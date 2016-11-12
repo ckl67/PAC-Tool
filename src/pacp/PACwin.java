@@ -63,7 +63,7 @@ public class PACwin {
 	private void initialize(PACcop pac) {
 		frmPacCop = new JFrame();
 		frmPacCop.setResizable(false);
-		frmPacCop.setIconImage(Toolkit.getDefaultToolkit().getImage(PACwin.class.getResource("/com/sun/javafx/scene/control/skin/modena/HTMLEditor-Indent-Black.png")));
+		frmPacCop.setIconImage(Toolkit.getDefaultToolkit().getImage("D:\\Users\\kluges1\\workspace\\pac-tool\\exe\\PAC-Tool.png"));
 		frmPacCop.setTitle("PAC Tool");
 		frmPacCop.setBounds(100, 100, 443, 525);
 		frmPacCop.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
