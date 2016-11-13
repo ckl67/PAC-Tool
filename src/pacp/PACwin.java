@@ -23,7 +23,6 @@ import java.awt.event.FocusEvent;
 import javax.swing.JEditorPane;
 
 
-
 public class PACwin {
 
 	private JFrame frmPacCop;
@@ -45,6 +44,8 @@ public class PACwin {
 	private JTextField textFieldEER;
 	private JTextField textFieldMassFlow;
 	private JTextField textFieldDeltaH0;
+	private JTextField textFieldVoltage;
+	private JTextField textFieldCosPhi;
 
 
 	/**
@@ -56,6 +57,10 @@ public class PACwin {
 		textFieldSousRefroid.setText(String.valueOf(Math.round(pac.getCond() - pac.getLiq())));
 		textFieldEER.setText(String.valueOf(Math.round(pac.getCapacity()/pac.getPower()*10.0)/10.0));
 		textFieldDeltaH0.setText("-----");
+		
+		double tmp = Math.round(PACmain.cosphi(pac.getPower(), pac.getVoltage(), pac.getCurrent())*10000.0)/10000.0;
+		textFieldCosPhi.setText(String.valueOf(tmp));
+
 	}
 
 	/**
@@ -306,7 +311,7 @@ public class PACwin {
 		// 										    	Performance 2 Panel
 		// ===============================================================================================================
 		JPanel panel_5 = new JPanel();
-		panel_5.setBounds(10, 183, 413, 231);
+		panel_5.setBounds(10, 183, 413, 241);
 		panel_5.setBorder(new TitledBorder(null, "Performance Constructeur 2", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_5.setLayout(null);
 		panelPAC.add(panel_5);
@@ -368,6 +373,10 @@ public class PACwin {
 
 				double tmp = Math.round(pac.getCapacity()/pac.getPower()*10.0)/10.0;
 				textFieldEER.setText(String.valueOf(tmp));
+				
+				tmp = Math.round(PACmain.cosphi(pac.getPower(), pac.getVoltage(), pac.getCurrent())*10000.0)/10000.0;
+				textFieldCosPhi.setText(String.valueOf(tmp));
+
 			}
 		});
 		textFieldPower.setToolTipText("Puissance Absorb\u00E9e");
@@ -392,6 +401,10 @@ public class PACwin {
 		textFieldCurrent.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
 				pac.setCurrent(Double.valueOf( textFieldCurrent.getText()));
+				
+				double tmp = Math.round(PACmain.cosphi(pac.getPower(), pac.getVoltage(), pac.getCurrent())*10000.0)/10000.0;
+				textFieldCosPhi.setText(String.valueOf(tmp));
+
 			}
 		});
 		textFieldCurrent.setToolTipText("Courant absorb\u00E9");
@@ -533,6 +546,10 @@ public class PACwin {
 		chckbxPound.setBounds(324, 201, 68, 23);
 		panel_5.add(chckbxPound);
 		
+		// ---------------------------------------------------------------
+		// H1-H3
+		// ---------------------------------------------------------------
+
 		JLabel lblDeltaH0 = new JLabel("H1-H3");
 		lblDeltaH0.setBounds(223, 59, 62, 14);
 		panel_5.add(lblDeltaH0);
@@ -550,12 +567,57 @@ public class PACwin {
 		JLabel lblDeltaH0_unity = new JLabel("KJ/Kg");
 		lblDeltaH0_unity.setBounds(356, 59, 36, 14);
 		panel_5.add(lblDeltaH0_unity);
+		
+		// ---------------------------------------------------------------
+		// Voltage
+		// ---------------------------------------------------------------
+		JLabel lblVoltage = new JLabel("Voltage :");
+		lblVoltage.setBounds(10, 177, 73, 14);
+		panel_5.add(lblVoltage);
+		
+		textFieldVoltage = new JTextField();
+		textFieldVoltage.addFocusListener(new FocusAdapter() {
+			public void focusLost(FocusEvent arg0) {			
+				
+				pac.setVoltage(Double.valueOf( textFieldVoltage.getText()));
+
+				double tmp = Math.round(PACmain.cosphi(pac.getPower(), pac.getVoltage(), pac.getCurrent())*10000.0)/10000.0;
+				textFieldCosPhi.setText(String.valueOf(tmp));
+			}
+		});
+		textFieldVoltage.setToolTipText("Tension");
+		textFieldVoltage.setText(String.valueOf(pac.getVoltage()));
+		textFieldVoltage.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldVoltage.setColumns(10);
+		textFieldVoltage.setBounds(82, 174, 62, 20);
+		panel_5.add(textFieldVoltage);
+		
+		JLabel lblVoltage_unity = new JLabel("V");
+		lblVoltage_unity.setBounds(154, 177, 46, 14);
+		panel_5.add(lblVoltage_unity);
+		
+		// ---------------------------------------------------------------
+		// Cos Phi
+		// ---------------------------------------------------------------
+		JLabel lblCosphi = new JLabel("Cos (Phi)");
+		lblCosphi.setBounds(10, 208, 73, 14);
+		panel_5.add(lblCosphi);
+		
+		textFieldCosPhi = new JTextField();
+		textFieldCosPhi.setToolTipText("Cosinus(Phi)");
+		textFieldCosPhi.setText("0.0");
+		textFieldCosPhi.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldCosPhi.setEditable(false);
+		textFieldCosPhi.setColumns(10);
+		textFieldCosPhi.setBackground(Color.PINK);
+		textFieldCosPhi.setBounds(82, 205, 62, 20);
+		panel_5.add(textFieldCosPhi);
 
 		// ---------------------------------------------------------------
 		// Quit
 		// ---------------------------------------------------------------
 		JButton btnQuit1 = new JButton("Quitter");
-		btnQuit1.setBounds(320, 425, 89, 23);
+		btnQuit1.setBounds(322, 435, 89, 23);
 		btnQuit1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frmPacCop.setVisible(false);	
@@ -793,8 +855,8 @@ public class PACwin {
 		JEditorPane dtrpnDddDdd = new JEditorPane();
 		dtrpnDddDdd.setContentType("text/html");
 		dtrpnDddDdd.setEditable(false);
-		dtrpnDddDdd.setText("<b>COP:</b> COefficient de Performance <br>\r\n&nbsp;&nbsp;&nbsp; COP = Energie <u>Restitu\u00E9e</u>\r\n(Chaleur) / Energie consomm\u00E9e <br>\r\n&nbsp;&nbsp;&nbsp; Attention sur les catalogues le COP\r\n(constructeur) <br>\r\n&nbsp;&nbsp;&nbsp; est calcul\u00E9 \u00E0 partir d'une temp\u00E9rature\r\nd'eau de nappe <br>\r\n&nbsp;&nbsp;&nbsp; phr\u00E9atique de 10\u00B0C <br>\r\n<b>COP constructeur:</b> <br>\r\n&nbsp;&nbsp;&nbsp; Performance d'une PAC d\u00E9termin\u00E9e en\r\nlaboratoire ,<br>\r\n&nbsp;&nbsp;&nbsp; donc assez loin des r\u00E9alit\u00E9s.<br>\r\n<b>COP global de la PAC :</b> <br>\r\n&nbsp;&nbsp;&nbsp; Performance qui tient compte des\r\nauxiliaires, <br>\r\n&nbsp;&nbsp;&nbsp; ventilateurs, pompes,etc..<br>\r\n<b>COP annuel (COPPA) : </b><br>\r\n&nbsp;&nbsp;&nbsp; Performance r\u00E9elle calcul\u00E9e pendant une\r\np\u00E9riode compl\u00E8te <br>\r\n&nbsp;&nbsp;&nbsp; de chauffage qui tient compte des\r\nsp\u00E9cificit\u00E9s de l'installation.<br>\r\n<b>EER (Energy Efficiency Ratio) : </b><br>\r\n&nbsp;&nbsp;&nbsp; (ou) Coefficient d'Efficacit\u00E9\r\nFrigorifique (ou) COP froid <br>\r\n&nbsp;&nbsp;&nbsp; EER = Energie <u>Absorb\u00E9e</u>\r\n(Froid) / Energie consomm\u00E9e<br>\r\n");
-		dtrpnDddDdd.setBounds(10, 11, 412, 375);
+		dtrpnDddDdd.setText("<b>Capacity : </b>Puissance Frigorifique<b><br>\r\n&nbsp;&nbsp;&nbsp; </b>(H1-H3) x D\u00E9bit Massique<br>\r\n<b>COP:</b> COefficient de Performance <br>\r\n&nbsp;&nbsp;&nbsp; COP = Puissance <u>Restitu\u00E9e</u>\r\n(Chaleur) / Puissance consomm\u00E9e <br>\r\n&nbsp;&nbsp;&nbsp; Attention sur les catalogues le COP\r\n(constructeur) <br>\r\n&nbsp;&nbsp;&nbsp; est calcul\u00E9 \u00E0 partir d'une temp\u00E9rature\r\nd'eau de nappe <br>\r\n&nbsp;&nbsp;&nbsp; phr\u00E9atique de 10\u00B0C <br>\r\n<b>COP constructeur :</b> <br>\r\n&nbsp;&nbsp;&nbsp; Performance d'une PAC d\u00E9termin\u00E9e en\r\nlaboratoire ,<br>\r\n&nbsp;&nbsp;&nbsp; donc assez loin des r\u00E9alit\u00E9s.<br>\r\n<b>COP global de la PAC :</b> <br>\r\n&nbsp;&nbsp;&nbsp; Performance qui tient compte des\r\nauxiliaires, <br>\r\n&nbsp;&nbsp;&nbsp; ventilateurs, pompes,etc..<br>\r\n<b>COP annuel (COPPA) : </b><br>\r\n&nbsp;&nbsp;&nbsp; Performance r\u00E9elle calcul\u00E9e pendant une\r\np\u00E9riode compl\u00E8te <br>\r\n&nbsp;&nbsp;&nbsp; de chauffage qui tient compte des\r\nsp\u00E9cificit\u00E9s de l'installation.<br>\r\n<b>EER (Energy Efficiency Ratio) : </b><br>\r\n&nbsp;&nbsp;&nbsp;&nbsp;Coefficient d'Efficacit\u00E9\r\nFrigorifique (ou) COP froid <br>\r\n&nbsp;&nbsp;&nbsp; EER = Puissance&nbsp;<u>Absorb\u00E9e</u>\r\n(Froid) / Puissance consomm\u00E9e<br>\r\n</htm>\r\n<b>Mass Flow :</b><br>\r\n&nbsp;&nbsp;&nbsp; D\u00E9bit Massique (Kg/s)<br>\r\n<span style=\"font-weight: bold;\">BTU/h :</span>\r\nBritish Thermal Unit per hour<span style=\"font-weight: bold;\"></span><br\r\n style=\"font-weight: bold;\">\r\n&nbsp;&nbsp;&nbsp; Unit\u00E9 anglo-saxonne de puissance: <br>\r\n&nbsp;&nbsp;&nbsp; 1 000 BTU/h valent approximativement\r\n293,071 W &nbsp;<br>\r\n");
+		dtrpnDddDdd.setBounds(10, 11, 412, 447);
 		panelDef.add(dtrpnDddDdd);
 
 

@@ -101,4 +101,9 @@ public class PACmain {
 		return lbs;
 	}
 	
+	public static double cosphi(double P, double U, double I) {
+		double cosphi;
+		cosphi = P/(U*I);
+		return cosphi;
+	}
 }

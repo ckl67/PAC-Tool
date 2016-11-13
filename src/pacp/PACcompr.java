@@ -10,6 +10,7 @@ public class PACcompr {
 	private double Power;
 	private double Current;
 	private double MassFlow;
+	private double Voltage;
 	
 	// ------------ Constructor
 	PACcompr() {
@@ -22,6 +23,7 @@ public class PACcompr {
 		Power = 3000;
 		Current = 14.7;
 		MassFlow = 488;		
+		Voltage = 220;		
 	}
 	
 	// ----------------------------------------------------------------------------
@@ -59,6 +61,9 @@ public class PACcompr {
 		MassFlow = v;
 	}
 	
+	public void setVoltage(double v) {
+		Voltage = v;
+	}
 	
 	// ----------------------------------------------------------------------------
 	// Getter
@@ -93,6 +98,10 @@ public class PACcompr {
 	
 	public double getMassFlow() {
 		return MassFlow;		
+	}
+
+	public double getVoltage() {
+		return Voltage;		
 	}
 
 }

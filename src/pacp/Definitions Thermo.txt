@@ -27,7 +27,7 @@ Il ne faut pas confondre COPfroid et COPchaud !
 Le COPchaud est le rapport entre l'énergie thermique délivrée au condenseur 
 et l'énergie électrique demandée par le compresseur 
 
-j
+
 COP FROID
 ==========
 Alors que le COPfroid part de la chaleur captée à l'évaporateur. 
@@ -36,10 +36,3 @@ La confusion étant fréquente,
 Il n'est pas inutile lorsque l'on compare le rendement des machines dans les documentations de constructeurs, 
 de vérifier ce qui se trouve derrière l'appellation COP.
 
-
-Par contre si je reprends les infos 
-Evap = 7,2°C  / Cond = 54,4°C
-RG = 18,3     / Liq = 46
-
-L’EER ou Energy Efficiency Ratio est le coefficient d’efficacité frigorifique. Il représente la performance énergétique de la pompe à chaleur fonctionnant en mode rafraîchissement > Calcul EER = énergie utile ou chaleur absorbée à l'évaporateur/énergie fournie au compresseur).
- 
