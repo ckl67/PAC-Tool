@@ -21,8 +21,7 @@ import javax.swing.border.TitledBorder;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import javax.swing.JEditorPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextPane;
+
 
 
 public class PACwin {
@@ -794,7 +793,7 @@ public class PACwin {
 		JEditorPane dtrpnDddDdd = new JEditorPane();
 		dtrpnDddDdd.setContentType("text/html");
 		dtrpnDddDdd.setEditable(false);
-		dtrpnDddDdd.setText("<b>COP:</b> COefficient de Performance <br>\r\n&emsp; \tCOP = Energie <u>Restitu\u00E9e</u> (Chaleur) / Energie consomm\u00E9e <br>\r\n&emsp;\tAttention sur les catalogues le COP (constructeur) <br>\r\n&emsp;\test calcul\u00E9 \u00E0 partir d'une temp\u00E9rature d'eau de nappe <br> \r\n&emsp;\tphr\u00E9atique de 10\u00B0C <br>\r\n<b>COP constructeur:</b> <br>\r\n&emsp;\tPerformance d'une PAC d\u00E9termin\u00E9e en laboratoire ,<br>\r\n&emsp;\tdonc assez loin des r\u00E9alit\u00E9s.<br>\r\n<b>COP global de la PAC :</b> <br>\r\n&emsp;\tPerformance qui tient compte des auxiliaires, <br>\r\n&emsp;\tventilateurs,pompes,etc..<br>\r\n<b>COP annuel (COPPA) : </b><br>\r\n&emsp;\tPerformance r\u00E9elle calcul\u00E9e pendant une p\u00E9riode compl\u00E8te <br>\r\n&emsp;\tde chauffage qui tient compte des sp\u00E9cificit\u00E9s de l'installation.<br>\r\n<b>EER (Energy Efficiency Ratio) : </b><br>\r\n &emsp;\t(ou) Coefficient d'Efficacit\u00E9 Frigorifique  (ou) COP froid <br>\r\n&emsp;\tEER = Energie <u>Absorb\u00E9e</u> (Froid) / Energie consomm\u00E9e<br>");
+		dtrpnDddDdd.setText("<b>COP:</b> COefficient de Performance <br>\r\n&nbsp;&nbsp;&nbsp; COP = Energie <u>Restitu\u00E9e</u>\r\n(Chaleur) / Energie consomm\u00E9e <br>\r\n&nbsp;&nbsp;&nbsp; Attention sur les catalogues le COP\r\n(constructeur) <br>\r\n&nbsp;&nbsp;&nbsp; est calcul\u00E9 \u00E0 partir d'une temp\u00E9rature\r\nd'eau de nappe <br>\r\n&nbsp;&nbsp;&nbsp; phr\u00E9atique de 10\u00B0C <br>\r\n<b>COP constructeur:</b> <br>\r\n&nbsp;&nbsp;&nbsp; Performance d'une PAC d\u00E9termin\u00E9e en\r\nlaboratoire ,<br>\r\n&nbsp;&nbsp;&nbsp; donc assez loin des r\u00E9alit\u00E9s.<br>\r\n<b>COP global de la PAC :</b> <br>\r\n&nbsp;&nbsp;&nbsp; Performance qui tient compte des\r\nauxiliaires, <br>\r\n&nbsp;&nbsp;&nbsp; ventilateurs, pompes,etc..<br>\r\n<b>COP annuel (COPPA) : </b><br>\r\n&nbsp;&nbsp;&nbsp; Performance r\u00E9elle calcul\u00E9e pendant une\r\np\u00E9riode compl\u00E8te <br>\r\n&nbsp;&nbsp;&nbsp; de chauffage qui tient compte des\r\nsp\u00E9cificit\u00E9s de l'installation.<br>\r\n<b>EER (Energy Efficiency Ratio) : </b><br>\r\n&nbsp;&nbsp;&nbsp; (ou) Coefficient d'Efficacit\u00E9\r\nFrigorifique (ou) COP froid <br>\r\n&nbsp;&nbsp;&nbsp; EER = Energie <u>Absorb\u00E9e</u>\r\n(Froid) / Energie consomm\u00E9e<br>\r\n");
 		dtrpnDddDdd.setBounds(10, 11, 412, 375);
 		panelDef.add(dtrpnDddDdd);
 
