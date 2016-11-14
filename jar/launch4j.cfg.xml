@@ -13,7 +13,7 @@
   <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
-  <icon>D:\Users\kluges1\workspace\pac-tool\exe\PAC-Tool.ico</icon>
+  <icon>D:\Users\kluges1\workspace\pac-tool\src\pacp\images\PAC-Tool.ico</icon>
   <jre>
     <path>C:\Program Files\Java\jre1.8.0_111</path>
     <bundledJre64Bit>false</bundledJre64Bit>

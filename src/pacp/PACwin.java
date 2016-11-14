@@ -5,6 +5,9 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
@@ -21,11 +24,12 @@ import javax.swing.border.TitledBorder;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import javax.swing.JEditorPane;
+import javax.swing.JScrollPane;
 
 
 public class PACwin {
 
-	private JFrame frmPacCop;
+	private JFrame frame;
 	private JTextField textFieldH1;
 	private JTextField textFieldH2;
 	private JTextField textFieldH3;
@@ -68,40 +72,70 @@ public class PACwin {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize(PACcop pac) {
-		frmPacCop = new JFrame();
-		frmPacCop.setResizable(false);
-		frmPacCop.setIconImage(Toolkit.getDefaultToolkit().getImage("D:\\Users\\kluges1\\workspace\\pac-tool\\exe\\PAC-Tool.png"));
-		frmPacCop.setTitle("PAC Tool");
-		frmPacCop.setBounds(100, 100, 443, 525);
-		frmPacCop.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame = new JFrame();
+		frame.setResizable(false);
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(PACwin.class.getResource("/pacp/images/PAC-Tool_32.png")));
+		frame.setTitle("PAC Tool");
+		frame.setBounds(100, 100, 443, 544);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		frmPacCop.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
 		// ===============================================================================================================
+		// 													MENU
+		// ===============================================================================================================
+		JMenuBar menubar = new JMenuBar();
+		frame.setJMenuBar(menubar);
+		
+		JMenu file = new JMenu("File");
+		menubar.add(file);
+		JMenuItem exit = new JMenuItem("Exit");
+		exit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(0);
+			}
+		});
+		file.add(exit);
+		
+		JMenu help = new JMenu("Help");
+		menubar.add(help);
+		JMenuItem about = new JMenuItem("About");
+		about.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AboutWin nabw = new AboutWin();
+				nabw.NewAboutWin();
+			}
+		});
+		help.add(about);
+			
+		// ===============================================================================================================
+		//													TABBED PANE
+		// ===============================================================================================================
+		
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
+
 		// ===============================================================================================================
 		//									                 PANEL PAC
-		// ===============================================================================================================
 		// ===============================================================================================================
 		JPanel panelPAC = new JPanel();
 		tabbedPane.addTab("PAC", null, panelPAC, null);
 		panelPAC.setLayout(null);
 
-		// ===============================================================================================================
-		// 										    	Performance Panel
-		// ===============================================================================================================
-		JPanel panel_4 = new JPanel();
-		panel_4.setBorder(new TitledBorder(null, "Performance Constructeur 1", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_4.setBounds(10, 11, 413, 161);
-		panel_4.setLayout(null);
-		panelPAC.add(panel_4);
+		// ================================================================
+		// 					  	Performance Panel
+		// ================================================================
+		JPanel panel_pc1 = new JPanel();
+		panel_pc1.setBorder(new TitledBorder(null, "Performance Constructeur 1", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_pc1.setBounds(10, 11, 413, 161);
+		panel_pc1.setLayout(null);
+		panelPAC.add(panel_pc1);
 
 		// ---------------------------------------------------------------
 		// EVAP
 		// ---------------------------------------------------------------
 		JLabel lblEvap = new JLabel("Evap :");
 		lblEvap.setBounds(10, 28, 51, 14);
-		panel_4.add(lblEvap);
+		panel_pc1.add(lblEvap);
 
 		textFieldEvap = new JTextField();
 		textFieldEvap.setToolTipText("Temp\u00E9rature d'\u00E9vaporation (T0)");
@@ -115,21 +149,21 @@ public class PACwin {
 			}
 		});
 		textFieldEvap.setBounds(59, 25, 75, 20);
-		panel_4.add(textFieldEvap);
+		panel_pc1.add(textFieldEvap);
 		textFieldEvap.setText(String.valueOf(pac.getEvap()));
 		textFieldEvap.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldEvap.setColumns(10);
 
 		JLabel lblTemp_unity1 = new JLabel("\u00B0F");
 		lblTemp_unity1.setBounds(144, 28, 46, 14);
-		panel_4.add(lblTemp_unity1);
+		panel_pc1.add(lblTemp_unity1);
 
 		// ---------------------------------------------------------------
 		// RG
 		// ---------------------------------------------------------------
 		JLabel lblRG = new JLabel("RG :");
 		lblRG.setBounds(10, 67, 51, 14);
-		panel_4.add(lblRG);
+		panel_pc1.add(lblRG);
 
 		textFieldRG = new JTextField();
 		textFieldRG.setToolTipText("Temp\u00E9rature d'aspiration du compresseur Point : (1)");
@@ -143,21 +177,21 @@ public class PACwin {
 			}
 		});
 		textFieldRG.setBounds(59, 64, 75, 20);
-		panel_4.add(textFieldRG);
+		panel_pc1.add(textFieldRG);
 		textFieldRG.setText(String.valueOf(pac.getRG()));
 		textFieldRG.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldRG.setColumns(10);
 
 		JLabel lblTemp_unity2 = new JLabel("\u00B0F");
 		lblTemp_unity2.setBounds(144, 67, 46, 14);
-		panel_4.add(lblTemp_unity2);
+		panel_pc1.add(lblTemp_unity2);
 
 		// ---------------------------------------------------------------
 		// SURCHAUFFE
 		// ---------------------------------------------------------------
 		JLabel lblSurchauffe = new JLabel("Surchauffe :");
 		lblSurchauffe.setBounds(10, 101, 81, 14);
-		panel_4.add(lblSurchauffe);
+		panel_pc1.add(lblSurchauffe);
 
 		textFieldSurchauffe = new JTextField();
 		textFieldSurchauffe.setText("0.0");
@@ -165,19 +199,19 @@ public class PACwin {
 		textFieldSurchauffe.setBackground(Color.PINK);
 		textFieldSurchauffe.setEditable(false);
 		textFieldSurchauffe.setBounds(88, 98, 46, 20);
-		panel_4.add(textFieldSurchauffe);
+		panel_pc1.add(textFieldSurchauffe);
 		textFieldSurchauffe.setColumns(10);
 
 		JLabel lblTemp_unity5 = new JLabel("\u00B0F");
 		lblTemp_unity5.setBounds(144, 101, 46, 14);
-		panel_4.add(lblTemp_unity5);
+		panel_pc1.add(lblTemp_unity5);
 
 		// ---------------------------------------------------------------
 		// COND
 		// ---------------------------------------------------------------
 		JLabel lblCond = new JLabel("Cond :");
 		lblCond.setBounds(233, 28, 46, 14);
-		panel_4.add(lblCond);
+		panel_pc1.add(lblCond);
 
 		textFieldCond = new JTextField();
 		textFieldCond.setToolTipText("Temp\u00E9rature de condensation (TK) ");
@@ -194,18 +228,18 @@ public class PACwin {
 		textFieldCond.setText(String.valueOf(pac.getCond()));
 		textFieldCond.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldCond.setColumns(10);
-		panel_4.add(textFieldCond);
+		panel_pc1.add(textFieldCond);
 
 		JLabel lblTemp_unity3 = new JLabel("\u00B0F");
 		lblTemp_unity3.setBounds(374, 28, 29, 14);
-		panel_4.add(lblTemp_unity3);
+		panel_pc1.add(lblTemp_unity3);
 
 		// ---------------------------------------------------------------
 		// LIQ
 		// ---------------------------------------------------------------
 		JLabel lblLiq = new JLabel("Liq :");
 		lblLiq.setBounds(233, 67, 46, 14);
-		panel_4.add(lblLiq);
+		panel_pc1.add(lblLiq);
 
 		textFieldLiq = new JTextField();
 		textFieldLiq.setToolTipText("Temp\u00E9rature Entr\u00E9e D\u00E9tendeur : Point (3) ");
@@ -223,11 +257,11 @@ public class PACwin {
 		textFieldLiq.setText(String.valueOf(pac.getLiq()));
 		textFieldLiq.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldLiq.setColumns(10);
-		panel_4.add(textFieldLiq);
+		panel_pc1.add(textFieldLiq);
 
 		JLabel lblTemp_unity4 = new JLabel("\u00B0F");
 		lblTemp_unity4.setBounds(374, 64, 29, 14);
-		panel_4.add(lblTemp_unity4);
+		panel_pc1.add(lblTemp_unity4);
 
 		// ---------------------------------------------------------------
 		// SOUS REFROIDISSEMENT
@@ -235,7 +269,7 @@ public class PACwin {
 
 		JLabel lblSousRefroid = new JLabel("S-Refroidissement :");
 		lblSousRefroid.setBounds(205, 101, 113, 14);
-		panel_4.add(lblSousRefroid);
+		panel_pc1.add(lblSousRefroid);
 
 		textFieldSousRefroid = new JTextField();
 		textFieldSousRefroid.setText("0.0");
@@ -244,18 +278,18 @@ public class PACwin {
 		textFieldSousRefroid.setColumns(10);
 		textFieldSousRefroid.setBackground(Color.PINK);
 		textFieldSousRefroid.setBounds(318, 98, 46, 20);
-		panel_4.add(textFieldSousRefroid);
+		panel_pc1.add(textFieldSousRefroid);
 
 		JLabel lblTemp_unity6 = new JLabel("\u00B0F");
 		lblTemp_unity6.setBounds(374, 101, 29, 14);
-		panel_4.add(lblTemp_unity6);
+		panel_pc1.add(lblTemp_unity6);
 
 		// ---------------------------------------------------------------
 		// Check Box Farenheit / Celcius
 		// ---------------------------------------------------------------
 		JCheckBox checkoxFaren = new JCheckBox("Farenheit");
 		checkoxFaren.setBounds(302, 131, 95, 23);
-		panel_4.add(checkoxFaren);
+		panel_pc1.add(checkoxFaren);
 		checkoxFaren.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if (checkoxFaren.isSelected()) {
@@ -307,14 +341,14 @@ public class PACwin {
 		});
 		checkoxFaren.setSelected(true);
 
-		// ===============================================================================================================
-		// 										    	Performance 2 Panel
-		// ===============================================================================================================
-		JPanel panel_5 = new JPanel();
-		panel_5.setBounds(10, 183, 413, 241);
-		panel_5.setBorder(new TitledBorder(null, "Performance Constructeur 2", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_5.setLayout(null);
-		panelPAC.add(panel_5);
+		// ================================================================
+		// 					   	Performance 2 Panel
+		// ================================================================
+		JPanel panel_pc2 = new JPanel();
+		panel_pc2.setBounds(10, 183, 413, 241);
+		panel_pc2.setBorder(new TitledBorder(null, "Performance Constructeur 2", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_pc2.setLayout(null);
+		panelPAC.add(panel_pc2);
 
 		JCheckBox checkoxBTU = new JCheckBox("BTU/hr");
 		checkoxBTU.setToolTipText("British Thermal Unit / hour");
@@ -327,7 +361,7 @@ public class PACwin {
 		JLabel lblCapacity = new JLabel("Capacity :");
 		lblCapacity.setToolTipText("");
 		lblCapacity.setBounds(10, 28, 73, 14);
-		panel_5.add(lblCapacity);
+		panel_pc2.add(lblCapacity);
 
 		textFieldCapacity = new JTextField();
 		textFieldCapacity.addFocusListener(new FocusAdapter() {
@@ -351,19 +385,19 @@ public class PACwin {
 		textFieldCapacity.setText(String.valueOf(pac.getCapacity()));
 		textFieldCapacity.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldCapacity.setColumns(10);
-		panel_5.add(textFieldCapacity);
+		panel_pc2.add(textFieldCapacity);
 
 		JLabel lblCapacity_unity = new JLabel("Btu/hr");
 		lblCapacity_unity.setToolTipText("(BUT/hr) British Thermal Unit / hour = Unit\u00E9 de mesure d'\u00E9nergie thermique / Heure. L'unit\u00E9 de puissance du SI est le watt (symbole : W), qui correspond \u00E0  un joule fourni par seconde.");
 		lblCapacity_unity.setBounds(154, 28, 46, 14);
-		panel_5.add(lblCapacity_unity);
+		panel_pc2.add(lblCapacity_unity);
 
 		// ---------------------------------------------------------------
 		// Power
 		// ---------------------------------------------------------------
 		JLabel lblPower = new JLabel("Power :");
 		lblPower.setBounds(10, 59, 73, 14);
-		panel_5.add(lblPower);
+		panel_pc2.add(lblPower);
 
 		textFieldPower = new JTextField();
 		textFieldPower.addFocusListener(new FocusAdapter() {
@@ -384,18 +418,18 @@ public class PACwin {
 		textFieldPower.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldPower.setBounds(82, 56, 62, 20);
 		textFieldPower.setColumns(10);
-		panel_5.add(textFieldPower);
+		panel_pc2.add(textFieldPower);
 
 		JLabel lblPower_Unity = new JLabel("Watt");
 		lblPower_Unity.setBounds(154, 62, 46, 14);
-		panel_5.add(lblPower_Unity);
+		panel_pc2.add(lblPower_Unity);
 
 		// ---------------------------------------------------------------
 		// Courant
 		// ---------------------------------------------------------------
 		JLabel lblCourant = new JLabel("Current :");
 		lblCourant.setBounds(10, 90, 73, 14);
-		panel_5.add(lblCourant);
+		panel_pc2.add(lblCourant);
 
 		textFieldCurrent = new JTextField();
 		textFieldCurrent.addFocusListener(new FocusAdapter() {
@@ -412,18 +446,18 @@ public class PACwin {
 		textFieldCurrent.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldCurrent.setColumns(10);
 		textFieldCurrent.setBounds(82, 87, 62, 20);
-		panel_5.add(textFieldCurrent);
+		panel_pc2.add(textFieldCurrent);
 
 		JLabel lblCurrent_unity = new JLabel("A");
 		lblCurrent_unity.setBounds(154, 90, 46, 14);
-		panel_5.add(lblCurrent_unity);
+		panel_pc2.add(lblCurrent_unity);
 		
 		// ---------------------------------------------------------------
 		// EER
 		// ---------------------------------------------------------------
 		JLabel lblEer = new JLabel("EER :");
 		lblEer.setBounds(10, 128, 73, 14);
-		panel_5.add(lblEer);
+		panel_pc2.add(lblEer);
 		
 		textFieldEER = new JTextField();
 		textFieldEER.setEditable(false);
@@ -433,11 +467,11 @@ public class PACwin {
 		textFieldEER.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldEER.setColumns(10);
 		textFieldEER.setBounds(82, 125, 62, 20);
-		panel_5.add(textFieldEER);
+		panel_pc2.add(textFieldEER);
 		
 		JLabel lblEER_unity = new JLabel("BTU/(hr.W)");
 		lblEER_unity.setBounds(154, 125, 73, 22);
-		panel_5.add(lblEER_unity);
+		panel_pc2.add(lblEER_unity);
 
 		// ---------------------------------------------------------------
 		// Mass Flow
@@ -445,7 +479,7 @@ public class PACwin {
 
 		JLabel lblMassflow = new JLabel("MassFlow :");
 		lblMassflow.setBounds(220, 28, 73, 14);
-		panel_5.add(lblMassflow);
+		panel_pc2.add(lblMassflow);
 
 		textFieldMassFlow = new JTextField();
 		textFieldMassFlow.addFocusListener(new FocusAdapter() {
@@ -466,11 +500,11 @@ public class PACwin {
 		textFieldMassFlow.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldMassFlow.setColumns(10);
 		textFieldMassFlow.setBounds(295, 25, 51, 20);
-		panel_5.add(textFieldMassFlow);
+		panel_pc2.add(textFieldMassFlow);
 		
 		JLabel lblMassFlow_unity = new JLabel("lbs/hr");
 		lblMassFlow_unity.setBounds(356, 28, 36, 14);
-		panel_5.add(lblMassFlow_unity);
+		panel_pc2.add(lblMassFlow_unity);
 
 		// ---------------------------------------------------------------
 		// Check Box BTU/HR or Watt
@@ -509,7 +543,7 @@ public class PACwin {
 			}
 		});
 		checkoxBTU.setSelected(true);
-		panel_5.add(checkoxBTU);
+		panel_pc2.add(checkoxBTU);
 		
 		// ---------------------------------------------------------------
 		// Pound
@@ -544,7 +578,7 @@ public class PACwin {
 		});
 		chckbxPound.setSelected(true);
 		chckbxPound.setBounds(324, 201, 68, 23);
-		panel_5.add(chckbxPound);
+		panel_pc2.add(chckbxPound);
 		
 		// ---------------------------------------------------------------
 		// H1-H3
@@ -552,7 +586,7 @@ public class PACwin {
 
 		JLabel lblDeltaH0 = new JLabel("H1-H3");
 		lblDeltaH0.setBounds(223, 59, 62, 14);
-		panel_5.add(lblDeltaH0);
+		panel_pc2.add(lblDeltaH0);
 		
 		textFieldDeltaH0 = new JTextField();
 		textFieldDeltaH0.setBackground(Color.PINK);
@@ -562,18 +596,18 @@ public class PACwin {
 		textFieldDeltaH0.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldDeltaH0.setColumns(10);
 		textFieldDeltaH0.setBounds(295, 56, 51, 20);
-		panel_5.add(textFieldDeltaH0);
+		panel_pc2.add(textFieldDeltaH0);
 		
 		JLabel lblDeltaH0_unity = new JLabel("KJ/Kg");
 		lblDeltaH0_unity.setBounds(356, 59, 36, 14);
-		panel_5.add(lblDeltaH0_unity);
+		panel_pc2.add(lblDeltaH0_unity);
 		
 		// ---------------------------------------------------------------
 		// Voltage
 		// ---------------------------------------------------------------
 		JLabel lblVoltage = new JLabel("Voltage :");
 		lblVoltage.setBounds(10, 177, 73, 14);
-		panel_5.add(lblVoltage);
+		panel_pc2.add(lblVoltage);
 		
 		textFieldVoltage = new JTextField();
 		textFieldVoltage.addFocusListener(new FocusAdapter() {
@@ -590,18 +624,18 @@ public class PACwin {
 		textFieldVoltage.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldVoltage.setColumns(10);
 		textFieldVoltage.setBounds(82, 174, 62, 20);
-		panel_5.add(textFieldVoltage);
+		panel_pc2.add(textFieldVoltage);
 		
 		JLabel lblVoltage_unity = new JLabel("V");
 		lblVoltage_unity.setBounds(154, 177, 46, 14);
-		panel_5.add(lblVoltage_unity);
+		panel_pc2.add(lblVoltage_unity);
 		
 		// ---------------------------------------------------------------
 		// Cos Phi
 		// ---------------------------------------------------------------
 		JLabel lblCosphi = new JLabel("Cos (Phi)");
 		lblCosphi.setBounds(10, 208, 73, 14);
-		panel_5.add(lblCosphi);
+		panel_pc2.add(lblCosphi);
 		
 		textFieldCosPhi = new JTextField();
 		textFieldCosPhi.setToolTipText("Cosinus(Phi)");
@@ -611,7 +645,7 @@ public class PACwin {
 		textFieldCosPhi.setColumns(10);
 		textFieldCosPhi.setBackground(Color.PINK);
 		textFieldCosPhi.setBounds(82, 205, 62, 20);
-		panel_5.add(textFieldCosPhi);
+		panel_pc2.add(textFieldCosPhi);
 
 		// ---------------------------------------------------------------
 		// Quit
@@ -620,16 +654,14 @@ public class PACwin {
 		btnQuit1.setBounds(322, 435, 89, 23);
 		btnQuit1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frmPacCop.setVisible(false);	
-				frmPacCop.dispose();
+				frame.setVisible(false);	
+				frame.dispose();
 			}
 		});
 		panelPAC.add(btnQuit1);
 
 		// ===============================================================================================================
-		// ===============================================================================================================
-		//									        PANEL Mesure 
-		// ===============================================================================================================
+		//									        PANEL MEASURE 
 		// ===============================================================================================================
 
 		JPanel panelComp = new JPanel();
@@ -828,7 +860,7 @@ public class PACwin {
 		// ---------------------------------------------------------------
 
 		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setIcon(new ImageIcon("D:\\Users\\kluges1\\workspace\\pac-tool\\src\\pacp\\enthalpie.jpg"));
+		lblNewLabel.setIcon(new ImageIcon(PACwin.class.getResource("/pacp/images/enthalpie.jpg")));
 		lblNewLabel.setBounds(233, 11, 150, 100);
 		panelComp.add(lblNewLabel);
 
@@ -848,24 +880,29 @@ public class PACwin {
 		textFieldCarnotFroid.setBounds(297, 135, 86, 20);
 		panelComp.add(textFieldCarnotFroid);
 		
+		// ===============================================================================================================
+		//									        PANEL DEFINITION 
+		// ===============================================================================================================
+
 		JPanel panelDef = new JPanel();
 		tabbedPane.addTab("D\u00E9finitions", null, panelDef, null);
 		panelDef.setLayout(null);
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(0, 0, 432, 467);
+		panelDef.add(scrollPane);
 		
-		JEditorPane dtrpnDddDdd = new JEditorPane();
-		dtrpnDddDdd.setContentType("text/html");
-		dtrpnDddDdd.setEditable(false);
-		dtrpnDddDdd.setText("<b>Capacity : </b>Puissance Frigorifique<b><br>\r\n&nbsp;&nbsp;&nbsp; </b>(H1-H3) x D\u00E9bit Massique<br>\r\n<b>COP:</b> COefficient de Performance <br>\r\n&nbsp;&nbsp;&nbsp; COP = Puissance <u>Restitu\u00E9e</u>\r\n(Chaleur) / Puissance consomm\u00E9e <br>\r\n&nbsp;&nbsp;&nbsp; Attention sur les catalogues le COP\r\n(constructeur) <br>\r\n&nbsp;&nbsp;&nbsp; est calcul\u00E9 \u00E0 partir d'une temp\u00E9rature\r\nd'eau de nappe <br>\r\n&nbsp;&nbsp;&nbsp; phr\u00E9atique de 10\u00B0C <br>\r\n<b>COP constructeur :</b> <br>\r\n&nbsp;&nbsp;&nbsp; Performance d'une PAC d\u00E9termin\u00E9e en\r\nlaboratoire ,<br>\r\n&nbsp;&nbsp;&nbsp; donc assez loin des r\u00E9alit\u00E9s.<br>\r\n<b>COP global de la PAC :</b> <br>\r\n&nbsp;&nbsp;&nbsp; Performance qui tient compte des\r\nauxiliaires, <br>\r\n&nbsp;&nbsp;&nbsp; ventilateurs, pompes,etc..<br>\r\n<b>COP annuel (COPPA) : </b><br>\r\n&nbsp;&nbsp;&nbsp; Performance r\u00E9elle calcul\u00E9e pendant une\r\np\u00E9riode compl\u00E8te <br>\r\n&nbsp;&nbsp;&nbsp; de chauffage qui tient compte des\r\nsp\u00E9cificit\u00E9s de l'installation.<br>\r\n<b>EER (Energy Efficiency Ratio) : </b><br>\r\n&nbsp;&nbsp;&nbsp;&nbsp;Coefficient d'Efficacit\u00E9\r\nFrigorifique (ou) COP froid <br>\r\n&nbsp;&nbsp;&nbsp; EER = Puissance&nbsp;<u>Absorb\u00E9e</u>\r\n(Froid) / Puissance consomm\u00E9e<br>\r\n</htm>\r\n<b>Mass Flow :</b><br>\r\n&nbsp;&nbsp;&nbsp; D\u00E9bit Massique (Kg/s)<br>\r\n<span style=\"font-weight: bold;\">BTU/h :</span>\r\nBritish Thermal Unit per hour<span style=\"font-weight: bold;\"></span><br\r\n style=\"font-weight: bold;\">\r\n&nbsp;&nbsp;&nbsp; Unit\u00E9 anglo-saxonne de puissance: <br>\r\n&nbsp;&nbsp;&nbsp; 1 000 BTU/h valent approximativement\r\n293,071 W &nbsp;<br>\r\n");
-		dtrpnDddDdd.setBounds(10, 11, 412, 447);
-		panelDef.add(dtrpnDddDdd);
-
-
-
+		JEditorPane txtdef = new JEditorPane();
+		txtdef.setEditable(false);
+		txtdef.setContentType("text/html");
+		txtdef.setText("<b>Capacity : </b>Puissance Frigorifique<b><br>\r\n&nbsp;&nbsp;&nbsp; </b>(H1-H3) x D\u00E9bit Massique<br>\r\n<b>COP:</b> COefficient de Performance <br>\r\n&nbsp;&nbsp;&nbsp; COP = Puissance <u>Restitu\u00E9e</u>\r\n(Chaleur) / Puissance consomm\u00E9e <br>\r\n&nbsp;&nbsp;&nbsp; Attention sur les catalogues le COP\r\n(constructeur) <br>\r\n&nbsp;&nbsp;&nbsp; est calcul\u00E9 \u00E0 partir d'une temp\u00E9rature\r\nd'eau de nappe <br>\r\n&nbsp;&nbsp;&nbsp; phr\u00E9atique de 10\u00B0C <br>\r\n<b>COP constructeur :</b> <br>\r\n&nbsp;&nbsp;&nbsp; Performance d'une PAC d\u00E9termin\u00E9e en\r\nlaboratoire ,<br>\r\n&nbsp;&nbsp;&nbsp; donc assez loin des r\u00E9alit\u00E9s.<br>\r\n<b>COP global de la PAC :</b> <br>\r\n&nbsp;&nbsp;&nbsp; Performance qui tient compte des\r\nauxiliaires, <br>\r\n&nbsp;&nbsp;&nbsp; ventilateurs, pompes,etc..<br>\r\n<b>COP annuel (COPPA) : </b><br>\r\n&nbsp;&nbsp;&nbsp; Performance r\u00E9elle calcul\u00E9e pendant une\r\np\u00E9riode compl\u00E8te <br>\r\n&nbsp;&nbsp;&nbsp; de chauffage qui tient compte des\r\nsp\u00E9cificit\u00E9s de l'installation.<br>\r\n<b>EER (Energy Efficiency Ratio) : </b><br>\r\n&nbsp;&nbsp;&nbsp;&nbsp;Coefficient d'Efficacit\u00E9\r\nFrigorifique (ou) COP froid <br>\r\n&nbsp;&nbsp;&nbsp; EER = Puissance&nbsp;<u>Absorb\u00E9e</u>\r\n(Froid) / Puissance consomm\u00E9e<br>\r\n<b>Mass Flow :</b><br>\r\n&nbsp;&nbsp;&nbsp; D\u00E9bit Massique (Kg/s)<br>\r\n<span style=\"font-weight: bold;\">BTU/h :</span>\r\nBritish Thermal Unit per hour<span style=\"font-weight: bold;\"></span><br\r\n style=\"font-weight: bold;\">\r\n&nbsp;&nbsp;&nbsp; Unit\u00E9 anglo-saxonne de puissance: <br>\r\n&nbsp;&nbsp;&nbsp; 1 000 BTU/h valent approximativement\r\n293,071 W &nbsp;<br>\r\n");
+		scrollPane.setViewportView(txtdef);
+		
 
 		// ---------------------------------------------------------------
 		// Display 
 		// ---------------------------------------------------------------
-		frmPacCop.setVisible(true);
+		frame.setVisible(true);
 
 	}
 
