@@ -1,6 +1,6 @@
 package pacp;
 
-public class PACcop extends PACcompr {
+public class PACcop extends Scroll {
 
 	private double T0;
 	private double TK;

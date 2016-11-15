@@ -1,7 +1,10 @@
 package pacp;
 
-public class PACcompr {
+import org.json.simple.JSONObject;
 
+public class Scroll {
+
+	private String Name;
 	private double Evap;
 	private double Cond;
 	private double RG;
@@ -12,62 +15,80 @@ public class PACcompr {
 	private double MassFlow;
 	private double Voltage;
 	
-	// ------------ Constructor
-	PACcompr() {
-		// ZR40K3-PFG
-		Evap = 45;
-		Cond = 130;
-		RG = 65;
-		Liq = 115;
-		Capacity = 33300;
-		Power = 3000;
-		Current = 14.7;
-		MassFlow = 488;		
-		Voltage = 220;		
+	// ------------ Constructor Default
+	Scroll() {
+			setName("ZR40K3-PFG");
+			Evap = 45;
+			Cond = 130;
+			RG = 65;
+			Liq = 115;
+			Capacity = 33300;
+			Power = 3000;
+			Current = 14.7;
+			MassFlow = 488;		
+			Voltage = 220;		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public JSONObject getJsonObject() {
+		JSONObject ObjScroll = new JSONObject();  
+		ObjScroll.put("Name", Name);
+		ObjScroll.put("Evap", Evap);	
+		ObjScroll.put("Cond", Cond);	
+//		ObjScroll.put("", );	
+		return(ObjScroll);
 	}
 	
 	// ----------------------------------------------------------------------------
 	// Setter
 	// ----------------------------------------------------------------------------
+	public void setName(String v) {
+		this.Name = v;
+	}
+
 	public void setEvap(double v) {
-		Evap = v;
+		this.Evap = v;
 	}
 	
 	public void setCond(double v) {
-		Cond = v;
+		this.Cond = v;
 	}
 
 	public void setRG(double v) {
-		RG = v;
+		this.RG = v;
 	}
 
 	public void setLiq(double v) {
-		Liq = v;
+		this.Liq = v;
 	}
 
 	public void setCapacity(double v) {
-		Capacity = v;
+		this.Capacity = v;
 	}
 
 	public void setPower(double v) {
-		Power = v;
+		this.Power = v;
 	}
 	
 	public void setCurrent(double v) {
-		Current = v;
+		this.Current = v;
 	}
 	
 	public void setMassFlow(double v) {
-		MassFlow = v;
+		this.MassFlow = v;
 	}
 	
 	public void setVoltage(double v) {
-		Voltage = v;
+		this.Voltage = v;
 	}
 	
 	// ----------------------------------------------------------------------------
 	// Getter
 	// ----------------------------------------------------------------------------
+	public String getName() {
+		return Name;
+	}
+	
 	public double getEvap() {
 		return Evap;		
 	}
@@ -103,5 +124,6 @@ public class PACcompr {
 	public double getVoltage() {
 		return Voltage;		
 	}
+
 
 }

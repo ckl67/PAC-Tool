@@ -21,10 +21,17 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JCheckBox;
 import javax.swing.border.TitledBorder;
+
+import org.json.simple.JSONObject;
+
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.Font;
+import javax.swing.JSeparator;
 
 
 public class PACwin {
@@ -50,6 +57,7 @@ public class PACwin {
 	private JTextField textFieldDeltaH0;
 	private JTextField textFieldVoltage;
 	private JTextField textFieldCosPhi;
+	private JTextField textFieldScrollName;
 
 
 	/**
@@ -57,6 +65,8 @@ public class PACwin {
 	 */
 	public PACwin(PACcop pac) {
 		initialize(pac);
+		
+		textFieldScrollName.setText(pac.getName());
 		textFieldSurchauffe.setText(String.valueOf(Math.round(pac.getRG() - pac.getEvap())));
 		textFieldSousRefroid.setText(String.valueOf(Math.round(pac.getCond() - pac.getLiq())));
 		textFieldEER.setText(String.valueOf(Math.round(pac.getCapacity()/pac.getPower()*10.0)/10.0));
@@ -88,20 +98,39 @@ public class PACwin {
 		
 		JMenu file = new JMenu("File");
 		menubar.add(file);
-		JMenuItem exit = new JMenuItem("Exit");
-		exit.addActionListener(new ActionListener() {
+		JMenuItem mexit = new JMenuItem("Exit");
+		mexit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.exit(0);
 			}
 		});
-		file.add(exit);
+		
+		JMenuItem mloadcfg = new JMenuItem("Load Config.");
+		file.add(mloadcfg);
+		
+		JMenuItem msavecfg = new JMenuItem("Save Config.");
+		msavecfg.addActionListener(new ActionListener() {
+			@SuppressWarnings("unchecked")
+			public void actionPerformed(ActionEvent arg0) {
+				
+				JSONObject ObjPacTool = new JSONObject();  
+				ObjPacTool.put("Scroll", pac.getJsonObject());  
+				System.out.println(ObjPacTool);
+				
+			}
+		});
+		file.add(msavecfg);
+		
+		JSeparator separator = new JSeparator();
+		file.add(separator);
+		file.add(mexit);
 		
 		JMenu help = new JMenu("Help");
 		menubar.add(help);
 		JMenuItem about = new JMenuItem("About");
 		about.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AboutWin nabw = new AboutWin();
+				PACwabout nabw = new PACwabout();
 				nabw.NewAboutWin();
 			}
 		});
@@ -126,7 +155,7 @@ public class PACwin {
 		// ================================================================
 		JPanel panel_pc1 = new JPanel();
 		panel_pc1.setBorder(new TitledBorder(null, "Performance Constructeur 1", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_pc1.setBounds(10, 11, 413, 161);
+		panel_pc1.setBounds(10, 46, 413, 161);
 		panel_pc1.setLayout(null);
 		panelPAC.add(panel_pc1);
 
@@ -345,7 +374,7 @@ public class PACwin {
 		// 					   	Performance 2 Panel
 		// ================================================================
 		JPanel panel_pc2 = new JPanel();
-		panel_pc2.setBounds(10, 183, 413, 241);
+		panel_pc2.setBounds(10, 215, 413, 241);
 		panel_pc2.setBorder(new TitledBorder(null, "Performance Constructeur 2", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_pc2.setLayout(null);
 		panelPAC.add(panel_pc2);
@@ -646,19 +675,27 @@ public class PACwin {
 		textFieldCosPhi.setBackground(Color.PINK);
 		textFieldCosPhi.setBounds(82, 205, 62, 20);
 		panel_pc2.add(textFieldCosPhi);
-
+		
 		// ---------------------------------------------------------------
-		// Quit
+		// Combo Box Scroll compressor
 		// ---------------------------------------------------------------
-		JButton btnQuit1 = new JButton("Quitter");
-		btnQuit1.setBounds(322, 435, 89, 23);
-		btnQuit1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame.setVisible(false);	
-				frame.dispose();
+		JComboBox comboBoxScroll = new JComboBox();
+		comboBoxScroll.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println(comboBoxScroll.getSelectedItem());
 			}
 		});
-		panelPAC.add(btnQuit1);
+		comboBoxScroll.setModel(new DefaultComboBoxModel(new String[] {"one", "two", "three"}));
+		comboBoxScroll.setBounds(257, 15, 139, 20);
+		panelPAC.add(comboBoxScroll);
+		
+		textFieldScrollName = new JTextField();
+		textFieldScrollName.setText("scroll");
+		textFieldScrollName.setFont(new Font("Tahoma", Font.BOLD, 14));
+		textFieldScrollName.setEditable(false);
+		textFieldScrollName.setBounds(10, 15, 151, 20);
+		panelPAC.add(textFieldScrollName);
+		textFieldScrollName.setColumns(10);
 
 		// ===============================================================================================================
 		//									        PANEL MEASURE 

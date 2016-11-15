@@ -11,7 +11,7 @@ import java.awt.Color;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.Toolkit;
 
-public class AboutWin {
+public class PACwabout {
 
 	private JFrame frame;
 
@@ -22,7 +22,7 @@ public class AboutWin {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AboutWin window = new AboutWin();
+					PACwabout window = new PACwabout();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -34,7 +34,7 @@ public class AboutWin {
 	/**
 	 * Create the application.
 	 */
-	public AboutWin() {
+	public PACwabout() {
 		initialize();
 	}
 
@@ -43,7 +43,7 @@ public class AboutWin {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(AboutWin.class.getResource("/pacp/images/PAC-Tool_32.png")));
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(PACwabout.class.getResource("/pacp/images/PAC-Tool_32.png")));
 		frame.setResizable(false);
 		frame.getContentPane().setBackground(Color.WHITE);
 		frame.setBounds(100, 100, 370, 152);
@@ -65,7 +65,7 @@ public class AboutWin {
 		frame.getContentPane().add(txtpnabout);
 		
 		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(AboutWin.class.getResource("/pacp/images/PAC-Tool_64.png")));
+		lblNewLabel.setIcon(new ImageIcon(PACwabout.class.getResource("/pacp/images/PAC-Tool_64.png")));
 		lblNewLabel.setBounds(10, 11, 64, 64);
 		frame.getContentPane().add(lblNewLabel);
 	}
