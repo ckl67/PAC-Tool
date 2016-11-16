@@ -2,15 +2,17 @@ package pacp;
 
 public class Pac {
 	
-	private Scroll scroll;
+	protected Scroll scroll;
 	private Circulator circulator;
 	private Condenser condenser;
 	private Evaporator evaporator;
 	
+	// Constructor
 	public Pac() {
 		setScroll(new Scroll());
 	}
 
+	// Getter and Setter
 	public Scroll getScroll() {
 		return scroll;
 	}

@@ -1,6 +1,6 @@
 package pacp;
 
-public class PACcop extends Scroll {
+public class Cop extends Pac {
 
 	private double T0;
 	private double TK;
@@ -9,56 +9,55 @@ public class PACcop extends Scroll {
 	private double H3;
 	
 	// -------- Constructeurs --------
-	public PACcop() {
-		T0 = 0.0;
-		TK = 0.0;
-		H1 = 0.0;
-		H2 = 0.0;
-		H3 = 0.0;
-	}
-		
-	// ---------- Mutateurs ----------  
-	public void setT0(double vT0) {
-		T0 = vT0;				
+	public Cop() {
+		setT0(0.0);
+		setTK(0.0);
+		setH1(0.0);
+		setH2(0.0);
+		setH3(0.0);
 	}
 
-	public void setTK(double vTK) {
-		TK = vTK;				
-	}
-
-	public void setH1(double vH1) {
-		H1 = vH1;				
-	}
-	
-	public void setH2(double vH2) {
-		H2 = vH2;				
-	}
-	
-	public void setH3(double vH3) {
-		H3 = vH3;				
-	}
-
-	// ---------- Assesseurs ----------
+	// --------- Getter / Setter
 	public double getT0() {
 		return T0;
+	}
+
+	public void setT0(double t0) {
+		T0 = t0;
 	}
 
 	public double getTK() {
 		return TK;
 	}
-	
+
+	public void setTK(double tK) {
+		TK = tK;
+	}
+
 	public double getH1() {
 		return H1;
+	}
+
+	public void setH1(double h1) {
+		H1 = h1;
 	}
 
 	public double getH2() {
 		return H2;
 	}
 
+	public void setH2(double h2) {
+		H2 = h2;
+	}
+
 	public double getH3() {
 		return H3;
 	}
 
+	public void setH3(double h3) {
+		H3 = h3;
+	}
+	
 	// ---------- Fonctions -----------
 	/**
 	 * Calcul COP Carnot Froid
@@ -140,4 +139,5 @@ public class PACcop extends Scroll {
 		return result;		
 	}
 
+	
 }

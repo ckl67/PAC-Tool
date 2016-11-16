@@ -1,83 +1,28 @@
 package pacp;
 
 
-
 public class PACmain {
 
 	private static String PACTool_Version = "Version alpha 0.1";
 	
 	public static void main(String[] args){
 
-		Pac pac1 = new Pac();
-		Pac[] pactool;
+		Pac pac = new Pac();
+		Cop cop = new Cop();
 		
-		// first create array of elements that holds object addresses, then create objects
-		pactool = new Pac[] { new Pac(), new Pac()};
-		System.out.println(pactool[0].getScroll().getCapacity());
-		
-		System.out.println(pactool[1].getScroll().getCapacity());
-		
-		//Scroll scroll = pac1.getScroll();
-		//System.out.println(scroll.getCurrent());
-		
-		System.exit(0);
-		
-		PACcop pac = new PACcop();
-
-		//step1 : first create array of elements that holds object addresses.
-		Scroll [] scroll_list = new Scroll[2];
-		//step2 : now create objects in a loop.
-		for(int i=0; i<scroll_list.length; i++){
-			scroll_list[i] = new Scroll();//this will call constructor.
-		}
-
-		scroll_list[0].setName("ZR40K3-PFG (1)");
-		scroll_list[0].setEvap(45);
-		scroll_list[0].setCond(130);
-		scroll_list[0].setRG(65);
-		scroll_list[0].setLiq(115);
-		scroll_list[0].setCapacity(33300);
-		scroll_list[0].setPower(3000);
-		scroll_list[0].setCurrent(14.7);
-		scroll_list[0].setMassFlow(488);		
-		scroll_list[0].setVoltage(220);
-
-		scroll_list[1].setName("ZR40K3-PFG (2)");
-		scroll_list[1].setEvap(245);
-		scroll_list[1].setCond(230);
-		scroll_list[1].setRG(265);
-		scroll_list[1].setLiq(215);
-		scroll_list[1].setCapacity(23300);
-		scroll_list[1].setPower(2000);
-		scroll_list[1].setCurrent(24.7);
-		scroll_list[1].setMassFlow(288);		
-		scroll_list[1].setVoltage(220);
-
-
 		@SuppressWarnings("unused")
-		PACwin window = new PACwin(pac);
+		WinPrime window = new WinPrime(pac,cop);
 
-		/*
-		System.out.format("TO = %.2f°C\n",pac.getT0());
-		System.out.format("TK = %.2f°C\n",pac.getTK());
-		System.out.format("H1 = %.2fkJ/kg\n",pac.getH1());
-		System.out.format("H2 = %.2fkJ/kg\n",pac.getH2());
-		System.out.format("H3=H4 = %.2fkJ/kg\n",pac.getH3());
-		System.out.println();
-		System.out.format("COP Carnot Froid = %.2f \n",pac.cop_carnot_froid());
-		System.out.format("COP Carnot Chaud = %.2f \n",pac.cop_carnot_chaud());
-		System.out.format("COP Froid = %.2f \n",pac.cop_froid());
-		System.out.format("COP Chaud = %.2f \n",pac.cop_chaud());
-		System.out.format("COP effectif foid = %.2f \n",pac.cop_rendement_froid());
-		System.out.format("COP effectif chaud= %.2f \n",pac.cop_rendement_chaud());
-		 */
 	}
-
 
 	// ========================================================================================
 	//                                 FUNCTIONS
 	// ========================================================================================
 
+	/**
+	 * Return Software Version
+	 * @return : Version in String
+	 */
 	public static String getPacToolVersion() {
 		return PACTool_Version;
 	}
@@ -131,9 +76,8 @@ public class PACmain {
 
 	/**
 	 * Convert pound to Kg
-	 * @param lbs
+	 * @param Pound = lbs
 	 * @return kg
-	 * 
 	 */
 	public static double pound2kg(double lbs) {
 		double kg;
@@ -144,7 +88,7 @@ public class PACmain {
 	/**
 	 * Convert Kg to Pound
 	 * @param kg
-	 * @return
+	 * @return Pound
 	 */
 	public static double kg2pound(double kg) {
 		double lbs;
@@ -152,6 +96,11 @@ public class PACmain {
 		return lbs;
 	}
 
+	/**
+	 * Compute Cos(Phi)
+	 * @param Power, Voltage, Current
+	 * @return Cos(Phi)
+	 */
 	public static double cosphi(double P, double U, double I) {
 		double cosphi;
 		cosphi = P/(U*I);
