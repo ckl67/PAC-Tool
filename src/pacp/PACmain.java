@@ -4,12 +4,12 @@ package pacp;
 public class PACmain {
 
 	private static String PACTool_Version = "Version alpha 0.1";
-	
+
 	public static void main(String[] args){
 
 		Pac pac = new Pac();
 		Cop cop = new Cop();
-		
+
 		@SuppressWarnings("unused")
 		WinPrime window = new WinPrime(pac,cop);
 
@@ -26,7 +26,7 @@ public class PACmain {
 	public static String getPacToolVersion() {
 		return PACTool_Version;
 	}
-	
+
 	/**
 	 * Convert Degre in Farenheit
 	 * @param degre : Value in Degre

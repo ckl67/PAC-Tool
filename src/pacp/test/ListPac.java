@@ -23,21 +23,23 @@ public class ListPac {
 		System.out.println(pactool[1].getScroll().getCapacity());
 
 		// Method 3
-		// first create array of elements that holds object addresses, then create objects
+		//step1 : first create array of 10 elements that holds object addresses.
 		Pac[] pac_ar = new Pac[MAXPacList];
-		List<Pac> pacl = new ArrayList<Pac>();
 
-		Scroll scroll;
-		
-		scroll = pac_ar[1].getScroll(); 
-		scroll.setCurrent(0000);
+		//step2 : now create objects in a loop.
+        for(int i=0; i<pac_ar.length; i++){
+        	pac_ar[i] = new Pac();
+        }
+        
+        // Differentiates
+        pac_ar[0].getScroll().setCurrent(0.0);
+        pac_ar[1].getScroll().setCurrent(10.0);
+        pac_ar[2].getScroll().setCurrent(20.0);
 
-		scroll = pac_ar[1].getScroll(); 
-		scroll.setCurrent(1000);
-
-		scroll = pac_ar[2].getScroll(); 
-		scroll.setCurrent(2000);
-
+        // List
+        List<Pac> pacl = new ArrayList<Pac>();
+        
+        // Add and remove
 		pacl.add(pac_ar[0]);
 		pacl.add(pac_ar[1]);
 		pacl.add(pac_ar[2]);

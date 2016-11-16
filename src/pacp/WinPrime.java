@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
@@ -72,15 +73,25 @@ public class WinPrime {
 	private JCheckBox chckbxPound;
 
 	private static int MAXPacList = 10; 
+	// Array of elements that holds object addresses
 	private Pac[] pac_ar = new Pac[MAXPacList];
-	private List<Pac> pacl = new ArrayList<Pac>();
+	// List 
+	//private List<Pac> pacl = new ArrayList<Pac>();
 
 	/**
 	 * Create the application.
 	 */
 	public WinPrime(Pac pac, Cop cop) {
-		initialize(pac,cop);
-		fillScrollTexField(pac.getScroll());
+		
+		// Create all objects in a loop except the first which is already created :!!!!!!
+		pac_ar[0] = pac;
+        for(int i=1; i<pac_ar.length; i++){
+        	pac_ar[i] = new Pac();
+        	//System.out.println(pac_ar[i].getScroll().getEvap());
+        }
+        
+		initialize(pac_ar[0],cop);
+		fillScrollTexField(pac_ar[0].getScroll());
 	}
 	
 	/**
@@ -109,6 +120,23 @@ public class WinPrime {
 		textFieldScrollCosPhi.setText(String.valueOf(tmp));		
 	}
 	
+	private void SetTextField2Pac(Pac pac) {
+
+		Scroll scroll = pac.getScroll();
+		
+		scroll.setName(textFieldScrollName.getText());
+		scroll.setEvap(Double.valueOf(textFieldScrollEvap.getText()));
+		scroll.setRG(Double.valueOf(textFieldScrollRG.getText()));
+		scroll.setCond(Double.valueOf(textFieldScrollCond.getText()));
+		scroll.setLiq(Double.valueOf(textFieldScrollLiq.getText()));
+		scroll.setCapacity(Double.valueOf(textFieldScrollCapacity.getText()));
+		scroll.setPower(Double.valueOf(textFieldScrollPower.getText()));
+		scroll.setCurrent(Double.valueOf(textFieldScrollCurrent.getText()));
+		scroll.setMassFlow(Double.valueOf(textFieldScrollMassFlow.getText()));
+		scroll.setVoltage(Double.valueOf(textFieldScrollVoltage.getText()));
+	}
+
+	
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -117,6 +145,7 @@ public class WinPrime {
 		
 		Scroll scroll = paci.getScroll();
 		
+	   
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(WinPrime.class.getResource("/pacp/images/PAC-Tool_32.png")));
@@ -774,6 +803,7 @@ public class WinPrime {
 		// Compressor Name
 		// ---------------------------------------------------------------
 		textFieldScrollName = new JTextField();
+		textFieldScrollName.setToolTipText("Personnaliser le Nom avant sauvegarde !");
 		textFieldScrollName.setForeground(new Color(0, 0, 128));
 		textFieldScrollName.setBorder(null);
 		textFieldScrollName.setBackground(UIManager.getColor("Button.background"));
@@ -786,7 +816,7 @@ public class WinPrime {
 			}
 		});
 		textFieldScrollName.setFont(new Font("Tahoma", Font.BOLD, 16));
-		textFieldScrollName.setBounds(25, 10, 167, 52);
+		textFieldScrollName.setBounds(10, 10, 167, 52);
 		panelPAC.add(textFieldScrollName);
 		textFieldScrollName.setColumns(10);
 
@@ -798,11 +828,12 @@ public class WinPrime {
 		comboBoxScroll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println(comboBoxScroll.getSelectedItem());
+				fillScrollTexField(pac_ar[comboBoxScroll.getSelectedIndex()].getScroll());
 			}
 		});
 		//comboBoxScroll.setModel(new DefaultComboBoxModel(new String[] {"one", "two", "three"}));
 
-		//comboBoxScroll.addItem(scroll.getName());
+		comboBoxScroll.addItem(scroll.getName());
 		comboBoxScroll.setBounds(277, 10, 145, 20);
 		panelPAC.add(comboBoxScroll);
 
@@ -810,33 +841,52 @@ public class WinPrime {
 		// ---------------------------------------------------------------
 		// Combo Box Save
 		// ---------------------------------------------------------------
-		JButton btnSaveNewScroll = new JButton("Save");
-		btnSaveNewScroll.addActionListener(new ActionListener() {
+		JButton btnSaveScroll = new JButton("Save");
+		btnSaveScroll.addActionListener(new ActionListener() {
 			@SuppressWarnings("unchecked")
 			public void actionPerformed(ActionEvent arg0) {
-				comboBoxScroll.addItem(scroll.getName());
-				
+				SetTextField2Pac(pac_ar[comboBoxScroll.getSelectedIndex()]);	
 			}
 		});
-		btnSaveNewScroll.setFont(new Font("Tahoma", Font.PLAIN, 9));
-		btnSaveNewScroll.setBounds(277, 39, 68, 23);
-		panelPAC.add(btnSaveNewScroll);
+		btnSaveScroll.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		btnSaveScroll.setBounds(277, 39, 68, 23);
+		panelPAC.add(btnSaveScroll);
 
 		// ---------------------------------------------------------------
 		// Combo Box Delete
 		// ---------------------------------------------------------------
-		JButton btnSaveDeleteScroll = new JButton("Delete");
-		btnSaveDeleteScroll.addActionListener(new ActionListener() {
+		JButton btnDeleteScroll = new JButton("Delete");
+		btnDeleteScroll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println(comboBoxScroll.getItemCount() );
-				if (comboBoxScroll.getItemCount() > 1)  {
+				if (comboBoxScroll.getItemCount() > 1) 
 					comboBoxScroll.removeItemAt(comboBoxScroll.getSelectedIndex());					
-				}
+				System.out.println(comboBoxScroll.getItemCount() );
 			}
 		});
-		btnSaveDeleteScroll.setFont(new Font("Tahoma", Font.PLAIN, 9));
-		btnSaveDeleteScroll.setBounds(355, 39, 68, 23);
-		panelPAC.add(btnSaveDeleteScroll);
+		btnDeleteScroll.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		btnDeleteScroll.setBounds(355, 39, 68, 23);
+		panelPAC.add(btnDeleteScroll);
+		
+		// ---------------------------------------------------------------
+		// Combo Box New
+		// ---------------------------------------------------------------
+		JButton btnNewScroll = new JButton("New");
+		btnNewScroll.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (comboBoxScroll.getItemCount() < MAXPacList) {
+					comboBoxScroll.addItem(scroll.getName());
+					comboBoxScroll.setSelectedIndex(comboBoxScroll.getSelectedIndex()+1);
+					SetTextField2Pac(pac_ar[comboBoxScroll.getSelectedIndex()]);	
+				}
+				else
+					JOptionPane.showMessageDialog(frame, "Limite Atteinte = " + MAXPacList);
+				System.out.println(comboBoxScroll.getItemCount() );
+			
+			}
+		});
+		btnNewScroll.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		btnNewScroll.setBounds(199, 39, 68, 23);
+		panelPAC.add(btnNewScroll);
 
 		// ===============================================================================================================
 		//									        PANEL MEASURE 
