@@ -16,7 +16,7 @@ public class Scroll {
 	private double Voltage;
 	
 	// ------------ Constructor Default
-	Scroll() {
+	public Scroll() {
 			setName("ZR40K3-PFG");
 			Evap = 45;
 			Cond = 130;
@@ -29,15 +29,43 @@ public class Scroll {
 			Voltage = 220;		
 	}
 	
+	/**
+	 * Return the features of Class Scroll() in a JSON format
+	 * @return : JSONObject
+	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
 		JSONObject ObjScroll = new JSONObject();  
-		ObjScroll.put("Name", Name);
-		ObjScroll.put("Evap", Evap);	
-		ObjScroll.put("Cond", Cond);	
-//		ObjScroll.put("", );	
+		ObjScroll.put("Name", this.Name);
+		ObjScroll.put("Evap", this.Evap);	
+		ObjScroll.put("Cond", this.Cond);	
+		ObjScroll.put("RG", this.RG);	
+		ObjScroll.put("Liq", this.Liq);	
+		ObjScroll.put("Capacity", this.Capacity);	
+		ObjScroll.put("Power", this.Power);	
+		ObjScroll.put("Current", this.Current);	
+		ObjScroll.put("MassFlow", this.MassFlow);	
+		ObjScroll.put("Voltage", this.Voltage);	
 		return(ObjScroll);
 	}
+	
+	/**
+	 * Set scroll with the element in the JSON object
+	 * @param jsonObj : JSON Object
+	 */
+	public void setJsonObject(JSONObject jsonObj) {
+		this.Name = (String) jsonObj.get("Name");
+		this.Evap = (double) jsonObj.get("Evap");
+		this.Cond = (double) jsonObj.get("Cond");
+		this.RG = (double) jsonObj.get("RG");
+		this.Liq = (double) jsonObj.get("Liq");
+		this.Capacity = (double) jsonObj.get("Capacity");
+		this.Power = (double) jsonObj.get("Power");
+		this.Current = (double) jsonObj.get("Current");
+		this.MassFlow = (double) jsonObj.get("MassFlow");
+		this.Voltage = (double) jsonObj.get("Voltage");
+	}
+	
 	
 	// ----------------------------------------------------------------------------
 	// Setter

@@ -1,20 +1,30 @@
 package pacp;
 
-import java.io.FileReader;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONArray;
-import org.json.simple.parser.ParseException;
-import org.json.simple.parser.JSONParser;
 
 
 public class PACmain {
 
-	@SuppressWarnings("unchecked")
+	private static String PACTool_Version = "Version alpha 0.1";
+	
 	public static void main(String[] args){
 
+		Pac pac1 = new Pac();
+		Pac[] pactool;
+		
+		// first create array of elements that holds object addresses, then create objects
+		pactool = new Pac[] { new Pac(), new Pac()};
+		System.out.println(pactool[0].getScroll().getCapacity());
+		
+		System.out.println(pactool[1].getScroll().getCapacity());
+		
+		//Scroll scroll = pac1.getScroll();
+		//System.out.println(scroll.getCurrent());
+		
+		System.exit(0);
+		
 		PACcop pac = new PACcop();
 
-		//step1 : first create array of 10 elements that holds object addresses.
+		//step1 : first create array of elements that holds object addresses.
 		Scroll [] scroll_list = new Scroll[2];
 		//step2 : now create objects in a loop.
 		for(int i=0; i<scroll_list.length; i++){
@@ -68,7 +78,10 @@ public class PACmain {
 	//                                 FUNCTIONS
 	// ========================================================================================
 
-
+	public static String getPacToolVersion() {
+		return PACTool_Version;
+	}
+	
 	/**
 	 * Convert Degre in Farenheit
 	 * @param degre : Value in Degre

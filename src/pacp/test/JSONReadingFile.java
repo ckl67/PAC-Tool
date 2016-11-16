@@ -29,8 +29,12 @@ public class JSONReadingFile {
 			System.out.println(jsonObjectL2.get("Lang"));  
 			System.out.println(String.valueOf(jsonObjectL2.get("Empty")));  
 			
-			jsonObjectL2 = (JSONObject) jsonObjectL1.get("Scroll");  
+			JSONArray jsonObjectScrollL = (JSONArray) jsonObjectL1.get("Scroll");
+			System.out.println(jsonObjectScrollL);
+
+			jsonObjectL2 = (JSONObject) jsonObjectScrollL.get(0);  
 			System.out.println(jsonObjectL2);
+			
 			System.out.println(String.valueOf(jsonObjectL2.get("AVR")));  
 			System.out.println(String.valueOf(jsonObjectL2.get("EE")));  
 

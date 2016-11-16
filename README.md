@@ -6,13 +6,14 @@ Outil pour Pompe à Chaleur
 -------------
  Définition 
 -------------
-Cet outil permet de vérifier les données contructeur (COP) et de calculer le COP de votre pompe 
-à chaleur à partir de vos mesures.
+Outil qui permet de vérifier les données contructeur (COP) et de calculer le COP de votre pompe à chaleur à partir de vos mesures.
+Programme écrit en Java.
+(Ce programme m'a permis de me former au langage Java.)
 
 ----------------
- Développement
+ Chaine Développement
 ----------------
-La chaine d'outil pour le développement
+La chaine d'outil pour le développement est la suivante:
 
 Environnement de développement intégré / (Integrated Development Environment)
 	Eclipse IDE for Java Developers
@@ -25,22 +26,17 @@ Editeur HTML
 	kompozer-0.7.10-win32
 
 Gestion de versions Git
-		Git
+	Git
 		
 SourceTree	
 	Client graphique claire et structurée, compatible avec Git
 	Dans option Git, activer: "Update Embedded Git" afin d'avoir la version intégrée de Git
 	
 GitHub 
-	Service web d'hébergement et de gestion de développement de logiciels, 
-	utilisant le logiciel de gestion de versions Git
-	https://github.com/ckl67/PAC-Tool
+	Service Web d'hébergement et de gestion de développement de logiciels. 
+	Projet sous: PAC-Tool
 
 Conversion Jar vers Exe
 	Launch4j est une application qui permet de créer des "lanceurs" (exécutables Windows classiques 
 	pour des applications développées en Java. 
-
-----------------
- Fichiers
-----------------
-
+	

@@ -1,5 +1,6 @@
 package pacp.test;
 //http://www.java2blog.com/2013/11/jsonsimple-example-read-and-write-json.html
+//https://www.tutorialspoint.com/json/json_java_example.htm
 import java.io.File;  
 import java.io.FileWriter;  
 import java.io.IOException;  
@@ -12,10 +13,18 @@ public class JSONWritingFile {
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {  
 		
+		JSONArray listOfScroll = new JSONArray();
 		JSONObject ObjScroll = new JSONObject();  
 		ObjScroll.put("AVR", 10);
-		ObjScroll.put("EE", 100);	
+		ObjScroll.put("EE", 100);		
+		listOfScroll.add(ObjScroll);
 
+		JSONObject ObjScroll2 = new JSONObject();  
+		ObjScroll2.put("AVR", 100);
+		ObjScroll2.put("EE", 1000);	
+		listOfScroll.add(ObjScroll2);
+
+		
 		JSONObject ObjCfg = new JSONObject();  
 		ObjCfg.put("Lang", "French");
 		ObjCfg.put("Empty", 1);
@@ -36,7 +45,7 @@ public class JSONWritingFile {
 		ObjMeasure.put("T1T2T3T4", listOfT);  
 
 		JSONObject ObjPacTool = new JSONObject();  
-		ObjPacTool.put("Scroll", ObjScroll);  
+		ObjPacTool.put("Scroll", listOfScroll);  
 		ObjPacTool.put("Cfg", ObjCfg);  
 		ObjPacTool.put("Measure", ObjMeasure);
 

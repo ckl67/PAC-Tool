@@ -12,6 +12,11 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.awt.event.KeyAdapter;
 
 import java.awt.Color;
@@ -23,6 +28,8 @@ import javax.swing.JCheckBox;
 import javax.swing.border.TitledBorder;
 
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -32,6 +39,7 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.Font;
 import javax.swing.JSeparator;
+import javax.swing.UIManager;
 
 
 public class PACwin {
@@ -43,38 +51,52 @@ public class PACwin {
 	private JTextField textFieldTK;
 	private JTextField textFieldT0;
 	private JTextField textFieldCarnotFroid;
-	private JTextField textFieldEvap;
-	private JTextField textFieldRG;
-	private JTextField textFieldCond;
-	private JTextField textFieldLiq;
-	private JTextField textFieldCapacity;
-	private JTextField textFieldPower;
-	private JTextField textFieldCurrent;
-	private JTextField textFieldSurchauffe;
-	private JTextField textFieldSousRefroid;
-	private JTextField textFieldEER;
-	private JTextField textFieldMassFlow;
-	private JTextField textFieldDeltaH0;
-	private JTextField textFieldVoltage;
-	private JTextField textFieldCosPhi;
+	private JTextField textFieldScrollEvap;
+	private JTextField textFieldScrollRG;
+	private JTextField textFieldScrollCond;
+	private JTextField textFieldScrollLiq;
+	private JTextField textFieldScrollCapacity;
+	private JTextField textFieldScrollPower;
+	private JTextField textFieldScrollCurrent;
+	private JTextField textFieldScrollSurchauffe;
+	private JTextField textFieldScrollSousRefroid;
+	private JTextField textFieldScrollEER;
+	private JTextField textFieldScrollMassFlow;
+	private JTextField textFieldScrollDeltaH0;
+	private JTextField textFieldScrollVoltage;
+	private JTextField textFieldScrollCosPhi;
 	private JTextField textFieldScrollName;
 
+	private JCheckBox checkoxBTU;
+	private JCheckBox chckbxPound;
 
+	private void fillScrollTexField(PACcop pac) {
+
+		textFieldScrollName.setText(pac.getName());
+
+		textFieldScrollEvap.setText(String.valueOf(pac.getEvap()));
+		textFieldScrollRG.setText(String.valueOf(pac.getRG()));
+		textFieldScrollCond.setText(String.valueOf(pac.getCond()));
+		textFieldScrollLiq.setText(String.valueOf(pac.getLiq()));
+		textFieldScrollCapacity.setText(String.valueOf(pac.getCapacity()));
+		textFieldScrollPower.setText(String.valueOf(pac.getPower()));
+		textFieldScrollCurrent.setText(String.valueOf(pac.getCurrent()));
+		textFieldScrollSurchauffe.setText(String.valueOf(Math.round(pac.getRG() - pac.getEvap())));
+		textFieldScrollSousRefroid.setText(String.valueOf(Math.round(pac.getCond() - pac.getLiq())));
+		textFieldScrollEER.setText(String.valueOf(Math.round(pac.getCapacity()/pac.getPower()*10.0)/10.0));
+		textFieldScrollMassFlow.setText(String.valueOf(pac.getMassFlow()));
+		textFieldScrollDeltaH0.setText("-----");
+		textFieldScrollVoltage.setText(String.valueOf(pac.getVoltage()));
+		double tmp = Math.round(PACmain.cosphi(pac.getPower(), pac.getVoltage(), pac.getCurrent())*10000.0)/10000.0;
+		textFieldScrollCosPhi.setText(String.valueOf(tmp));		
+
+	}
 	/**
 	 * Create the application.
 	 */
 	public PACwin(PACcop pac) {
 		initialize(pac);
-		
-		textFieldScrollName.setText(pac.getName());
-		textFieldSurchauffe.setText(String.valueOf(Math.round(pac.getRG() - pac.getEvap())));
-		textFieldSousRefroid.setText(String.valueOf(Math.round(pac.getCond() - pac.getLiq())));
-		textFieldEER.setText(String.valueOf(Math.round(pac.getCapacity()/pac.getPower()*10.0)/10.0));
-		textFieldDeltaH0.setText("-----");
-		
-		double tmp = Math.round(PACmain.cosphi(pac.getPower(), pac.getVoltage(), pac.getCurrent())*10000.0)/10000.0;
-		textFieldCosPhi.setText(String.valueOf(tmp));
-
+		fillScrollTexField(pac);
 	}
 
 	/**
@@ -85,8 +107,8 @@ public class PACwin {
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(PACwin.class.getResource("/pacp/images/PAC-Tool_32.png")));
-		frame.setTitle("PAC Tool");
-		frame.setBounds(100, 100, 443, 544);
+		frame.setTitle("PAC Tool (" + PACmain.getPacToolVersion()+ ")");
+		frame.setBounds(100, 100, 443, 574);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
@@ -95,36 +117,103 @@ public class PACwin {
 		// ===============================================================================================================
 		JMenuBar menubar = new JMenuBar();
 		frame.setJMenuBar(menubar);
-		
+
 		JMenu file = new JMenu("File");
 		menubar.add(file);
+
+		// ---------------------------------------------------------------
+		// Load Config
+		// ---------------------------------------------------------------
+		JMenuItem mloadcfg = new JMenuItem("Load Config.");
+		mloadcfg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				JSONParser parser = new JSONParser();  
+				try {  
+
+					Object obj = parser.parse(new FileReader("D:/Users/kluges1/workspace/pac-tool/test/PAC-Tool.cfg"));  
+					JSONObject jsonObjectL1 = (JSONObject) obj;  
+
+					// Read + Set Scroll
+					JSONObject jsonObjectL2 = (JSONObject) jsonObjectL1.get("Scroll");  
+					pac.setJsonObject(jsonObjectL2);
+
+					System.out.println("READ JSON object to file");  
+					System.out.println("-----------------------");  
+					System.out.print(jsonObjectL2);  
+
+					fillScrollTexField(pac);
+
+				} catch (FileNotFoundException e) {  
+					e.printStackTrace();  
+				} catch (IOException e) {  
+					e.printStackTrace();  
+				} catch (ParseException e) {  
+					e.printStackTrace();  
+				}  
+			}
+		});
+		file.add(mloadcfg);
+
+		// ---------------------------------------------------------------
+		// Save Config
+		// ---------------------------------------------------------------
+		JMenuItem msavecfg = new JMenuItem("Save Config.");
+		msavecfg.addActionListener(new ActionListener() {
+			@SuppressWarnings("unchecked")
+			public void actionPerformed(ActionEvent arg0) {
+
+				// Create JSON Data for Class Scroll
+				JSONObject ObjPacTool = new JSONObject();  
+				ObjPacTool.put("Scroll", pac.getJsonObject());  
+
+				// Create JSON data for the configuration
+				JSONObject ObjCfg = new JSONObject();  
+				ObjCfg.put("checkoxBTU", checkoxBTU.isSelected());
+				ObjCfg.put("chckbxPound", chckbxPound.isSelected());
+				ObjPacTool.put("Cfg", ObjCfg);  
+
+				try {  
+					// Writing to a file  
+					File file=new File("D:/Users/kluges1/workspace/pac-tool/test/PAC-Tool.cfg");  
+					file.createNewFile();  
+					FileWriter fileWriter = new FileWriter(file);  
+					System.out.println("Writing JSON object to file");  
+					System.out.println("-----------------------");  
+					System.out.print(ObjPacTool);  
+
+					fileWriter.write(ObjPacTool.toJSONString());  
+					fileWriter.flush();  
+					fileWriter.close();  
+
+				} catch (IOException e) {  
+					e.printStackTrace();  
+				}  
+			}
+		});
+		file.add(msavecfg);
+
+		// ---------------------------------------------------------------
+		// Seperator
+		// ---------------------------------------------------------------
+		JSeparator separator = new JSeparator();
+		file.add(separator);
+
+		// ---------------------------------------------------------------
+		// Exit
+		// ---------------------------------------------------------------
 		JMenuItem mexit = new JMenuItem("Exit");
 		mexit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.exit(0);
 			}
 		});
-		
-		JMenuItem mloadcfg = new JMenuItem("Load Config.");
-		file.add(mloadcfg);
-		
-		JMenuItem msavecfg = new JMenuItem("Save Config.");
-		msavecfg.addActionListener(new ActionListener() {
-			@SuppressWarnings("unchecked")
-			public void actionPerformed(ActionEvent arg0) {
-				
-				JSONObject ObjPacTool = new JSONObject();  
-				ObjPacTool.put("Scroll", pac.getJsonObject());  
-				System.out.println(ObjPacTool);
-				
-			}
-		});
-		file.add(msavecfg);
-		
-		JSeparator separator = new JSeparator();
-		file.add(separator);
 		file.add(mexit);
-		
+
+		// ---------------------------------------------------------------
+		// Help
+		// ---------------------------------------------------------------
+
 		JMenu help = new JMenu("Help");
 		menubar.add(help);
 		JMenuItem about = new JMenuItem("About");
@@ -135,11 +224,11 @@ public class PACwin {
 			}
 		});
 		help.add(about);
-			
+
 		// ===============================================================================================================
 		//													TABBED PANE
 		// ===============================================================================================================
-		
+
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
@@ -147,6 +236,7 @@ public class PACwin {
 		//									                 PANEL PAC
 		// ===============================================================================================================
 		JPanel panelPAC = new JPanel();
+		panelPAC.setForeground(Color.BLUE);
 		tabbedPane.addTab("PAC", null, panelPAC, null);
 		panelPAC.setLayout(null);
 
@@ -155,7 +245,7 @@ public class PACwin {
 		// ================================================================
 		JPanel panel_pc1 = new JPanel();
 		panel_pc1.setBorder(new TitledBorder(null, "Performance Constructeur 1", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_pc1.setBounds(10, 46, 413, 161);
+		panel_pc1.setBounds(10, 73, 413, 161);
 		panel_pc1.setLayout(null);
 		panelPAC.add(panel_pc1);
 
@@ -166,22 +256,22 @@ public class PACwin {
 		lblEvap.setBounds(10, 28, 51, 14);
 		panel_pc1.add(lblEvap);
 
-		textFieldEvap = new JTextField();
-		textFieldEvap.setToolTipText("Temp\u00E9rature d'\u00E9vaporation (T0)");
-		textFieldEvap.addFocusListener(new FocusAdapter() {
+		textFieldScrollEvap = new JTextField();
+		textFieldScrollEvap.setToolTipText("Temp\u00E9rature d'\u00E9vaporation (T0)");
+		textFieldScrollEvap.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent arg0) {
-				pac.setEvap(Double.valueOf( textFieldEvap.getText()));
-				
+				pac.setEvap(Double.valueOf( textFieldScrollEvap.getText()));
+
 				double tmp = Math.round(pac.getRG() - pac.getEvap());
-				textFieldSurchauffe.setText(String.valueOf(tmp));
+				textFieldScrollSurchauffe.setText(String.valueOf(tmp));
 
 			}
 		});
-		textFieldEvap.setBounds(59, 25, 75, 20);
-		panel_pc1.add(textFieldEvap);
-		textFieldEvap.setText(String.valueOf(pac.getEvap()));
-		textFieldEvap.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldEvap.setColumns(10);
+		textFieldScrollEvap.setBounds(59, 25, 75, 20);
+		panel_pc1.add(textFieldScrollEvap);
+
+		textFieldScrollEvap.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldScrollEvap.setColumns(10);
 
 		JLabel lblTemp_unity1 = new JLabel("\u00B0F");
 		lblTemp_unity1.setBounds(144, 28, 46, 14);
@@ -194,22 +284,21 @@ public class PACwin {
 		lblRG.setBounds(10, 67, 51, 14);
 		panel_pc1.add(lblRG);
 
-		textFieldRG = new JTextField();
-		textFieldRG.setToolTipText("Temp\u00E9rature d'aspiration du compresseur Point : (1)");
-		textFieldRG.addFocusListener(new FocusAdapter() {
+		textFieldScrollRG = new JTextField();
+		textFieldScrollRG.setToolTipText("Temp\u00E9rature d'aspiration du compresseur Point : (1)");
+		textFieldScrollRG.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent arg0) {
-				
-				pac.setRG(Double.valueOf( textFieldRG.getText()));
+
+				pac.setRG(Double.valueOf( textFieldScrollRG.getText()));
 
 				double tmp = Math.round(pac.getRG() - pac.getEvap());
-				textFieldSurchauffe.setText(String.valueOf(tmp));			
+				textFieldScrollSurchauffe.setText(String.valueOf(tmp));			
 			}
 		});
-		textFieldRG.setBounds(59, 64, 75, 20);
-		panel_pc1.add(textFieldRG);
-		textFieldRG.setText(String.valueOf(pac.getRG()));
-		textFieldRG.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldRG.setColumns(10);
+		textFieldScrollRG.setBounds(59, 64, 75, 20);
+		panel_pc1.add(textFieldScrollRG);
+		textFieldScrollRG.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldScrollRG.setColumns(10);
 
 		JLabel lblTemp_unity2 = new JLabel("\u00B0F");
 		lblTemp_unity2.setBounds(144, 67, 46, 14);
@@ -222,14 +311,14 @@ public class PACwin {
 		lblSurchauffe.setBounds(10, 101, 81, 14);
 		panel_pc1.add(lblSurchauffe);
 
-		textFieldSurchauffe = new JTextField();
-		textFieldSurchauffe.setText("0.0");
-		textFieldSurchauffe.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldSurchauffe.setBackground(Color.PINK);
-		textFieldSurchauffe.setEditable(false);
-		textFieldSurchauffe.setBounds(88, 98, 46, 20);
-		panel_pc1.add(textFieldSurchauffe);
-		textFieldSurchauffe.setColumns(10);
+		textFieldScrollSurchauffe = new JTextField();
+		textFieldScrollSurchauffe.setText("0.0");
+		textFieldScrollSurchauffe.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldScrollSurchauffe.setBackground(Color.PINK);
+		textFieldScrollSurchauffe.setEditable(false);
+		textFieldScrollSurchauffe.setBounds(88, 98, 46, 20);
+		panel_pc1.add(textFieldScrollSurchauffe);
+		textFieldScrollSurchauffe.setColumns(10);
 
 		JLabel lblTemp_unity5 = new JLabel("\u00B0F");
 		lblTemp_unity5.setBounds(144, 101, 46, 14);
@@ -242,22 +331,21 @@ public class PACwin {
 		lblCond.setBounds(233, 28, 46, 14);
 		panel_pc1.add(lblCond);
 
-		textFieldCond = new JTextField();
-		textFieldCond.setToolTipText("Temp\u00E9rature de condensation (TK) ");
-		textFieldCond.addFocusListener(new FocusAdapter() {
+		textFieldScrollCond = new JTextField();
+		textFieldScrollCond.setToolTipText("Temp\u00E9rature de condensation (TK) ");
+		textFieldScrollCond.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent arg0) {
-				
-				pac.setCond(Double.valueOf( textFieldCond.getText()));
+
+				pac.setCond(Double.valueOf( textFieldScrollCond.getText()));
 
 				double tmp = Math.round(pac.getCond() - pac.getLiq());
-				textFieldSousRefroid.setText(String.valueOf(tmp));
+				textFieldScrollSousRefroid.setText(String.valueOf(tmp));
 			}
 		});
-		textFieldCond.setBounds(289, 25, 75, 20);
-		textFieldCond.setText(String.valueOf(pac.getCond()));
-		textFieldCond.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldCond.setColumns(10);
-		panel_pc1.add(textFieldCond);
+		textFieldScrollCond.setBounds(289, 25, 75, 20);
+		textFieldScrollCond.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldScrollCond.setColumns(10);
+		panel_pc1.add(textFieldScrollCond);
 
 		JLabel lblTemp_unity3 = new JLabel("\u00B0F");
 		lblTemp_unity3.setBounds(374, 28, 29, 14);
@@ -270,23 +358,22 @@ public class PACwin {
 		lblLiq.setBounds(233, 67, 46, 14);
 		panel_pc1.add(lblLiq);
 
-		textFieldLiq = new JTextField();
-		textFieldLiq.setToolTipText("Temp\u00E9rature Entr\u00E9e D\u00E9tendeur : Point (3) ");
-		textFieldLiq.addFocusListener(new FocusAdapter() {
+		textFieldScrollLiq = new JTextField();
+		textFieldScrollLiq.setToolTipText("Temp\u00E9rature Entr\u00E9e D\u00E9tendeur : Point (3) ");
+		textFieldScrollLiq.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent arg0) {
-				
-				pac.setLiq(Double.valueOf( textFieldLiq.getText()));
+
+				pac.setLiq(Double.valueOf( textFieldScrollLiq.getText()));
 
 				double tmp = Math.round(pac.getCond() - pac.getLiq());
-				textFieldSousRefroid.setText(String.valueOf(tmp));
+				textFieldScrollSousRefroid.setText(String.valueOf(tmp));
 			}
 		});
-		
-		textFieldLiq.setBounds(289, 64, 75, 20);
-		textFieldLiq.setText(String.valueOf(pac.getLiq()));
-		textFieldLiq.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldLiq.setColumns(10);
-		panel_pc1.add(textFieldLiq);
+
+		textFieldScrollLiq.setBounds(289, 64, 75, 20);
+		textFieldScrollLiq.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldScrollLiq.setColumns(10);
+		panel_pc1.add(textFieldScrollLiq);
 
 		JLabel lblTemp_unity4 = new JLabel("\u00B0F");
 		lblTemp_unity4.setBounds(374, 64, 29, 14);
@@ -300,14 +387,14 @@ public class PACwin {
 		lblSousRefroid.setBounds(205, 101, 113, 14);
 		panel_pc1.add(lblSousRefroid);
 
-		textFieldSousRefroid = new JTextField();
-		textFieldSousRefroid.setText("0.0");
-		textFieldSousRefroid.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldSousRefroid.setEditable(false);
-		textFieldSousRefroid.setColumns(10);
-		textFieldSousRefroid.setBackground(Color.PINK);
-		textFieldSousRefroid.setBounds(318, 98, 46, 20);
-		panel_pc1.add(textFieldSousRefroid);
+		textFieldScrollSousRefroid = new JTextField();
+		textFieldScrollSousRefroid.setText("0.0");
+		textFieldScrollSousRefroid.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldScrollSousRefroid.setEditable(false);
+		textFieldScrollSousRefroid.setColumns(10);
+		textFieldScrollSousRefroid.setBackground(Color.PINK);
+		textFieldScrollSousRefroid.setBounds(318, 98, 46, 20);
+		panel_pc1.add(textFieldScrollSousRefroid);
 
 		JLabel lblTemp_unity6 = new JLabel("\u00B0F");
 		lblTemp_unity6.setBounds(374, 101, 29, 14);
@@ -330,19 +417,19 @@ public class PACwin {
 					lblTemp_unity6.setText("°F");
 
 					pac.setEvap(PACmain.degre2farenheit(pac.getEvap()));
-					textFieldEvap.setText(String.valueOf(Math.round(pac.getEvap()*100.0)/100.0));
-					
+					textFieldScrollEvap.setText(String.valueOf(Math.round(pac.getEvap()*100.0)/100.0));
+
 					pac.setRG(PACmain.degre2farenheit(pac.getRG()));
-					textFieldRG.setText(String.valueOf(Math.round(pac.getRG()*100.0)/100.0));
+					textFieldScrollRG.setText(String.valueOf(Math.round(pac.getRG()*100.0)/100.0));
 
 					pac.setCond(PACmain.degre2farenheit(pac.getCond()));
-					textFieldCond.setText(String.valueOf(Math.round(pac.getCond()*100.0)/100.0));
+					textFieldScrollCond.setText(String.valueOf(Math.round(pac.getCond()*100.0)/100.0));
 
 					pac.setLiq(PACmain.degre2farenheit(pac.getLiq()));
-					textFieldLiq.setText(String.valueOf(Math.round(pac.getLiq()*100.0)/100.0));
+					textFieldScrollLiq.setText(String.valueOf(Math.round(pac.getLiq()*100.0)/100.0));
 
-					textFieldSurchauffe.setText(String.valueOf(Math.round(pac.getRG() - pac.getEvap())));
-					textFieldSousRefroid.setText(String.valueOf(Math.round(pac.getCond() - pac.getLiq())));
+					textFieldScrollSurchauffe.setText(String.valueOf(Math.round(pac.getRG() - pac.getEvap())));
+					textFieldScrollSousRefroid.setText(String.valueOf(Math.round(pac.getCond() - pac.getLiq())));
 				} else {
 					lblTemp_unity1.setText("°C");
 					lblTemp_unity2.setText("°C");
@@ -352,19 +439,19 @@ public class PACwin {
 					lblTemp_unity6.setText("°C");
 
 					pac.setEvap(PACmain.farenheit2degre(pac.getEvap()));
-					textFieldEvap.setText(String.valueOf(Math.round(pac.getEvap()*100.0)/100.0));
-					
+					textFieldScrollEvap.setText(String.valueOf(Math.round(pac.getEvap()*100.0)/100.0));
+
 					pac.setRG(PACmain.farenheit2degre(pac.getRG()));
-					textFieldRG.setText(String.valueOf(Math.round(pac.getRG()*100.0)/100.0));
+					textFieldScrollRG.setText(String.valueOf(Math.round(pac.getRG()*100.0)/100.0));
 
 					pac.setCond(PACmain.farenheit2degre(pac.getCond()));
-					textFieldCond.setText(String.valueOf(Math.round(pac.getCond()*100.0)/100.0));
+					textFieldScrollCond.setText(String.valueOf(Math.round(pac.getCond()*100.0)/100.0));
 
 					pac.setLiq(PACmain.farenheit2degre(pac.getLiq()));
-					textFieldLiq.setText(String.valueOf(Math.round(pac.getLiq()*100.0)/100.0));
+					textFieldScrollLiq.setText(String.valueOf(Math.round(pac.getLiq()*100.0)/100.0));
 
-					textFieldSurchauffe.setText(String.valueOf(Math.round(pac.getRG() - pac.getEvap())));
-					textFieldSousRefroid.setText(String.valueOf(Math.round(pac.getCond() - pac.getLiq())));
+					textFieldScrollSurchauffe.setText(String.valueOf(Math.round(pac.getRG() - pac.getEvap())));
+					textFieldScrollSousRefroid.setText(String.valueOf(Math.round(pac.getCond() - pac.getLiq())));
 				}
 			}
 		});
@@ -374,47 +461,46 @@ public class PACwin {
 		// 					   	Performance 2 Panel
 		// ================================================================
 		JPanel panel_pc2 = new JPanel();
-		panel_pc2.setBounds(10, 215, 413, 241);
+		panel_pc2.setBounds(10, 245, 413, 241);
 		panel_pc2.setBorder(new TitledBorder(null, "Performance Constructeur 2", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_pc2.setLayout(null);
 		panelPAC.add(panel_pc2);
 
-		JCheckBox checkoxBTU = new JCheckBox("BTU/hr");
+		checkoxBTU = new JCheckBox("BTU/hr");
 		checkoxBTU.setToolTipText("British Thermal Unit / hour");
-		JCheckBox chckbxPound = new JCheckBox("lbs/h");
-		
+		chckbxPound = new JCheckBox("lbs/h");
+
 		// ---------------------------------------------------------------
 		// Capacity
 		// ---------------------------------------------------------------
-		
+
 		JLabel lblCapacity = new JLabel("Capacity :");
 		lblCapacity.setToolTipText("");
 		lblCapacity.setBounds(10, 28, 73, 14);
 		panel_pc2.add(lblCapacity);
 
-		textFieldCapacity = new JTextField();
-		textFieldCapacity.addFocusListener(new FocusAdapter() {
+		textFieldScrollCapacity = new JTextField();
+		textFieldScrollCapacity.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent arg0) {
-				
-				pac.setCapacity(Double.valueOf( textFieldCapacity.getText()));
+
+				pac.setCapacity(Double.valueOf( textFieldScrollCapacity.getText()));
 
 				double tmp = Math.round(pac.getCapacity()/pac.getPower()*10.0)/10.0;
-				textFieldEER.setText(String.valueOf(tmp));
-				
+				textFieldScrollEER.setText(String.valueOf(tmp));
+
 				if (checkoxBTU.isSelected() | chckbxPound.isSelected())  {
-					textFieldDeltaH0.setText("-----");
+					textFieldScrollDeltaH0.setText("-----");
 				} else {
 					tmp = Math.round(pac.getCapacity()/pac.getMassFlow()/1000.0);
-					textFieldDeltaH0.setText(String.valueOf(tmp));
+					textFieldScrollDeltaH0.setText(String.valueOf(tmp));
 				}
 			}
 		});
-		textFieldCapacity.setToolTipText("Puissance frigorifique: (H1-H3) x D\u00E9bit Massique");
-		textFieldCapacity.setBounds(82, 25, 62, 20);
-		textFieldCapacity.setText(String.valueOf(pac.getCapacity()));
-		textFieldCapacity.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldCapacity.setColumns(10);
-		panel_pc2.add(textFieldCapacity);
+		textFieldScrollCapacity.setToolTipText("Puissance frigorifique: (H1-H3) x D\u00E9bit Massique");
+		textFieldScrollCapacity.setBounds(82, 25, 62, 20);
+		textFieldScrollCapacity.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldScrollCapacity.setColumns(10);
+		panel_pc2.add(textFieldScrollCapacity);
 
 		JLabel lblCapacity_unity = new JLabel("Btu/hr");
 		lblCapacity_unity.setToolTipText("(BUT/hr) British Thermal Unit / hour = Unit\u00E9 de mesure d'\u00E9nergie thermique / Heure. L'unit\u00E9 de puissance du SI est le watt (symbole : W), qui correspond \u00E0  un joule fourni par seconde.");
@@ -428,26 +514,25 @@ public class PACwin {
 		lblPower.setBounds(10, 59, 73, 14);
 		panel_pc2.add(lblPower);
 
-		textFieldPower = new JTextField();
-		textFieldPower.addFocusListener(new FocusAdapter() {
+		textFieldScrollPower = new JTextField();
+		textFieldScrollPower.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
-				
-				pac.setPower(Double.valueOf( textFieldPower.getText()));
+
+				pac.setPower(Double.valueOf( textFieldScrollPower.getText()));
 
 				double tmp = Math.round(pac.getCapacity()/pac.getPower()*10.0)/10.0;
-				textFieldEER.setText(String.valueOf(tmp));
-				
+				textFieldScrollEER.setText(String.valueOf(tmp));
+
 				tmp = Math.round(PACmain.cosphi(pac.getPower(), pac.getVoltage(), pac.getCurrent())*10000.0)/10000.0;
-				textFieldCosPhi.setText(String.valueOf(tmp));
+				textFieldScrollCosPhi.setText(String.valueOf(tmp));
 
 			}
 		});
-		textFieldPower.setToolTipText("Puissance Absorb\u00E9e");
-		textFieldPower.setText(String.valueOf(pac.getPower()));
-		textFieldPower.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldPower.setBounds(82, 56, 62, 20);
-		textFieldPower.setColumns(10);
-		panel_pc2.add(textFieldPower);
+		textFieldScrollPower.setToolTipText("Puissance Absorb\u00E9e");
+		textFieldScrollPower.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldScrollPower.setBounds(82, 56, 62, 20);
+		textFieldScrollPower.setColumns(10);
+		panel_pc2.add(textFieldScrollPower);
 
 		JLabel lblPower_Unity = new JLabel("Watt");
 		lblPower_Unity.setBounds(154, 62, 46, 14);
@@ -460,44 +545,43 @@ public class PACwin {
 		lblCourant.setBounds(10, 90, 73, 14);
 		panel_pc2.add(lblCourant);
 
-		textFieldCurrent = new JTextField();
-		textFieldCurrent.addFocusListener(new FocusAdapter() {
+		textFieldScrollCurrent = new JTextField();
+		textFieldScrollCurrent.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
-				pac.setCurrent(Double.valueOf( textFieldCurrent.getText()));
-				
+				pac.setCurrent(Double.valueOf( textFieldScrollCurrent.getText()));
+
 				double tmp = Math.round(PACmain.cosphi(pac.getPower(), pac.getVoltage(), pac.getCurrent())*10000.0)/10000.0;
-				textFieldCosPhi.setText(String.valueOf(tmp));
+				textFieldScrollCosPhi.setText(String.valueOf(tmp));
 
 			}
 		});
-		textFieldCurrent.setToolTipText("Courant absorb\u00E9");
-		textFieldCurrent.setText(String.valueOf(pac.getCurrent()));
-		textFieldCurrent.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldCurrent.setColumns(10);
-		textFieldCurrent.setBounds(82, 87, 62, 20);
-		panel_pc2.add(textFieldCurrent);
+		textFieldScrollCurrent.setToolTipText("Courant absorb\u00E9");
+		textFieldScrollCurrent.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldScrollCurrent.setColumns(10);
+		textFieldScrollCurrent.setBounds(82, 87, 62, 20);
+		panel_pc2.add(textFieldScrollCurrent);
 
 		JLabel lblCurrent_unity = new JLabel("A");
 		lblCurrent_unity.setBounds(154, 90, 46, 14);
 		panel_pc2.add(lblCurrent_unity);
-		
+
 		// ---------------------------------------------------------------
 		// EER
 		// ---------------------------------------------------------------
 		JLabel lblEer = new JLabel("EER :");
 		lblEer.setBounds(10, 128, 73, 14);
 		panel_pc2.add(lblEer);
-		
-		textFieldEER = new JTextField();
-		textFieldEER.setEditable(false);
-		textFieldEER.setBackground(Color.PINK);
-		textFieldEER.setToolTipText("EER (Energy Efficiency Ratio) : Coefficient d\u2019efficacit\u00E9 frigorifique");
-		textFieldEER.setText("0.0");
-		textFieldEER.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldEER.setColumns(10);
-		textFieldEER.setBounds(82, 125, 62, 20);
-		panel_pc2.add(textFieldEER);
-		
+
+		textFieldScrollEER = new JTextField();
+		textFieldScrollEER.setEditable(false);
+		textFieldScrollEER.setBackground(Color.PINK);
+		textFieldScrollEER.setToolTipText("EER (Energy Efficiency Ratio) : Coefficient d\u2019efficacit\u00E9 frigorifique");
+		textFieldScrollEER.setText("0.0");
+		textFieldScrollEER.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldScrollEER.setColumns(10);
+		textFieldScrollEER.setBounds(82, 125, 62, 20);
+		panel_pc2.add(textFieldScrollEER);
+
 		JLabel lblEER_unity = new JLabel("BTU/(hr.W)");
 		lblEER_unity.setBounds(154, 125, 73, 22);
 		panel_pc2.add(lblEER_unity);
@@ -510,27 +594,26 @@ public class PACwin {
 		lblMassflow.setBounds(220, 28, 73, 14);
 		panel_pc2.add(lblMassflow);
 
-		textFieldMassFlow = new JTextField();
-		textFieldMassFlow.addFocusListener(new FocusAdapter() {
+		textFieldScrollMassFlow = new JTextField();
+		textFieldScrollMassFlow.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
-				pac.setMassFlow(Double.valueOf( textFieldMassFlow.getText()));
+				pac.setMassFlow(Double.valueOf( textFieldScrollMassFlow.getText()));
 
 				if (checkoxBTU.isSelected() | chckbxPound.isSelected())  {
-					textFieldDeltaH0.setText("-----");
+					textFieldScrollDeltaH0.setText("-----");
 				} else {
 					double tmp = Math.round(pac.getCapacity()/pac.getMassFlow()/1000.0);
-					textFieldDeltaH0.setText(String.valueOf(tmp));
+					textFieldScrollDeltaH0.setText(String.valueOf(tmp));
 				}
 
 			}
 		});
-		textFieldMassFlow.setToolTipText("D\u00E9bit Massique");
-		textFieldMassFlow.setText(String.valueOf(pac.getMassFlow()));
-		textFieldMassFlow.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldMassFlow.setColumns(10);
-		textFieldMassFlow.setBounds(295, 25, 51, 20);
-		panel_pc2.add(textFieldMassFlow);
-		
+		textFieldScrollMassFlow.setToolTipText("D\u00E9bit Massique");
+		textFieldScrollMassFlow.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldScrollMassFlow.setColumns(10);
+		textFieldScrollMassFlow.setBounds(295, 25, 51, 20);
+		panel_pc2.add(textFieldScrollMassFlow);
+
 		JLabel lblMassFlow_unity = new JLabel("lbs/hr");
 		lblMassFlow_unity.setBounds(356, 28, 36, 14);
 		panel_pc2.add(lblMassFlow_unity);
@@ -538,77 +621,77 @@ public class PACwin {
 		// ---------------------------------------------------------------
 		// Check Box BTU/HR or Watt
 		// ---------------------------------------------------------------
-		
+
 		checkoxBTU.setBounds(324, 171, 68, 23);
 		checkoxBTU.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if (checkoxBTU.isSelected()) {
 					lblCapacity_unity.setText("Btu/hr");
 					lblEER_unity.setText("BTU/(hr.W)");
-					
-					pac.setCapacity(PACmain.watt2btuhr(pac.getCapacity()));
-					textFieldCapacity.setText(String.valueOf(Math.round(pac.getCapacity()*100.0)/100.0));
 
-					textFieldEER.setText(String.valueOf(Math.round(pac.getCapacity()/pac.getPower()*10.0)/10.0));
-					
-					textFieldDeltaH0.setText("-----");
+					pac.setCapacity(PACmain.watt2btuhr(pac.getCapacity()));
+					textFieldScrollCapacity.setText(String.valueOf(Math.round(pac.getCapacity()*100.0)/100.0));
+
+					textFieldScrollEER.setText(String.valueOf(Math.round(pac.getCapacity()/pac.getPower()*10.0)/10.0));
+
+					textFieldScrollDeltaH0.setText("-----");
 
 				} else {
 					lblCapacity_unity.setText("Watt");
 					lblEER_unity.setText("");
 
 					pac.setCapacity(PACmain.buthr2watt(pac.getCapacity()));
-					textFieldCapacity.setText(String.valueOf(Math.round(pac.getCapacity()*100.0)/100.0));
+					textFieldScrollCapacity.setText(String.valueOf(Math.round(pac.getCapacity()*100.0)/100.0));
 
-					textFieldEER.setText(String.valueOf(Math.round(pac.getCapacity()/pac.getPower()*10.0)/10.0));
-					
+					textFieldScrollEER.setText(String.valueOf(Math.round(pac.getCapacity()/pac.getPower()*10.0)/10.0));
+
 					if (checkoxBTU.isSelected() | chckbxPound.isSelected())  {
-						textFieldDeltaH0.setText("-----");
+						textFieldScrollDeltaH0.setText("-----");
 					} else {
 						double tmp = Math.round(pac.getCapacity()/pac.getMassFlow()/1000.0);
-						textFieldDeltaH0.setText(String.valueOf(tmp));
+						textFieldScrollDeltaH0.setText(String.valueOf(tmp));
 					}
 				}
 			}
 		});
 		checkoxBTU.setSelected(true);
 		panel_pc2.add(checkoxBTU);
-		
+
 		// ---------------------------------------------------------------
 		// Pound
 		// ---------------------------------------------------------------
-		
+
 		chckbxPound.setToolTipText("Pounds/hour");
 		chckbxPound.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (chckbxPound.isSelected()) {
 					lblMassFlow_unity.setText("lbs/hr");
-					
-					pac.setMassFlow(PACmain.kg2pound(pac.getMassFlow()) );
-					textFieldMassFlow.setText(String.valueOf(Math.round(pac.getMassFlow()*10.0)/10.0));
 
-					textFieldDeltaH0.setText("-----");
+					pac.setMassFlow(PACmain.kg2pound(pac.getMassFlow()) );
+					textFieldScrollMassFlow.setText(String.valueOf(Math.round(pac.getMassFlow()*10.0)/10.0));
+
+					textFieldScrollDeltaH0.setText("-----");
 
 				} else {
 					lblMassFlow_unity.setText("Kg/s");
 
 					pac.setMassFlow(PACmain.pound2kg(pac.getMassFlow()) );
-					textFieldMassFlow.setText(String.valueOf(Math.round(pac.getMassFlow()*10000.0)/10000.0));		
-					
+					textFieldScrollMassFlow.setText(String.valueOf(Math.round(pac.getMassFlow()*10000.0)/10000.0));		
+
 					if (checkoxBTU.isSelected() | chckbxPound.isSelected())  {
-						textFieldDeltaH0.setText("-----");
+						textFieldScrollDeltaH0.setText("-----");
 					} else {
 						double tmp = Math.round(pac.getCapacity()/pac.getMassFlow()/1000.0);
-						textFieldDeltaH0.setText(String.valueOf(tmp));
+						textFieldScrollDeltaH0.setText(String.valueOf(tmp));
 					}
-					
+
 				}
 			}
 		});
 		chckbxPound.setSelected(true);
 		chckbxPound.setBounds(324, 201, 68, 23);
 		panel_pc2.add(chckbxPound);
-		
+
 		// ---------------------------------------------------------------
 		// H1-H3
 		// ---------------------------------------------------------------
@@ -616,66 +699,65 @@ public class PACwin {
 		JLabel lblDeltaH0 = new JLabel("H1-H3");
 		lblDeltaH0.setBounds(223, 59, 62, 14);
 		panel_pc2.add(lblDeltaH0);
-		
-		textFieldDeltaH0 = new JTextField();
-		textFieldDeltaH0.setBackground(Color.PINK);
-		textFieldDeltaH0.setEditable(false);
-		textFieldDeltaH0.setToolTipText("Delta Enthalpie ");
-		textFieldDeltaH0.setText("0.0");
-		textFieldDeltaH0.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldDeltaH0.setColumns(10);
-		textFieldDeltaH0.setBounds(295, 56, 51, 20);
-		panel_pc2.add(textFieldDeltaH0);
-		
+
+		textFieldScrollDeltaH0 = new JTextField();
+		textFieldScrollDeltaH0.setBackground(Color.PINK);
+		textFieldScrollDeltaH0.setEditable(false);
+		textFieldScrollDeltaH0.setToolTipText("Delta Enthalpie ");
+		textFieldScrollDeltaH0.setText("0.0");
+		textFieldScrollDeltaH0.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldScrollDeltaH0.setColumns(10);
+		textFieldScrollDeltaH0.setBounds(295, 56, 51, 20);
+		panel_pc2.add(textFieldScrollDeltaH0);
+
 		JLabel lblDeltaH0_unity = new JLabel("KJ/Kg");
 		lblDeltaH0_unity.setBounds(356, 59, 36, 14);
 		panel_pc2.add(lblDeltaH0_unity);
-		
+
 		// ---------------------------------------------------------------
 		// Voltage
 		// ---------------------------------------------------------------
 		JLabel lblVoltage = new JLabel("Voltage :");
 		lblVoltage.setBounds(10, 177, 73, 14);
 		panel_pc2.add(lblVoltage);
-		
-		textFieldVoltage = new JTextField();
-		textFieldVoltage.addFocusListener(new FocusAdapter() {
+
+		textFieldScrollVoltage = new JTextField();
+		textFieldScrollVoltage.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent arg0) {			
-				
-				pac.setVoltage(Double.valueOf( textFieldVoltage.getText()));
+
+				pac.setVoltage(Double.valueOf( textFieldScrollVoltage.getText()));
 
 				double tmp = Math.round(PACmain.cosphi(pac.getPower(), pac.getVoltage(), pac.getCurrent())*10000.0)/10000.0;
-				textFieldCosPhi.setText(String.valueOf(tmp));
+				textFieldScrollCosPhi.setText(String.valueOf(tmp));
 			}
 		});
-		textFieldVoltage.setToolTipText("Tension");
-		textFieldVoltage.setText(String.valueOf(pac.getVoltage()));
-		textFieldVoltage.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldVoltage.setColumns(10);
-		textFieldVoltage.setBounds(82, 174, 62, 20);
-		panel_pc2.add(textFieldVoltage);
-		
+		textFieldScrollVoltage.setToolTipText("Tension");
+		textFieldScrollVoltage.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldScrollVoltage.setColumns(10);
+		textFieldScrollVoltage.setBounds(82, 174, 62, 20);
+		panel_pc2.add(textFieldScrollVoltage);
+
 		JLabel lblVoltage_unity = new JLabel("V");
 		lblVoltage_unity.setBounds(154, 177, 46, 14);
 		panel_pc2.add(lblVoltage_unity);
-		
+
 		// ---------------------------------------------------------------
 		// Cos Phi
 		// ---------------------------------------------------------------
 		JLabel lblCosphi = new JLabel("Cos (Phi)");
 		lblCosphi.setBounds(10, 208, 73, 14);
 		panel_pc2.add(lblCosphi);
-		
-		textFieldCosPhi = new JTextField();
-		textFieldCosPhi.setToolTipText("Cosinus(Phi)");
-		textFieldCosPhi.setText("0.0");
-		textFieldCosPhi.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldCosPhi.setEditable(false);
-		textFieldCosPhi.setColumns(10);
-		textFieldCosPhi.setBackground(Color.PINK);
-		textFieldCosPhi.setBounds(82, 205, 62, 20);
-		panel_pc2.add(textFieldCosPhi);
-		
+
+		textFieldScrollCosPhi = new JTextField();
+		textFieldScrollCosPhi.setToolTipText("Cosinus(Phi)");
+		textFieldScrollCosPhi.setText("0.0");
+		textFieldScrollCosPhi.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldScrollCosPhi.setEditable(false);
+		textFieldScrollCosPhi.setColumns(10);
+		textFieldScrollCosPhi.setBackground(Color.PINK);
+		textFieldScrollCosPhi.setBounds(82, 205, 62, 20);
+		panel_pc2.add(textFieldScrollCosPhi);
+
 		// ---------------------------------------------------------------
 		// Combo Box Scroll compressor
 		// ---------------------------------------------------------------
@@ -683,19 +765,46 @@ public class PACwin {
 		comboBoxScroll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println(comboBoxScroll.getSelectedItem());
+				System.out.println(comboBoxScroll.getComponentCount());
 			}
 		});
 		comboBoxScroll.setModel(new DefaultComboBoxModel(new String[] {"one", "two", "three"}));
-		comboBoxScroll.setBounds(257, 15, 139, 20);
+		comboBoxScroll.setBounds(277, 10, 145, 20);
 		panelPAC.add(comboBoxScroll);
-		
+
+		// ---------------------------------------------------------------
+		// Compressor Name
+		// ---------------------------------------------------------------
 		textFieldScrollName = new JTextField();
-		textFieldScrollName.setText("scroll");
-		textFieldScrollName.setFont(new Font("Tahoma", Font.BOLD, 14));
-		textFieldScrollName.setEditable(false);
-		textFieldScrollName.setBounds(10, 15, 151, 20);
+		textFieldScrollName.setForeground(new Color(0, 0, 128));
+		textFieldScrollName.setBorder(null);
+		textFieldScrollName.setBackground(UIManager.getColor("Button.background"));
+		textFieldScrollName.setHorizontalAlignment(SwingConstants.CENTER);
+		textFieldScrollName.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+
+				pac.setName( textFieldScrollName.getText());
+			}
+		});
+		textFieldScrollName.setFont(new Font("Tahoma", Font.BOLD, 16));
+		textFieldScrollName.setBounds(25, 10, 167, 52);
 		panelPAC.add(textFieldScrollName);
 		textFieldScrollName.setColumns(10);
+
+		JButton btnSaveNewScroll = new JButton("Save");
+		btnSaveNewScroll.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnSaveNewScroll.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		btnSaveNewScroll.setBounds(277, 39, 68, 23);
+		panelPAC.add(btnSaveNewScroll);
+
+		JButton btnSaveDeleteScroll = new JButton("Delete");
+		btnSaveDeleteScroll.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		btnSaveDeleteScroll.setBounds(355, 39, 68, 23);
+		panelPAC.add(btnSaveDeleteScroll);
 
 		// ===============================================================================================================
 		//									        PANEL MEASURE 
@@ -916,7 +1025,7 @@ public class PACwin {
 		textFieldCarnotFroid.setColumns(10);
 		textFieldCarnotFroid.setBounds(297, 135, 86, 20);
 		panelComp.add(textFieldCarnotFroid);
-		
+
 		// ===============================================================================================================
 		//									        PANEL DEFINITION 
 		// ===============================================================================================================
@@ -928,13 +1037,13 @@ public class PACwin {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(0, 0, 432, 467);
 		panelDef.add(scrollPane);
-		
+
 		JEditorPane txtdef = new JEditorPane();
 		txtdef.setEditable(false);
 		txtdef.setContentType("text/html");
 		txtdef.setText("<b>Capacity : </b>Puissance Frigorifique<b><br>\r\n&nbsp;&nbsp;&nbsp; </b>(H1-H3) x D\u00E9bit Massique<br>\r\n<b>COP:</b> COefficient de Performance <br>\r\n&nbsp;&nbsp;&nbsp; COP = Puissance <u>Restitu\u00E9e</u>\r\n(Chaleur) / Puissance consomm\u00E9e <br>\r\n&nbsp;&nbsp;&nbsp; Attention sur les catalogues le COP\r\n(constructeur) <br>\r\n&nbsp;&nbsp;&nbsp; est calcul\u00E9 \u00E0 partir d'une temp\u00E9rature\r\nd'eau de nappe <br>\r\n&nbsp;&nbsp;&nbsp; phr\u00E9atique de 10\u00B0C <br>\r\n<b>COP constructeur :</b> <br>\r\n&nbsp;&nbsp;&nbsp; Performance d'une PAC d\u00E9termin\u00E9e en\r\nlaboratoire ,<br>\r\n&nbsp;&nbsp;&nbsp; donc assez loin des r\u00E9alit\u00E9s.<br>\r\n<b>COP global de la PAC :</b> <br>\r\n&nbsp;&nbsp;&nbsp; Performance qui tient compte des\r\nauxiliaires, <br>\r\n&nbsp;&nbsp;&nbsp; ventilateurs, pompes,etc..<br>\r\n<b>COP annuel (COPPA) : </b><br>\r\n&nbsp;&nbsp;&nbsp; Performance r\u00E9elle calcul\u00E9e pendant une\r\np\u00E9riode compl\u00E8te <br>\r\n&nbsp;&nbsp;&nbsp; de chauffage qui tient compte des\r\nsp\u00E9cificit\u00E9s de l'installation.<br>\r\n<b>EER (Energy Efficiency Ratio) : </b><br>\r\n&nbsp;&nbsp;&nbsp;&nbsp;Coefficient d'Efficacit\u00E9\r\nFrigorifique (ou) COP froid <br>\r\n&nbsp;&nbsp;&nbsp; EER = Puissance&nbsp;<u>Absorb\u00E9e</u>\r\n(Froid) / Puissance consomm\u00E9e<br>\r\n<b>Mass Flow :</b><br>\r\n&nbsp;&nbsp;&nbsp; D\u00E9bit Massique (Kg/s)<br>\r\n<span style=\"font-weight: bold;\">BTU/h :</span>\r\nBritish Thermal Unit per hour<span style=\"font-weight: bold;\"></span><br\r\n style=\"font-weight: bold;\">\r\n&nbsp;&nbsp;&nbsp; Unit\u00E9 anglo-saxonne de puissance: <br>\r\n&nbsp;&nbsp;&nbsp; 1 000 BTU/h valent approximativement\r\n293,071 W &nbsp;<br>\r\n");
 		scrollPane.setViewportView(txtdef);
-		
+
 
 		// ---------------------------------------------------------------
 		// Display 
