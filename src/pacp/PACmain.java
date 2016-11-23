@@ -7,11 +7,10 @@ public class PACmain {
 
 	public static void main(String[] args){
 
-		Pac pac = new Pac();
-		Cop cop = new Cop();
+
 
 		@SuppressWarnings("unused")
-		WinPrime window = new WinPrime(pac,cop);
+		WinPrime window = new WinPrime();
 
 	}
 

@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.KeyAdapter;
-
 import java.awt.Color;
 import java.awt.Toolkit;
 import javax.swing.JTabbedPane;
@@ -29,20 +28,17 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JCheckBox;
 import javax.swing.border.TitledBorder;
-
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
-import javax.swing.JComboBox;
 import java.awt.Font;
 import javax.swing.JSeparator;
 import javax.swing.UIManager;
-
+import javax.swing.JComboBox;
 
 public class WinPrime {
 
@@ -68,91 +64,44 @@ public class WinPrime {
 	private JTextField textFieldScrollVoltage;
 	private JTextField textFieldScrollCosPhi;
 	private JTextField textFieldScrollName;
-
+	private JCheckBox checkoxFaren;
 	private JCheckBox checkoxBTU;
 	private JCheckBox chckbxPound;
 
-	private static int MAXPacList = 10; 
-	// Array of elements that holds object addresses
-	private Pac[] pac_ar = new Pac[MAXPacList];
-	// List 
-	//private List<Pac> pacl = new ArrayList<Pac>();
+	// List of PAC 
+	private List<Pac> pacl = new ArrayList<Pac>();
+	// Compressor Scroll used for display -- Will be put in pacl.getScroll() with save button
+	//private Scroll scrollCrnt = new Scroll();
 
+	Pac pac = new Pac();
+	Cop cop = new Cop();
+
+	// ===================================================================================================================
 	/**
 	 * Create the application.
+	 * 
 	 */
-	public WinPrime(Pac pac, Cop cop) {
-		
-		// Create all objects in a loop except the first which is already created :!!!!!!
-		pac_ar[0] = pac;
-        for(int i=1; i<pac_ar.length; i++){
-        	pac_ar[i] = new Pac();
-        	//System.out.println(pac_ar[i].getScroll().getEvap());
-        }
-        
-		initialize(pac_ar[0],cop);
-		fillScrollTexField(pac_ar[0].getScroll());
-	}
-	
-	/**
-	 * Fill all the field For Scroll 
-	 * with class Scroll infos !!
-	 * @param pac
-	 */
-	private void fillScrollTexField(Scroll scroll) {
+	public WinPrime() {
 
-		textFieldScrollName.setText(scroll.getName());
-
-		textFieldScrollEvap.setText(String.valueOf(scroll.getEvap()));
-		textFieldScrollRG.setText(String.valueOf(scroll.getRG()));
-		textFieldScrollCond.setText(String.valueOf(scroll.getCond()));
-		textFieldScrollLiq.setText(String.valueOf(scroll.getLiq()));
-		textFieldScrollCapacity.setText(String.valueOf(scroll.getCapacity()));
-		textFieldScrollPower.setText(String.valueOf(scroll.getPower()));
-		textFieldScrollCurrent.setText(String.valueOf(scroll.getCurrent()));
-		textFieldScrollSurchauffe.setText(String.valueOf(Math.round(scroll.getRG() - scroll.getEvap())));
-		textFieldScrollSousRefroid.setText(String.valueOf(Math.round(scroll.getCond() - scroll.getLiq())));
-		textFieldScrollEER.setText(String.valueOf(Math.round(scroll.getCapacity()/scroll.getPower()*10.0)/10.0));
-		textFieldScrollMassFlow.setText(String.valueOf(scroll.getMassFlow()));
-		textFieldScrollDeltaH0.setText("-----");
-		textFieldScrollVoltage.setText(String.valueOf(scroll.getVoltage()));
-		double tmp = Math.round(PACmain.cosphi(scroll.getPower(), scroll.getVoltage(), scroll.getCurrent())*10000.0)/10000.0;
-		textFieldScrollCosPhi.setText(String.valueOf(tmp));		
-	}
-	
-	private void SetTextField2Pac(Pac pac) {
-
-		Scroll scroll = pac.getScroll();
-		
-		scroll.setName(textFieldScrollName.getText());
-		scroll.setEvap(Double.valueOf(textFieldScrollEvap.getText()));
-		scroll.setRG(Double.valueOf(textFieldScrollRG.getText()));
-		scroll.setCond(Double.valueOf(textFieldScrollCond.getText()));
-		scroll.setLiq(Double.valueOf(textFieldScrollLiq.getText()));
-		scroll.setCapacity(Double.valueOf(textFieldScrollCapacity.getText()));
-		scroll.setPower(Double.valueOf(textFieldScrollPower.getText()));
-		scroll.setCurrent(Double.valueOf(textFieldScrollCurrent.getText()));
-		scroll.setMassFlow(Double.valueOf(textFieldScrollMassFlow.getText()));
-		scroll.setVoltage(Double.valueOf(textFieldScrollVoltage.getText()));
+		pacl.add(pac);	
+		initialize(pac,cop);
+		fillScrollTexField(pac.getScroll());
 	}
 
-	
+
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	//@SuppressWarnings("unchecked")
 	private void initialize(Pac paci, Cop copi) {
-		
-		Scroll scroll = paci.getScroll();
-		
-	   
+
+		//		Scroll scroll = paci.getScroll();
+
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(WinPrime.class.getResource("/pacp/images/PAC-Tool_32.png")));
 		frame.setTitle("PAC Tool (" + PACmain.getPacToolVersion()+ ")");
 		frame.setBounds(100, 100, 443, 574);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 
 		// ===============================================================================================================
 		// 													MENU
@@ -178,7 +127,7 @@ public class WinPrime {
 
 					// Read + Set Scroll
 					JSONObject jsonObjectL2 = (JSONObject) jsonObjectL1.get("Scroll");  
-					scroll.setJsonObject(jsonObjectL2);
+					//					scroll.setJsonObject(jsonObjectL2);
 
 					System.out.println("READ JSON object to file");  
 					System.out.println("-----------------------");  
@@ -206,7 +155,7 @@ public class WinPrime {
 
 				// Create JSON Data for Class Scroll
 				JSONObject ObjPacTool = new JSONObject();  
-				ObjPacTool.put("Scroll", scroll.getJsonObject());  
+				//				ObjPacTool.put("Scroll", scroll.getJsonObject());  
 
 				// Create JSON data for the configuration
 				JSONObject ObjCfg = new JSONObject();  
@@ -301,11 +250,10 @@ public class WinPrime {
 		textFieldScrollEvap.setToolTipText("Temp\u00E9rature d'\u00E9vaporation (T0)");
 		textFieldScrollEvap.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent arg0) {
-				scroll.setEvap(Double.valueOf( textFieldScrollEvap.getText()));
-
-				double tmp = Math.round(scroll.getRG() - scroll.getEvap());
+				double tRG = Double.valueOf( textFieldScrollRG.getText());
+				double tEvap = Double.valueOf( textFieldScrollEvap.getText());
+				double tmp = Math.round(tRG - tEvap);
 				textFieldScrollSurchauffe.setText(String.valueOf(tmp));
-
 			}
 		});
 		textFieldScrollEvap.setBounds(59, 25, 75, 20);
@@ -329,10 +277,9 @@ public class WinPrime {
 		textFieldScrollRG.setToolTipText("Temp\u00E9rature d'aspiration du compresseur Point : (1)");
 		textFieldScrollRG.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent arg0) {
-
-				scroll.setRG(Double.valueOf( textFieldScrollRG.getText()));
-
-				double tmp = Math.round(scroll.getRG() - scroll.getEvap());
+				double tRG = Double.valueOf( textFieldScrollRG.getText());
+				double tEvap = Double.valueOf( textFieldScrollEvap.getText());
+				double tmp = Math.round(tRG - tEvap);
 				textFieldScrollSurchauffe.setText(String.valueOf(tmp));			
 			}
 		});
@@ -376,10 +323,9 @@ public class WinPrime {
 		textFieldScrollCond.setToolTipText("Temp\u00E9rature de condensation (TK) ");
 		textFieldScrollCond.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent arg0) {
-
-				scroll.setCond(Double.valueOf( textFieldScrollCond.getText()));
-
-				double tmp = Math.round(scroll.getCond() - scroll.getLiq());
+				double tcond = Double.valueOf( textFieldScrollCond.getText());
+				double tliq = Double.valueOf( textFieldScrollLiq.getText());
+				double tmp = Math.round(tcond - tliq);
 				textFieldScrollSousRefroid.setText(String.valueOf(tmp));
 			}
 		});
@@ -403,10 +349,9 @@ public class WinPrime {
 		textFieldScrollLiq.setToolTipText("Temp\u00E9rature Entr\u00E9e D\u00E9tendeur : Point (3) ");
 		textFieldScrollLiq.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent arg0) {
-
-				scroll.setLiq(Double.valueOf( textFieldScrollLiq.getText()));
-
-				double tmp = Math.round(scroll.getCond() - scroll.getLiq());
+				double tcond = Double.valueOf( textFieldScrollCond.getText());
+				double tliq = Double.valueOf( textFieldScrollLiq.getText());
+				double tmp = Math.round(tcond - tliq);
 				textFieldScrollSousRefroid.setText(String.valueOf(tmp));
 			}
 		});
@@ -444,7 +389,7 @@ public class WinPrime {
 		// ---------------------------------------------------------------
 		// Check Box Farenheit / Celcius
 		// ---------------------------------------------------------------
-		JCheckBox checkoxFaren = new JCheckBox("Farenheit");
+		checkoxFaren = new JCheckBox("Farenheit");
 		checkoxFaren.setBounds(302, 131, 95, 23);
 		panel_pc1.add(checkoxFaren);
 		checkoxFaren.addActionListener(new ActionListener() {
@@ -457,20 +402,21 @@ public class WinPrime {
 					lblTemp_unity5.setText("°F");
 					lblTemp_unity6.setText("°F");
 
-					scroll.setEvap(PACmain.degre2farenheit(scroll.getEvap()));
-					textFieldScrollEvap.setText(String.valueOf(Math.round(scroll.getEvap()*100.0)/100.0));
+					double tcond = PACmain.degre2farenheit(Double.valueOf( textFieldScrollCond.getText()));
+					double tliq = PACmain.degre2farenheit(Double.valueOf( textFieldScrollLiq.getText()));
+					double tRG = PACmain.degre2farenheit(Double.valueOf( textFieldScrollRG.getText()));
+					double tEvap = PACmain.degre2farenheit(Double.valueOf( textFieldScrollEvap.getText()));
+					
+					textFieldScrollEvap.setText(String.valueOf(Math.round(tEvap*100.0)/100.0));
+					textFieldScrollRG.setText(String.valueOf(Math.round(tRG*100.0)/100.0));
+					textFieldScrollCond.setText(String.valueOf(Math.round(tcond*100.0)/100.0));
+					textFieldScrollLiq.setText(String.valueOf(Math.round(tliq*100.0)/100.0));
 
-					scroll.setRG(PACmain.degre2farenheit(scroll.getRG()));
-					textFieldScrollRG.setText(String.valueOf(Math.round(scroll.getRG()*100.0)/100.0));
+					double tmp = Math.round(tRG - tEvap);
+					textFieldScrollSurchauffe.setText(String.valueOf(tmp));			
 
-					scroll.setCond(PACmain.degre2farenheit(scroll.getCond()));
-					textFieldScrollCond.setText(String.valueOf(Math.round(scroll.getCond()*100.0)/100.0));
-
-					scroll.setLiq(PACmain.degre2farenheit(scroll.getLiq()));
-					textFieldScrollLiq.setText(String.valueOf(Math.round(scroll.getLiq()*100.0)/100.0));
-
-					textFieldScrollSurchauffe.setText(String.valueOf(Math.round(scroll.getRG() - scroll.getEvap())));
-					textFieldScrollSousRefroid.setText(String.valueOf(Math.round(scroll.getCond() - scroll.getLiq())));
+					tmp = Math.round(tcond - tliq);
+					textFieldScrollSousRefroid.setText(String.valueOf(tmp));
 				} else {
 					lblTemp_unity1.setText("°C");
 					lblTemp_unity2.setText("°C");
@@ -479,20 +425,21 @@ public class WinPrime {
 					lblTemp_unity5.setText("°C");
 					lblTemp_unity6.setText("°C");
 
-					scroll.setEvap(PACmain.farenheit2degre(scroll.getEvap()));
-					textFieldScrollEvap.setText(String.valueOf(Math.round(scroll.getEvap()*100.0)/100.0));
+					double tcond = PACmain.farenheit2degre(Double.valueOf( textFieldScrollCond.getText()));
+					double tliq = PACmain.farenheit2degre(Double.valueOf( textFieldScrollLiq.getText()));
+					double tRG = PACmain.farenheit2degre(Double.valueOf( textFieldScrollRG.getText()));
+					double tEvap = PACmain.farenheit2degre(Double.valueOf( textFieldScrollEvap.getText()));
+					
+					textFieldScrollEvap.setText(String.valueOf(Math.round(tEvap*100.0)/100.0));
+					textFieldScrollRG.setText(String.valueOf(Math.round(tRG*100.0)/100.0));
+					textFieldScrollCond.setText(String.valueOf(Math.round(tcond*100.0)/100.0));
+					textFieldScrollLiq.setText(String.valueOf(Math.round(tliq*100.0)/100.0));
 
-					scroll.setRG(PACmain.farenheit2degre(scroll.getRG()));
-					textFieldScrollRG.setText(String.valueOf(Math.round(scroll.getRG()*100.0)/100.0));
+					double tmp = Math.round(tRG - tEvap);
+					textFieldScrollSurchauffe.setText(String.valueOf(tmp));			
 
-					scroll.setCond(PACmain.farenheit2degre(scroll.getCond()));
-					textFieldScrollCond.setText(String.valueOf(Math.round(scroll.getCond()*100.0)/100.0));
-
-					scroll.setLiq(PACmain.farenheit2degre(scroll.getLiq()));
-					textFieldScrollLiq.setText(String.valueOf(Math.round(scroll.getLiq()*100.0)/100.0));
-
-					textFieldScrollSurchauffe.setText(String.valueOf(Math.round(scroll.getRG() - scroll.getEvap())));
-					textFieldScrollSousRefroid.setText(String.valueOf(Math.round(scroll.getCond() - scroll.getLiq())));
+					tmp = Math.round(tcond - tliq);
+					textFieldScrollSousRefroid.setText(String.valueOf(tmp));
 				}
 			}
 		});
@@ -524,15 +471,16 @@ public class WinPrime {
 		textFieldScrollCapacity.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent arg0) {
 
-				scroll.setCapacity(Double.valueOf( textFieldScrollCapacity.getText()));
-
-				double tmp = Math.round(scroll.getCapacity()/scroll.getPower()*10.0)/10.0;
+				double vCapacity = Double.valueOf( textFieldScrollCapacity.getText());
+				double vPower =  Double.valueOf( textFieldScrollPower.getText());
+				double vMassFlow = Double.valueOf(textFieldScrollMassFlow.getText());
+				double tmp = Math.round(vCapacity/vPower*10.0)/10.0;
 				textFieldScrollEER.setText(String.valueOf(tmp));
 
 				if (checkoxBTU.isSelected() | chckbxPound.isSelected())  {
 					textFieldScrollDeltaH0.setText("-----");
 				} else {
-					tmp = Math.round(scroll.getCapacity()/scroll.getMassFlow()/1000.0);
+					tmp = Math.round(vCapacity/vMassFlow/1000.0);
 					textFieldScrollDeltaH0.setText(String.valueOf(tmp));
 				}
 			}
@@ -558,15 +506,16 @@ public class WinPrime {
 		textFieldScrollPower = new JTextField();
 		textFieldScrollPower.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
+				
+				double vCapacity = Double.valueOf( textFieldScrollCapacity.getText());
+				double vPower =  Double.valueOf( textFieldScrollPower.getText());
+				double vVoltage = Double.valueOf(textFieldScrollVoltage.getText());
+				double vCurrent = Double.valueOf(textFieldScrollCurrent.getText());
+				double tmp = Math.round(vCapacity/vPower*10.0)/10.0;
+				textFieldScrollEER.setText(String.valueOf(tmp));	
 
-				scroll.setPower(Double.valueOf( textFieldScrollPower.getText()));
-
-				double tmp = Math.round(scroll.getCapacity()/scroll.getPower()*10.0)/10.0;
-				textFieldScrollEER.setText(String.valueOf(tmp));
-
-				tmp = Math.round(PACmain.cosphi(scroll.getPower(), scroll.getVoltage(), scroll.getCurrent())*10000.0)/10000.0;
+				tmp = Math.round(PACmain.cosphi(vPower, vVoltage,vCurrent)*10000.0)/10000.0;
 				textFieldScrollCosPhi.setText(String.valueOf(tmp));
-
 			}
 		});
 		textFieldScrollPower.setToolTipText("Puissance Absorb\u00E9e");
@@ -589,11 +538,12 @@ public class WinPrime {
 		textFieldScrollCurrent = new JTextField();
 		textFieldScrollCurrent.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
-				scroll.setCurrent(Double.valueOf( textFieldScrollCurrent.getText()));
+				double vPower =  Double.valueOf( textFieldScrollPower.getText());
+				double vVoltage = Double.valueOf(textFieldScrollVoltage.getText());
+				double vCurrent = Double.valueOf(textFieldScrollCurrent.getText());
 
-				double tmp = Math.round(PACmain.cosphi(scroll.getPower(), scroll.getVoltage(), scroll.getCurrent())*10000.0)/10000.0;
+				double tmp = Math.round(PACmain.cosphi(vPower, vVoltage,vCurrent)*10000.0)/10000.0;
 				textFieldScrollCosPhi.setText(String.valueOf(tmp));
-
 			}
 		});
 		textFieldScrollCurrent.setToolTipText("Courant absorb\u00E9");
@@ -638,15 +588,15 @@ public class WinPrime {
 		textFieldScrollMassFlow = new JTextField();
 		textFieldScrollMassFlow.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
-				scroll.setMassFlow(Double.valueOf( textFieldScrollMassFlow.getText()));
+				double vCapacity = Double.valueOf( textFieldScrollCapacity.getText());
+				double vMassFlow = Double.valueOf(textFieldScrollMassFlow.getText());
 
 				if (checkoxBTU.isSelected() | chckbxPound.isSelected())  {
 					textFieldScrollDeltaH0.setText("-----");
 				} else {
-					double tmp = Math.round(scroll.getCapacity()/scroll.getMassFlow()/1000.0);
+					double tmp = Math.round(vCapacity/vMassFlow/1000.0);
 					textFieldScrollDeltaH0.setText(String.valueOf(tmp));
 				}
-
 			}
 		});
 		textFieldScrollMassFlow.setToolTipText("D\u00E9bit Massique");
@@ -670,26 +620,28 @@ public class WinPrime {
 					lblCapacity_unity.setText("Btu/hr");
 					lblEER_unity.setText("BTU/(hr.W)");
 
-					scroll.setCapacity(PACmain.watt2btuhr(scroll.getCapacity()));
-					textFieldScrollCapacity.setText(String.valueOf(Math.round(scroll.getCapacity()*100.0)/100.0));
-
-					textFieldScrollEER.setText(String.valueOf(Math.round(scroll.getCapacity()/scroll.getPower()*10.0)/10.0));
-
+					double vCapacity = PACmain.watt2btuhr(Double.valueOf( textFieldScrollCapacity.getText()));
+					double vPower =  Double.valueOf( textFieldScrollPower.getText());
+					
+					textFieldScrollCapacity.setText(String.valueOf(Math.round(vCapacity*100.0)/100.0));
+					textFieldScrollEER.setText(String.valueOf(Math.round(vCapacity/vPower*10.0)/10.0));
 					textFieldScrollDeltaH0.setText("-----");
 
 				} else {
 					lblCapacity_unity.setText("Watt");
 					lblEER_unity.setText("");
 
-					scroll.setCapacity(PACmain.buthr2watt(scroll.getCapacity()));
-					textFieldScrollCapacity.setText(String.valueOf(Math.round(scroll.getCapacity()*100.0)/100.0));
+					double vCapacity = PACmain.buthr2watt(Double.valueOf( textFieldScrollCapacity.getText()));
+					double vPower =  Double.valueOf( textFieldScrollPower.getText());
+					double vMassFlow = Double.valueOf(textFieldScrollMassFlow.getText());
 
-					textFieldScrollEER.setText(String.valueOf(Math.round(scroll.getCapacity()/scroll.getPower()*10.0)/10.0));
+					textFieldScrollCapacity.setText(String.valueOf(Math.round(vCapacity*100.0)/100.0));
+					textFieldScrollEER.setText(String.valueOf(Math.round(vCapacity/vPower*10.0)/10.0));
 
 					if (checkoxBTU.isSelected() | chckbxPound.isSelected())  {
 						textFieldScrollDeltaH0.setText("-----");
 					} else {
-						double tmp = Math.round(scroll.getCapacity()/scroll.getMassFlow()/1000.0);
+						double tmp = Math.round(vCapacity/vMassFlow/1000.0);
 						textFieldScrollDeltaH0.setText(String.valueOf(tmp));
 					}
 				}
@@ -708,21 +660,22 @@ public class WinPrime {
 				if (chckbxPound.isSelected()) {
 					lblMassFlow_unity.setText("lbs/hr");
 
-					scroll.setMassFlow(PACmain.kg2pound(scroll.getMassFlow()) );
-					textFieldScrollMassFlow.setText(String.valueOf(Math.round(scroll.getMassFlow()*10.0)/10.0));
+					double vMassFlow = PACmain.kg2pound(Double.valueOf(textFieldScrollMassFlow.getText()));
+					textFieldScrollMassFlow.setText(String.valueOf(Math.round(vMassFlow*10.0)/10.0));
 
 					textFieldScrollDeltaH0.setText("-----");
 
 				} else {
 					lblMassFlow_unity.setText("Kg/s");
 
-					scroll.setMassFlow(PACmain.pound2kg(scroll.getMassFlow()) );
-					textFieldScrollMassFlow.setText(String.valueOf(Math.round(scroll.getMassFlow()*10000.0)/10000.0));		
+					double vCapacity = Double.valueOf( textFieldScrollCapacity.getText());
+					double vMassFlow = PACmain.pound2kg(Double.valueOf(textFieldScrollMassFlow.getText()));
+					textFieldScrollMassFlow.setText(String.valueOf(Math.round(vMassFlow*10000.0)/10000.0));		
 
 					if (checkoxBTU.isSelected() | chckbxPound.isSelected())  {
 						textFieldScrollDeltaH0.setText("-----");
 					} else {
-						double tmp = Math.round(scroll.getCapacity()/scroll.getMassFlow()/1000.0);
+						double tmp = Math.round(vCapacity/vMassFlow/1000.0);
 						textFieldScrollDeltaH0.setText(String.valueOf(tmp));
 					}
 
@@ -765,10 +718,11 @@ public class WinPrime {
 		textFieldScrollVoltage = new JTextField();
 		textFieldScrollVoltage.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent arg0) {			
+				double vPower =  Double.valueOf( textFieldScrollPower.getText());
+				double vVoltage = Double.valueOf(textFieldScrollVoltage.getText());
+				double vCurrent = Double.valueOf(textFieldScrollCurrent.getText());
 
-				scroll.setVoltage(Double.valueOf( textFieldScrollVoltage.getText()));
-
-				double tmp = Math.round(PACmain.cosphi(scroll.getPower(), scroll.getVoltage(), scroll.getCurrent())*10000.0)/10000.0;
+				double tmp = Math.round(PACmain.cosphi(vPower, vVoltage,vCurrent)*10000.0)/10000.0;
 				textFieldScrollCosPhi.setText(String.valueOf(tmp));
 			}
 		});
@@ -803,49 +757,47 @@ public class WinPrime {
 		// Compressor Name
 		// ---------------------------------------------------------------
 		textFieldScrollName = new JTextField();
-		textFieldScrollName.setToolTipText("Personnaliser le Nom avant sauvegarde !");
+		textFieldScrollName.setToolTipText("Name can be modified");
 		textFieldScrollName.setForeground(new Color(0, 0, 128));
 		textFieldScrollName.setBorder(null);
 		textFieldScrollName.setBackground(UIManager.getColor("Button.background"));
 		textFieldScrollName.setHorizontalAlignment(SwingConstants.CENTER);
-		textFieldScrollName.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent arg0) {
-
-				scroll.setName( textFieldScrollName.getText());
-			}
-		});
 		textFieldScrollName.setFont(new Font("Tahoma", Font.BOLD, 16));
 		textFieldScrollName.setBounds(10, 10, 167, 52);
-		panelPAC.add(textFieldScrollName);
 		textFieldScrollName.setColumns(10);
+		panelPAC.add(textFieldScrollName);
 
 		// ---------------------------------------------------------------
-		// Combo Box Scroll compressor
+		// Combo box Scroll
 		// ---------------------------------------------------------------
-		@SuppressWarnings("rawtypes")
-		JComboBox comboBoxScroll = new JComboBox();
+		JComboBox<String> comboBoxScroll = new JComboBox<String>();
 		comboBoxScroll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println(comboBoxScroll.getSelectedItem());
-				fillScrollTexField(pac_ar[comboBoxScroll.getSelectedIndex()].getScroll());
+				int ComboId = comboBoxScroll.getSelectedIndex();
+				fillScrollTexField(pacl.get(ComboId).getScroll());
 			}
 		});
-		//comboBoxScroll.setModel(new DefaultComboBoxModel(new String[] {"one", "two", "three"}));
-
-		comboBoxScroll.addItem(scroll.getName());
-		comboBoxScroll.setBounds(277, 10, 145, 20);
+		comboBoxScroll.setBounds(243, 10, 131, 20);
+		comboBoxScroll.addItem(pacl.get(0).getScroll().getName());
 		panelPAC.add(comboBoxScroll);
 
 
 		// ---------------------------------------------------------------
-		// Combo Box Save
+		// Scroll Save
 		// ---------------------------------------------------------------
 		JButton btnSaveScroll = new JButton("Save");
 		btnSaveScroll.addActionListener(new ActionListener() {
-			@SuppressWarnings("unchecked")
 			public void actionPerformed(ActionEvent arg0) {
-				SetTextField2Pac(pac_ar[comboBoxScroll.getSelectedIndex()]);	
+				int ComboId = comboBoxScroll.getSelectedIndex();
+				if ( ComboId > 0 ) {
+					String tmp = textFieldScrollName.getText();
+					UpdateTextField2Pac(pacl.get(ComboId));
+					comboBoxScroll.removeItemAt(ComboId);
+					comboBoxScroll.insertItemAt(tmp, ComboId);
+					comboBoxScroll.setSelectedIndex(ComboId);
+					pacl.get(ComboId).getScroll().setName(tmp);
+					textFieldScrollName.setText(tmp);
+				}
 			}
 		});
 		btnSaveScroll.setFont(new Font("Tahoma", Font.PLAIN, 9));
@@ -853,40 +805,44 @@ public class WinPrime {
 		panelPAC.add(btnSaveScroll);
 
 		// ---------------------------------------------------------------
-		// Combo Box Delete
+		// Delete Scroll 
 		// ---------------------------------------------------------------
 		JButton btnDeleteScroll = new JButton("Delete");
 		btnDeleteScroll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (comboBoxScroll.getItemCount() > 1) 
-					comboBoxScroll.removeItemAt(comboBoxScroll.getSelectedIndex());					
-				System.out.println(comboBoxScroll.getItemCount() );
+				int ComboId = comboBoxScroll.getSelectedIndex();
+				if ( ComboId > 0 ) {
+					pacl.remove(ComboId);
+					comboBoxScroll.removeItemAt(ComboId);
+					comboBoxScroll.setSelectedIndex(ComboId-1);
+				} else {
+					JOptionPane.showMessageDialog(frame, "This entry cannot be deleted");
+				}
 			}
 		});
 		btnDeleteScroll.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		btnDeleteScroll.setBounds(355, 39, 68, 23);
 		panelPAC.add(btnDeleteScroll);
-		
+
 		// ---------------------------------------------------------------
-		// Combo Box New
+		// New Scroll
 		// ---------------------------------------------------------------
 		JButton btnNewScroll = new JButton("New");
 		btnNewScroll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (comboBoxScroll.getItemCount() < MAXPacList) {
-					comboBoxScroll.addItem(scroll.getName());
-					comboBoxScroll.setSelectedIndex(comboBoxScroll.getSelectedIndex()+1);
-					SetTextField2Pac(pac_ar[comboBoxScroll.getSelectedIndex()]);	
-				}
-				else
-					JOptionPane.showMessageDialog(frame, "Limite Atteinte = " + MAXPacList);
-				System.out.println(comboBoxScroll.getItemCount() );
-			
+				int ComboId = comboBoxScroll.getSelectedIndex();
+				ComboId++;
+				pacl.add(ComboId, new Pac());
+				comboBoxScroll.insertItemAt("Empty", ComboId);
+				comboBoxScroll.setSelectedIndex(ComboId);
+				textFieldScrollName.setText("Empty");
+				pacl.get(ComboId).getScroll().setName("Empty");
 			}
 		});
 		btnNewScroll.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		btnNewScroll.setBounds(199, 39, 68, 23);
 		panelPAC.add(btnNewScroll);
+
 
 		// ===============================================================================================================
 		//									        PANEL MEASURE 
@@ -1149,4 +1105,73 @@ public class WinPrime {
 				res++;
 		return res;
 	}
+
+
+	/**
+	 * Fill all the field For Scroll 
+	 * with class Scroll infos !!
+	 * @param pac
+	 */
+	private void fillScrollTexField(Scroll scroll) {
+		boolean weclick = false;
+
+		textFieldScrollName.setText(scroll.getName());
+
+		if (!checkoxFaren.isSelected()) {
+			checkoxFaren.doClick();
+			weclick = true;
+		}
+
+		textFieldScrollEvap.setText(String.valueOf(scroll.getEvap()));
+		textFieldScrollRG.setText(String.valueOf(scroll.getRG()));
+		textFieldScrollCond.setText(String.valueOf(scroll.getCond()));
+		textFieldScrollLiq.setText(String.valueOf(scroll.getLiq()));
+		textFieldScrollCapacity.setText(String.valueOf(scroll.getCapacity()));
+		textFieldScrollPower.setText(String.valueOf(scroll.getPower()));
+		textFieldScrollCurrent.setText(String.valueOf(scroll.getCurrent()));
+		textFieldScrollSurchauffe.setText(String.valueOf(Math.round(scroll.getRG() - scroll.getEvap())));
+		textFieldScrollSousRefroid.setText(String.valueOf(Math.round(scroll.getCond() - scroll.getLiq())));
+		textFieldScrollEER.setText(String.valueOf(Math.round(scroll.getCapacity()/scroll.getPower()*10.0)/10.0));
+		textFieldScrollMassFlow.setText(String.valueOf(scroll.getMassFlow()));
+		textFieldScrollDeltaH0.setText("-----");
+		textFieldScrollVoltage.setText(String.valueOf(scroll.getVoltage()));
+		double tmp = Math.round(PACmain.cosphi(scroll.getPower(), scroll.getVoltage(), scroll.getCurrent())*10000.0)/10000.0;
+		textFieldScrollCosPhi.setText(String.valueOf(tmp));
+
+		if (weclick) {
+			checkoxFaren.doClick();
+		}
+
+	}
+
+	// Will save the information from TextField to PAC variable
+	// Data will be stored in Anglo-Saxon Format
+	private void UpdateTextField2Pac( Pac paci) {
+		Scroll scroll = paci.getScroll();
+		boolean weclick = false;
+
+		scroll.setName(textFieldScrollName.getText());
+
+		if (!checkoxFaren.isSelected()) {
+			checkoxFaren.doClick();
+			weclick = true;
+		}
+
+		scroll.setEvap(Double.valueOf(textFieldScrollEvap.getText()));
+		scroll.setRG(Double.valueOf(textFieldScrollRG.getText()));
+		scroll.setCond(Double.valueOf(textFieldScrollCond.getText()));
+		scroll.setLiq(Double.valueOf(textFieldScrollLiq.getText()));
+		scroll.setCapacity(Double.valueOf(textFieldScrollCapacity.getText()));
+		scroll.setPower(Double.valueOf(textFieldScrollPower.getText()));
+		scroll.setCurrent(Double.valueOf(textFieldScrollCurrent.getText()));
+		scroll.setMassFlow(Double.valueOf(textFieldScrollMassFlow.getText()));
+		scroll.setVoltage(Double.valueOf(textFieldScrollVoltage.getText()));
+
+		if (weclick) {
+			checkoxFaren.doClick();
+		}
+
+	}
+
 }
+
