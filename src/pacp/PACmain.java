@@ -3,7 +3,7 @@ package pacp;
 
 public class PACmain {
 
-	private static String PACTool_Version = "Version alpha 0.1";
+	private static String PACTool_Version = "Version Beta 0.1";
 
 	public static void main(String[] args){
 

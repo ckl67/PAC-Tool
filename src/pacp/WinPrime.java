@@ -11,6 +11,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -28,6 +29,9 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JCheckBox;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -38,7 +42,10 @@ import javax.swing.JScrollPane;
 import java.awt.Font;
 import javax.swing.JSeparator;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.JComboBox;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JFileChooser;
 
 public class WinPrime {
 
@@ -67,13 +74,26 @@ public class WinPrime {
 	private JCheckBox checkoxFaren;
 	private JCheckBox checkoxBTU;
 	private JCheckBox chckbxPound;
+	private JComboBox<String> comboBoxScroll;
 
+	private JLabel lblCapacity;
+	private JLabel lblPower;
+	private JLabel lblCurrent;
+	private JLabel lblEer;
+	private JLabel lblVoltage;
+	private JLabel lblMassflow;
+	private JLabel lblEvap;
+	private JLabel lblRG;
+	private JLabel lblCond;
+	private JLabel lblLiq;
+
+	
 	// List of PAC 
 	private List<Pac> pacl = new ArrayList<Pac>();
-	// Compressor Scroll used for display -- Will be put in pacl.getScroll() with save button
-	//private Scroll scrollCrnt = new Scroll();
-
+	// First pac is created !!
 	Pac pac = new Pac();
+
+	// COP measure
 	Cop cop = new Cop();
 
 	// ===================================================================================================================
@@ -82,19 +102,17 @@ public class WinPrime {
 	 * 
 	 */
 	public WinPrime() {
-
 		pacl.add(pac);	
 		initialize(pac,cop);
 		fillScrollTexField(pac.getScroll());
 	}
 
 
+	// ===================================================================================================================
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize(Pac paci, Cop copi) {
-
-		//		Scroll scroll = paci.getScroll();
 
 		frame = new JFrame();
 		frame.setResizable(false);
@@ -103,110 +121,239 @@ public class WinPrime {
 		frame.setBounds(100, 100, 443, 574);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 		// ===============================================================================================================
 		// 													MENU
 		// ===============================================================================================================
 		JMenuBar menubar = new JMenuBar();
 		frame.setJMenuBar(menubar);
 
-		JMenu file = new JMenu("File");
-		menubar.add(file);
+		JMenu mfile = new JMenu("Fichier");
+		menubar.add(mfile);
 
 		// ---------------------------------------------------------------
 		// Load Config
 		// ---------------------------------------------------------------
-		JMenuItem mloadcfg = new JMenuItem("Load Config.");
+		JMenuItem mloadcfg = new JMenuItem(" Ouvrir Config.");
+		mloadcfg.setIcon(new ImageIcon(WinPrime.class.getResource("/com/sun/javafx/scene/web/skin/Redo_16x16_JFX.png")));
 		mloadcfg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
-				JSONParser parser = new JSONParser();  
-				try {  
+				JFileChooser chooser = new JFileChooser();
+				FileNameExtensionFilter filter = new FileNameExtensionFilter( "Conf. files", "cfg");
+				chooser.setFileFilter(filter);
+				File workingDirectory = new File(System.getProperty("user.dir"));
+				chooser.setCurrentDirectory(workingDirectory);
+				int returnVal = chooser.showOpenDialog(frame);
+				if(returnVal == JFileChooser.APPROVE_OPTION) {
+					//System.out.println("You chose to open this file: " + chooser.getSelectedFile().getAbsolutePath());
 
-					Object obj = parser.parse(new FileReader("D:/Users/kluges1/workspace/pac-tool/test/PAC-Tool.cfg"));  
-					JSONObject jsonObjectL1 = (JSONObject) obj;  
+					JSONParser parser = new JSONParser(); 
+					JSONObject jsonObjectR = null;
+					try {
+						jsonObjectR = (JSONObject) parser.parse(new FileReader(chooser.getSelectedFile().getAbsolutePath()));
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}  
 
-					// Read + Set Scroll
-					JSONObject jsonObjectL2 = (JSONObject) jsonObjectL1.get("Scroll");  
-					//					scroll.setJsonObject(jsonObjectL2);
+					//System.out.println("READ JSON object to file");  
+					//System.out.println("-----------------------");  
+					//System.out.print(jsonObjectR);  
 
-					System.out.println("READ JSON object to file");  
-					System.out.println("-----------------------");  
-					System.out.print(jsonObjectL2);  
+					JSONArray jsonObjectScrollL = (JSONArray) jsonObjectR.get("Scroll");
+					JSONObject jsonObjectScrolln;
+					JSONObject jsonObjectCfg = (JSONObject) jsonObjectR.get("Cfg");
 
-					fillScrollTexField(paci.getScroll());
-				} catch (FileNotFoundException e) {  
-					e.printStackTrace();  
-				} catch (IOException e) {  
-					e.printStackTrace();  
-				} catch (ParseException e) {  
-					e.printStackTrace();  
-				}  
+					// Read Configuration & Preferences
+					long nbScrollList = (long) jsonObjectCfg.get("nbScrollList");
+
+					// Read Scroll List + Affect to pacl scroll
+					for(int i=1;i<pacl.size();i++) {
+						pacl.remove(i);
+						comboBoxScroll.removeItemAt(i);
+					}
+					//System.out.println("size="+pacl.size());
+					//System.out.println("comboBoxScroll size="+comboBoxScroll.getItemCount());
+
+					for(int i=0;i<nbScrollList;i++) {
+						jsonObjectScrolln = (JSONObject) jsonObjectScrollL.get(i);
+						if(i==0) {
+							//pacl.add(i, paci);
+							pacl.get(i).getScroll().setJsonObject(jsonObjectScrolln);
+						}
+						else {
+							pacl.add(i, new Pac());
+							pacl.get(i).getScroll().setJsonObject(jsonObjectScrolln);
+							comboBoxScroll.insertItemAt(pacl.get(i).getScroll().getName(),i);
+						}
+					}
+					comboBoxScroll.setSelectedIndex(0);
+					fillScrollTexField(pacl.get(0).getScroll());
+
+					// Read Configuration & Preferences WITH ACTION TO PERFORM --> MUST BE THE LAST ACTION !!
+					if (!(boolean)(jsonObjectCfg.get("checkoxFaren")))
+						checkoxFaren.doClick(); 		
+					if (!(boolean)(jsonObjectCfg.get("checkoxBTU")))
+						checkoxBTU.doClick(); 		
+					if (!(boolean)(jsonObjectCfg.get("chckbxPound")))
+						chckbxPound.doClick(); 		
+				} 
 			}
 		});
-		file.add(mloadcfg);
+		mfile.add(mloadcfg);
 
 		// ---------------------------------------------------------------
 		// Save Config
 		// ---------------------------------------------------------------
-		JMenuItem msavecfg = new JMenuItem("Save Config.");
+		JMenuItem msavecfg = new JMenuItem("Sauver Config.");
+		msavecfg.setIcon(new ImageIcon(WinPrime.class.getResource("/com/sun/javafx/scene/web/skin/Undo_16x16_JFX.png")));
 		msavecfg.addActionListener(new ActionListener() {
 			@SuppressWarnings("unchecked")
 			public void actionPerformed(ActionEvent arg0) {
 
-				// Create JSON Data for Class Scroll
-				JSONObject ObjPacTool = new JSONObject();  
-				//				ObjPacTool.put("Scroll", scroll.getJsonObject());  
+				// Create JSON Scroll list
+				JSONArray listOfScroll = new JSONArray();
+				JSONObject ObjScroll = new JSONObject();  
+				for(int i=0;i<pacl.size();i++) {
+					ObjScroll = pacl.get(i).getScroll().getJsonObject();  
+					listOfScroll.add(ObjScroll);
+				}
 
-				// Create JSON data for the configuration
+				// Create JSON data for the PAC-Tool : Configuration + preferences 
 				JSONObject ObjCfg = new JSONObject();  
+				ObjCfg.put("nbScrollList", pacl.size());
 				ObjCfg.put("checkoxBTU", checkoxBTU.isSelected());
 				ObjCfg.put("chckbxPound", chckbxPound.isSelected());
+				ObjCfg.put("checkoxFaren", checkoxFaren.isSelected());
+
+				// Compact in JSON Data: PacTool
+				JSONObject ObjPacTool = new JSONObject();  
+				ObjPacTool.put("Scroll", listOfScroll);  
 				ObjPacTool.put("Cfg", ObjCfg);  
 
-				try {  
+				JFileChooser chooser = new JFileChooser();
+				FileNameExtensionFilter filter = new FileNameExtensionFilter( "Conf. files", "cfg");
+				chooser.setApproveButtonText("Sauvegarder");
+				chooser.setFileFilter(filter);
+				File workingDirectory = new File(System.getProperty("user.dir"));
+				chooser.setCurrentDirectory(workingDirectory);
+				int returnVal = chooser.showOpenDialog(frame);
+				if(returnVal == JFileChooser.APPROVE_OPTION) {
+					//System.out.println("You chose to open this file: " + chooser.getSelectedFile().getAbsolutePath());
+
 					// Writing to a file  
-					File file=new File("D:/Users/kluges1/workspace/pac-tool/test/PAC-Tool.cfg");  
-					file.createNewFile();  
-					FileWriter fileWriter = new FileWriter(file);  
-					System.out.println("Writing JSON object to file");  
-					System.out.println("-----------------------");  
-					System.out.print(ObjPacTool);  
+					//file.createNewFile();  
+					FileWriter fileWriter;
+					try {
+						fileWriter = new FileWriter(chooser.getSelectedFile().getAbsolutePath());
+						fileWriter.write(ObjPacTool.toJSONString());  
+						fileWriter.flush();  
+						fileWriter.close();  
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}  
+					//System.out.println("Writing JSON object to file");  
+					//System.out.println("-----------------------");  
+					//System.out.print(ObjPacTool);  
 
-					fileWriter.write(ObjPacTool.toJSONString());  
-					fileWriter.flush();  
-					fileWriter.close();  
 
-				} catch (IOException e) {  
-					e.printStackTrace();  
-				}  
+				} 
 			}
 		});
-		file.add(msavecfg);
+		mfile.add(msavecfg);
 
 		// ---------------------------------------------------------------
-		// Seperator
+		// Separator
 		// ---------------------------------------------------------------
-		JSeparator separator = new JSeparator();
-		file.add(separator);
+		JSeparator mseparator = new JSeparator();
+		mfile.add(mseparator);
 
 		// ---------------------------------------------------------------
 		// Exit
 		// ---------------------------------------------------------------
-		JMenuItem mexit = new JMenuItem("Exit");
+		JMenuItem mexit = new JMenuItem("Quitter");
+		mexit.setIcon(new ImageIcon(WinPrime.class.getResource("/javax/swing/plaf/metal/icons/ocean/close.gif")));
 		mexit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.exit(0);
 			}
 		});
-		file.add(mexit);
+		mfile.add(mexit);
+
+		// ---------------------------------------------------------------
+		// Menu Config
+		// ---------------------------------------------------------------
+		JMenu mpreference = new JMenu("Pr\u00E9f\u00E9rences");
+		menubar.add(mpreference);
+
+		JMenu mlangue = new JMenu("Langues");
+		mlangue.setIcon(new ImageIcon(WinPrime.class.getResource("/pacp/images/flag-frgb16x16.png")));
+		mpreference.add(mlangue);
+
+		ButtonGroup buttonGroup = new ButtonGroup();
+
+		JRadioButtonMenuItem mRationItemFrench = new JRadioButtonMenuItem("Francais");
+		mRationItemFrench.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				lblCapacity.setText("Puis. Frigo.:");
+				lblPower.setText("Puis. Absorb.:");
+				lblCurrent.setText("Courant:");
+				lblEer.setText("COP Froid:");
+				lblVoltage.setText("Tension:");
+				lblMassflow.setText("Débit Massique:");
+				lblEvap.setText("T. Evap. (T0):");
+				lblRG.setText("T. Asp. Comp.(P1)");
+				lblCond.setText("T. Cond. (TK):");
+				lblLiq.setText("T. Détend.(P3):");
+			}
+		});
+		buttonGroup.add(mRationItemFrench);
+
+		mlangue.add(mRationItemFrench);
+
+		JRadioButtonMenuItem mRationItemEnglisch = new JRadioButtonMenuItem("Anglais");
+		mRationItemEnglisch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				lblCapacity.setText("Capacity:");
+				lblPower.setText("Power:");
+				lblCurrent.setText("Current:");
+				lblEer.setText("EER:");
+				lblVoltage.setText("Voltage:");
+				lblMassflow.setText("Mass flow:");
+				lblEvap.setText("Evap:");
+				lblRG.setText("RG:");
+				lblCond.setText("Cond:");
+				lblLiq.setText("Liq:");
+			}
+		});
+		mRationItemEnglisch.setSelected(true);
+		buttonGroup.add(mRationItemEnglisch);
+
+		mlangue.add(mRationItemEnglisch);
 
 		// ---------------------------------------------------------------
 		// Help
 		// ---------------------------------------------------------------
 
-		JMenu help = new JMenu("Help");
+		JMenu help = new JMenu("Aide");
 		menubar.add(help);
-		JMenuItem about = new JMenuItem("About");
+		JMenuItem about = new JMenuItem("A propos de ?");
+		about.setIcon(new ImageIcon(WinPrime.class.getResource("/pacp/images/Apropos.png")));
 		about.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				WinAbout nabw = new WinAbout();
@@ -234,16 +381,17 @@ public class WinPrime {
 		// 					  	Performance Panel
 		// ================================================================
 		JPanel panel_pc1 = new JPanel();
-		panel_pc1.setBorder(new TitledBorder(null, "Performance Constructeur 1", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_pc1.setBounds(10, 73, 413, 161);
+		panel_pc1.setBorder(new TitledBorder(null, "Donn\u00E9es Performance Constructeur (Temp\u00E9rature)", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_pc1.setBounds(5, 73, 420, 161);
 		panel_pc1.setLayout(null);
 		panelPAC.add(panel_pc1);
 
 		// ---------------------------------------------------------------
 		// EVAP
 		// ---------------------------------------------------------------
-		JLabel lblEvap = new JLabel("Evap :");
-		lblEvap.setBounds(10, 28, 51, 14);
+		lblEvap = new JLabel("Evap :");
+		lblEvap.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblEvap.setBounds(5, 28, 93, 14);
 		panel_pc1.add(lblEvap);
 
 		textFieldScrollEvap = new JTextField();
@@ -256,21 +404,22 @@ public class WinPrime {
 				textFieldScrollSurchauffe.setText(String.valueOf(tmp));
 			}
 		});
-		textFieldScrollEvap.setBounds(59, 25, 75, 20);
+		textFieldScrollEvap.setBounds(99, 25, 67, 20);
 		panel_pc1.add(textFieldScrollEvap);
 
 		textFieldScrollEvap.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldScrollEvap.setColumns(10);
 
 		JLabel lblTemp_unity1 = new JLabel("\u00B0F");
-		lblTemp_unity1.setBounds(144, 28, 46, 14);
+		lblTemp_unity1.setBounds(176, 28, 25, 14);
 		panel_pc1.add(lblTemp_unity1);
 
 		// ---------------------------------------------------------------
 		// RG
 		// ---------------------------------------------------------------
-		JLabel lblRG = new JLabel("RG :");
-		lblRG.setBounds(10, 67, 51, 14);
+		lblRG = new JLabel("RG :");
+		lblRG.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblRG.setBounds(5, 67, 93, 14);
 		panel_pc1.add(lblRG);
 
 		textFieldScrollRG = new JTextField();
@@ -283,20 +432,21 @@ public class WinPrime {
 				textFieldScrollSurchauffe.setText(String.valueOf(tmp));			
 			}
 		});
-		textFieldScrollRG.setBounds(59, 64, 75, 20);
+		textFieldScrollRG.setBounds(99, 64, 67, 20);
 		panel_pc1.add(textFieldScrollRG);
 		textFieldScrollRG.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldScrollRG.setColumns(10);
 
 		JLabel lblTemp_unity2 = new JLabel("\u00B0F");
-		lblTemp_unity2.setBounds(144, 67, 46, 14);
+		lblTemp_unity2.setBounds(176, 67, 25, 14);
 		panel_pc1.add(lblTemp_unity2);
 
 		// ---------------------------------------------------------------
 		// SURCHAUFFE
 		// ---------------------------------------------------------------
 		JLabel lblSurchauffe = new JLabel("Surchauffe :");
-		lblSurchauffe.setBounds(10, 101, 81, 14);
+		lblSurchauffe.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblSurchauffe.setBounds(38, 101, 81, 14);
 		panel_pc1.add(lblSurchauffe);
 
 		textFieldScrollSurchauffe = new JTextField();
@@ -304,19 +454,20 @@ public class WinPrime {
 		textFieldScrollSurchauffe.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldScrollSurchauffe.setBackground(Color.PINK);
 		textFieldScrollSurchauffe.setEditable(false);
-		textFieldScrollSurchauffe.setBounds(88, 98, 46, 20);
+		textFieldScrollSurchauffe.setBounds(120, 98, 46, 20);
 		panel_pc1.add(textFieldScrollSurchauffe);
 		textFieldScrollSurchauffe.setColumns(10);
 
 		JLabel lblTemp_unity5 = new JLabel("\u00B0F");
-		lblTemp_unity5.setBounds(144, 101, 46, 14);
+		lblTemp_unity5.setBounds(176, 101, 25, 14);
 		panel_pc1.add(lblTemp_unity5);
 
 		// ---------------------------------------------------------------
 		// COND
 		// ---------------------------------------------------------------
-		JLabel lblCond = new JLabel("Cond :");
-		lblCond.setBounds(233, 28, 46, 14);
+		lblCond = new JLabel("Cond :");
+		lblCond.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblCond.setBounds(203, 28, 99, 14);
 		panel_pc1.add(lblCond);
 
 		textFieldScrollCond = new JTextField();
@@ -329,20 +480,21 @@ public class WinPrime {
 				textFieldScrollSousRefroid.setText(String.valueOf(tmp));
 			}
 		});
-		textFieldScrollCond.setBounds(289, 25, 75, 20);
+		textFieldScrollCond.setBounds(302, 25, 75, 20);
 		textFieldScrollCond.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldScrollCond.setColumns(10);
 		panel_pc1.add(textFieldScrollCond);
 
 		JLabel lblTemp_unity3 = new JLabel("\u00B0F");
-		lblTemp_unity3.setBounds(374, 28, 29, 14);
+		lblTemp_unity3.setBounds(380, 28, 23, 14);
 		panel_pc1.add(lblTemp_unity3);
 
 		// ---------------------------------------------------------------
 		// LIQ
 		// ---------------------------------------------------------------
-		JLabel lblLiq = new JLabel("Liq :");
-		lblLiq.setBounds(233, 67, 46, 14);
+		lblLiq = new JLabel("Liq :");
+		lblLiq.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblLiq.setBounds(203, 67, 99, 14);
 		panel_pc1.add(lblLiq);
 
 		textFieldScrollLiq = new JTextField();
@@ -356,13 +508,13 @@ public class WinPrime {
 			}
 		});
 
-		textFieldScrollLiq.setBounds(289, 64, 75, 20);
+		textFieldScrollLiq.setBounds(302, 64, 75, 20);
 		textFieldScrollLiq.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldScrollLiq.setColumns(10);
 		panel_pc1.add(textFieldScrollLiq);
 
 		JLabel lblTemp_unity4 = new JLabel("\u00B0F");
-		lblTemp_unity4.setBounds(374, 64, 29, 14);
+		lblTemp_unity4.setBounds(380, 64, 23, 14);
 		panel_pc1.add(lblTemp_unity4);
 
 		// ---------------------------------------------------------------
@@ -370,7 +522,8 @@ public class WinPrime {
 		// ---------------------------------------------------------------
 
 		JLabel lblSousRefroid = new JLabel("S-Refroidissement :");
-		lblSousRefroid.setBounds(205, 101, 113, 14);
+		lblSousRefroid.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblSousRefroid.setBounds(226, 101, 103, 14);
 		panel_pc1.add(lblSousRefroid);
 
 		textFieldScrollSousRefroid = new JTextField();
@@ -379,11 +532,11 @@ public class WinPrime {
 		textFieldScrollSousRefroid.setEditable(false);
 		textFieldScrollSousRefroid.setColumns(10);
 		textFieldScrollSousRefroid.setBackground(Color.PINK);
-		textFieldScrollSousRefroid.setBounds(318, 98, 46, 20);
+		textFieldScrollSousRefroid.setBounds(331, 98, 46, 20);
 		panel_pc1.add(textFieldScrollSousRefroid);
 
 		JLabel lblTemp_unity6 = new JLabel("\u00B0F");
-		lblTemp_unity6.setBounds(374, 101, 29, 14);
+		lblTemp_unity6.setBounds(380, 101, 23, 14);
 		panel_pc1.add(lblTemp_unity6);
 
 		// ---------------------------------------------------------------
@@ -406,7 +559,7 @@ public class WinPrime {
 					double tliq = PACmain.degre2farenheit(Double.valueOf( textFieldScrollLiq.getText()));
 					double tRG = PACmain.degre2farenheit(Double.valueOf( textFieldScrollRG.getText()));
 					double tEvap = PACmain.degre2farenheit(Double.valueOf( textFieldScrollEvap.getText()));
-					
+
 					textFieldScrollEvap.setText(String.valueOf(Math.round(tEvap*100.0)/100.0));
 					textFieldScrollRG.setText(String.valueOf(Math.round(tRG*100.0)/100.0));
 					textFieldScrollCond.setText(String.valueOf(Math.round(tcond*100.0)/100.0));
@@ -429,7 +582,7 @@ public class WinPrime {
 					double tliq = PACmain.farenheit2degre(Double.valueOf( textFieldScrollLiq.getText()));
 					double tRG = PACmain.farenheit2degre(Double.valueOf( textFieldScrollRG.getText()));
 					double tEvap = PACmain.farenheit2degre(Double.valueOf( textFieldScrollEvap.getText()));
-					
+
 					textFieldScrollEvap.setText(String.valueOf(Math.round(tEvap*100.0)/100.0));
 					textFieldScrollRG.setText(String.valueOf(Math.round(tRG*100.0)/100.0));
 					textFieldScrollCond.setText(String.valueOf(Math.round(tcond*100.0)/100.0));
@@ -449,8 +602,8 @@ public class WinPrime {
 		// 					   	Performance 2 Panel
 		// ================================================================
 		JPanel panel_pc2 = new JPanel();
-		panel_pc2.setBounds(10, 245, 413, 241);
-		panel_pc2.setBorder(new TitledBorder(null, "Performance Constructeur 2", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_pc2.setBounds(5, 245, 420, 241);
+		panel_pc2.setBorder(new TitledBorder(null, "Donn\u00E9es Performance Constructeur (Autres)", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_pc2.setLayout(null);
 		panelPAC.add(panel_pc2);
 
@@ -462,9 +615,10 @@ public class WinPrime {
 		// Capacity
 		// ---------------------------------------------------------------
 
-		JLabel lblCapacity = new JLabel("Capacity :");
+		lblCapacity = new JLabel("Capacity :");
+		lblCapacity.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblCapacity.setToolTipText("");
-		lblCapacity.setBounds(10, 28, 73, 14);
+		lblCapacity.setBounds(5, 28, 73, 14);
 		panel_pc2.add(lblCapacity);
 
 		textFieldScrollCapacity = new JTextField();
@@ -499,14 +653,15 @@ public class WinPrime {
 		// ---------------------------------------------------------------
 		// Power
 		// ---------------------------------------------------------------
-		JLabel lblPower = new JLabel("Power :");
-		lblPower.setBounds(10, 59, 73, 14);
+		lblPower = new JLabel("Power :");
+		lblPower.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblPower.setBounds(5, 59, 73, 14);
 		panel_pc2.add(lblPower);
 
 		textFieldScrollPower = new JTextField();
 		textFieldScrollPower.addFocusListener(new FocusAdapter() {
 			public void focusLost(FocusEvent e) {
-				
+
 				double vCapacity = Double.valueOf( textFieldScrollCapacity.getText());
 				double vPower =  Double.valueOf( textFieldScrollPower.getText());
 				double vVoltage = Double.valueOf(textFieldScrollVoltage.getText());
@@ -531,9 +686,10 @@ public class WinPrime {
 		// ---------------------------------------------------------------
 		// Courant
 		// ---------------------------------------------------------------
-		JLabel lblCourant = new JLabel("Current :");
-		lblCourant.setBounds(10, 90, 73, 14);
-		panel_pc2.add(lblCourant);
+		lblCurrent = new JLabel("Current :");
+		lblCurrent.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblCurrent.setBounds(5, 90, 73, 14);
+		panel_pc2.add(lblCurrent);
 
 		textFieldScrollCurrent = new JTextField();
 		textFieldScrollCurrent.addFocusListener(new FocusAdapter() {
@@ -559,8 +715,9 @@ public class WinPrime {
 		// ---------------------------------------------------------------
 		// EER
 		// ---------------------------------------------------------------
-		JLabel lblEer = new JLabel("EER :");
-		lblEer.setBounds(10, 128, 73, 14);
+		lblEer = new JLabel("EER :");
+		lblEer.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblEer.setBounds(5, 128, 73, 14);
 		panel_pc2.add(lblEer);
 
 		textFieldScrollEER = new JTextField();
@@ -581,8 +738,9 @@ public class WinPrime {
 		// Mass Flow
 		// ---------------------------------------------------------------
 
-		JLabel lblMassflow = new JLabel("MassFlow :");
-		lblMassflow.setBounds(220, 28, 73, 14);
+		lblMassflow = new JLabel("Mass Flow :");
+		lblMassflow.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblMassflow.setBounds(205, 28, 86, 14);
 		panel_pc2.add(lblMassflow);
 
 		textFieldScrollMassFlow = new JTextField();
@@ -622,7 +780,7 @@ public class WinPrime {
 
 					double vCapacity = PACmain.watt2btuhr(Double.valueOf( textFieldScrollCapacity.getText()));
 					double vPower =  Double.valueOf( textFieldScrollPower.getText());
-					
+
 					textFieldScrollCapacity.setText(String.valueOf(Math.round(vCapacity*100.0)/100.0));
 					textFieldScrollEER.setText(String.valueOf(Math.round(vCapacity/vPower*10.0)/10.0));
 					textFieldScrollDeltaH0.setText("-----");
@@ -690,8 +848,9 @@ public class WinPrime {
 		// H1-H3
 		// ---------------------------------------------------------------
 
-		JLabel lblDeltaH0 = new JLabel("H1-H3");
-		lblDeltaH0.setBounds(223, 59, 62, 14);
+		JLabel lblDeltaH0 = new JLabel("H1-H3 :");
+		lblDeltaH0.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblDeltaH0.setBounds(220, 59, 62, 14);
 		panel_pc2.add(lblDeltaH0);
 
 		textFieldScrollDeltaH0 = new JTextField();
@@ -711,8 +870,9 @@ public class WinPrime {
 		// ---------------------------------------------------------------
 		// Voltage
 		// ---------------------------------------------------------------
-		JLabel lblVoltage = new JLabel("Voltage :");
-		lblVoltage.setBounds(10, 177, 73, 14);
+		lblVoltage = new JLabel("Voltage :");
+		lblVoltage.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblVoltage.setBounds(5, 177, 73, 14);
 		panel_pc2.add(lblVoltage);
 
 		textFieldScrollVoltage = new JTextField();
@@ -739,8 +899,9 @@ public class WinPrime {
 		// ---------------------------------------------------------------
 		// Cos Phi
 		// ---------------------------------------------------------------
-		JLabel lblCosphi = new JLabel("Cos (Phi)");
-		lblCosphi.setBounds(10, 208, 73, 14);
+		JLabel lblCosphi = new JLabel("Cos (\u03C6)");
+		lblCosphi.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblCosphi.setBounds(5, 208, 73, 14);
 		panel_pc2.add(lblCosphi);
 
 		textFieldScrollCosPhi = new JTextField();
@@ -770,7 +931,7 @@ public class WinPrime {
 		// ---------------------------------------------------------------
 		// Combo box Scroll
 		// ---------------------------------------------------------------
-		JComboBox<String> comboBoxScroll = new JComboBox<String>();
+		comboBoxScroll = new JComboBox<String>();
 		comboBoxScroll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int ComboId = comboBoxScroll.getSelectedIndex();
@@ -785,7 +946,7 @@ public class WinPrime {
 		// ---------------------------------------------------------------
 		// Scroll Save
 		// ---------------------------------------------------------------
-		JButton btnSaveScroll = new JButton("Save");
+		JButton btnSaveScroll = new JButton("Sauv.");
 		btnSaveScroll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int ComboId = comboBoxScroll.getSelectedIndex();
@@ -807,7 +968,7 @@ public class WinPrime {
 		// ---------------------------------------------------------------
 		// Delete Scroll 
 		// ---------------------------------------------------------------
-		JButton btnDeleteScroll = new JButton("Delete");
+		JButton btnDeleteScroll = new JButton("Suppr.");
 		btnDeleteScroll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int ComboId = comboBoxScroll.getSelectedIndex();
@@ -827,7 +988,7 @@ public class WinPrime {
 		// ---------------------------------------------------------------
 		// New Scroll
 		// ---------------------------------------------------------------
-		JButton btnNewScroll = new JButton("New");
+		JButton btnNewScroll = new JButton("Nouv.");
 		btnNewScroll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int ComboId = comboBoxScroll.getSelectedIndex();
@@ -1110,17 +1271,28 @@ public class WinPrime {
 	/**
 	 * Fill all the field For Scroll 
 	 * with class Scroll infos !!
+	 * The data are read from the variable, where the information is stored in British value
 	 * @param pac
 	 */
 	private void fillScrollTexField(Scroll scroll) {
-		boolean weclick = false;
-
-		textFieldScrollName.setText(scroll.getName());
+		boolean weclickf = false;
+		boolean weclickb = false;
+		boolean weclickp = false;
 
 		if (!checkoxFaren.isSelected()) {
 			checkoxFaren.doClick();
-			weclick = true;
+			weclickf = true;
 		}
+		if (!checkoxBTU.isSelected()) {
+			checkoxBTU.doClick();
+			weclickb = true;
+		}
+		if (!chckbxPound.isSelected()) {
+			chckbxPound.doClick();
+			weclickp = true;
+		}
+
+		textFieldScrollName.setText(scroll.getName());
 
 		textFieldScrollEvap.setText(String.valueOf(scroll.getEvap()));
 		textFieldScrollRG.setText(String.valueOf(scroll.getRG()));
@@ -1138,8 +1310,14 @@ public class WinPrime {
 		double tmp = Math.round(PACmain.cosphi(scroll.getPower(), scroll.getVoltage(), scroll.getCurrent())*10000.0)/10000.0;
 		textFieldScrollCosPhi.setText(String.valueOf(tmp));
 
-		if (weclick) {
+		if (weclickf) {
 			checkoxFaren.doClick();
+		}
+		if (weclickb) {
+			checkoxBTU.doClick();
+		}
+		if (weclickp) {
+			chckbxPound.doClick();
 		}
 
 	}
@@ -1148,14 +1326,25 @@ public class WinPrime {
 	// Data will be stored in Anglo-Saxon Format
 	private void UpdateTextField2Pac( Pac paci) {
 		Scroll scroll = paci.getScroll();
-		boolean weclick = false;
 
-		scroll.setName(textFieldScrollName.getText());
+		boolean weclickf = false;
+		boolean weclickb = false;
+		boolean weclickp = false;
 
 		if (!checkoxFaren.isSelected()) {
 			checkoxFaren.doClick();
-			weclick = true;
+			weclickf = true;
 		}
+		if (!checkoxBTU.isSelected()) {
+			checkoxBTU.doClick();
+			weclickb = true;
+		}
+		if (!chckbxPound.isSelected()) {
+			chckbxPound.doClick();
+			weclickp = true;
+		}
+
+		scroll.setName(textFieldScrollName.getText());
 
 		scroll.setEvap(Double.valueOf(textFieldScrollEvap.getText()));
 		scroll.setRG(Double.valueOf(textFieldScrollRG.getText()));
@@ -1167,11 +1356,16 @@ public class WinPrime {
 		scroll.setMassFlow(Double.valueOf(textFieldScrollMassFlow.getText()));
 		scroll.setVoltage(Double.valueOf(textFieldScrollVoltage.getText()));
 
-		if (weclick) {
+		if (weclickf) {
 			checkoxFaren.doClick();
+		}
+		if (weclickb) {
+			checkoxBTU.doClick();
+		}
+		if (weclickp) {
+			chckbxPound.doClick();
 		}
 
 	}
-
 }
 
