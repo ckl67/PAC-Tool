@@ -8,7 +8,7 @@ Outil pour Pompe à Chaleur
 -------------
 Outil qui permet de vérifier les données contructeur (COP) et de calculer le COP de votre pompe à chaleur à partir de vos mesures.
 Programme écrit en Java.
-(Ce programme m'a permis de me former au langage Java.)
+(Ce programme m'a permis de m'initier au langage Java.) (Super Language !!)
 
 ----------------
  Chaine Développement
