@@ -1,3 +1,21 @@
+/*
+ * - PAC-Tool - 
+ * Tool for understanding basics and computation of PAC (Pompe à Chaleur)
+ * Copyright (C) 2016 christian.klugesherz@gmail.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License (version 2)
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package pacp;
 
 import javax.swing.JFrame;
@@ -86,15 +104,14 @@ public class WinPrime {
 	private JLabel lblRG;
 	private JLabel lblCond;
 	private JLabel lblLiq;
-
 	
 	// List of PAC 
 	private List<Pac> pacl = new ArrayList<Pac>();
-	// First pac is created !!
+	// First pac is created (This Pac can never been deleted!!)
 	Pac pac = new Pac();
 
-	// COP measure
-	Cop cop = new Cop();
+	// Compute COP measure
+	Ccop cop = new Ccop();
 
 	// ===================================================================================================================
 	/**
@@ -112,15 +129,16 @@ public class WinPrime {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(Pac paci, Cop copi) {
+	private void initialize(Pac paci, Ccop copi) {
 
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(WinPrime.class.getResource("/pacp/images/PAC-Tool_32.png")));
-		frame.setTitle("PAC Tool (" + PACmain.getPacToolVersion()+ ")");
+		frame.setTitle("PAC Tool (" + PacMain.getPacToolVersion()+ ")");
 		frame.setBounds(100, 100, 443, 574);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		PacMain.centreWindow(frame);
+		
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
@@ -372,10 +390,10 @@ public class WinPrime {
 		// ===============================================================================================================
 		//									                 PANEL PAC
 		// ===============================================================================================================
-		JPanel panelPAC = new JPanel();
-		panelPAC.setForeground(Color.BLUE);
-		tabbedPane.addTab("PAC", null, panelPAC, null);
-		panelPAC.setLayout(null);
+		JPanel panelSroll = new JPanel();
+		panelSroll.setForeground(Color.BLUE);
+		tabbedPane.addTab("SCROLL", null, panelSroll, null);
+		panelSroll.setLayout(null);
 
 		// ================================================================
 		// 					  	Performance Panel
@@ -384,7 +402,7 @@ public class WinPrime {
 		panel_pc1.setBorder(new TitledBorder(null, "Donn\u00E9es Performance Constructeur (Temp\u00E9rature)", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_pc1.setBounds(5, 73, 420, 161);
 		panel_pc1.setLayout(null);
-		panelPAC.add(panel_pc1);
+		panelSroll.add(panel_pc1);
 
 		// ---------------------------------------------------------------
 		// EVAP
@@ -555,10 +573,10 @@ public class WinPrime {
 					lblTemp_unity5.setText("°F");
 					lblTemp_unity6.setText("°F");
 
-					double tcond = PACmain.degre2farenheit(Double.valueOf( textFieldScrollCond.getText()));
-					double tliq = PACmain.degre2farenheit(Double.valueOf( textFieldScrollLiq.getText()));
-					double tRG = PACmain.degre2farenheit(Double.valueOf( textFieldScrollRG.getText()));
-					double tEvap = PACmain.degre2farenheit(Double.valueOf( textFieldScrollEvap.getText()));
+					double tcond = PacMain.degre2farenheit(Double.valueOf( textFieldScrollCond.getText()));
+					double tliq = PacMain.degre2farenheit(Double.valueOf( textFieldScrollLiq.getText()));
+					double tRG = PacMain.degre2farenheit(Double.valueOf( textFieldScrollRG.getText()));
+					double tEvap = PacMain.degre2farenheit(Double.valueOf( textFieldScrollEvap.getText()));
 
 					textFieldScrollEvap.setText(String.valueOf(Math.round(tEvap*100.0)/100.0));
 					textFieldScrollRG.setText(String.valueOf(Math.round(tRG*100.0)/100.0));
@@ -578,10 +596,10 @@ public class WinPrime {
 					lblTemp_unity5.setText("°C");
 					lblTemp_unity6.setText("°C");
 
-					double tcond = PACmain.farenheit2degre(Double.valueOf( textFieldScrollCond.getText()));
-					double tliq = PACmain.farenheit2degre(Double.valueOf( textFieldScrollLiq.getText()));
-					double tRG = PACmain.farenheit2degre(Double.valueOf( textFieldScrollRG.getText()));
-					double tEvap = PACmain.farenheit2degre(Double.valueOf( textFieldScrollEvap.getText()));
+					double tcond = PacMain.farenheit2degre(Double.valueOf( textFieldScrollCond.getText()));
+					double tliq = PacMain.farenheit2degre(Double.valueOf( textFieldScrollLiq.getText()));
+					double tRG = PacMain.farenheit2degre(Double.valueOf( textFieldScrollRG.getText()));
+					double tEvap = PacMain.farenheit2degre(Double.valueOf( textFieldScrollEvap.getText()));
 
 					textFieldScrollEvap.setText(String.valueOf(Math.round(tEvap*100.0)/100.0));
 					textFieldScrollRG.setText(String.valueOf(Math.round(tRG*100.0)/100.0));
@@ -605,7 +623,7 @@ public class WinPrime {
 		panel_pc2.setBounds(5, 245, 420, 241);
 		panel_pc2.setBorder(new TitledBorder(null, "Donn\u00E9es Performance Constructeur (Autres)", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_pc2.setLayout(null);
-		panelPAC.add(panel_pc2);
+		panelSroll.add(panel_pc2);
 
 		checkoxBTU = new JCheckBox("BTU/hr");
 		checkoxBTU.setToolTipText("British Thermal Unit / hour");
@@ -669,7 +687,7 @@ public class WinPrime {
 				double tmp = Math.round(vCapacity/vPower*10.0)/10.0;
 				textFieldScrollEER.setText(String.valueOf(tmp));	
 
-				tmp = Math.round(PACmain.cosphi(vPower, vVoltage,vCurrent)*10000.0)/10000.0;
+				tmp = Math.round(PacMain.cosphi(vPower, vVoltage,vCurrent)*10000.0)/10000.0;
 				textFieldScrollCosPhi.setText(String.valueOf(tmp));
 			}
 		});
@@ -698,7 +716,7 @@ public class WinPrime {
 				double vVoltage = Double.valueOf(textFieldScrollVoltage.getText());
 				double vCurrent = Double.valueOf(textFieldScrollCurrent.getText());
 
-				double tmp = Math.round(PACmain.cosphi(vPower, vVoltage,vCurrent)*10000.0)/10000.0;
+				double tmp = Math.round(PacMain.cosphi(vPower, vVoltage,vCurrent)*10000.0)/10000.0;
 				textFieldScrollCosPhi.setText(String.valueOf(tmp));
 			}
 		});
@@ -778,7 +796,7 @@ public class WinPrime {
 					lblCapacity_unity.setText("Btu/hr");
 					lblEER_unity.setText("BTU/(hr.W)");
 
-					double vCapacity = PACmain.watt2btuhr(Double.valueOf( textFieldScrollCapacity.getText()));
+					double vCapacity = PacMain.watt2btuhr(Double.valueOf( textFieldScrollCapacity.getText()));
 					double vPower =  Double.valueOf( textFieldScrollPower.getText());
 
 					textFieldScrollCapacity.setText(String.valueOf(Math.round(vCapacity*100.0)/100.0));
@@ -789,7 +807,7 @@ public class WinPrime {
 					lblCapacity_unity.setText("Watt");
 					lblEER_unity.setText("");
 
-					double vCapacity = PACmain.buthr2watt(Double.valueOf( textFieldScrollCapacity.getText()));
+					double vCapacity = PacMain.buthr2watt(Double.valueOf( textFieldScrollCapacity.getText()));
 					double vPower =  Double.valueOf( textFieldScrollPower.getText());
 					double vMassFlow = Double.valueOf(textFieldScrollMassFlow.getText());
 
@@ -818,7 +836,7 @@ public class WinPrime {
 				if (chckbxPound.isSelected()) {
 					lblMassFlow_unity.setText("lbs/hr");
 
-					double vMassFlow = PACmain.kg2pound(Double.valueOf(textFieldScrollMassFlow.getText()));
+					double vMassFlow = PacMain.kg2pound(Double.valueOf(textFieldScrollMassFlow.getText()));
 					textFieldScrollMassFlow.setText(String.valueOf(Math.round(vMassFlow*10.0)/10.0));
 
 					textFieldScrollDeltaH0.setText("-----");
@@ -827,7 +845,7 @@ public class WinPrime {
 					lblMassFlow_unity.setText("Kg/s");
 
 					double vCapacity = Double.valueOf( textFieldScrollCapacity.getText());
-					double vMassFlow = PACmain.pound2kg(Double.valueOf(textFieldScrollMassFlow.getText()));
+					double vMassFlow = PacMain.pound2kg(Double.valueOf(textFieldScrollMassFlow.getText()));
 					textFieldScrollMassFlow.setText(String.valueOf(Math.round(vMassFlow*10000.0)/10000.0));		
 
 					if (checkoxBTU.isSelected() | chckbxPound.isSelected())  {
@@ -882,7 +900,7 @@ public class WinPrime {
 				double vVoltage = Double.valueOf(textFieldScrollVoltage.getText());
 				double vCurrent = Double.valueOf(textFieldScrollCurrent.getText());
 
-				double tmp = Math.round(PACmain.cosphi(vPower, vVoltage,vCurrent)*10000.0)/10000.0;
+				double tmp = Math.round(PacMain.cosphi(vPower, vVoltage,vCurrent)*10000.0)/10000.0;
 				textFieldScrollCosPhi.setText(String.valueOf(tmp));
 			}
 		});
@@ -926,7 +944,7 @@ public class WinPrime {
 		textFieldScrollName.setFont(new Font("Tahoma", Font.BOLD, 16));
 		textFieldScrollName.setBounds(10, 10, 167, 52);
 		textFieldScrollName.setColumns(10);
-		panelPAC.add(textFieldScrollName);
+		panelSroll.add(textFieldScrollName);
 
 		// ---------------------------------------------------------------
 		// Combo box Scroll
@@ -940,7 +958,7 @@ public class WinPrime {
 		});
 		comboBoxScroll.setBounds(243, 10, 131, 20);
 		comboBoxScroll.addItem(pacl.get(0).getScroll().getName());
-		panelPAC.add(comboBoxScroll);
+		panelSroll.add(comboBoxScroll);
 
 
 		// ---------------------------------------------------------------
@@ -963,7 +981,7 @@ public class WinPrime {
 		});
 		btnSaveScroll.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		btnSaveScroll.setBounds(277, 39, 68, 23);
-		panelPAC.add(btnSaveScroll);
+		panelSroll.add(btnSaveScroll);
 
 		// ---------------------------------------------------------------
 		// Delete Scroll 
@@ -983,7 +1001,7 @@ public class WinPrime {
 		});
 		btnDeleteScroll.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		btnDeleteScroll.setBounds(355, 39, 68, 23);
-		panelPAC.add(btnDeleteScroll);
+		panelSroll.add(btnDeleteScroll);
 
 		// ---------------------------------------------------------------
 		// New Scroll
@@ -1002,16 +1020,16 @@ public class WinPrime {
 		});
 		btnNewScroll.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		btnNewScroll.setBounds(199, 39, 68, 23);
-		panelPAC.add(btnNewScroll);
+		panelSroll.add(btnNewScroll);
 
 
 		// ===============================================================================================================
 		//									        PANEL MEASURE 
 		// ===============================================================================================================
 
-		JPanel panelComp = new JPanel();
-		tabbedPane.addTab("Mesures", null, panelComp, null);
-		panelComp.setLayout(null);
+		JPanel panelCompCOP = new JPanel();
+		tabbedPane.addTab("Mesure COP", null, panelCompCOP, null);
+		panelCompCOP.setLayout(null);
 
 		// ---------------------------------------------------------------
 		// Button Compute
@@ -1039,7 +1057,7 @@ public class WinPrime {
 				 */
 			}
 		});
-		panelComp.add(btnComp);
+		panelCompCOP.add(btnComp);
 
 
 		// ---------------------------------------------------------------
@@ -1047,11 +1065,11 @@ public class WinPrime {
 		// ---------------------------------------------------------------
 		JLabel lblH = new JLabel("H1 :");
 		lblH.setBounds(25, 76, 30, 14);
-		panelComp.add(lblH);
+		panelCompCOP.add(lblH);
 
 		JLabel lblH1unity = new JLabel("kJ/kg");
 		lblH1unity.setBounds(158, 76, 36, 14);
-		panelComp.add(lblH1unity);
+		panelCompCOP.add(lblH1unity);
 
 		textFieldH1 = new JTextField();
 		textFieldH1.setText("416");
@@ -1070,18 +1088,18 @@ public class WinPrime {
 				}
 			}
 		});
-		panelComp.add(textFieldH1);
+		panelCompCOP.add(textFieldH1);
 
 		// ---------------------------------------------------------------
 		// H2
 		// ---------------------------------------------------------------
 		JLabel lblH2 = new JLabel("H2 :");
 		lblH2.setBounds(25, 107, 30, 14);
-		panelComp.add(lblH2);
+		panelCompCOP.add(lblH2);
 
 		JLabel lblH2unity = new JLabel("kJ/kg");
 		lblH2unity.setBounds(158, 107, 36, 14);
-		panelComp.add(lblH2unity);
+		panelCompCOP.add(lblH2unity);
 
 		textFieldH2 = new JTextField();
 		textFieldH2.setText("448");
@@ -1102,18 +1120,18 @@ public class WinPrime {
 				}
 			}
 		});
-		panelComp.add(textFieldH2);
+		panelCompCOP.add(textFieldH2);
 
 		// ---------------------------------------------------------------
 		// H3 & H4
 		// ---------------------------------------------------------------
 		JLabel lblH3 = new JLabel("H3=H4 :");
 		lblH3.setBounds(25, 138, 46, 14);
-		panelComp.add(lblH3);
+		panelCompCOP.add(lblH3);
 
 		JLabel lblH3unity = new JLabel("kJ/kg");
 		lblH3unity.setBounds(158, 138, 36, 14);
-		panelComp.add(lblH3unity);
+		panelCompCOP.add(lblH3unity);
 
 		textFieldH3 = new JTextField();
 		textFieldH3.setText("250");
@@ -1134,18 +1152,18 @@ public class WinPrime {
 				}
 			}
 		});
-		panelComp.add(textFieldH3);
+		panelCompCOP.add(textFieldH3);
 
 		// ---------------------------------------------------------------
 		// T0
 		// ---------------------------------------------------------------
 		JLabel lblT0 = new JLabel("T0 :");
 		lblT0.setBounds(25, 14, 30, 14);
-		panelComp.add(lblT0);
+		panelCompCOP.add(lblT0);
 
 		JLabel lblT0unity = new JLabel("\u00B0C");
 		lblT0unity.setBounds(158, 14, 36, 14);
-		panelComp.add(lblT0unity);
+		panelCompCOP.add(lblT0unity);
 
 		textFieldT0 = new JTextField();
 		textFieldT0.setText("5");
@@ -1166,18 +1184,18 @@ public class WinPrime {
 				}
 			}
 		});
-		panelComp.add(textFieldT0);
+		panelCompCOP.add(textFieldT0);
 
 		// ---------------------------------------------------------------
 		// TK
 		// ---------------------------------------------------------------
 		JLabel lblTk = new JLabel("TK :");
 		lblTk.setBounds(25, 45, 30, 14);
-		panelComp.add(lblTk);
+		panelCompCOP.add(lblTk);
 
 		JLabel lblTkunity = new JLabel("\u00B0C");
 		lblTkunity.setBounds(158, 42, 36, 14);
-		panelComp.add(lblTkunity);
+		panelCompCOP.add(lblTkunity);
 
 		textFieldTK = new JTextField();
 		textFieldTK.setText("48");
@@ -1198,7 +1216,7 @@ public class WinPrime {
 				}
 			}
 		});
-		panelComp.add(textFieldTK);
+		panelCompCOP.add(textFieldTK);
 
 		// ---------------------------------------------------------------
 		// Image
@@ -1207,14 +1225,14 @@ public class WinPrime {
 		JLabel lblNewLabel = new JLabel("New label");
 		lblNewLabel.setIcon(new ImageIcon(WinPrime.class.getResource("/pacp/images/enthalpie.jpg")));
 		lblNewLabel.setBounds(233, 11, 150, 100);
-		panelComp.add(lblNewLabel);
+		panelCompCOP.add(lblNewLabel);
 
 		// ---------------------------------------------------------------
 		// Carnot Froid
 		// ---------------------------------------------------------------
 		JLabel labelCarnotFroid = new JLabel("Carnot Froid :");
 		labelCarnotFroid.setBounds(212, 138, 75, 14);
-		panelComp.add(labelCarnotFroid);
+		panelCompCOP.add(labelCarnotFroid);
 
 		textFieldCarnotFroid = new JTextField();
 		textFieldCarnotFroid.setBackground(Color.PINK);
@@ -1223,7 +1241,7 @@ public class WinPrime {
 		textFieldCarnotFroid.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldCarnotFroid.setColumns(10);
 		textFieldCarnotFroid.setBounds(297, 135, 86, 20);
-		panelComp.add(textFieldCarnotFroid);
+		panelCompCOP.add(textFieldCarnotFroid);
 
 		// ===============================================================================================================
 		//									        PANEL DEFINITION 
@@ -1307,7 +1325,7 @@ public class WinPrime {
 		textFieldScrollMassFlow.setText(String.valueOf(scroll.getMassFlow()));
 		textFieldScrollDeltaH0.setText("-----");
 		textFieldScrollVoltage.setText(String.valueOf(scroll.getVoltage()));
-		double tmp = Math.round(PACmain.cosphi(scroll.getPower(), scroll.getVoltage(), scroll.getCurrent())*10000.0)/10000.0;
+		double tmp = Math.round(PacMain.cosphi(scroll.getPower(), scroll.getVoltage(), scroll.getCurrent())*10000.0)/10000.0;
 		textFieldScrollCosPhi.setText(String.valueOf(tmp));
 
 		if (weclickf) {
