@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.KeyAdapter;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Toolkit;
 import javax.swing.JTabbedPane;
 import java.awt.BorderLayout;
@@ -64,6 +65,12 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.JComboBox;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JFileChooser;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.border.MatteBorder;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EtchedBorder;
 
 public class WinPrime {
 
@@ -112,6 +119,7 @@ public class WinPrime {
 
 	// Compute COP measure
 	Ccop cop = new Ccop();
+	private JTextField textFieldCirculatorVoltage;
 
 	// ===================================================================================================================
 	/**
@@ -379,13 +387,15 @@ public class WinPrime {
 			}
 		});
 		help.add(about);
+		frame.getContentPane().setLayout(null);
 
 		// ===============================================================================================================
 		//													TABBED PANE
 		// ===============================================================================================================
 
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		frame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
+		tabbedPane.setBounds(0, 0, 437, 525);
+		frame.getContentPane().add(tabbedPane);
 
 		// ===============================================================================================================
 		//									                 PANEL PAC
@@ -1021,6 +1031,19 @@ public class WinPrime {
 		btnNewScroll.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		btnNewScroll.setBounds(199, 39, 68, 23);
 		panelSroll.add(btnNewScroll);
+		
+		JPanel panelCirculator = new JPanel();
+		tabbedPane.addTab("Circulateur", null, panelCirculator, null);
+		panelCirculator.setLayout(null);
+		
+		JLabel lblCirculVolt = new JLabel("Tension");
+		lblCirculVolt.setBounds(40, 52, 46, 14);
+		panelCirculator.add(lblCirculVolt);
+		
+		textFieldCirculatorVoltage = new JTextField();
+		textFieldCirculatorVoltage.setBounds(122, 49, 86, 20);
+		panelCirculator.add(textFieldCirculatorVoltage);
+		textFieldCirculatorVoltage.setColumns(10);
 
 
 		// ===============================================================================================================
@@ -1028,6 +1051,7 @@ public class WinPrime {
 		// ===============================================================================================================
 
 		JPanel panelCompCOP = new JPanel();
+		panelCompCOP.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		tabbedPane.addTab("Mesure COP", null, panelCompCOP, null);
 		panelCompCOP.setLayout(null);
 
@@ -1223,6 +1247,23 @@ public class WinPrime {
 		// ---------------------------------------------------------------
 
 		JLabel lblNewLabel = new JLabel("New label");
+		lblNewLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		lblNewLabel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		lblNewLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+								
+				JFrame window = new JFrame();
+				GEnthalpie content = new GEnthalpie(640,480, "/pacp/images/diagrammes enthalpie/R22.png");	
+				window.setLocation(80,10);
+				window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				window.setContentPane(content);
+				window.pack();
+				window.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR)); 
+				window.setVisible(true);	
+								
+			}
+		});
 		lblNewLabel.setIcon(new ImageIcon(WinPrime.class.getResource("/pacp/images/enthalpie.jpg")));
 		lblNewLabel.setBounds(233, 11, 150, 100);
 		panelCompCOP.add(lblNewLabel);
