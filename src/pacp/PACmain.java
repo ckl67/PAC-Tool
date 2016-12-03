@@ -24,14 +24,14 @@ import java.awt.Window;
 
 public class PacMain {
 
-	private static String PACTool_Version = "Version Beta 0.1";
+	private static String PACTool_Version = "Version Alpha 0.1";
 
 	// ========================================================================================
 	//                                 		MAIN
 	// ========================================================================================
 	public static void main(String[] args){
-		@SuppressWarnings("unused")
 		WinPrime window = new WinPrime();
+		window.WinPrimeVisible();
 	}
 
 	// ========================================================================================

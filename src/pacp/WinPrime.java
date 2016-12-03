@@ -44,12 +44,10 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Toolkit;
 import javax.swing.JTabbedPane;
-import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JCheckBox;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -67,10 +65,8 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JFileChooser;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.border.MatteBorder;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.BevelBorder;
-import javax.swing.border.EtchedBorder;
+
 
 public class WinPrime {
 
@@ -111,7 +107,7 @@ public class WinPrime {
 	private JLabel lblRG;
 	private JLabel lblCond;
 	private JLabel lblLiq;
-	
+
 	// List of PAC 
 	private List<Pac> pacl = new ArrayList<Pac>();
 	// First pac is created (This Pac can never been deleted!!)
@@ -130,6 +126,11 @@ public class WinPrime {
 		pacl.add(pac);	
 		initialize(pac,cop);
 		fillScrollTexField(pac.getScroll());
+		
+	}
+
+	public void WinPrimeVisible() {
+		frame.setVisible(true);
 	}
 
 
@@ -146,7 +147,7 @@ public class WinPrime {
 		frame.setBounds(100, 100, 443, 574);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		PacMain.centreWindow(frame);
-		
+
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
@@ -381,12 +382,16 @@ public class WinPrime {
 		JMenuItem about = new JMenuItem("A propos de ?");
 		about.setIcon(new ImageIcon(WinPrime.class.getResource("/pacp/images/Apropos.png")));
 		about.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				WinAbout nabw = new WinAbout();
-				nabw.NewAboutWin();
+			public void actionPerformed(ActionEvent evt) {
+				try {
+					WinAbout window = new WinAbout();
+					window.WinAboutVisible();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
-		help.add(about);
+		help.add(about);;
 		frame.getContentPane().setLayout(null);
 
 		// ===============================================================================================================
@@ -1031,15 +1036,15 @@ public class WinPrime {
 		btnNewScroll.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		btnNewScroll.setBounds(199, 39, 68, 23);
 		panelSroll.add(btnNewScroll);
-		
+
 		JPanel panelCirculator = new JPanel();
 		tabbedPane.addTab("Circulateur", null, panelCirculator, null);
 		panelCirculator.setLayout(null);
-		
+
 		JLabel lblCirculVolt = new JLabel("Tension");
 		lblCirculVolt.setBounds(40, 52, 46, 14);
 		panelCirculator.add(lblCirculVolt);
-		
+
 		textFieldCirculatorVoltage = new JTextField();
 		textFieldCirculatorVoltage.setBounds(122, 49, 86, 20);
 		panelCirculator.add(textFieldCirculatorVoltage);
@@ -1252,16 +1257,12 @@ public class WinPrime {
 		lblNewLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-								
-				JFrame window = new JFrame();
-				GEnthalpie content = new GEnthalpie(640,480, "/pacp/images/diagrammes enthalpie/R22.png");	
-				window.setLocation(80,10);
-				window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				window.setContentPane(content);
-				window.pack();
-				window.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR)); 
-				window.setVisible(true);	
-								
+				try {
+					WinEnthalpie window = new WinEnthalpie();
+					window.WinEnthalpieVisible();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		lblNewLabel.setIcon(new ImageIcon(WinPrime.class.getResource("/pacp/images/enthalpie.jpg")));
@@ -1303,10 +1304,6 @@ public class WinPrime {
 		scrollPane.setViewportView(txtdef);
 
 
-		// ---------------------------------------------------------------
-		// Display 
-		// ---------------------------------------------------------------
-		frame.setVisible(true);
 
 	}
 

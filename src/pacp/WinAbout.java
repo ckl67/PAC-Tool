@@ -18,8 +18,6 @@
  */
 package pacp;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JTextPane;
 import javax.swing.event.HyperlinkListener;
@@ -36,22 +34,6 @@ public class WinAbout {
 
 	private JFrame frame;
 
-	// ========================================================================================
-	/**
-	 * Launch the application.
-	 */
-	public void NewAboutWin() {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					WinAbout window = new WinAbout();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	// ========================================================================================
 	/**
@@ -61,6 +43,11 @@ public class WinAbout {
 		initialize();
 	}
 
+	// ========================================================================================
+	public void WinAboutVisible() {
+		frame.setVisible(true);
+	}
+	
 	// ========================================================================================
 	/**
 	 * Initialize the contents of the frame.
