@@ -20,43 +20,48 @@ package pacp;
 
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.InputEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class PanelEnthalpie extends JPanel implements MouseWheelListener, MouseListener, MouseMotionListener {
-
-	/**
-	 * Some constants & variables
-	 */
 	private static final long serialVersionUID = 1L;
-	private float zoom = 1f;
 
-	private int xMouse = 0;
-	private int yMouse = 0;
-	private BufferedImage img;
-	private Graphics graphicsForDrawing; 
+	private BufferedImage image;
+
+	private Point xymouse = new Point();
+	private Point offset = new Point();
+	private Point dragStart = new Point();
+
+	private Point2D.Double OrigineH = new Point2D.Double(85,570); // (h0,h1)
+
+	private boolean setOrigineH0=false;
+	private boolean setOrigineH1=false;
+
+	double zoom = 1;
 
 	/**
-	 * Constructor for GEnthalpie class sets the background + sets it to listen for mouse events on itself.
+	 * Constructor for GEnthalpie class
 	 */
-	public PanelEnthalpie(int width, int height, String digenth, MouseMotionListener ml) {
-		setPreferredSize(new Dimension(width, height));
+	public PanelEnthalpie(String dirImgEnth, MouseAdapter ma) {
+
 		try {
-			img = ImageIO.read(PanelEnthalpie.class.getResource(digenth));	
+			image = ImageIO.read(PanelEnthalpie.class.getResource(dirImgEnth));	
 		} catch (IOException e) {
+			System.out.println("Image non trouvée !");
 			e.printStackTrace(); 
 		}
 		setBackground(Color.WHITE);
@@ -64,138 +69,128 @@ public class PanelEnthalpie extends JPanel implements MouseWheelListener, MouseL
 		addMouseWheelListener(this);
 		addMouseListener(this);
 		addMouseMotionListener(this);
-		addMouseMotionListener(ml);
+		addMouseMotionListener(ma);
 	}
 
-
-	/**
-	 * Draw the contents of the panel.  Since no information issaved about what the user has drawn, the user's drawing
-	 * is erased + background image whenever this routine is called.
-	 */
 	@Override
-	public void paintComponent(Graphics g)
-	{
-		int width = getWidth();
-		int height = getHeight();
-		float z = zoom*zoom;
-		float currentImgWidth = img.getWidth()*z;
-		float currentImgHeight = img.getHeight()*z;
-		//float currentImgWidth = img.getMinX()*z;
-		//float currentImgHeight = img.getHeight()*z;
-		
+	public void paintComponent(Graphics g)	{
 		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D)g;
+		Graphics2D g2d = (Graphics2D) g.create();
 
 		AffineTransform t = new AffineTransform();
-		//t.translate(width/2-currentImgWidth/2, height/2-currentImgHeight/2);
-		t.translate(xMouse-200, yMouse-200);
-		t.scale(z, z);
+		// First Zoom, then translate to be sure to not pollute the offset with zoom operation 
+		t.scale(zoom, zoom);
+		t.translate(offset.x, offset.y);
+		g2d.drawImage(image, t, null);
+	}
 
-		g2.drawImage(img, t, null);
+	public void SetOrigineH() {
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));		
+		setOrigineH0 = true;
+	}
 
-		// g.dispose() will release any operating system resources that might be held by g.
-		// dispose() is intended for closing the frame.
-		//g2.dispose();
+	public void SetFinalH() {
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));		
+		setOrigineH1 = true;
+	}
 
+	public void Clean() {
+		repaint();
+	}
+
+	public double getH(int x) {
+		//XH = 140 + (240-140) * (X/Zoom - offset(x) -xOrigineH) /  (xFinalH-xOrigineH)
+		double xh = 140.0 + (240.0-140.0) * ((double)x/zoom - offset.x - OrigineH.x)/(double)(OrigineH.y-OrigineH.x) ;
+		//System.out.println(	"  x="+x +	"  offset.x="+offset.x +"  xOrigineH=" + OrigineH.x +	"  xFinalH="+OrigineH.y +"  Zoom="+zoom+"  x/zoom="+ (double)x/zoom );
+		return xh;
 	}
 
 	// ===============================================================================================================
 	// 													EVENT LISTNER
 	// ===============================================================================================================
 	@Override
-	public void mouseWheelMoved(MouseWheelEvent e) {
-		zoom = Math.max(0, zoom - 0.03f * e.getWheelRotation());
-		//The system will call the component’s paintComponent() method later, as soon as it gets a chance to do so
-		repaint();
+	public void mousePressed(MouseEvent evt) {
+		int xMouse = evt.getX();
+		int yMouse = evt.getY();
+		
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
+		if ((evt.getModifiers() & InputEvent.BUTTON2_MASK) != 0) {
+			dragStart.x = xMouse-offset.x;
+			dragStart.y = yMouse-offset.y;
+		}
+
+		if ( setOrigineH0) {
+			OrigineH.x =  xMouse/zoom - offset.x;
+			//System.out.println("  x="+xMouse +	"  offset.x="+offset.x + "  Zoom="+zoom +  "  ph0(140)=" +OrigineH.x + "  pt_h1(240)=" + OrigineH.y);
+			setOrigineH0 = false;
+		}
+
+		if ( setOrigineH1) {
+			OrigineH.y = xMouse/zoom - offset.x;
+			//System.out.println("  x="+xMouse +	"  offset.x="+offset.x +"  Zoom="+zoom + "  ph0(140)=" +OrigineH.x + "  pt_h1(240)=" + OrigineH.y);
+			setOrigineH1 = false;
+		}
+		Graphics g = getGraphics();
+		Graphics2D g2 = (Graphics2D)g;
+		
+		//Point
+		g2.setColor(Color.RED);
+		g2.fillOval( xMouse-5, yMouse-5, 10, 10 );
+		g2.setColor(Color.BLACK);
+		g2.drawOval( xMouse-5, yMouse-5, 10, 10 );
+		g2.setColor(Color.RED);
+		g2.fillOval( xMouse-5, yMouse-5, 10, 10 );
+		g2.setColor(Color.BLACK);
+		g2.drawOval( xMouse-5, yMouse-5, 10, 10 );	
 	}
 
+	@Override
+	public void mouseDragged(MouseEvent evt) {
+		if ((evt.getModifiers() & InputEvent.BUTTON2_MASK) != 0) {
+			offset.x = (evt.getX() - dragStart.x);
+			offset.y = (evt.getY() - dragStart.y);
+			this.repaint();
+		}
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent evt) {
+		zoom -= evt.getPreciseWheelRotation() * .03;
+		if (zoom < 0) zoom = 0;
+		this.repaint();
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent evt) {
+		xymouse.x= evt.getX();
+		xymouse.y= evt.getY();					    
+	}		
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mousePressed(MouseEvent evt) {
-		if ( evt.isShiftDown() ) {
-			// The user was holding down the Shift key. Just repaint the panel.
-			repaint();
-			return;
-		}
-		int xMouse = evt.getX();
-		int yMouse = evt.getY();
-
-		Graphics g = getGraphics();
-		//The system will call the component’s paintComponent() method later, as soon as it gets a chance to do so
-		Graphics2D g2 = (Graphics2D)g;
-
-		//Point
-		g2.setColor(Color.RED);
-		g2.fillOval( xMouse, yMouse, 10, 10 );
-		g2.setColor(Color.BLACK);
-		g2.drawOval( xMouse, yMouse, 10, 10 );
-
-
-		//Point
-		g2.setColor(Color.RED);
-		g2.fillOval( xMouse, yMouse, 10, 10 );
-		g2.setColor(Color.BLACK);
-		g2.drawOval( xMouse, yMouse, 10, 10 );
-
-
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent evt) {
-		// TODO Auto-generated method stub
-
-	}
-
-
-	@Override
-	public void mouseDragged(MouseEvent evt) {
-		if ((evt.getModifiers() & InputEvent.BUTTON2_MASK) != 0) {
-			xMouse = evt.getX();
-			yMouse = evt.getY();
-			repaint();
-		}
-	}
-
-
-	@Override
-	public void mouseMoved(MouseEvent evt) {
-
-		int x = evt.getX();
-		int y = evt.getY();
 		
-		//Component source=(Component)evt.getSource();
-		//source.getParent()
-
-		// TODO Auto-generated method stub
-		//graphicsForDrawing = getGraphics();
-		//repaint();
-
-	//	String s = x + ", " + y;
-		//System.out.println(s);
-		//graphicsForDrawing.setColor(Color.red);
-		//graphicsForDrawing.drawString(s, x, y);
-
 	}
 
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+	
+	}
+
+};
 
 
-}
