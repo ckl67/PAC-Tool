@@ -31,39 +31,28 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 public class PanelEnthalpie extends JPanel implements MouseWheelListener, MouseListener, MouseMotionListener {
-	private static final long serialVersionUID = 1L;
-
+	
+	private static final long serialVersionUID = 1L;	
+	private ConfEnthalpy confEnthalpy;
 	private BufferedImage image;
-
 	private Point xymouse = new Point();
 	private Point offset = new Point();
 	private Point dragStart = new Point();
-
-	private Point2D.Double OrigineH = new Point2D.Double(85,570); // (h0,h1)
-
-	private boolean setOrigineH0=false;
-	private boolean setOrigineH1=false;
-
-	double zoom = 1;
+	private double zoom = 1;
 
 	/**
 	 * Constructor for GEnthalpie class
 	 */
-	public PanelEnthalpie(String dirImgEnth, MouseAdapter ma) {
-
-		try {
-			image = ImageIO.read(PanelEnthalpie.class.getResource(dirImgEnth));	
-		} catch (IOException e) {
-			System.out.println("Image non trouvée !");
-			e.printStackTrace(); 
-		}
+	public PanelEnthalpie(ConfEnthalpy vconfEnthalpy, MouseAdapter ma) {
+		confEnthalpy = vconfEnthalpy;
+		openEnthalpyImageFile();
 		setBackground(Color.WHITE);
 
 		addMouseWheelListener(this);
@@ -84,24 +73,30 @@ public class PanelEnthalpie extends JPanel implements MouseWheelListener, MouseL
 		g2d.drawImage(image, t, null);
 	}
 
-	public void SetOrigineH() {
-		this.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));		
-		setOrigineH0 = true;
+	// ========================================================================================
+	//                            SETTER & GETTER & VISIBLE FUNCTIONS
+	// ========================================================================================
+	// EnthalpyImageFile
+	public void openEnthalpyImageFile() {
+		try {
+			File file = new File(confEnthalpy.getEnthalpyImageFile());
+			image = ImageIO.read(file);	
+		} catch (IOException e) {
+			System.out.println("Image non trouvée !");
+			e.printStackTrace(); 
+		}
 	}
-
-	public void SetFinalH() {
-		this.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));		
-		setOrigineH1 = true;
-	}
-
+		
+	// Clean
 	public void Clean() {
 		repaint();
 	}
 
+	// Compute H / mouse coordinate
 	public double getH(int x) {
 		//XH = 140 + (240-140) * (X/Zoom - offset(x) -xOrigineH) /  (xFinalH-xOrigineH)
-		double xh = 140.0 + (240.0-140.0) * ((double)x/zoom - offset.x - OrigineH.x)/(double)(OrigineH.y-OrigineH.x) ;
-		//System.out.println(	"  x="+x +	"  offset.x="+offset.x +"  xOrigineH=" + OrigineH.x +	"  xFinalH="+OrigineH.y +"  Zoom="+zoom+"  x/zoom="+ (double)x/zoom );
+		double xh = confEnthalpy.getiHOrigine() + (confEnthalpy.getiHFinal()-confEnthalpy.getiHOrigine()) * ((double)x/zoom - offset.x - confEnthalpy.getmHOrigine())/(double)(confEnthalpy.getmHFinal()-confEnthalpy.getmHOrigine()) ;
+		//System.out.println(	"  x="+x +	"  offset.x="+confEnthalpy.getoffset().x +"  xOrigineH=" + confEnthalpy.getmHOrigine() +	"  xFinalH="+confEnthalpy.getmOrigineH(.y +"  Zoom="+zoom+"  x/zoom="+ (double)x/zoom + "  xh=" + xh );
 		return xh;
 	}
 
@@ -120,16 +115,16 @@ public class PanelEnthalpie extends JPanel implements MouseWheelListener, MouseL
 			dragStart.y = yMouse-offset.y;
 		}
 
-		if ( setOrigineH0) {
-			OrigineH.x =  xMouse/zoom - offset.x;
-			//System.out.println("  x="+xMouse +	"  offset.x="+offset.x + "  Zoom="+zoom +  "  ph0(140)=" +OrigineH.x + "  pt_h1(240)=" + OrigineH.y);
-			setOrigineH0 = false;
+		if ( confEnthalpy.islocateOrigineH()) {
+			confEnthalpy.setmHOrigine(xMouse/zoom - offset.x);
+			//System.out.println("  x="+xMouse +	"  offset.x="+offset.x + "  Zoom="+zoom +  "  ph0(140)=" +mOrigineH.x + "  pt_h1(240)=" + mOrigineH.y);
+			confEnthalpy.setlocateOrigineH(false);
 		}
 
-		if ( setOrigineH1) {
-			OrigineH.y = xMouse/zoom - offset.x;
-			//System.out.println("  x="+xMouse +	"  offset.x="+offset.x +"  Zoom="+zoom + "  ph0(140)=" +OrigineH.x + "  pt_h1(240)=" + OrigineH.y);
-			setOrigineH1 = false;
+		if ( confEnthalpy.islocateFinalH()) {
+			confEnthalpy.setmHFinal(xMouse/zoom - offset.x);
+			//System.out.println("  x="+xMouse +	"  offset.x="+offset.x +"  Zoom="+zoom + "  ph0(140)=" +mOrigineH.x + "  pt_h1(240)=" + mOrigineH.y);
+			confEnthalpy.setlocateFinalH(false);
 		}
 		Graphics g = getGraphics();
 		Graphics2D g2 = (Graphics2D)g;
@@ -163,6 +158,12 @@ public class PanelEnthalpie extends JPanel implements MouseWheelListener, MouseL
 
 	@Override
 	public void mouseMoved(MouseEvent evt) {
+		if ( confEnthalpy.islocateOrigineH()) {
+			this.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+		}
+		if ( confEnthalpy.islocateFinalH()) {
+			this.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));			
+		}
 		xymouse.x= evt.getX();
 		xymouse.y= evt.getY();					    
 	}		

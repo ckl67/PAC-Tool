@@ -70,7 +70,10 @@ import javax.swing.border.BevelBorder;
 
 public class WinPrime {
 
+	private ConfEnthalpy confEnthalpy;
+	
 	private JFrame frame;
+	
 	private JTextField textFieldH1;
 	private JTextField textFieldH2;
 	private JTextField textFieldH3;
@@ -92,11 +95,13 @@ public class WinPrime {
 	private JTextField textFieldScrollVoltage;
 	private JTextField textFieldScrollCosPhi;
 	private JTextField textFieldScrollName;
+	private JTextField textFieldCirculatorVoltage;
+
 	private JCheckBox checkoxFaren;
 	private JCheckBox checkoxBTU;
 	private JCheckBox chckbxPound;
 	private JComboBox<String> comboBoxScroll;
-
+	
 	private JLabel lblCapacity;
 	private JLabel lblPower;
 	private JLabel lblCurrent;
@@ -108,24 +113,20 @@ public class WinPrime {
 	private JLabel lblCond;
 	private JLabel lblLiq;
 
-	// List of PAC 
+	// List of PAC (First Pac can never been deleted!!)
 	private List<Pac> pacl = new ArrayList<Pac>();
-	// First pac is created (This Pac can never been deleted!!)
-	Pac pac = new Pac();
 
-	// Compute COP measure
-	Ccop cop = new Ccop();
-	private JTextField textFieldCirculatorVoltage;
 
 	// ===================================================================================================================
 	/**
 	 * Create the application.
 	 * 
 	 */
-	public WinPrime() {
-		pacl.add(pac);	
-		initialize(pac,cop);
-		fillScrollTexField(pac.getScroll());
+	public WinPrime(Pac paci, Ccop copi, ConfEnthalpy vconfEnthalpy) {
+		confEnthalpy = vconfEnthalpy;
+		pacl.add(paci);	
+		initialize(paci,copi);
+		fillScrollTexField(paci.getScroll());
 		
 	}
 
@@ -143,10 +144,10 @@ public class WinPrime {
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(WinPrime.class.getResource("/pacp/images/PAC-Tool_32.png")));
-		frame.setTitle("PAC Tool (" + PacMain.getPacToolVersion()+ ")");
+		frame.setTitle("PAC Tool (" + PacMain.PACTool_Version+ ")");
 		frame.setBounds(100, 100, 443, 574);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		PacMain.centreWindow(frame);
+		PacCommon.centreWindow(frame);
 
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -327,6 +328,22 @@ public class WinPrime {
 		// ---------------------------------------------------------------
 		JMenu mpreference = new JMenu("Pr\u00E9f\u00E9rences");
 		menubar.add(mpreference);
+		
+		JMenuItem mImgEnthalpyCfg = new JMenuItem("Enthalpie Conf.");
+		mImgEnthalpyCfg.setIcon(new ImageIcon(WinPrime.class.getResource("/com/sun/javafx/scene/web/skin/FontBackgroundColor_16x16_JFX.png")));
+		mImgEnthalpyCfg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				try {
+					WinConfEnthalpy window = new WinConfEnthalpy(confEnthalpy);
+					window.WinConfEnthalpyVisible();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+			}
+		});
+		mpreference.add(mImgEnthalpyCfg);
 
 		JMenu mlangue = new JMenu("Langues");
 		mlangue.setIcon(new ImageIcon(WinPrime.class.getResource("/pacp/images/flag-frgb16x16.png")));
@@ -588,10 +605,10 @@ public class WinPrime {
 					lblTemp_unity5.setText("°F");
 					lblTemp_unity6.setText("°F");
 
-					double tcond = PacMain.degre2farenheit(Double.valueOf( textFieldScrollCond.getText()));
-					double tliq = PacMain.degre2farenheit(Double.valueOf( textFieldScrollLiq.getText()));
-					double tRG = PacMain.degre2farenheit(Double.valueOf( textFieldScrollRG.getText()));
-					double tEvap = PacMain.degre2farenheit(Double.valueOf( textFieldScrollEvap.getText()));
+					double tcond = PacCommon.degre2farenheit(Double.valueOf( textFieldScrollCond.getText()));
+					double tliq = PacCommon.degre2farenheit(Double.valueOf( textFieldScrollLiq.getText()));
+					double tRG = PacCommon.degre2farenheit(Double.valueOf( textFieldScrollRG.getText()));
+					double tEvap = PacCommon.degre2farenheit(Double.valueOf( textFieldScrollEvap.getText()));
 
 					textFieldScrollEvap.setText(String.valueOf(Math.round(tEvap*100.0)/100.0));
 					textFieldScrollRG.setText(String.valueOf(Math.round(tRG*100.0)/100.0));
@@ -611,10 +628,10 @@ public class WinPrime {
 					lblTemp_unity5.setText("°C");
 					lblTemp_unity6.setText("°C");
 
-					double tcond = PacMain.farenheit2degre(Double.valueOf( textFieldScrollCond.getText()));
-					double tliq = PacMain.farenheit2degre(Double.valueOf( textFieldScrollLiq.getText()));
-					double tRG = PacMain.farenheit2degre(Double.valueOf( textFieldScrollRG.getText()));
-					double tEvap = PacMain.farenheit2degre(Double.valueOf( textFieldScrollEvap.getText()));
+					double tcond = PacCommon.farenheit2degre(Double.valueOf( textFieldScrollCond.getText()));
+					double tliq = PacCommon.farenheit2degre(Double.valueOf( textFieldScrollLiq.getText()));
+					double tRG = PacCommon.farenheit2degre(Double.valueOf( textFieldScrollRG.getText()));
+					double tEvap = PacCommon.farenheit2degre(Double.valueOf( textFieldScrollEvap.getText()));
 
 					textFieldScrollEvap.setText(String.valueOf(Math.round(tEvap*100.0)/100.0));
 					textFieldScrollRG.setText(String.valueOf(Math.round(tRG*100.0)/100.0));
@@ -702,7 +719,7 @@ public class WinPrime {
 				double tmp = Math.round(vCapacity/vPower*10.0)/10.0;
 				textFieldScrollEER.setText(String.valueOf(tmp));	
 
-				tmp = Math.round(PacMain.cosphi(vPower, vVoltage,vCurrent)*10000.0)/10000.0;
+				tmp = Math.round(PacCommon.cosphi(vPower, vVoltage,vCurrent)*10000.0)/10000.0;
 				textFieldScrollCosPhi.setText(String.valueOf(tmp));
 			}
 		});
@@ -731,7 +748,7 @@ public class WinPrime {
 				double vVoltage = Double.valueOf(textFieldScrollVoltage.getText());
 				double vCurrent = Double.valueOf(textFieldScrollCurrent.getText());
 
-				double tmp = Math.round(PacMain.cosphi(vPower, vVoltage,vCurrent)*10000.0)/10000.0;
+				double tmp = Math.round(PacCommon.cosphi(vPower, vVoltage,vCurrent)*10000.0)/10000.0;
 				textFieldScrollCosPhi.setText(String.valueOf(tmp));
 			}
 		});
@@ -811,7 +828,7 @@ public class WinPrime {
 					lblCapacity_unity.setText("Btu/hr");
 					lblEER_unity.setText("BTU/(hr.W)");
 
-					double vCapacity = PacMain.watt2btuhr(Double.valueOf( textFieldScrollCapacity.getText()));
+					double vCapacity = PacCommon.watt2btuhr(Double.valueOf( textFieldScrollCapacity.getText()));
 					double vPower =  Double.valueOf( textFieldScrollPower.getText());
 
 					textFieldScrollCapacity.setText(String.valueOf(Math.round(vCapacity*100.0)/100.0));
@@ -822,7 +839,7 @@ public class WinPrime {
 					lblCapacity_unity.setText("Watt");
 					lblEER_unity.setText("");
 
-					double vCapacity = PacMain.buthr2watt(Double.valueOf( textFieldScrollCapacity.getText()));
+					double vCapacity = PacCommon.buthr2watt(Double.valueOf( textFieldScrollCapacity.getText()));
 					double vPower =  Double.valueOf( textFieldScrollPower.getText());
 					double vMassFlow = Double.valueOf(textFieldScrollMassFlow.getText());
 
@@ -851,7 +868,7 @@ public class WinPrime {
 				if (chckbxPound.isSelected()) {
 					lblMassFlow_unity.setText("lbs/hr");
 
-					double vMassFlow = PacMain.kg2pound(Double.valueOf(textFieldScrollMassFlow.getText()));
+					double vMassFlow = PacCommon.kg2pound(Double.valueOf(textFieldScrollMassFlow.getText()));
 					textFieldScrollMassFlow.setText(String.valueOf(Math.round(vMassFlow*10.0)/10.0));
 
 					textFieldScrollDeltaH0.setText("-----");
@@ -860,7 +877,7 @@ public class WinPrime {
 					lblMassFlow_unity.setText("Kg/s");
 
 					double vCapacity = Double.valueOf( textFieldScrollCapacity.getText());
-					double vMassFlow = PacMain.pound2kg(Double.valueOf(textFieldScrollMassFlow.getText()));
+					double vMassFlow = PacCommon.pound2kg(Double.valueOf(textFieldScrollMassFlow.getText()));
 					textFieldScrollMassFlow.setText(String.valueOf(Math.round(vMassFlow*10000.0)/10000.0));		
 
 					if (checkoxBTU.isSelected() | chckbxPound.isSelected())  {
@@ -915,7 +932,7 @@ public class WinPrime {
 				double vVoltage = Double.valueOf(textFieldScrollVoltage.getText());
 				double vCurrent = Double.valueOf(textFieldScrollCurrent.getText());
 
-				double tmp = Math.round(PacMain.cosphi(vPower, vVoltage,vCurrent)*10000.0)/10000.0;
+				double tmp = Math.round(PacCommon.cosphi(vPower, vVoltage,vCurrent)*10000.0)/10000.0;
 				textFieldScrollCosPhi.setText(String.valueOf(tmp));
 			}
 		});
@@ -1258,7 +1275,7 @@ public class WinPrime {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				try {
-					WinEnthalpie window = new WinEnthalpie();
+					WinEnthalpy window = new WinEnthalpy(confEnthalpy);
 					window.WinEnthalpieVisible();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -1363,7 +1380,7 @@ public class WinPrime {
 		textFieldScrollMassFlow.setText(String.valueOf(scroll.getMassFlow()));
 		textFieldScrollDeltaH0.setText("-----");
 		textFieldScrollVoltage.setText(String.valueOf(scroll.getVoltage()));
-		double tmp = Math.round(PacMain.cosphi(scroll.getPower(), scroll.getVoltage(), scroll.getCurrent())*10000.0)/10000.0;
+		double tmp = Math.round(PacCommon.cosphi(scroll.getPower(), scroll.getVoltage(), scroll.getCurrent())*10000.0)/10000.0;
 		textFieldScrollCosPhi.setText(String.valueOf(tmp));
 
 		if (weclickf) {
