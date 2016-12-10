@@ -46,6 +46,7 @@ public class WinEnthalpy {
 	
 	private JLabel lblMouseCoordinate;
 	private JLabel lblEnthalpyCoord;
+	private JLabel lblPressionCoord;
 	
 		
 	/**
@@ -83,18 +84,26 @@ public class WinEnthalpy {
 			@Override
 			public void mouseMoved(MouseEvent m) {
 				String s = "x: %d   y: %d";
-				lblMouseCoordinate.setText(String.format(s, m.getX(), m.getY()));
+				lblMouseCoordinate.setText(String.format("("+s+")", m.getX(), m.getY()));
 				
 				double result = panelEnthalpyDrawArea.getH(m.getX());
-				lblEnthalpyCoord.setText(String.format("H=%.2f",result));
+				lblEnthalpyCoord.setText(String.format("H=%.2f kJ/kg",result));
 		    
+				result = panelEnthalpyDrawArea.getP(m.getY());
+				lblPressionCoord.setText(String.format("P=%.2f bar",result));				
 			}
 		};
-		panelEnthalpyBottom.setLayout(new GridLayout(0, 2, 0, 0));
+		panelEnthalpyBottom.setLayout(new GridLayout(0, 3, 0, 0));
 		
 		lblEnthalpyCoord = new JLabel("Enthalpy Coordinate");
+		lblEnthalpyCoord.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEnthalpyCoord.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panelEnthalpyBottom.add(lblEnthalpyCoord);
+		
+		lblPressionCoord = new JLabel("Pression Coordinate");
+		lblPressionCoord.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPressionCoord.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		panelEnthalpyBottom.add(lblPressionCoord);
 
 		panelEnthalpyBottom.add(lblMouseCoordinate);
 
