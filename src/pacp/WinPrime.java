@@ -315,7 +315,7 @@ public class WinPrime {
 		// Exit
 		// ---------------------------------------------------------------
 		JMenuItem mexit = new JMenuItem("Quitter");
-		mexit.setIcon(new ImageIcon(WinPrime.class.getResource("/javax/swing/plaf/metal/icons/ocean/close.gif")));
+		mexit.setIcon(new ImageIcon(WinPrime.class.getResource("/pacp/images/sortir-session16.png")));
 		mexit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.exit(0);
@@ -330,7 +330,7 @@ public class WinPrime {
 		menubar.add(mpreference);
 		
 		JMenuItem mImgEnthalpyCfg = new JMenuItem("Enthalpie Conf.");
-		mImgEnthalpyCfg.setIcon(new ImageIcon(WinPrime.class.getResource("/com/sun/javafx/scene/web/skin/FontBackgroundColor_16x16_JFX.png")));
+		mImgEnthalpyCfg.setIcon(new ImageIcon(WinPrime.class.getResource("/pacp/images/configuration16.png")));
 		mImgEnthalpyCfg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -397,7 +397,7 @@ public class WinPrime {
 		JMenu help = new JMenu("Aide");
 		menubar.add(help);
 		JMenuItem about = new JMenuItem("A propos de ?");
-		about.setIcon(new ImageIcon(WinPrime.class.getResource("/pacp/images/Apropos.png")));
+		about.setIcon(new ImageIcon(WinPrime.class.getResource("/pacp/images/About16.png")));
 		about.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				try {

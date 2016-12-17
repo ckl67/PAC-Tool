@@ -20,23 +20,37 @@ package pacp;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ConfEnthalpy {
 
+	// Enthalpy
 	private String enthalpyImageFile;
-	
+
 	private Point2D.Double mOrigineH = new Point2D.Double();  		// Coordinate mouse (hOrigine,hFinal)
 	private Point iOrigineH = new Point();						    // Coordinate Reference for (hOrigine,hFinal) in Enthalpy image
 	private boolean locateOrigineH;
 	private boolean locateFinalH;
-	
+
 	private Point2D.Double mOrigineP = new Point2D.Double();  		// Coordinate mouse (POrigine,PFinal)
-	private Point iOrigineP = new Point();						    // Coordinate Reference for (POrigine,PFinal) Pression in image
+	private Point iOrigineP = new Point();						    // Coordinate Reference for (POrigine,PFinal) Pressure in image
 	private boolean locateOrigineP;
 	private boolean locateFinalP;
-	
+
+	// Pressure-Temperature
+	private String temperaturePressureFile;
+	private List<Point2D.Double> listTempPress;
+	private double correctionPressure;
+
 	public ConfEnthalpy() {
-		setEnthalpyImageFile("D:/Users/kluges1/workspace/pac-tool/src/pacp/images/diagrammes enthalpique/R22.png");
+		setEnthalpyImageFile("D:/Users/kluges1/workspace/pac-tool/ressources/R22.png");
 
 		// Enthalpy
 		setiHOrigine(140);
@@ -45,15 +59,20 @@ public class ConfEnthalpy {
 		setmHFinal(570.0);
 		locateOrigineH=false;
 		locateFinalH=false;
-		
-		// Pression
+
+		// Pressure
 		setiPOrigine(1);
 		setiPFinal(10);
 		setmPOrigine(1000.0);
 		setmPFinal(516.0);
 		locateOrigineP=false;
 		locateFinalP=false;
-		
+
+		// Pressure-Temperature
+		setTemperaturePressureFile("D:/Users/kluges1/workspace/pac-tool/ressources/P2T_R22.txt");
+		setlistTempPress(new ArrayList<Point2D.Double>());
+		correctionPressure = 1.0;
+
 	}
 
 	// --------------------------------------------------------------------------------
@@ -77,14 +96,14 @@ public class ConfEnthalpy {
 	public double getmHFinal() {
 		return mOrigineH.y;
 	}
-	
+
 	public void setmHOrigine(double hOrigine) {
 		this.mOrigineH.x = hOrigine;
 	}
 	public void setmHFinal(double hFinal) {
 		this.mOrigineH.y = hFinal;
 	}
-	
+
 	// --------------------------------------------------------------------------------
 	// Image Reference for H :  Origin / Final
 	// --------------------------------------------------------------------------------
@@ -99,7 +118,7 @@ public class ConfEnthalpy {
 	public void setiHOrigine(int hOrigine) {
 		this.iOrigineH.x = hOrigine;
 	}
-	
+
 	public void setiHFinal(int hFinal) {
 		this.iOrigineH.y = hFinal;
 	}
@@ -133,14 +152,14 @@ public class ConfEnthalpy {
 	public double getmPFinal() {
 		return mOrigineP.y;
 	}
-	
+
 	public void setmPOrigine(double POrigine) {
 		this.mOrigineP.x = POrigine;
 	}
 	public void setmPFinal(double PFinal) {
 		this.mOrigineP.y = PFinal;
 	}
-	
+
 	// --------------------------------------------------------------------------------
 	// Image Reference for P :  Origin / Final
 	// --------------------------------------------------------------------------------
@@ -155,11 +174,11 @@ public class ConfEnthalpy {
 	public void setiPOrigine(int POrigine) {
 		this.iOrigineP.x = POrigine;
 	}
-	
+
 	public void setiPFinal(int PFinal) {
 		this.iOrigineP.y = PFinal;
 	}
-	
+
 	// --------------------------------------------------------------------------------
 	// Image Reference for P Requested :  Origin / Final
 	// --------------------------------------------------------------------------------
@@ -178,4 +197,137 @@ public class ConfEnthalpy {
 	public void setlocateOrigineP(boolean setOrigineP) {
 		this.locateOrigineP = setOrigineP;
 	}
+
+	// ================================================================================
+	//						Temperature / Pressure
+	// ================================================================================
+
+	/**
+	 * Set or Get the Temperature/Pressure File
+	 */
+	public String getTemperaturePressureFile() {
+		return temperaturePressureFile;
+	}
+
+	public void setTemperaturePressureFile(String temperaturePressureFile) {
+		this.temperaturePressureFile = temperaturePressureFile;
+	}
+
+	// --------------------------------------------------------------------------------
+
+	public List<Point2D.Double> getlistTempPress() {
+		return listTempPress;
+	}
+
+	public double getTempFromList(int id) {
+		return listTempPress.get(id).getX();
+	}
+
+	public double getPressFromList(int id) {
+		return listTempPress.get(id).getY();
+	}
+
+	public void setlistTempPress(List<Point2D.Double> listTempPress) {
+		this.listTempPress = listTempPress;
+	}
+
+	// Load Pressure Temperature Text file
+	public void loadPressureTemperatureFile() {
+		Pattern p = Pattern.compile("(-?\\d+(,\\d+)?)");
+		BufferedReader buff_in;
+		String line;
+		double temp=0;
+		double press=0;
+
+		int i;
+
+		try {
+			buff_in = new BufferedReader(new FileReader(temperaturePressureFile));
+			try {
+				while ((line = buff_in.readLine()) != null)
+				{
+					if (!line.startsWith("#") ) {
+						Matcher m = p.matcher(line);
+						i=0;
+						while (m.find()) {
+							if (i ==0) 
+								temp = Double.parseDouble(m.group().replace(",", "."));
+							else 
+								press = Double.parseDouble(m.group().replace(",", "."));
+							i++;
+						}
+						listTempPress.add(new Point2D.Double(temp, press+correctionPressure));
+					}
+				}
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				buff_in.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public double getPressFromTemp(double temp){
+		double x,presso;
+		double distance = Math.abs(listTempPress.get(0).getX() - temp);
+		int idx=1,id = 0;
+		for(int c = 1; c < listTempPress.size(); c++){
+			double  cdistance = Math.abs(listTempPress.get(c).getX() - temp);
+			if(cdistance < distance){
+				idx = c;
+				distance = cdistance;
+			}
+		}
+		double y0,y1,x0,x1;
+		if (idx == listTempPress.size()) {
+			id = idx-1;
+		} 
+		x  = temp;
+		x0 = listTempPress.get(id).getX();
+		x1 = listTempPress.get(id+1).getX();
+		y0 = listTempPress.get(id).getY();
+		y1 = listTempPress.get(id+1).getY();
+		presso = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+
+		return presso+correctionPressure;
+	}
+
+	public double getTempFromPress(double press){
+		double x,tempo;
+		double distance = Math.abs(listTempPress.get(0).getY() - press);
+		int idx=1,id = 0;
+		for(int c = 1; c < listTempPress.size(); c++){
+			double  cdistance = Math.abs(listTempPress.get(c).getY() - press);
+			if(cdistance < distance){
+				idx = c;
+				distance = cdistance;
+			}
+		}
+		double y0,y1,x0,x1;
+		if (idx == listTempPress.size()) {
+			id = idx-1;
+		} 
+		x  = press;
+		x0 = listTempPress.get(id).getY();
+		x1 = listTempPress.get(id+1).getY();
+		y0 = listTempPress.get(id).getX();
+		y1 = listTempPress.get(id+1).getX();
+		tempo = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+
+		return tempo;
+	}
+
 }

@@ -40,16 +40,18 @@ import javax.swing.SwingConstants;
 public class WinConfEnthalpy {
 
 	private ConfEnthalpy confEnthalpy;
-	private JFrame frmPactoolConfigurationDiargramme;
+
+	private JFrame frmPactoolConfigurationDiagramme;
 	private JTextField textFieldEnthalpyFilePath;
 	private JTextField textFieldHOrigine;
 	private JTextField textFieldHFinal;
 	private JTextField textFieldPOrigine;
 	private JTextField textFieldPFinal;
+	private JTextField txtFieldTemperaturePressionFile;
 
 	// ========================================================================================
 	public void WinConfEnthalpyVisible() {
-		frmPactoolConfigurationDiargramme.setVisible(true);
+		frmPactoolConfigurationDiagramme.setVisible(true);
 	}
 
 	/**
@@ -64,15 +66,15 @@ public class WinConfEnthalpy {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frmPactoolConfigurationDiargramme = new JFrame();
-		frmPactoolConfigurationDiargramme.setTitle("Pac-Tool Configuration Diargramme Enthalpique");
-		frmPactoolConfigurationDiargramme.setResizable(false);
-		frmPactoolConfigurationDiargramme.setIconImage(Toolkit.getDefaultToolkit().getImage(WinConfEnthalpy.class.getResource("/pacp/images/PAC-Tool_32.png")));
-		frmPactoolConfigurationDiargramme.setBounds(100, 100, 550, 331);
-		frmPactoolConfigurationDiargramme.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frmPactoolConfigurationDiagramme = new JFrame();
+		frmPactoolConfigurationDiagramme.setTitle("Pac-Tool Configuration Diargramme Enthalpique");
+		frmPactoolConfigurationDiagramme.setResizable(false);
+		frmPactoolConfigurationDiagramme.setIconImage(Toolkit.getDefaultToolkit().getImage(WinConfEnthalpy.class.getResource("/pacp/images/PAC-Tool_32.png")));
+		frmPactoolConfigurationDiagramme.setBounds(100, 100, 550, 465);
+		frmPactoolConfigurationDiagramme.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		JPanel panel = new JPanel();
-		frmPactoolConfigurationDiargramme.getContentPane().add(panel, BorderLayout.CENTER);
+		frmPactoolConfigurationDiagramme.getContentPane().add(panel, BorderLayout.CENTER);
 
 		JButton btnEnthalpyFileChoice = new JButton("Fichier Image");
 		btnEnthalpyFileChoice.setBounds(427, 24, 97, 23);
@@ -84,24 +86,33 @@ public class WinConfEnthalpy {
 				chooser.setFileFilter(filter);
 				File workingDirectory = new File(System.getProperty("user.dir"));
 				chooser.setCurrentDirectory(workingDirectory);
-				int returnVal = chooser.showOpenDialog(frmPactoolConfigurationDiargramme);
+				int returnVal = chooser.showOpenDialog(frmPactoolConfigurationDiagramme);
 				if(returnVal == JFileChooser.APPROVE_OPTION) {
 					//System.out.println("You chose to open this file: " + chooser.getSelectedFile().getAbsolutePath());
 					String imagepath=chooser.getSelectedFile().getAbsolutePath();
 					textFieldEnthalpyFilePath.setText(imagepath);
+					confEnthalpy.setEnthalpyImageFile(textFieldEnthalpyFilePath.getText());	
+					try {
+						if (WinEnthalpy.panelEnthalpyDrawArea.isVisible() ) {
+							WinEnthalpy.panelEnthalpyDrawArea.openEnthalpyImageFile();
+							WinEnthalpy.panelEnthalpyDrawArea.clean();
+						}
+					} catch (NullPointerException e) {
+
+					}
 				}
 			}
 		});
 		panel.setLayout(null);
 		panel.add(btnEnthalpyFileChoice);
 
-		JButton btnOK = new JButton("OK");
-		btnOK.setBounds(477, 262, 47, 23);
+		JButton btnOK = new JButton("Fermer");
+		btnOK.setBounds(467, 403, 67, 23);
 		btnOK.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//System.out.println(textFieldEnthalpyFilePath.getText());
-				confEnthalpy.setEnthalpyImageFile(textFieldEnthalpyFilePath.getText());		
-				frmPactoolConfigurationDiargramme.dispose();
+				//confEnthalpy.setEnthalpyImageFile(textFieldEnthalpyFilePath.getText());		
+				frmPactoolConfigurationDiagramme.dispose();
 			}
 		});
 
@@ -111,18 +122,9 @@ public class WinConfEnthalpy {
 
 		textFieldEnthalpyFilePath = new JTextField();
 		textFieldEnthalpyFilePath.setBounds(104, 25, 313, 20);
-		textFieldEnthalpyFilePath.setText("D:/Users/kluges1/workspace/pac-tool/src/pacp/images/diagrammes enthalpie/R22.png");
+		textFieldEnthalpyFilePath.setText("D:/Users/kluges1/workspace/pac-tool/ressources/R22.png");
 		textFieldEnthalpyFilePath.setColumns(10);
 		panel.add(textFieldEnthalpyFilePath);
-
-		JButton btnCancel = new JButton("Cancel");
-		btnCancel.setBounds(402, 262, 65, 23);
-		btnCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				frmPactoolConfigurationDiargramme.dispose();
-			}
-		});
-		panel.add(btnCancel);
 		panel.add(btnOK);
 
 		JPanel panel_1 = new JPanel();
@@ -179,13 +181,13 @@ public class WinConfEnthalpy {
 		btnHFinal.setBounds(365, 53, 89, 23);
 		panel_1.add(btnHFinal);
 
-		JLabel lblKjkg = new JLabel("kJ/kg");
-		lblKjkg.setBounds(199, 26, 46, 14);
-		panel_1.add(lblKjkg);
+		JLabel lblKjkg0 = new JLabel("kJ/kg");
+		lblKjkg0.setBounds(199, 26, 46, 14);
+		panel_1.add(lblKjkg0);
 
-		JLabel label = new JLabel("kJ/kg");
-		label.setBounds(469, 26, 35, 14);
-		panel_1.add(label);
+		JLabel lblKjkg01 = new JLabel("kJ/kg");
+		lblKjkg01.setBounds(469, 26, 35, 14);
+		panel_1.add(lblKjkg01);
 
 		JPanel panel_2 = new JPanel();
 		panel_2.setBorder(new TitledBorder(null, "Pression", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -201,6 +203,7 @@ public class WinConfEnthalpy {
 		panel_2.add(lblPOrigine);
 
 		textFieldPOrigine = new JTextField();
+		textFieldPOrigine.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldPOrigine.setText(String.valueOf(confEnthalpy.getiPOrigine()));
 		textFieldPOrigine.setBounds(104, 21, 86, 20);
 		panel_2.add(textFieldPOrigine);
@@ -223,6 +226,7 @@ public class WinConfEnthalpy {
 		panel_2.add(lblPFinal);
 
 		textFieldPFinal = new JTextField();
+		textFieldPFinal.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldPFinal.setText(String.valueOf(confEnthalpy.getiPFinal()));
 		textFieldPFinal.setBounds(370, 19, 86, 20);
 		panel_2.add(textFieldPFinal);
@@ -238,12 +242,53 @@ public class WinConfEnthalpy {
 		btnPFinal.setBounds(367, 49, 89, 23);
 		panel_2.add(btnPFinal);
 
-		JLabel lblBar = new JLabel("bar");
-		lblBar.setBounds(197, 24, 46, 14);
-		panel_2.add(lblBar);
+		JLabel lblBar0 = new JLabel("bar");
+		lblBar0.setBounds(197, 24, 46, 14);
+		panel_2.add(lblBar0);
 
-		JLabel label_1 = new JLabel("bar");
-		label_1.setBounds(466, 24, 26, 14);
-		panel_2.add(label_1);
+		JLabel lblBar01 = new JLabel("bar");
+		lblBar01.setBounds(466, 24, 26, 14);
+		panel_2.add(lblBar01);
+
+		JPanel panel_3 = new JPanel();
+		panel_3.setLayout(null);
+		panel_3.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Relation Temp\u00E9rature / Pression", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel_3.setBounds(10, 262, 514, 91);
+		panel.add(panel_3);
+
+		JLabel lblTempPress = new JLabel("New label");
+		lblTempPress.setIcon(new ImageIcon(WinConfEnthalpy.class.getResource("/pacp/images/PressionTemperature.png")));
+		lblTempPress.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		lblTempPress.setBackground(Color.WHITE);
+		lblTempPress.setBounds(10, 20, 106, 50);
+		panel_3.add(lblTempPress);
+
+		txtFieldTemperaturePressionFile = new JTextField();
+		txtFieldTemperaturePressionFile.setText("D:\\Users\\kluges1\\workspace\\pac-tool\\ressources\\P2T_R22.txt");
+		txtFieldTemperaturePressionFile.setHorizontalAlignment(SwingConstants.RIGHT);
+		txtFieldTemperaturePressionFile.setColumns(10);
+		txtFieldTemperaturePressionFile.setBounds(126, 35, 273, 20);
+		panel_3.add(txtFieldTemperaturePressionFile);
+
+		JButton buttonLoadTemPressFile = new JButton("Fichier T/P");
+		buttonLoadTemPressFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser chooser = new JFileChooser();
+				FileNameExtensionFilter filter = new FileNameExtensionFilter( "Temperature-Pression files", "txt");
+				chooser.setFileFilter(filter);
+				File workingDirectory = new File(System.getProperty("user.dir"));
+				chooser.setCurrentDirectory(workingDirectory);
+				int returnVal = chooser.showOpenDialog(frmPactoolConfigurationDiagramme);
+				if(returnVal == JFileChooser.APPROVE_OPTION) {
+					//System.out.println("You chose to open this file: " + chooser.getSelectedFile().getAbsolutePath());
+					String imagepath=chooser.getSelectedFile().getAbsolutePath();
+					txtFieldTemperaturePressionFile.setText(imagepath);
+					confEnthalpy.setTemperaturePressureFile(txtFieldTemperaturePressionFile.getText());	
+
+				}
+			}
+		});
+		buttonLoadTemPressFile.setBounds(409, 34, 83, 23);
+		panel_3.add(buttonLoadTemPressFile);
 	}
 }

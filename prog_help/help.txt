@@ -1,0 +1,33 @@
+m3/h
+
+Kg/s
+
+
+m3 --> kg
+
+
+v = volume massique  dm3/Kg = Vol/m
+lecture 74 dm3/Kg
+38 dm3/Kg 0,038 m3/kg
+
+
+ro = masse volumique = m/Vol
+
+ro = 1/v
+
+
+
+kg/s * kj/kg = kj/s = Watt
+
+0,06 kg/s
+200
+
+9759
+
+Vol/s
+
+Delta H = 156 000
+
+9759 = 156 000 x debit massique 
+debit massique = 0,062
+
