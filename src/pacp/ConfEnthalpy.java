@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
 
 public class ConfEnthalpy {
 
+	
 	// Enthalpy
 	private String enthalpyImageFile;
 
@@ -282,51 +283,47 @@ public class ConfEnthalpy {
 
 	public double getPressFromTemp(double temp){
 		double x,presso;
-		double distance = Math.abs(listTempPress.get(0).getX() - temp);
-		int idx=1,id = 0;
-		for(int c = 1; c < listTempPress.size(); c++){
-			double  cdistance = Math.abs(listTempPress.get(c).getX() - temp);
-			if(cdistance < distance){
+		int idx=0;
+		for(int c = 0; c < listTempPress.size(); c++){
+			if(temp >= listTempPress.get(c).getX() ){
 				idx = c;
-				distance = cdistance;
 			}
 		}
-		double y0,y1,x0,x1;
-		if (idx == listTempPress.size()) {
-			id = idx-1;
+		if (idx == listTempPress.size()-1) {
+			idx = idx-1;
 		} 
-		x  = temp;
-		x0 = listTempPress.get(id).getX();
-		x1 = listTempPress.get(id+1).getX();
-		y0 = listTempPress.get(id).getY();
-		y1 = listTempPress.get(id+1).getY();
-		presso = (x-x0)*(y1-y0)/(x1-x0)+ y0;
 
+		double y0,y1,x0,x1;
+		x  = temp;
+		x0 = listTempPress.get(idx).getX();
+		x1 = listTempPress.get(idx+1).getX();
+		y0 = listTempPress.get(idx).getY();
+		y1 = listTempPress.get(idx+1).getY();
+		presso = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+		
 		return presso+correctionPressure;
 	}
 
 	public double getTempFromPress(double press){
 		double x,tempo;
-		double distance = Math.abs(listTempPress.get(0).getY() - press);
-		int idx=1,id = 0;
-		for(int c = 1; c < listTempPress.size(); c++){
-			double  cdistance = Math.abs(listTempPress.get(c).getY() - press);
-			if(cdistance < distance){
+		int idx=0;
+		for(int c = 0; c < listTempPress.size(); c++){
+			if((press-correctionPressure) >= listTempPress.get(c).getY() ){
 				idx = c;
-				distance = cdistance;
 			}
 		}
-		double y0,y1,x0,x1;
-		if (idx == listTempPress.size()) {
-			id = idx-1;
+		if (idx == listTempPress.size()-1) {
+			idx = idx-1;
 		} 
-		x  = press;
-		x0 = listTempPress.get(id).getY();
-		x1 = listTempPress.get(id+1).getY();
-		y0 = listTempPress.get(id).getX();
-		y1 = listTempPress.get(id+1).getX();
-		tempo = (x-x0)*(y1-y0)/(x1-x0)+ y0;
 
+		double y0,y1,x0,x1;
+		x  = press;
+		x0 = listTempPress.get(idx).getY();
+		x1 = listTempPress.get(idx+1).getY();
+		y0 = listTempPress.get(idx).getX();
+		y1 = listTempPress.get(idx+1).getX();
+		tempo = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+		
 		return tempo;
 	}
 

@@ -31,22 +31,24 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import javax.swing.border.MatteBorder;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class WinPressTemp {
+	public static PDisplay panelTempPressDrawArea;
 
 	private ConfEnthalpy confEnthalpy;
-	
+
 	private JFrame frmRelationTempraturePression;
 	private JLabel lblTemperature;
 	private JLabel lblPressure;
-	private PDisplay panelDisplay;
-	
 
 	// Supplementary margin on both sides of the display
 	private double marginx = 10;
@@ -64,24 +66,28 @@ public class WinPressTemp {
 	private double ymin = 0.5;  		// Minimum of the range of values displayed.
 	private double ymax = 90;     	// Maximum of the range of value displayed.
 
-	
+
 
 	// Constructor 
 	public WinPressTemp(ConfEnthalpy vconfEnthalpy)  {
 		confEnthalpy = vconfEnthalpy;
-		confEnthalpy.loadPressureTemperatureFile();
 		initialize();
 	}
 
 	public void WinPressTempVisible() {
 		frmRelationTempraturePression.setVisible(true);
 	}
-	
+
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
 		frmRelationTempraturePression = new JFrame();
+		frmRelationTempraturePression.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent arg0) {
+			}
+		});
 		frmRelationTempraturePression.setIconImage(Toolkit.getDefaultToolkit().getImage(WinPressTemp.class.getResource("/pacp/images/PAC-Tool_32.png")));
 		frmRelationTempraturePression.setTitle("Relation Temp\u00E9rature Pression");
 		frmRelationTempraturePression.setBounds(100, 100, 450, 400);
@@ -102,18 +108,20 @@ public class WinPressTemp {
 		lblTemperature.setHorizontalAlignment(SwingConstants.CENTER);
 		panelValue.add(lblTemperature);
 
-		panelDisplay = new PDisplay();
-		frmRelationTempraturePression.getContentPane().add(panelDisplay, BorderLayout.CENTER);
+		panelTempPressDrawArea = new PDisplay();
+		frmRelationTempraturePression.getContentPane().add(panelTempPressDrawArea, BorderLayout.CENTER);
 	}
 
 	// ===================================================================================================================
 	//												JPANEL Display
 	// ===================================================================================================================
 
-	private class PDisplay extends JPanel implements MouseListener, MouseMotionListener {
+	public class PDisplay extends JPanel implements MouseListener, MouseMotionListener {
 		private static final long serialVersionUID = 1L;
 		private double zoomx,zoomy;
 
+		private double posX,posY;
+		
 		
 		// Constructor
 		public PDisplay() {
@@ -204,6 +212,11 @@ public class WinPressTemp {
 			for(int i=1;i<confEnthalpy.getlistTempPress().size();i++) {
 				g2.draw( new Line2D.Double(confEnthalpy.getTempFromList(i-1),confEnthalpy.getPressFromList(i-1),confEnthalpy.getTempFromList(i),confEnthalpy.getPressFromList(i)));			 
 			}
+			
+			// Follow the graph
+		    g2.setColor(Color.blue);
+		    g2.draw( new Ellipse2D.Double(posX-2, posY-2, 2, 2));
+		    
 		}
 
 		@Override
@@ -212,13 +225,21 @@ public class WinPressTemp {
 
 		}
 
-		@Override
-		public void mouseMoved(MouseEvent m) {
+		public void spotTempPressFollower(double temp, double press) {
 			String s;
 			s = "T: %.2f°C --> P: %.2fbar";
-			lblTemperature.setText(String.format(s, m.getX()/zoomx+xmin-marginx,confEnthalpy.getPressFromTemp(m.getX()/zoomx+xmin-marginx) ));
+			lblTemperature.setText(String.format(s, temp,confEnthalpy.getPressFromTemp(temp) ));
+
 			s = "P: %.2fbar --> T: %.2f°C";
-			lblPressure.setText(String.format(s, -m.getY()/zoomy+marginy+ymax,confEnthalpy.getTempFromPress(-m.getY()/zoomy+marginy+ymax) ));
+			lblPressure.setText(String.format(s,press ,confEnthalpy.getTempFromPress(press) ));
+			
+			posX=temp;
+			posY = confEnthalpy.getPressFromTemp(temp);
+			repaint();
+		}
+		@Override
+		public void mouseMoved(MouseEvent m) {
+			spotTempPressFollower(m.getX()/zoomx+xmin-marginx, -m.getY()/zoomy+marginy+ymax);
 		}
 
 		@Override

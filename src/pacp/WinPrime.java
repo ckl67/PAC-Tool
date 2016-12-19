@@ -147,7 +147,7 @@ public class WinPrime {
 		frame.setTitle("PAC Tool (" + PacMain.PACTool_Version+ ")");
 		frame.setBounds(100, 100, 443, 574);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		PacCommon.centreWindow(frame);
+		//PacCommon.centreWindow(frame);
 
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -1272,14 +1272,9 @@ public class WinPrime {
 		lblNewLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		lblNewLabel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		lblNewLabel.addMouseListener(new MouseAdapter() {
-			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				try {
 					WinEnthalpy window = new WinEnthalpy(confEnthalpy);
 					window.WinEnthalpieVisible();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 			}
 		});
 		lblNewLabel.setIcon(new ImageIcon(WinPrime.class.getResource("/pacp/images/enthalpie.jpg")));

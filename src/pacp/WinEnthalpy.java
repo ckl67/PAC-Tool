@@ -51,6 +51,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.SystemColor;
 
 public class WinEnthalpy {
 
@@ -70,6 +71,7 @@ public class WinEnthalpy {
 	 */
 	public WinEnthalpy(ConfEnthalpy vconfEnthalpy) {
 		confEnthalpy = vconfEnthalpy;
+		confEnthalpy.loadPressureTemperatureFile();
 		initialize();
 	}
 
@@ -103,14 +105,21 @@ public class WinEnthalpy {
 				String s = "x: %d   y: %d";
 				lblMouseCoordinate.setText(String.format("("+s+")", m.getX(), m.getY()));
 
-				double result = panelEnthalpyDrawArea.getHoX(m.getX());
-				lblEnthalpyCoord.setText(String.format("H=%.2f kJ/kg",result));
+				double hResult = panelEnthalpyDrawArea.getHoX(m.getX());
+				lblEnthalpyCoord.setText(String.format("H=%.2f kJ/kg",hResult));
 
-				result = panelEnthalpyDrawArea.getPoY(m.getY());
-				lblPressureCoord.setText(String.format("P=%.2f bar",result));
+				double pResult = panelEnthalpyDrawArea.getPoY(m.getY());
+				lblPressureCoord.setText(String.format("P=%.2f bar",pResult));
 
-				result = panelEnthalpyDrawArea.getToP(result);
-				lblTempCoord.setText(String.format("T=%.2f °C",result));	
+				double tRresult = confEnthalpy.getTempFromPress(pResult);
+				lblTempCoord.setText(String.format("T=%.2f °C",tRresult));	
+				try {
+					if (WinPressTemp.panelTempPressDrawArea.isVisible()) {
+						WinPressTemp.panelTempPressDrawArea.spotTempPressFollower(tRresult,pResult);
+					}
+				} catch (NullPointerException e) {
+
+				}
 
 			}
 		};
@@ -148,10 +157,12 @@ public class WinEnthalpy {
 		frmDiagrammeEnthalpique.getContentPane().add(panelEnthalpyDrawArea, BorderLayout.CENTER);
 
 		JPanel panelHight = new JPanel();
+		panelHight.setBackground(SystemColor.inactiveCaption);
 		panelEnthalpyRight.add(panelHight);
 		panelHight.setLayout(new BoxLayout(panelHight, BoxLayout.Y_AXIS));
 
 		JButton btnH0 = new JButton("H0");
+		btnH0.setMaximumSize(new Dimension(85, 23));
 		btnH0.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btnH0.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -161,7 +172,7 @@ public class WinEnthalpy {
 		panelHight.add(btnH0);
 
 		JButton H1 = new JButton("H1");
-		H1.setMaximumSize(new Dimension(60, 23));
+		H1.setMaximumSize(new Dimension(85, 23));
 		H1.setAlignmentX(Component.CENTER_ALIGNMENT);
 		H1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -171,6 +182,7 @@ public class WinEnthalpy {
 		panelHight.add(H1);
 
 		JPanel panel = new JPanel();
+		panel.setBackground(SystemColor.inactiveCaption);
 		panelEnthalpyRight.add(panel);
 		panel.setLayout(new BorderLayout(0, 0));
 
@@ -184,6 +196,7 @@ public class WinEnthalpy {
 		panel.add(btnPressureTemp, BorderLayout.SOUTH);
 
 		JPanel panelBottom = new JPanel();
+		panelBottom.setBackground(SystemColor.inactiveCaption);
 		panelEnthalpyRight.add(panelBottom);
 		panelBottom.setLayout(new BorderLayout(0, 0));
 
@@ -199,9 +212,9 @@ public class WinEnthalpy {
 	// ===================================================================================================================
 	//												JPANEL Display
 	// ===================================================================================================================
-	
+
 	public class PanelEnthalpie extends JPanel implements MouseWheelListener, MouseListener, MouseMotionListener {
-		
+
 		private static final long serialVersionUID = 1L;	
 		private ConfEnthalpy confEnthalpy;
 		private BufferedImage image;
@@ -249,7 +262,7 @@ public class WinEnthalpy {
 				e.printStackTrace(); 
 			}
 		}
-			
+
 		// Clean
 		public void clean() {
 			repaint();
@@ -269,7 +282,7 @@ public class WinEnthalpy {
 			xd = zoom * (((h -  confEnthalpy.getiHOrigine()) / (confEnthalpy.getiHFinal()-confEnthalpy.getiHOrigine() )  * (confEnthalpy.getmHFinal()-confEnthalpy.getmHOrigine()) ) + offset.x +confEnthalpy.getmHOrigine());
 			return (int)xd;
 		}
-		
+
 		// Compute Temperature T / mouse coordinate
 		public double getToP(double P) {
 			double T;
@@ -282,20 +295,20 @@ public class WinEnthalpy {
 			T = P/zoom;		
 			return T;
 		}
-		
+
 		// Compute Pression P / mouse coordinate
 		public double getPoY(int y) {
 			// yP = mPOrigine  - y/zoom
 			// yP = Log(iPOrigine)  + (Log(iPFinal)-Log(iPOrigine) ) * (Y/zoom-offset.y -mPOrigine)  / (mPFinal-mPOrigine)
 			// yP = exp(yP*ln(10)
 			double yP;
-		//	yP = confEnthalpy.getmPOrigine()  - (double)y/zoom;
+			//	yP = confEnthalpy.getmPOrigine()  - (double)y/zoom;
 			yP = Math.log10(confEnthalpy.getiPOrigine())  + (Math.log10(confEnthalpy.getiPFinal())-Math.log10(confEnthalpy.getiPOrigine()) ) * (y/zoom-offset.y -confEnthalpy.getmPOrigine())  / (confEnthalpy.getmPFinal()-confEnthalpy.getmPOrigine());
 			yP = Math.exp(yP*Math.log(10));			
 			return yP;
 		}
-		
-		
+
+
 		// ===============================================================================================================
 		// 													EVENT LISTNER
 		// ===============================================================================================================
@@ -303,7 +316,7 @@ public class WinEnthalpy {
 		public void mousePressed(MouseEvent evt) {
 			int xMouse = evt.getX();
 			int yMouse = evt.getY();
-			
+
 			this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
 			if ((evt.getModifiers() & InputEvent.BUTTON2_MASK) != 0) {
@@ -320,7 +333,7 @@ public class WinEnthalpy {
 				confEnthalpy.setmHFinal(xMouse/zoom - offset.x);
 				confEnthalpy.setlocateFinalH(false);
 			}
-				
+
 			if ( confEnthalpy.islocateOrigineP()) {
 				confEnthalpy.setmPOrigine(yMouse/zoom - offset.y);
 				confEnthalpy.setlocateOrigineP(false);
@@ -330,10 +343,10 @@ public class WinEnthalpy {
 				confEnthalpy.setmPFinal(yMouse/zoom - offset.y);
 				confEnthalpy.setlocateFinalP(false);
 			}
-					
+
 			Graphics g = getGraphics();
 			Graphics2D g2 = (Graphics2D)g;
-			
+
 			//Point
 			g2.setColor(Color.RED);
 			g2.fillOval( xMouse-5, yMouse-5, 10, 10 );
@@ -382,25 +395,25 @@ public class WinEnthalpy {
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent arg0) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void mouseExited(MouseEvent arg0) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent arg0) {
 			// TODO Auto-generated method stub
-		
+
 		}
 
 	};
