@@ -51,7 +51,7 @@ public class JSONWritingFile {
 
 		try {  
 			// Writing to a file  
-			File file=new File("D:/Users/kluges1/workspace/pac-tool/test/PAC-Tool.cfg");  
+			File file=new File("D:/Users/kluges1/Downloads/test.cfg");  
 			file.createNewFile();  
 			FileWriter fileWriter = new FileWriter(file);  
 			System.out.println("Writing JSON object to file");  

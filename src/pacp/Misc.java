@@ -22,9 +22,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.Window;
 
-public class PacCommon {
+public class Misc {
 
-	// ========================================================================================
 	/**
 	 * Convert Degre in Farenheit
 	 * @param degre : Value in Degre
@@ -36,7 +35,6 @@ public class PacCommon {
 		return faren;	
 	}
 
-	// ========================================================================================
 	/**
 	 * Convert Farenheit in Degre
 	 * @param faren : Value in Farenheit
@@ -48,22 +46,20 @@ public class PacCommon {
 		return degre;	
 	}
 
-	// ========================================================================================
 	/**
-	 * Convert (BUT) British Thermal Unit in Watt 
+	 * Convert (BTU) British Thermal Unit in Watt 
 	 * 1btu/hr = 0,29307107 watt
 	 * @param btu
 	 * @return watt
 	 */
-	public static double buthr2watt(double btu) {
+	public static double btuhr2watt(double btu) {
 		double watt;
 		watt = btu * 0.29307107;
 		return watt;	
 	}
 
-	// ========================================================================================
 	/**
-	 * Convert Watt in (BUT) British Thermal Unit  
+	 * Convert Watt in (BTU) British Thermal Unit  
 	 * 1btu/hr = 0,29307107 watt
 	 * @param watt
 	 * @return btu
@@ -74,7 +70,6 @@ public class PacCommon {
 		return btu;	
 	}
 
-	// ========================================================================================
 	/**
 	 * Convert pound to Kg
 	 * @param Pound = lbs
@@ -86,7 +81,6 @@ public class PacCommon {
 		return kg;
 	}
 
-	// ========================================================================================
 	/**
 	 * Convert Kg to Pound
 	 * @param kg
@@ -98,7 +92,6 @@ public class PacCommon {
 		return lbs;
 	}
 
-	// ========================================================================================
 	/**
 	 * Compute Cos(Phi)
 	 * @param Power, Voltage, Current
@@ -110,7 +103,6 @@ public class PacCommon {
 		return cosphi;
 	}
 	
-	// ========================================================================================
 	/**
 	 * Center a Window
 	 * @param frame

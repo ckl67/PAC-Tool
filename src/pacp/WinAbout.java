@@ -60,7 +60,7 @@ public class WinAbout {
 		frame.setBounds(100, 100, 370, 152);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		PacCommon.centreWindow(frame);
+		Misc.centreWindow(frame);
 		
 		JTextPane txtpnabout = new JTextPane();
 		txtpnabout.setEditable(false);

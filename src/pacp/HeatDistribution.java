@@ -18,23 +18,23 @@
  */
 package pacp;
 
-public class Evaporator {
+public class HeatDistribution {
 
 	private String name;
 	private double inputT;
 	private double outputT; 
 	
 	// Constructor
-	Evaporator() {
-		this.name = "Evaporateur";
-		this.inputT  = 0; 	// Evaporator Input temperature in °C	
-		this.outputT = 0;	// Evaporator Output Temperature in °C
+	HeatDistribution() {
+		this.name = "Chauffage Sol Maison";
+		this.inputT  = 0; 	// Heat Distribution Input temperature in °C	
+		this.outputT = 0;	// Heat Distribution Output Temperature in °C
 	}
 	
-	Evaporator(double temp) {
-		this.name = "Evaporateur";
-		this.inputT  = temp; 	// Evaporator Input temperature in °C	
-		this.outputT = temp;	// Evaporator Output Temperature in °C
+	HeatDistribution(double temp) {
+		this.name = "Chauffage Sol Maison";
+		this.inputT  = temp; 	// Heat Distribution Input temperature in °C	
+		this.outputT = temp;	// Heat Distribution Output Temperature in °C
 	}
 
 	// Setter & Getter

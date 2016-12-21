@@ -44,7 +44,7 @@ import java.awt.event.WindowEvent;
 public class WinPressTemp {
 	public static PDisplay panelTempPressDrawArea;
 
-	private ConfEnthalpy confEnthalpy;
+	private Enthalpy enthalpy;
 
 	private JFrame frmRelationTempraturePression;
 	private JLabel lblTemperature;
@@ -69,8 +69,8 @@ public class WinPressTemp {
 
 
 	// Constructor 
-	public WinPressTemp(ConfEnthalpy vconfEnthalpy)  {
-		confEnthalpy = vconfEnthalpy;
+	public WinPressTemp(Enthalpy vconfEnthalpy)  {
+		enthalpy = vconfEnthalpy;
 		initialize();
 	}
 
@@ -209,8 +209,8 @@ public class WinPressTemp {
 			// -----------------------------------		
 			g2.setColor(Color.red);
 			g2.setStroke(new BasicStroke(0.5f));
-			for(int i=1;i<confEnthalpy.getlistTempPress().size();i++) {
-				g2.draw( new Line2D.Double(confEnthalpy.getTempFromList(i-1),confEnthalpy.getPressFromList(i-1),confEnthalpy.getTempFromList(i),confEnthalpy.getPressFromList(i)));			 
+			for(int i=1;i<enthalpy.getlistTempPress().size();i++) {
+				g2.draw( new Line2D.Double(enthalpy.getTempFromList(i-1),enthalpy.getPressFromList(i-1),enthalpy.getTempFromList(i),enthalpy.getPressFromList(i)));			 
 			}
 			
 			// Follow the graph
@@ -228,13 +228,13 @@ public class WinPressTemp {
 		public void spotTempPressFollower(double temp, double press) {
 			String s;
 			s = "T: %.2f°C --> P: %.2fbar";
-			lblTemperature.setText(String.format(s, temp,confEnthalpy.getPressFromTemp(temp) ));
+			lblTemperature.setText(String.format(s, temp,enthalpy.getPressFromTemp(temp) ));
 
 			s = "P: %.2fbar --> T: %.2f°C";
-			lblPressure.setText(String.format(s,press ,confEnthalpy.getTempFromPress(press) ));
+			lblPressure.setText(String.format(s,press ,enthalpy.getTempFromPress(press) ));
 			
 			posX=temp;
-			posY = confEnthalpy.getPressFromTemp(temp);
+			posY = enthalpy.getPressFromTemp(temp);
 			repaint();
 		}
 		@Override

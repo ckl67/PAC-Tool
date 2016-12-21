@@ -29,7 +29,7 @@ package pacp;
  *
  */
 
-public class PacMain {
+public class Run {
 
 	public static final String PACTool_Version = "Version Alpha 0.1";
 
@@ -40,13 +40,13 @@ public class PacMain {
 	private static Ccop cop = new Ccop();
 	
 	// Conf Enthalpy Image
-	private static ConfEnthalpy confEnthalpy = new ConfEnthalpy();
+	private static Enthalpy enthalpy = new Enthalpy();
 	
 	// ========================================================================================
 	//                                 		MAIN
 	// ========================================================================================
 	public static void main(String[] args){
-		WinPrime window = new WinPrime(pac, cop, confEnthalpy);
+		WinPrime window = new WinPrime(pac, cop, enthalpy);
 		window.WinPrimeVisible();
 	}
 

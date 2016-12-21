@@ -57,7 +57,7 @@ public class WinEnthalpy {
 
 	public static PanelEnthalpie panelEnthalpyDrawArea;
 
-	private ConfEnthalpy confEnthalpy;
+	private Enthalpy enthalpy;
 	private JFrame frmDiagrammeEnthalpique;
 
 	private JLabel lblMouseCoordinate;
@@ -69,9 +69,9 @@ public class WinEnthalpy {
 	/**
 	 * Create the application.
 	 */
-	public WinEnthalpy(ConfEnthalpy vconfEnthalpy) {
-		confEnthalpy = vconfEnthalpy;
-		confEnthalpy.loadPressureTemperatureFile();
+	public WinEnthalpy(Enthalpy vconfEnthalpy) {
+		enthalpy = vconfEnthalpy;
+		enthalpy.loadPressureTemperatureFile();
 		initialize();
 	}
 
@@ -111,7 +111,7 @@ public class WinEnthalpy {
 				double pResult = panelEnthalpyDrawArea.getPoY(m.getY());
 				lblPressureCoord.setText(String.format("P=%.2f bar",pResult));
 
-				double tRresult = confEnthalpy.getTempFromPress(pResult);
+				double tRresult = enthalpy.getTempFromPress(pResult);
 				lblTempCoord.setText(String.format("T=%.2f °C",tRresult));	
 				try {
 					if (WinPressTemp.panelTempPressDrawArea.isVisible()) {
@@ -146,7 +146,7 @@ public class WinEnthalpy {
 		frmDiagrammeEnthalpique.getContentPane().add(panelEnthalpyRight, BorderLayout.EAST);
 		panelEnthalpyRight.setLayout(new GridLayout(0, 1, 0, 0));
 
-		panelEnthalpyDrawArea = new PanelEnthalpie(confEnthalpy, ma);	
+		panelEnthalpyDrawArea = new PanelEnthalpie(enthalpy, ma);	
 		panelEnthalpyDrawArea.setBackground(Color.WHITE);
 		panelEnthalpyDrawArea.addKeyListener(new KeyAdapter() {
 			@Override
@@ -189,7 +189,7 @@ public class WinEnthalpy {
 		JButton btnPressureTemp = new JButton("Pres/Temp");
 		btnPressureTemp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				WinPressTemp window = new WinPressTemp(confEnthalpy);
+				WinPressTemp window = new WinPressTemp(enthalpy);
 				window.WinPressTempVisible();
 			}
 		});
@@ -216,7 +216,7 @@ public class WinEnthalpy {
 	public class PanelEnthalpie extends JPanel implements MouseWheelListener, MouseListener, MouseMotionListener {
 
 		private static final long serialVersionUID = 1L;	
-		private ConfEnthalpy confEnthalpy;
+		private Enthalpy enthalpy;
 		private BufferedImage image;
 		private Point xymouse = new Point();
 		private Point offset = new Point();
@@ -226,8 +226,8 @@ public class WinEnthalpy {
 		/**
 		 * Constructor for GEnthalpie class
 		 */
-		public PanelEnthalpie(ConfEnthalpy vconfEnthalpy, MouseAdapter ma) {
-			confEnthalpy = vconfEnthalpy;
+		public PanelEnthalpie(Enthalpy vconfEnthalpy, MouseAdapter ma) {
+			enthalpy = vconfEnthalpy;
 			openEnthalpyImageFile();
 			setBackground(Color.WHITE);
 
@@ -255,7 +255,7 @@ public class WinEnthalpy {
 		// EnthalpyImageFile
 		public void openEnthalpyImageFile() {
 			try {
-				File file = new File(confEnthalpy.getEnthalpyImageFile());
+				File file = new File(enthalpy.getEnthalpyImageFile());
 				image = ImageIO.read(file);	
 			} catch (IOException e) {
 				System.out.println("Image non trouvée !");
@@ -272,14 +272,14 @@ public class WinEnthalpy {
 		public double getHoX(int x) {
 			//  H = iHOrigine  + (iHFinal-iHOrigine ) * (X/zoom-offset.x -mHOrigine)  / (mHFinal-mHOrigine)
 			double xh;
-			xh = confEnthalpy.getiHOrigine() + (confEnthalpy.getiHFinal()-confEnthalpy.getiHOrigine()) * (x/zoom - offset.x - confEnthalpy.getmHOrigine())/(double)(confEnthalpy.getmHFinal()-confEnthalpy.getmHOrigine()) ;
+			xh = enthalpy.getiHOrigine() + (enthalpy.getiHFinal()-enthalpy.getiHOrigine()) * (x/zoom - offset.x - enthalpy.getmHOrigine())/(double)(enthalpy.getmHFinal()-enthalpy.getmHOrigine()) ;
 			return xh;
 		}
 
 		public int getXoH(double h) {
 			//  X = zoom * ([(H -  iHOrigine) / (iHFinal-iHOrigine )  * (mHFinal-mHOrigine) ] + offset.x +mHOrigine)
 			double xd;
-			xd = zoom * (((h -  confEnthalpy.getiHOrigine()) / (confEnthalpy.getiHFinal()-confEnthalpy.getiHOrigine() )  * (confEnthalpy.getmHFinal()-confEnthalpy.getmHOrigine()) ) + offset.x +confEnthalpy.getmHOrigine());
+			xd = zoom * (((h -  enthalpy.getiHOrigine()) / (enthalpy.getiHFinal()-enthalpy.getiHOrigine() )  * (enthalpy.getmHFinal()-enthalpy.getmHOrigine()) ) + offset.x +enthalpy.getmHOrigine());
 			return (int)xd;
 		}
 
@@ -303,7 +303,7 @@ public class WinEnthalpy {
 			// yP = exp(yP*ln(10)
 			double yP;
 			//	yP = confEnthalpy.getmPOrigine()  - (double)y/zoom;
-			yP = Math.log10(confEnthalpy.getiPOrigine())  + (Math.log10(confEnthalpy.getiPFinal())-Math.log10(confEnthalpy.getiPOrigine()) ) * (y/zoom-offset.y -confEnthalpy.getmPOrigine())  / (confEnthalpy.getmPFinal()-confEnthalpy.getmPOrigine());
+			yP = Math.log10(enthalpy.getiPOrigine())  + (Math.log10(enthalpy.getiPFinal())-Math.log10(enthalpy.getiPOrigine()) ) * (y/zoom-offset.y -enthalpy.getmPOrigine())  / (enthalpy.getmPFinal()-enthalpy.getmPOrigine());
 			yP = Math.exp(yP*Math.log(10));			
 			return yP;
 		}
@@ -324,24 +324,24 @@ public class WinEnthalpy {
 				dragStart.y = yMouse-offset.y;
 			}
 
-			if ( confEnthalpy.islocateOrigineH()) {
-				confEnthalpy.setmHOrigine(xMouse/zoom - offset.x);
-				confEnthalpy.setlocateOrigineH(false);
+			if ( enthalpy.islocateOrigineH()) {
+				enthalpy.setmHOrigine(xMouse/zoom - offset.x);
+				enthalpy.setlocateOrigineH(false);
 			}
 
-			if ( confEnthalpy.islocateFinalH()) {
-				confEnthalpy.setmHFinal(xMouse/zoom - offset.x);
-				confEnthalpy.setlocateFinalH(false);
+			if ( enthalpy.islocateFinalH()) {
+				enthalpy.setmHFinal(xMouse/zoom - offset.x);
+				enthalpy.setlocateFinalH(false);
 			}
 
-			if ( confEnthalpy.islocateOrigineP()) {
-				confEnthalpy.setmPOrigine(yMouse/zoom - offset.y);
-				confEnthalpy.setlocateOrigineP(false);
+			if ( enthalpy.islocateOrigineP()) {
+				enthalpy.setmPOrigine(yMouse/zoom - offset.y);
+				enthalpy.setlocateOrigineP(false);
 			}
 
-			if ( confEnthalpy.islocateFinalP()) {
-				confEnthalpy.setmPFinal(yMouse/zoom - offset.y);
-				confEnthalpy.setlocateFinalP(false);
+			if ( enthalpy.islocateFinalP()) {
+				enthalpy.setmPFinal(yMouse/zoom - offset.y);
+				enthalpy.setlocateFinalP(false);
 			}
 
 			Graphics g = getGraphics();
@@ -376,16 +376,16 @@ public class WinEnthalpy {
 
 		@Override
 		public void mouseMoved(MouseEvent evt) {
-			if ( confEnthalpy.islocateOrigineH()) {
+			if ( enthalpy.islocateOrigineH()) {
 				this.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 			}
-			if ( confEnthalpy.islocateFinalH()) {
+			if ( enthalpy.islocateFinalH()) {
 				this.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));			
 			}
-			if ( confEnthalpy.islocateOrigineP()) {
+			if ( enthalpy.islocateOrigineP()) {
 				this.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 			}
-			if ( confEnthalpy.islocateFinalP()) {
+			if ( enthalpy.islocateFinalP()) {
 				this.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));			
 			}
 			xymouse.x= evt.getX();

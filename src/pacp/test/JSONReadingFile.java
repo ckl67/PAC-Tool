@@ -17,36 +17,48 @@ public class JSONReadingFile {
 		JSONParser parser = new JSONParser();  
 
 		try {  
-
-			Object obj = parser.parse(new FileReader("D:/Users/kluges1/workspace/pac-tool/test/PAC-Tool.cfg"));  
+			JSONObject jsonObjectL1;
+			JSONObject jsonObjectL2;
+			JSONArray jsonArrayL1; 
+			
+			Object obj = parser.parse(new FileReader("D:/Users/kluges1/Downloads/test.cfg"));  
 			System.out.println(obj);  
 
-			JSONObject jsonObjectL1 = (JSONObject) obj;  
-			JSONObject jsonObjectL2;
+			// Object level 1 (whole)
+			jsonObjectL1 = (JSONObject) obj;  
+			System.out.println(jsonObjectL1);
 			
+			// Object level 2 (+1 deeper)
 			jsonObjectL2 = (JSONObject) jsonObjectL1.get("Cfg");  
 			System.out.println(jsonObjectL2);
 			System.out.println(jsonObjectL2.get("Lang"));  
 			System.out.println(String.valueOf(jsonObjectL2.get("Empty")));  
 			
+			// Object level 2 (+1 deeper) is AN Array !!
 			JSONArray jsonObjectScrollL = (JSONArray) jsonObjectL1.get("Scroll");
-			System.out.println(jsonObjectScrollL);
+			System.out.println(	"Array -- >"+ jsonObjectScrollL);
 
+			// Read ARRAY List !
+			Iterator<?> iteratorscroll = jsonObjectScrollL.iterator();  
+			while (iteratorscroll.hasNext()) {  
+				jsonObjectL2 = (JSONObject)iteratorscroll.next();
+				System.out.println(String.valueOf(jsonObjectL2));
+				System.out.println("AVR = " + String.valueOf(jsonObjectL2.get("AVR")));  
+			}  
+			
+			// ARRAY Get 1 element
 			jsonObjectL2 = (JSONObject) jsonObjectScrollL.get(0);  
 			System.out.println(jsonObjectL2);
-			
 			System.out.println(String.valueOf(jsonObjectL2.get("AVR")));  
 			System.out.println(String.valueOf(jsonObjectL2.get("EE")));  
 
 			jsonObjectL2 = (JSONObject) jsonObjectL1.get("Measure");  
 			System.out.println(jsonObjectL2);
 
-			JSONArray jsonArrayL1; 
 			jsonArrayL1 = (JSONArray) jsonObjectL2.get("T1T2T3T4");
 			System.out.println(jsonArrayL1);
 			
-			@SuppressWarnings("unchecked")
-			Iterator<String> iterator = jsonArrayL1.iterator();  
+			Iterator<?> iterator = jsonArrayL1.iterator();  
 			while (iterator.hasNext()) {  
 				System.out.println(String.valueOf(iterator.next()));  
 			}  

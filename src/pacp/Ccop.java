@@ -25,8 +25,8 @@ public class Ccop extends Pac {
 	private double H1;
 	private double H2;
 	private double H3;
-	
-	// -------- Constructeurs --------
+
+	// Constructor
 	public Ccop() {
 		setT0(0.0);
 		setTK(0.0);
@@ -75,30 +75,27 @@ public class Ccop extends Pac {
 	public void setH3(double h3) {
 		H3 = h3;
 	}
-	
-	// ---------- Fonctions -----------
+
+	// ---------- Function -----------
 	/**
-	 * Calcul COP Carnot Froid
+	 * Compute COP Carnot Froid
 	 * @return : T0/(TK-T0)
 	 */
 	public double cop_carnot_froid() {
 		double result = 0;
-		
+
 		if ((TK-T0) != 0.0) {
 			result = (T0+273)/(TK-T0);
 		}
 		return result;		
 	}
 	/**
-	 *  Calcul COP Carnot Chaud
-	 *  Coefficient de performance thermique d'une machine de Carnot
-	*   Pour une pompe à chaleur, on s'intéresse au rapport entre la chaleur fournie à la source chaude 
-	*   et le travail nécessaire à cette opération. 
+	 *  Compute COP Carnot Chaud
 	 * @return : TK/(TK-T0)
 	 */
 	public double cop_carnot_chaud() {
 		double result = 0;
-		
+
 		if ((TK-T0) != 0.0) {
 			result = (TK+273)/(TK-T0);
 		}
@@ -106,12 +103,12 @@ public class Ccop extends Pac {
 	}
 
 	/**
-	 * Calcul COP Froid
+	 * Compute COP Froid
 	 * @return : Q0/W = (H1-H3)/(H2-H1)
 	 */
 	public double cop_froid() {
 		double result = 0;
-		
+
 		if ((H2-H1) != 0.0) {
 			result = (H1-H3)/(H2-H1);
 		}
@@ -119,43 +116,16 @@ public class Ccop extends Pac {
 	}
 
 	/**
-	 * Calcul COP Chaud
+	 * Compute COP Chaud
 	 * @return : QK/W = (H2-H3)/(H2-H1)
 	 */
 	public double cop_chaud() {
 		double result = 0;
-		
+
 		if ((H2-H1) != 0.0) {
 			result = (H2-H3)/(H2-H1);
 		}
 		return result;		
 	}
 
-	/**
-	 * Calcul le rendement Chaud
-	 * @return : COP Chaud / COP Carnot Chaud
-	 */
-	public double cop_rendement_chaud() {
-		double result = 0;
-		
-		if ((cop_carnot_chaud()) != 0.0) {
-			result = (cop_chaud())/(cop_carnot_chaud());
-		}
-		return result;		
-	}
-	
-	/**
-	 * Calcul le rendement Froid
-	 * @return : COP Froid / COP Carnot Froid
-	 */
-	public double cop_rendement_froid() {
-		double result = 0;
-		
-		if ((cop_carnot_froid()) != 0.0) {
-			result = (cop_froid())/(cop_carnot_froid());
-		}
-		return result;		
-	}
-
-	
 }

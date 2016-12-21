@@ -18,25 +18,19 @@
  */
 package pacp;
 
-public class Evaporator {
+public class HeatTransferFluid {
 
 	private String name;
-	private double inputT;
-	private double outputT; 
+	private double T;
+	private double P; 
 	
 	// Constructor
-	Evaporator() {
-		this.name = "Evaporateur";
-		this.inputT  = 0; 	// Evaporator Input temperature in °C	
-		this.outputT = 0;	// Evaporator Output Temperature in °C
+	HeatTransferFluid() {
+		this.name = "Fluide caloporteur";
+		this.T  = 0; 	// Heat Transfer Fluid Temperature in °C	
+		this.P = 0;		// Heat Transfer Fluid Pressure in °C
 	}
 	
-	Evaporator(double temp) {
-		this.name = "Evaporateur";
-		this.inputT  = temp; 	// Evaporator Input temperature in °C	
-		this.outputT = temp;	// Evaporator Output Temperature in °C
-	}
-
 	// Setter & Getter
 	public String getName() {
 		return name;
@@ -46,16 +40,16 @@ public class Evaporator {
 		this.name = name;
 	}
 	
-	public double getInputT() {
-		return inputT;
+	public double getT() {
+		return T;
 	}
-	public void setInputT(double inputT) {
-		this.inputT = inputT;
+	public void setT(double T) {
+		this.T = T;
 	}
-	public double getOutputT() {
-		return outputT;
+	public double getP() {
+		return P;
 	}
-	public void setOutputT(double outputT) {
-		this.outputT = outputT;
+	public void setP(double P) {
+		this.P = P;
 	}
 }

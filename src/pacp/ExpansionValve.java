@@ -18,26 +18,24 @@
  */
 package pacp;
 
-public class Evaporator {
+public class ExpansionValve {
 
 	private String name;
-	private double inputT;
-	private double outputT; 
+	private double inputP;
+	private double outputP; 
 	
-	// Constructor
-	Evaporator() {
-		this.name = "Evaporateur";
-		this.inputT  = 0; 	// Evaporator Input temperature in °C	
-		this.outputT = 0;	// Evaporator Output Temperature in °C
-	}
-	
-	Evaporator(double temp) {
-		this.name = "Evaporateur";
-		this.inputT  = temp; 	// Evaporator Input temperature in °C	
-		this.outputT = temp;	// Evaporator Output Temperature in °C
+	ExpansionValve() {
+		setName("Capillaire");
+		setInputP(0);
+		setOutputP(0);
 	}
 
-	// Setter & Getter
+	ExpansionValve(double P) {
+		setName("Capillaire");
+		setInputP(P);
+		setOutputP(P);
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -45,17 +43,20 @@ public class Evaporator {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	public double getInputT() {
-		return inputT;
+
+	public double getInputP() {
+		return inputP;
 	}
-	public void setInputT(double inputT) {
-		this.inputT = inputT;
+
+	public void setInputP(double inputP) {
+		this.inputP = inputP;
 	}
-	public double getOutputT() {
-		return outputT;
+
+	public double getOutputP() {
+		return outputP;
 	}
-	public void setOutputT(double outputT) {
-		this.outputT = outputT;
+
+	public void setOutputP(double outputP) {
+		this.outputP = outputP;
 	}
 }

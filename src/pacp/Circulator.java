@@ -18,20 +18,37 @@
  */
 package pacp;
 
+import java.util.ArrayList;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 public class Circulator {
 
 	private String name;
-	private double current;
 	private double voltage;
-	private double power;
+	ArrayList<Double> currentL = new ArrayList<Double>();
+	ArrayList<Integer> rotatePerMinutesL = new ArrayList<Integer>();
+	ArrayList<Integer> powerL = new ArrayList<Integer>();
 
 	// Constructor
 	Circulator () {
-		name = "";
-		current= 0;
-		voltage = 0;
-		power=0;
+		name = "DAB A 80/180XM";
+		voltage = 220;
+
+		//setNbListFeatures(3);
+		rotatePerMinutesL.add(1620);
+		powerL.add(190);
+		currentL.add(0.91);
+
+		rotatePerMinutesL.add(2420);
+		powerL.add(226);
+		currentL.add(0.98);
+
+		rotatePerMinutesL.add(2710);
+		powerL.add(236);
+		currentL.add(1.0);		
 	}
+
 
 	// getter & setter
 	public String getName() {
@@ -42,14 +59,6 @@ public class Circulator {
 		this.name = name;
 	}
 
-	public double getCurrent() {
-		return current;
-	}
-
-	public void setCurrent(double current) {
-		this.current = current;
-	}
-
 	public double getVoltage() {
 		return voltage;
 	}
@@ -58,11 +67,83 @@ public class Circulator {
 		this.voltage = voltage;
 	}
 
-	public double getPower() {
-		return power;
+	public ArrayList<Double> getCurrentL() {
+		return currentL;
 	}
 
-	public void setPower(double power) {
-		this.power = power;
+	public ArrayList<Integer> getRotatePerMinutesL() {
+		return rotatePerMinutesL;
+	}
+
+	public ArrayList<Integer> getPowerL() {
+		return powerL;
+	}
+
+	/**
+	 * Add New Circulator features
+	 * @param vcurrent
+	 * @param vrotatePerMinutes
+	 * @param vpower
+	 */
+	public void addFeatures(double vcurrent, int vrotatePerMinutes, int vpower ) {
+		this.rotatePerMinutesL.add(vrotatePerMinutes);
+		this.powerL.add(vpower);
+		this.currentL.add(vcurrent);
+	}
+
+	/**
+	 * Clear the Feature List
+	 */
+	public void clearFeatures() {
+		this.rotatePerMinutesL.clear();
+		this.powerL.clear();
+		this.currentL.clear();
+	}
+
+	/**
+	 * Set Class with the element coming from a the JSON object
+	 * @param jsonObj : JSON Object
+	 * 			
+	 */
+	public void setJsonObject(JSONObject jsonObj) {
+		this.name = (String) jsonObj.get("Name");
+		this.voltage = (double)jsonObj.get("Voltage");
+
+		// Clear all Features
+		this.clearFeatures();
+
+		// Fill all feature with jsonObj
+		JSONArray ObjFeatureL = (JSONArray) jsonObj.get("Features");
+		for(int i=0; i< ObjFeatureL.size();i++) {
+			JSONObject jsonObjectL2 = (JSONObject) ObjFeatureL.get(i);
+			this.rotatePerMinutesL.add((int)jsonObjectL2.get("RotatePerMinutes"));
+			this.powerL.add((int)jsonObjectL2.get("Power"));
+			this.currentL.add((double)jsonObjectL2.get("Current"));
+		}
+	}
+
+	/**
+	 * Return (after to have fill the class), the Circulator's JSON data
+	 * @return : JSONObject
+	 *      {"Features":[{"Current":0.91,"Power":190},{"Current".....
+	 */
+	@SuppressWarnings("unchecked")
+	public JSONObject getJsonObject() {
+		JSONObject ObjCirculator = new JSONObject();  
+		JSONObject ObjFeature;
+		JSONArray ObjFeatureL = new JSONArray();
+
+		ObjCirculator.put("Name", this.name);
+		ObjCirculator.put("Voltage", this.voltage);
+
+		for(int i=0; i< currentL.size();i++) {
+			ObjFeature = new JSONObject();  
+			ObjFeature.put("Current", this.currentL.get(i));
+			ObjFeature.put("Power", this.powerL.get(i));
+			ObjFeature.put("RotatePerMinutes", this.rotatePerMinutesL.get(i));
+			ObjFeatureL.add(ObjFeature);
+		}
+		ObjCirculator.put("Features", ObjFeatureL);
+		return ObjCirculator;
 	}
 }

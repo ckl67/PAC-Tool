@@ -19,24 +19,43 @@
 package pacp;
 
 public class Pac {
-	
-	protected Scroll scroll;
-	private Circulator circulator;
+
+	private Compressor compressor;
 	private Condenser condenser;
+	private ExpansionValve expansionValve;
 	private Evaporator evaporator;
-	
+	private Refrigerant fluidRefrigerant;
+
+	private Circulator circulator;
+	private HeatSource circuit;
+	private HeatTransferFluid transferFluid;
+
+	private Circulator circulatorDistribution;
+	private HeatDistribution circuitHeatDistribution;
+	private HeatTransferFluid fluidCaloDistribution;
+
+
 	// Constructor
 	public Pac() {
-		setScroll(new Scroll());
+		setCompressor(new Compressor());
+		setCirculator(new Circulator());
 	}
+
+	public Pac(int input) {
+		
+		setCompressor(new Compressor());
+		setCirculator(new Circulator());
+	}
+
+	// ========================================================================================================	
 
 	// Getter and Setter
-	public Scroll getScroll() {
-		return scroll;
+	public Compressor getCompressor() {
+		return compressor;
 	}
 
-	public void setScroll(Scroll scroll) {
-		this.scroll = scroll;
+	public void setCompressor(Compressor compressor) {
+		this.compressor = compressor;
 	}
 
 	public Circulator getCirculator() {
@@ -62,5 +81,5 @@ public class Pac {
 	public void setEvaporator(Evaporator evaporator) {
 		this.evaporator = evaporator;
 	}
-	
+
 }

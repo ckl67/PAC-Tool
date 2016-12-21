@@ -21,11 +21,22 @@ package pacp;
 public class Condenser {
 
 	private String name;
+	private double inputT;
+	private double outputT; 
 	
 	// Constructor
 	Condenser() {
-
+		this.name = "Condenseur";
+		this.inputT  = 0; 	// Condenser Input temperature in °C	
+		this.outputT = 0;	// Condenser Output Temperature in °C
 	}
+	
+	Condenser(double temp) {
+		this.name = "Condenseur";
+		this.inputT  = temp; 	// Condenser Input temperature in °C	
+		this.outputT = temp;	// Condenser Output Temperature in °C
+	}
+
 	// Setter & Getter
 	public String getName() {
 		return name;
@@ -33,5 +44,18 @@ public class Condenser {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public double getInputT() {
+		return inputT;
+	}
+	public void setInputT(double inputT) {
+		this.inputT = inputT;
+	}
+	public double getOutputT() {
+		return outputT;
+	}
+	public void setOutputT(double outputT) {
+		this.outputT = outputT;
 	}
 }

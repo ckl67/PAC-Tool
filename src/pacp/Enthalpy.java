@@ -29,9 +29,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ConfEnthalpy {
+public class Enthalpy {
 
-	
+
 	// Enthalpy
 	private String enthalpyImageFile;
 
@@ -50,7 +50,7 @@ public class ConfEnthalpy {
 	private List<Point2D.Double> listTempPress;
 	private double correctionPressure;
 
-	public ConfEnthalpy() {
+	public Enthalpy() {
 		setEnthalpyImageFile("D:/Users/kluges1/workspace/pac-tool/ressources/R22.png");
 
 		// Enthalpy
@@ -282,48 +282,51 @@ public class ConfEnthalpy {
 	}
 
 	public double getPressFromTemp(double temp){
-		double x,presso;
+		double x,presso=0;
 		int idx=0;
-		for(int c = 0; c < listTempPress.size(); c++){
-			if(temp >= listTempPress.get(c).getX() ){
-				idx = c;
+		if (listTempPress.size() != 0) {
+			for(int c = 0; c < listTempPress.size(); c++){
+				if(temp >= listTempPress.get(c).getX() ){
+					idx = c;
+				}
 			}
-		}
-		if (idx == listTempPress.size()-1) {
-			idx = idx-1;
-		} 
+			if (idx == listTempPress.size()-1) {
+				idx = idx-1;
+			} 
 
-		double y0,y1,x0,x1;
-		x  = temp;
-		x0 = listTempPress.get(idx).getX();
-		x1 = listTempPress.get(idx+1).getX();
-		y0 = listTempPress.get(idx).getY();
-		y1 = listTempPress.get(idx+1).getY();
-		presso = (x-x0)*(y1-y0)/(x1-x0)+ y0;
-		
+			double y0,y1,x0,x1;
+			x  = temp;
+			x0 = listTempPress.get(idx).getX();
+			x1 = listTempPress.get(idx+1).getX();
+			y0 = listTempPress.get(idx).getY();
+			y1 = listTempPress.get(idx+1).getY();
+			presso = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+		}
 		return presso+correctionPressure;
 	}
 
 	public double getTempFromPress(double press){
-		double x,tempo;
+		double x,tempo=0;
 		int idx=0;
-		for(int c = 0; c < listTempPress.size(); c++){
-			if((press-correctionPressure) >= listTempPress.get(c).getY() ){
-				idx = c;
-			}
-		}
-		if (idx == listTempPress.size()-1) {
-			idx = idx-1;
-		} 
+		if (listTempPress.size() != 0) {
 
-		double y0,y1,x0,x1;
-		x  = press;
-		x0 = listTempPress.get(idx).getY();
-		x1 = listTempPress.get(idx+1).getY();
-		y0 = listTempPress.get(idx).getX();
-		y1 = listTempPress.get(idx+1).getX();
-		tempo = (x-x0)*(y1-y0)/(x1-x0)+ y0;
-		
+			for(int c = 0; c < listTempPress.size(); c++){
+				if((press-correctionPressure) >= listTempPress.get(c).getY() ){
+					idx = c;
+				}
+			}
+			if (idx == listTempPress.size()-1) {
+				idx = idx-1;
+			} 
+
+			double y0,y1,x0,x1;
+			x  = press;
+			x0 = listTempPress.get(idx).getY();
+			x1 = listTempPress.get(idx+1).getY();
+			y0 = listTempPress.get(idx).getX();
+			y1 = listTempPress.get(idx+1).getX();
+			tempo = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+		}
 		return tempo;
 	}
 

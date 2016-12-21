@@ -20,7 +20,7 @@ package pacp;
 
 import org.json.simple.JSONObject;
 
-public class Scroll {
+public class Compressor {
 	private String name;
 	private double evap;
 	private double cond;
@@ -31,8 +31,8 @@ public class Scroll {
 	private double current;
 	private double massFlow;
 	private double voltage;
-	
-	public Scroll() {
+		
+	public Compressor() {
 			setName("ZR40K3-PFG");
 			evap = 45;
 			cond = 130;
@@ -42,33 +42,50 @@ public class Scroll {
 			power = 3000;
 			current = 14.7;
 			massFlow = 488;		
-			voltage = 220;		
+			voltage = 220;	
 	}
 	
-	// ========================================================================================
 	/**
-	 * Return the features of Class Scroll() in a JSON format
+	 * Compressor will increase the Pressure and Temperature
+	 * @param inGas
+	 * @param addT
+	 * @param addP
+	 * @return
+	 */
+	public Refrigerant compressGas(Refrigerant inGas, double addT, double addP) {
+		Refrigerant outGas = new Refrigerant();
+		
+		outGas.setT(inGas.getT()+ addT);
+		outGas.setP(inGas.getP()+ addP);
+		
+		return outGas;
+		
+	}
+	
+	/**
+	 * Return the Compressor JSON data
+	 * Style of return:
+ 	 *      {"Current":0.91,"Power":190,".....
 	 * @return : JSONObject
 	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
-		JSONObject ObjScroll = new JSONObject();  
-		ObjScroll.put("Name", this.name);
-		ObjScroll.put("Evap", this.evap);	
-		ObjScroll.put("Cond", this.cond);	
-		ObjScroll.put("RG", this.rg);	
-		ObjScroll.put("Liq", this.liq);	
-		ObjScroll.put("Capacity", this.capacity);	
-		ObjScroll.put("Power", this.power);	
-		ObjScroll.put("Current", this.current);	
-		ObjScroll.put("MassFlow", this.massFlow);	
-		ObjScroll.put("Voltage", this.voltage);	
-		return(ObjScroll);
+		JSONObject ObjComp = new JSONObject();  
+		ObjComp.put("Name", this.name);
+		ObjComp.put("Evap", this.evap);	
+		ObjComp.put("Cond", this.cond);	
+		ObjComp.put("RG", this.rg);	
+		ObjComp.put("Liq", this.liq);	
+		ObjComp.put("Capacity", this.capacity);	
+		ObjComp.put("Power", this.power);	
+		ObjComp.put("Current", this.current);	
+		ObjComp.put("MassFlow", this.massFlow);	
+		ObjComp.put("Voltage", this.voltage);	
+		return ObjComp ;
 	}
 	
-	// ========================================================================================
 	/**
-	 * Set scroll with the element in the JSON object
+	 * Set Class with the element coming from a the JSON object
 	 * @param jsonObj : JSON Object
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
@@ -85,9 +102,9 @@ public class Scroll {
 	}
 	
 	
-	// ----------------------------------------------------------------------------
-	// Setter
-	// ----------------------------------------------------------------------------
+	// ========================================================================================
+	// Setter / Getter
+	// ========================================================================================
 	public void setName(String v) {
 		this.name = v;
 	}
@@ -128,9 +145,6 @@ public class Scroll {
 		this.voltage = v;
 	}
 	
-	// ----------------------------------------------------------------------------
-	// Getter
-	// ----------------------------------------------------------------------------
 	public String getName() {
 		return name;
 	}
