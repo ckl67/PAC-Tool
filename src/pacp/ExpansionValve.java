@@ -18,24 +18,65 @@
  */
 package pacp;
 
+import org.json.simple.JSONObject;
+
 public class ExpansionValve {
 
 	private String name;
-	private double inputP;
-	private double outputP; 
+	private double deltaP;
+	private double deltaT;
 	
+	// -------------------------------------------------------
+	// 						CONSTRUCTOR
+	// -------------------------------------------------------
+
 	ExpansionValve() {
 		setName("Capillaire");
-		setInputP(0);
-		setOutputP(0);
+		deltaT = 0;
+		deltaP = 0;
 	}
 
-	ExpansionValve(double P) {
-		setName("Capillaire");
-		setInputP(P);
-		setOutputP(P);
+	// -------------------------------------------------------
+	// 						Methods
+	// -------------------------------------------------------
+	/**
+	 * ExpansionValve will decrease the Pressure and Temperature
+	 * @param Refrigerant: inGas
+	 * @return : Refrigerant : outGas
+	 */
+	public Refrigerant transfer(Refrigerant vinGas) {
+		vinGas.setT(vinGas.getT()+ deltaT);
+		vinGas.setP(vinGas.getP()+ deltaP);
+		return vinGas;
 	}
 
+	/**
+	 * Return the JSON data
+	 * @return : JSONObject
+	 */
+	@SuppressWarnings("unchecked")
+	public JSONObject getJsonObject() {
+		JSONObject ObjComp = new JSONObject();  
+		ObjComp.put("Name", this.name);
+		ObjComp.put("DeltaT", this.deltaT);	
+		ObjComp.put("DeltaP", this.deltaP);	
+			return ObjComp ;
+	}
+	
+	/**
+	 * Set Class with the element coming from a the JSON object
+	 * @param jsonObj : JSON Object
+	 */
+	public void setJsonObject(JSONObject jsonObj) {
+		this.name = (String) jsonObj.get("Name");
+		this.deltaT = (double) jsonObj.get("DeltaT");
+		this.deltaP = (double) jsonObj.get("DeltaP");
+	}
+
+	
+	// -------------------------------------------------------
+	// 				Getter and Setter
+	// -------------------------------------------------------
 	public String getName() {
 		return name;
 	}
@@ -44,19 +85,21 @@ public class ExpansionValve {
 		this.name = name;
 	}
 
-	public double getInputP() {
-		return inputP;
+	public double getDeltaP() {
+		return deltaP;
 	}
 
-	public void setInputP(double inputP) {
-		this.inputP = inputP;
+	public void setDeltaP(double deltaP) {
+		this.deltaP = deltaP;
 	}
 
-	public double getOutputP() {
-		return outputP;
+	public double getDeltaT() {
+		return deltaT;
 	}
 
-	public void setOutputP(double outputP) {
-		this.outputP = outputP;
+	public void setDeltaT(double deltaT) {
+		this.deltaT = deltaT;
 	}
+
+
 }

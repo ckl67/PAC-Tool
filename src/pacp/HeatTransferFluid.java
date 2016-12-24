@@ -18,20 +18,53 @@
  */
 package pacp;
 
+import org.json.simple.JSONObject;
+
 public class HeatTransferFluid {
 
 	private String name;
 	private double T;
 	private double P; 
 	
-	// Constructor
+	// -------------------------------------------------------
+	// 						CONSTRUCTOR
+	// -------------------------------------------------------
+	
 	HeatTransferFluid() {
 		this.name = "Fluide caloporteur";
 		this.T  = 0; 	// Heat Transfer Fluid Temperature in °C	
 		this.P = 0;		// Heat Transfer Fluid Pressure in °C
 	}
 	
-	// Setter & Getter
+	// -------------------------------------------------------
+	// 							METHOD
+	// -------------------------------------------------------
+	/**
+	 * Return the JSON data
+	 * @return : JSONObject
+	 */
+	@SuppressWarnings("unchecked")
+	public JSONObject getJsonObject() {
+		JSONObject ObjComp = new JSONObject();  
+		ObjComp.put("Name", this.name);
+		ObjComp.put("T", this.T);	
+		ObjComp.put("P", this.P);	
+		return ObjComp ;
+	}
+	
+	/**
+	 * Set Class with the element coming from a the JSON object
+	 * @param jsonObj : JSON Object
+	 */
+	public void setJsonObject(JSONObject jsonObj) {
+		this.name = (String) jsonObj.get("Name");
+		this.T = (double) jsonObj.get("T");
+		this.P = (double) jsonObj.get("P");
+	}
+
+	// -------------------------------------------------------
+	// 					GETTER AND SETTER
+	// -------------------------------------------------------
 	public String getName() {
 		return name;
 	}

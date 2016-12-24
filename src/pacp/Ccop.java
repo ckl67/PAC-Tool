@@ -26,7 +26,9 @@ public class Ccop extends Pac {
 	private double H2;
 	private double H3;
 
-	// Constructor
+	// -------------------------------------------------------
+	// 						CONSTRUCTOR
+	// -------------------------------------------------------
 	public Ccop() {
 		setT0(0.0);
 		setTK(0.0);
@@ -35,48 +37,9 @@ public class Ccop extends Pac {
 		setH3(0.0);
 	}
 
-	// --------- Getter / Setter
-	public double getT0() {
-		return T0;
-	}
-
-	public void setT0(double t0) {
-		T0 = t0;
-	}
-
-	public double getTK() {
-		return TK;
-	}
-
-	public void setTK(double tK) {
-		TK = tK;
-	}
-
-	public double getH1() {
-		return H1;
-	}
-
-	public void setH1(double h1) {
-		H1 = h1;
-	}
-
-	public double getH2() {
-		return H2;
-	}
-
-	public void setH2(double h2) {
-		H2 = h2;
-	}
-
-	public double getH3() {
-		return H3;
-	}
-
-	public void setH3(double h3) {
-		H3 = h3;
-	}
-
-	// ---------- Function -----------
+	// -------------------------------------------------------
+	// 							METHOD
+	// -------------------------------------------------------
 	/**
 	 * Compute COP Carnot Froid
 	 * @return : T0/(TK-T0)
@@ -89,6 +52,7 @@ public class Ccop extends Pac {
 		}
 		return result;		
 	}
+	
 	/**
 	 *  Compute COP Carnot Chaud
 	 * @return : TK/(TK-T0)
@@ -128,4 +92,48 @@ public class Ccop extends Pac {
 		return result;		
 	}
 
+
+	// -------------------------------------------------------
+	// 					GETTER AND SETTER
+	// -------------------------------------------------------
+
+	public double getT0() {
+		return T0;
+	}
+
+	public void setT0(double t0) {
+		T0 = t0;
+	}
+
+	public double getTK() {
+		return TK;
+	}
+
+	public void setTK(double tK) {
+		TK = tK;
+	}
+
+	public double getH1() {
+		return H1;
+	}
+
+	public void setH1(double h1) {
+		H1 = h1;
+	}
+
+	public double getH2() {
+		return H2;
+	}
+
+	public void setH2(double h2) {
+		H2 = h2;
+	}
+
+	public double getH3() {
+		return H3;
+	}
+
+	public void setH3(double h3) {
+		H3 = h3;
+	}
 }

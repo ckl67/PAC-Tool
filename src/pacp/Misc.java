@@ -24,6 +24,29 @@ import java.awt.Window;
 
 public class Misc {
 
+	// -------------------------------------------------------
+	// 						CONSTRUCTOR
+	// -------------------------------------------------------
+	private Misc() { }  // Prevents instantiation
+
+	// -------------------------------------------------------
+	// 						CONSTANTES (DEFINE)
+	// -------------------------------------------------------
+
+	public static final int _COMPRESSOR = 0;
+	public static final int _CONDENSER = 1;
+	public static final int _EXPANSIONVALVE = 2;
+	public static final int _EVAPORATOR = 3;
+	
+	public static final int _INPUT_COMPRESSOR = 0;
+	public static final int _INPUT__CONDENSER = 1;
+	public static final int _INPUT__EXPANSIONVALVE = 2;
+	public static final int _INPUT__EVAPORATOR = 3;
+	
+	// -------------------------------------------------------
+	// 							METHOD
+	// -------------------------------------------------------
+
 	/**
 	 * Convert Degre in Farenheit
 	 * @param degre : Value in Degre
@@ -102,7 +125,7 @@ public class Misc {
 		cosphi = p/(u*i);
 		return cosphi;
 	}
-	
+
 	/**
 	 * Center a Window
 	 * @param frame

@@ -18,26 +18,60 @@
  */
 package pacp;
 
+import org.json.simple.JSONObject;
+
 public class Evaporator {
 
 	private String name;
-	private double inputT;
-	private double outputT; 
+	private double deltaT;
 	
-	// Constructor
+	// -------------------------------------------------------
+	// 						CONSTRUCTOR
+	// -------------------------------------------------------
 	Evaporator() {
 		this.name = "Evaporateur";
-		this.inputT  = 0; 	// Evaporator Input temperature in °C	
-		this.outputT = 0;	// Evaporator Output Temperature in °C
+		this.deltaT  = 0; 	// Evaporator Delta temperature in °C	
 	}
 	
-	Evaporator(double temp) {
-		this.name = "Evaporateur";
-		this.inputT  = temp; 	// Evaporator Input temperature in °C	
-		this.outputT = temp;	// Evaporator Output Temperature in °C
+	// -------------------------------------------------------
+	// 							METHOD
+	// -------------------------------------------------------
+
+	/**
+	 * Function Transfer
+	 * @param Refrigerant
+	 * @return Refrigerant
+	 */
+	public Refrigerant transfer(Refrigerant vinGas) {
+		vinGas.setT(  vinGas.getT() + deltaT );
+		return vinGas;
+	}
+	
+	/**
+	 * Return the JSON data
+	 * @return : JSONObject
+	 */
+	@SuppressWarnings("unchecked")
+	public JSONObject getJsonObject() {
+		JSONObject ObjComp = new JSONObject();  
+		ObjComp.put("Name", this.name);
+		ObjComp.put("DeltaT", this.deltaT);	
+		return ObjComp ;
+	}
+	
+	/**
+	 * Set Class with the element coming from a the JSON object
+	 * @param jsonObj : JSON Object
+	 */
+	public void setJsonObject(JSONObject jsonObj) {
+		this.name = (String) jsonObj.get("Name");
+		this.deltaT = (double) jsonObj.get("DeltaT");
 	}
 
-	// Setter & Getter
+	// -------------------------------------------------------
+	// 					GETTER AND SETTER
+	// -------------------------------------------------------
+
 	public String getName() {
 		return name;
 	}
@@ -46,16 +80,12 @@ public class Evaporator {
 		this.name = name;
 	}
 	
-	public double getInputT() {
-		return inputT;
+	public double getDeltaT() {
+		return deltaT;
 	}
-	public void setInputT(double inputT) {
-		this.inputT = inputT;
+
+	public void setDeltaT(double deltaT) {
+		this.deltaT = deltaT;
 	}
-	public double getOutputT() {
-		return outputT;
-	}
-	public void setOutputT(double outputT) {
-		this.outputT = outputT;
-	}
+
 }

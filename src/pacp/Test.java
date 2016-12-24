@@ -60,6 +60,10 @@ public class Test {
 				testCondenser();
 				loop=false;
 				break;        
+			case "5":
+				testEnthalpy();
+				loop=false;
+				break;        
 			case "6":
 				testEvaporator();
 				loop=false;
@@ -69,11 +73,11 @@ public class Test {
 				loop=false;
 				break;
 			case "8":
-				testHeatSource();
+				testHeatDistribution();
 				loop=false;
 				break;        	
 			case "9":
-				testHeatDistribution();
+				testHeatSource();
 				loop=false;
 				break;        	
 			case "10":
@@ -172,6 +176,11 @@ public class Test {
 			System.out.println("    RotatePerMinutes  =" + vCirlculatorn.getRotatePerMinutesL().get(i));
 		}
 
+		HeatTransferFluid vFluid = new HeatTransferFluid() ;
+		vFluid.setT(25);
+		System.out.println("Input --> Output");
+		System.out.println(vFluid.getT()+"°C-->"+vCirlculator.transfer(vFluid).getT()+"°C");		
+
 	}
 
 	// ===================================================================================================================
@@ -187,7 +196,12 @@ public class Test {
 		JSONObject jsonObjCompressor = new JSONObject();
 		jsonObjCompressor = vCompressor.getJsonObject();
 		System.out.println(jsonObjCompressor);
-
+		
+		Refrigerant vRefrigeranR22 =  new Refrigerant();
+		vRefrigeranR22.setP(25);
+		vCompressor.setDeltaP(40);
+		System.out.println("Input --> Output");
+		System.out.println(vRefrigeranR22.getP() + "-->" + vCompressor.transfer(vRefrigeranR22).getP());
 	}
 
 	// ===================================================================================================================
@@ -196,20 +210,51 @@ public class Test {
 	private static void testCondenser() {
 		System.out.println("TEST CONDENSER");
 
-		Condenser vCondenser = new Condenser(50);
+		Condenser vCondenser = new Condenser();
+		Refrigerant vGas = new Refrigerant();
+		
+		vCondenser.setDeltaT(50.0);
+		vGas.setT(10);
+		
 		System.out.println("Input --> Output");
-		System.out.println(vCondenser.getInputT()+"°C-->"+vCondenser.getOutputT()+"°C");		
+		System.out.println(vGas.getT()+"°C-->"+vCondenser.transfer(vGas).getT()+"°C");
+		
+		JSONObject jsonObjCondenser = new JSONObject();
+		jsonObjCondenser = vCondenser.getJsonObject();
+		System.out.println(jsonObjCondenser);
+
+		
 	}
 
+	// ===================================================================================================================
+	// 													TEST ENTHALPY
+	// ===================================================================================================================
+	private static void testEnthalpy() {
+		System.out.println("TEST ENTHALPY");
+
+		System.out.println("To define !!");
+
+	}
+		
 	// ===================================================================================================================
 	// 													TEST EVAPORATOR
 	// ===================================================================================================================
 	private static void testEvaporator() {
 		System.out.println("TEST EVAPORATOR");
 
-		Evaporator vEvaporator = new Evaporator(5);
+		Evaporator vEvaporator = new Evaporator();
+		Refrigerant vGas = new Refrigerant();
+		
+		vEvaporator.setDeltaT(-50.0);
+		vGas.setT(10);
+		
 		System.out.println("Input --> Output");
-		System.out.println(vEvaporator.getInputT()+"°C-->"+vEvaporator.getOutputT()+"°C");		
+		System.out.println(vGas.getT()+"°C-->"+vEvaporator.transfer(vGas).getT()+"°C");		
+		
+		JSONObject jsonObjEvaporator = new JSONObject();
+		jsonObjEvaporator = vEvaporator.getJsonObject();
+		System.out.println(jsonObjEvaporator);
+
 	}
 
 	// ===================================================================================================================
@@ -218,12 +263,23 @@ public class Test {
 	private static void testExpansionValve(){
 		System.out.println("TEST EXPANSION VALVE  = Détendeur !");
 
-		ExpansionValve vExpansionValve = new ExpansionValve(5);
+		ExpansionValve vExpansionValve = new ExpansionValve();
 		System.out.println(vExpansionValve.getName());
 
+		Refrigerant vRefrigeranR22 =  new Refrigerant();
+		vRefrigeranR22.setP(25);
+		vRefrigeranR22.setT(5);
+		vExpansionValve.setDeltaP(-40);
+		vExpansionValve.setDeltaT(+75);
 		System.out.println("Input --> Output");
-		System.out.println(vExpansionValve.getInputP()+" bar-->"+vExpansionValve.getOutputP()+" bar");		
+		System.out.println("P:" + vRefrigeranR22.getP() + "-->" + vExpansionValve.transfer(vRefrigeranR22).getP());
+		System.out.println("T:" + vRefrigeranR22.getT() + "-->" + vExpansionValve.transfer(vRefrigeranR22).getT());
+		
+		JSONObject jsonObjExpansionValve = new JSONObject();
+		jsonObjExpansionValve = vExpansionValve.getJsonObject();
+		System.out.println(jsonObjExpansionValve);
 
+		
 	}
 
 	// ===================================================================================================================
@@ -232,10 +288,19 @@ public class Test {
 	private static void testHeatDistribution() {
 		System.out.println("TEST HEATDISTRIBUTION");
 
-		HeatDistribution vHeatDistribution = new HeatDistribution(50);
+		HeatSrcDistrCircuit vHeatDistribution = new HeatSrcDistrCircuit(-50);
 		System.out.println(vHeatDistribution.getName());
+		
+		HeatTransferFluid vFluid = new HeatTransferFluid(); 
+		
+		vFluid.setT(25);
 		System.out.println("Input --> Output");
-		System.out.println(vHeatDistribution.getInputT()+"°C-->"+vHeatDistribution.getOutputT()+"°C");		
+		System.out.println(vFluid.getT()+"°C-->"+vHeatDistribution.transfer(vFluid).getT()+"°C");
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj = vHeatDistribution.getJsonObject();
+		System.out.println(jsonObj);
+
 	}
 
 	// ===================================================================================================================
@@ -244,10 +309,17 @@ public class Test {
 	private static void testHeatSource() {
 		System.out.println("TEST HEATSOURCE");
 
-		HeatSource vHeatSource = new HeatSource(50);
-		System.out.println(vHeatSource.getName());
+		HeatSrcDistrCircuit vHeatSource = new HeatSrcDistrCircuit(50);
+		
+		HeatTransferFluid vFluid = new HeatTransferFluid(); 
+		
+		vFluid.setT(-25);
 		System.out.println("Input --> Output");
-		System.out.println(vHeatSource.getInputT()+"°C-->"+vHeatSource.getOutputT()+"°C");		
+		System.out.println(vFluid.getT()+"°C-->"+vHeatSource.transfer(vFluid).getT()+"°C");
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj = vHeatSource.getJsonObject();
+		System.out.println(jsonObj);
 	}
 
 	// ===================================================================================================================
@@ -260,8 +332,12 @@ public class Test {
 		System.out.println(vHeatTransferFluid.getName());	
 		System.out.println("Temp. / Pression");
 		System.out.println(vHeatTransferFluid.getT()+"°C -- "+vHeatTransferFluid.getP()+"bar");		
-	}
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj = vHeatTransferFluid.getJsonObject();
+		System.out.println(jsonObj);
 
+	}
 
 	// ===================================================================================================================
 	// 													TEST MISCELLANEOUS
@@ -279,6 +355,55 @@ public class Test {
 	private static void testPAC() {
 		System.out.println("TEST PAC");
 		
+		Pac pac = new Pac();
+		
+		System.out.println("Very very simple simulation of the PAC Cycle");
+		System.out.println("We start to configure the different elements");
+		System.out.println("Compressor : deltaP=+52, deltaT=+25");
+		pac.getCompressor().setDeltaP(52);
+		pac.getCompressor().setDeltaT(25);
+		System.out.println("Condenser : deltaT=-10");
+		pac.getCondenser().setDeltaT(-10);
+		System.out.println("Expansion Valve : deltaT=-7 , deltaP=-33");
+		pac.getExpansionValve().setDeltaP(-33);
+		pac.getExpansionValve().setDeltaT(-7);
+		System.out.println("Evaporator : deltaT=22");
+		pac.getEvaporator().setDeltaT(+22);
+		
+		System.out.println("R22 feature : T=-5, P=5");
+		pac.getFluidRefri().setT(-5);
+		pac.getFluidRefri().setP(5);
+	
+		System.out.println("Fluid Source : T=2, P=0.5");
+		pac.getFluidCaloS().setT(2);
+		pac.getFluidCaloS().setP(0.5);
+		System.out.println("Circuit Source : deltaT=5");
+		pac.getCircuitS().setdeltaT(5);
+		
+		System.out.println("Fluid Distribution: T=25, P=0.5");
+		pac.getFluidCaloD().setT(25);
+		pac.getFluidCaloD().setP(0.5);
+		System.out.println("Circuit Distribution : deltaT=23");
+		pac.getCircuitD().setdeltaT(23);
+
+		System.out.println();
+		for (int i=0;i<4;i++) {
+			System.out.println("Run cycle:"+i+" by injecting R22 (T="+pac.getFluidRefri().getT()+";P="+pac.getFluidRefri().getP()+") in Compressor");
+			System.out.println("     Injecting Fluid Source (T="+pac.getFluidCaloS().getT()+";P="+pac.getFluidCaloS().getP()+") in Circulateur");
+			System.out.println("     Injecting Fluid Distribution(T="+pac.getFluidCaloD().getT()+";P="+pac.getFluidCaloD().getP()+") in Circulateur");
+
+			pac.PacCycle(Misc._INPUT_COMPRESSOR);
+			
+			System.out.println("R22 T=" + pac.getFluidRefri().getT() + "  P="+ pac.getFluidRefri().getP());
+			System.out.println("Fluid S T=" + pac.getFluidCaloS().getT() + "  P="+ pac.getFluidCaloS().getP());
+			System.out.println("Fluid D T=" + pac.getFluidCaloD().getT() + "  P="+ pac.getFluidCaloD().getP());
+		}
+
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj = pac.getJsonObject();
+		System.out.println(jsonObj);
+		
 	}
 
 	// ===================================================================================================================
@@ -288,8 +413,16 @@ public class Test {
 		System.out.println("TEST REFRIGERANT");
 
 		Refrigerant vRefrigerant = new Refrigerant();
+		
+		vRefrigerant.setT(45);
+		vRefrigerant.setP(25);
 		System.out.println("Temp. / Pression");
-		System.out.println(vRefrigerant.getT()+"°C -- "+vRefrigerant.getP()+"bar");		
+		System.out.println(vRefrigerant.getT()+"°C -- "+vRefrigerant.getP()+"bar");
+		
+		JSONObject jsonObjRefrigerant = new JSONObject();
+		jsonObjRefrigerant = vRefrigerant.getJsonObject();
+		System.out.println(jsonObjRefrigerant);
+
 	}
 
 } 

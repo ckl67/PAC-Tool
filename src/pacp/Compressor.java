@@ -31,7 +31,14 @@ public class Compressor {
 	private double current;
 	private double massFlow;
 	private double voltage;
+	
+	private double deltaP;
+	private double deltaT;
 		
+	// -------------------------------------------------------
+	// 						CONSTRUCTOR
+	// -------------------------------------------------------
+
 	public Compressor() {
 			setName("ZR40K3-PFG");
 			evap = 45;
@@ -43,23 +50,23 @@ public class Compressor {
 			current = 14.7;
 			massFlow = 488;		
 			voltage = 220;	
+			deltaT = 0;
+			deltaP = 0;
 	}
+	
+	// -------------------------------------------------------
+	// 							METHOD
+	// -------------------------------------------------------
 	
 	/**
 	 * Compressor will increase the Pressure and Temperature
-	 * @param inGas
-	 * @param addT
-	 * @param addP
-	 * @return
+	 * @param Refrigerant: inGas
+	 * @return : Refrigerant : outGas
 	 */
-	public Refrigerant compressGas(Refrigerant inGas, double addT, double addP) {
-		Refrigerant outGas = new Refrigerant();
-		
-		outGas.setT(inGas.getT()+ addT);
-		outGas.setP(inGas.getP()+ addP);
-		
-		return outGas;
-		
+	public Refrigerant transfer(Refrigerant vinGas) {
+		vinGas.setT(vinGas.getT()+ deltaT);
+		vinGas.setP(vinGas.getP()+ deltaP);
+		return vinGas;
 	}
 	
 	/**
@@ -101,10 +108,10 @@ public class Compressor {
 		this.voltage = (double) jsonObj.get("Voltage");
 	}
 	
-	
-	// ========================================================================================
-	// Setter / Getter
-	// ========================================================================================
+	// -------------------------------------------------------
+	// 					GETTER AND SETTER
+	// -------------------------------------------------------
+
 	public void setName(String v) {
 		this.name = v;
 	}
@@ -183,6 +190,22 @@ public class Compressor {
 
 	public double getVoltage() {
 		return voltage;		
+	}
+
+	public double getDeltaP() {
+		return deltaP;
+	}
+
+	public void setDeltaP(double deltaP) {
+		this.deltaP = deltaP;
+	}
+
+	public double getDeltaT() {
+		return deltaT;
+	}
+
+	public void setDeltaT(double deltaT) {
+		this.deltaT = deltaT;
 	}
 
 

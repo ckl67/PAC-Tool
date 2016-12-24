@@ -16,22 +16,29 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+
 package pacp;
 
 import org.json.simple.JSONObject;
 
-public class Condenser {
+public class HeatSrcDistrCircuit {
 
 	private String name;
 	private double deltaT;
-
+	
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
-	Condenser() {
-		this.name = "Condenseur";
-		this.deltaT  = 0; 	// Condenser Delta temperature in °C	
+	// Constructor
+	HeatSrcDistrCircuit() {
+		this.name = "Captage Sol";
+		this.deltaT  = 0; 	// Heat Distribution delta temperature in °C	
+	}
+
+	HeatSrcDistrCircuit(double temp) {
+		this.name = "Captage Sol";
+		this.deltaT  = temp; 	// Heat Distribution delta temperature in °C	
 	}
 	
 	// -------------------------------------------------------
@@ -40,12 +47,12 @@ public class Condenser {
 
 	/**
 	 * Function Transfer
-	 * @param Refrigerant
-	 * @return Refrigerant
+	 * @param HeatTransferFluid
+	 * @return HeatTransferFluid
 	 */
-	public Refrigerant transfer(Refrigerant vinGas) {
-		vinGas.setT(  vinGas.getT() + deltaT );
-		return vinGas;
+	public HeatTransferFluid transfer(HeatTransferFluid vFluid) {
+		vFluid.setT(  vFluid.getT() + deltaT );
+		return vFluid;
 	}
 
 	/**
@@ -83,11 +90,10 @@ public class Condenser {
 		this.name = name;
 	}
 	
-	public double getDeltaT() {
+	public double getdeltaT() {
 		return deltaT;
 	}
-
-	public void setDeltaT(double deltaT) {
+	public void setdeltaT(double deltaT) {
 		this.deltaT = deltaT;
 	}
 

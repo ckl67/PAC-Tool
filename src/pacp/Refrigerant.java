@@ -1,16 +1,52 @@
 package pacp;
 
+import org.json.simple.JSONObject;
+
 public class Refrigerant extends Enthalpy {
 
 	private String name;
 	private double P;
 	private double T;
 	
+	// -------------------------------------------------------
+	// 						CONSTRUCTOR
+	// -------------------------------------------------------
+
 	Refrigerant() {
 		setName("R22");
 		setP(0);
 		setT(0);
 	}
+
+	// -------------------------------------------------------
+	// 							METHOD
+	// -------------------------------------------------------
+	/**
+	 * Return the JSON data
+	 * @return : JSONObject
+	 */
+	@SuppressWarnings("unchecked")
+	public JSONObject getJsonObject() {
+		JSONObject ObjComp = new JSONObject();  
+		ObjComp.put("Name", this.name);
+		ObjComp.put("T", this.T);	
+		ObjComp.put("P", this.P);	
+		return ObjComp ;
+	}
+	
+	/**
+	 * Set Class with the element coming from a the JSON object
+	 * @param jsonObj : JSON Object
+	 */
+	public void setJsonObject(JSONObject jsonObj) {
+		this.name = (String) jsonObj.get("Name");
+		this.T = (double) jsonObj.get("T");
+		this.P = (double) jsonObj.get("P");
+	}
+
+	// -------------------------------------------------------
+	// 					GETTER AND SETTER
+	// -------------------------------------------------------
 
 	public String getName() {
 		return name;

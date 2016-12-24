@@ -30,7 +30,9 @@ public class Circulator {
 	ArrayList<Integer> rotatePerMinutesL = new ArrayList<Integer>();
 	ArrayList<Integer> powerL = new ArrayList<Integer>();
 
-	// Constructor
+	// -------------------------------------------------------
+	// 						CONSTRUCTOR
+	// -------------------------------------------------------
 	Circulator () {
 		name = "DAB A 80/180XM";
 		voltage = 220;
@@ -48,35 +50,19 @@ public class Circulator {
 		powerL.add(236);
 		currentL.add(1.0);		
 	}
+	
+	// -------------------------------------------------------
+	// 							METHOD
+	// -------------------------------------------------------
 
-
-	// getter & setter
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public double getVoltage() {
-		return voltage;
-	}
-
-	public void setVoltage(double voltage) {
-		this.voltage = voltage;
-	}
-
-	public ArrayList<Double> getCurrentL() {
-		return currentL;
-	}
-
-	public ArrayList<Integer> getRotatePerMinutesL() {
-		return rotatePerMinutesL;
-	}
-
-	public ArrayList<Integer> getPowerL() {
-		return powerL;
+	/**
+	 * Simulate the circulator
+	 * @param HeatTransferFluid: vinFluid 
+	 * @return: HeatTransferFluid
+	 */
+	public HeatTransferFluid transfer(HeatTransferFluid vinFluid) {
+		
+		return vinFluid;
 	}
 
 	/**
@@ -146,4 +132,37 @@ public class Circulator {
 		ObjCirculator.put("Features", ObjFeatureL);
 		return ObjCirculator;
 	}
+
+	// -------------------------------------------------------
+	// 					GETTER AND SETTER
+	// -------------------------------------------------------
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public double getVoltage() {
+		return voltage;
+	}
+
+	public void setVoltage(double voltage) {
+		this.voltage = voltage;
+	}
+
+	public ArrayList<Double> getCurrentL() {
+		return currentL;
+	}
+
+	public ArrayList<Integer> getRotatePerMinutesL() {
+		return rotatePerMinutesL;
+	}
+
+	public ArrayList<Integer> getPowerL() {
+		return powerL;
+	}
+
 }
