@@ -12,7 +12,7 @@ public class Refrigerant extends Enthalpy {
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
-	Refrigerant() {
+	public Refrigerant() {
 		setName("R22");
 		setP(0);
 		setT(0);

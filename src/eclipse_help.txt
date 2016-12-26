@@ -1,0 +1,6 @@
+ * Adding external Jar
+ 		Create a folder called lib in your project folder.
+		copy to this folder all the jar files you need.
+		Refresh your project in eclipse.
+		Select all the jar files, then right click on one of them and select Build Path -> Add to Build Path
+ 

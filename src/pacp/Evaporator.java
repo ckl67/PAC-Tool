@@ -28,7 +28,7 @@ public class Evaporator {
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	Evaporator() {
+	public Evaporator() {
 		this.name = "Evaporateur";
 		this.deltaT  = 0; 	// Evaporator Delta temperature in °C	
 	}

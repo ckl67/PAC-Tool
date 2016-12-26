@@ -31,29 +31,39 @@ import java.util.regex.Pattern;
 
 public class Enthalpy {
 
-
-	// Enthalpy
-	private String enthalpyImageFile;
+	/* ----------------
+	 * Diagram Enthalpy  
+	 * ----------------*/
+	private String enthalpyImageFile;								// Enthalpy image file (.png)
 
 	private Point2D.Double mOrigineH = new Point2D.Double();  		// Coordinate mouse (hOrigine,hFinal)
 	private Point iOrigineH = new Point();						    // Coordinate Reference for (hOrigine,hFinal) in Enthalpy image
-	private boolean locateOrigineH;
+	private boolean locateOrigineH;									// Image Reference for H Requested :  Origin / Final
 	private boolean locateFinalH;
 
 	private Point2D.Double mOrigineP = new Point2D.Double();  		// Coordinate mouse (POrigine,PFinal)
 	private Point iOrigineP = new Point();						    // Coordinate Reference for (POrigine,PFinal) Pressure in image
-	private boolean locateOrigineP;
+	private boolean locateOrigineP;									// Image Reference for P Requested :  Origin / Final
 	private boolean locateFinalP;
 
-	// Pressure-Temperature
-	private String temperaturePressureFile;
-	private List<Point2D.Double> listTempPress;
-	private double correctionPressure;
+	/* -----------------------------
+	   Diagram Pressure-Temperature
+	 * ----------------------------*/
+	private String temperaturePressureFile;							// Data file with : Temperature / Pressure relation
+	private List<Point2D.Double> listTempPress;						// Coordinate Temperature / Pressure : List
+	private double correctionPressure;								// Delta pressure absolute / relative
 
+	// -------------------------------------------------------
+	// 						CONSTRUCTOR
+	// -------------------------------------------------------
 	public Enthalpy() {
+		/* ----------------
+		 * Diagram Enthalpy  
+		 * ----------------*/
+		// Image
 		setEnthalpyImageFile("D:/Users/kluges1/workspace/pac-tool/ressources/R22.png");
 
-		// Enthalpy
+		// -- H
 		setiHOrigine(140);
 		setiHFinal(240);
 		setmHOrigine(85.0);
@@ -61,7 +71,7 @@ public class Enthalpy {
 		locateOrigineH=false;
 		locateFinalH=false;
 
-		// Pressure
+		// -- P
 		setiPOrigine(1);
 		setiPFinal(10);
 		setmPOrigine(1000.0);
@@ -69,170 +79,22 @@ public class Enthalpy {
 		locateOrigineP=false;
 		locateFinalP=false;
 
-		// Pressure-Temperature
+		/* -----------------------------
+		   Diagram Pressure-Temperature
+		 * ----------------------------*/
 		setTemperaturePressureFile("D:/Users/kluges1/workspace/pac-tool/ressources/P2T_R22.txt");
 		setlistTempPress(new ArrayList<Point2D.Double>());
 		correctionPressure = 1.0;
-
 	}
 
-	// --------------------------------------------------------------------------------
-	// Image File
-	// --------------------------------------------------------------------------------
-	public String getEnthalpyImageFile() {
-		return enthalpyImageFile;
-	}
-
-	public void setEnthalpyImageFile(String enthalpyImageFile) {
-		this.enthalpyImageFile = enthalpyImageFile;
-	}
-
-	// --------------------------------------------------------------------------------
-	// Mouse Position for H :  Origin / Final
-	// --------------------------------------------------------------------------------
-	public double getmHOrigine() {
-		return mOrigineH.x;
-	}
-
-	public double getmHFinal() {
-		return mOrigineH.y;
-	}
-
-	public void setmHOrigine(double hOrigine) {
-		this.mOrigineH.x = hOrigine;
-	}
-	public void setmHFinal(double hFinal) {
-		this.mOrigineH.y = hFinal;
-	}
-
-	// --------------------------------------------------------------------------------
-	// Image Reference for H :  Origin / Final
-	// --------------------------------------------------------------------------------
-	public int getiHOrigine() {
-		return iOrigineH.x;
-	}
-
-	public int getiHFinal() {
-		return iOrigineH.y;
-	}
-
-	public void setiHOrigine(int hOrigine) {
-		this.iOrigineH.x = hOrigine;
-	}
-
-	public void setiHFinal(int hFinal) {
-		this.iOrigineH.y = hFinal;
-	}
-
-	// --------------------------------------------------------------------------------
-	// Image Reference for H Requested :  Origin / Final
-	// --------------------------------------------------------------------------------
-	public boolean islocateFinalH() {
-		return locateFinalH;
-	}
-
-	public void setlocateFinalH(boolean setFinalH) {
-		this.locateFinalH = setFinalH;
-	}
-
-	public boolean islocateOrigineH() {
-		return locateOrigineH;
-	}
-
-	public void setlocateOrigineH(boolean setOrigineH) {
-		this.locateOrigineH = setOrigineH;
-	}
-
-	// --------------------------------------------------------------------------------
-	// Mouse Position for P :  Origin / Final
-	// --------------------------------------------------------------------------------
-	public double getmPOrigine() {
-		return mOrigineP.x;
-	}
-
-	public double getmPFinal() {
-		return mOrigineP.y;
-	}
-
-	public void setmPOrigine(double POrigine) {
-		this.mOrigineP.x = POrigine;
-	}
-	public void setmPFinal(double PFinal) {
-		this.mOrigineP.y = PFinal;
-	}
-
-	// --------------------------------------------------------------------------------
-	// Image Reference for P :  Origin / Final
-	// --------------------------------------------------------------------------------
-	public int getiPOrigine() {
-		return iOrigineP.x;
-	}
-
-	public int getiPFinal() {
-		return iOrigineP.y;
-	}
-
-	public void setiPOrigine(int POrigine) {
-		this.iOrigineP.x = POrigine;
-	}
-
-	public void setiPFinal(int PFinal) {
-		this.iOrigineP.y = PFinal;
-	}
-
-	// --------------------------------------------------------------------------------
-	// Image Reference for P Requested :  Origin / Final
-	// --------------------------------------------------------------------------------
-	public boolean islocateFinalP() {
-		return locateFinalP;
-	}
-
-	public void setlocateFinalP(boolean setFinalP) {
-		this.locateFinalP = setFinalP;
-	}
-
-	public boolean islocateOrigineP() {
-		return locateOrigineP;
-	}
-
-	public void setlocateOrigineP(boolean setOrigineP) {
-		this.locateOrigineP = setOrigineP;
-	}
-
-	// ================================================================================
-	//						Temperature / Pressure
-	// ================================================================================
+	// -------------------------------------------------------
+	// 							METHOD
+	// -------------------------------------------------------
 
 	/**
-	 * Set or Get the Temperature/Pressure File
+	 * Read Data file containing: Pressure /Temperature relation (P. relative) 
+	 * Will fill the : listTempPress list
 	 */
-	public String getTemperaturePressureFile() {
-		return temperaturePressureFile;
-	}
-
-	public void setTemperaturePressureFile(String temperaturePressureFile) {
-		this.temperaturePressureFile = temperaturePressureFile;
-	}
-
-	// --------------------------------------------------------------------------------
-
-	public List<Point2D.Double> getlistTempPress() {
-		return listTempPress;
-	}
-
-	public double getTempFromList(int id) {
-		return listTempPress.get(id).getX();
-	}
-
-	public double getPressFromList(int id) {
-		return listTempPress.get(id).getY();
-	}
-
-	public void setlistTempPress(List<Point2D.Double> listTempPress) {
-		this.listTempPress = listTempPress;
-	}
-
-	// Load Pressure Temperature Text file
 	public void loadPressureTemperatureFile() {
 		Pattern p = Pattern.compile("(-?\\d+(,\\d+)?)");
 		BufferedReader buff_in;
@@ -257,7 +119,7 @@ public class Enthalpy {
 								press = Double.parseDouble(m.group().replace(",", "."));
 							i++;
 						}
-						listTempPress.add(new Point2D.Double(temp, press+correctionPressure));
+						listTempPress.add(new Point2D.Double(temp, press));
 					}
 				}
 			} catch (NumberFormatException e) {
@@ -273,14 +135,17 @@ public class Enthalpy {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
+	/**
+	 * Convert Temperature(°C) and Pressure (bar) 
+	 * @param temp: temperature (°C)
+	 * @return : Pressure (bar absolute)
+	 */
 	public double getPressFromTemp(double temp){
 		double x,presso=0;
 		int idx=0;
@@ -305,13 +170,19 @@ public class Enthalpy {
 		return presso+correctionPressure;
 	}
 
+	/**
+	 * Convert Temperature(°C) and Pressure (bar) 
+	 * @param : Pressure (absolute) press
+	 * @return : Temperature (°C)
+	 */
 	public double getTempFromPress(double press){
 		double x,tempo=0;
 		int idx=0;
+		double pressi = press - correctionPressure; 
 		if (listTempPress.size() != 0) {
 
 			for(int c = 0; c < listTempPress.size(); c++){
-				if((press-correctionPressure) >= listTempPress.get(c).getY() ){
+				if(pressi >= listTempPress.get(c).getY() ){
 					idx = c;
 				}
 			}
@@ -320,7 +191,7 @@ public class Enthalpy {
 			} 
 
 			double y0,y1,x0,x1;
-			x  = press;
+			x  = pressi;
 			x0 = listTempPress.get(idx).getY();
 			x1 = listTempPress.get(idx+1).getY();
 			y0 = listTempPress.get(idx).getX();
@@ -328,6 +199,140 @@ public class Enthalpy {
 			tempo = (x-x0)*(y1-y0)/(x1-x0)+ y0;
 		}
 		return tempo;
+	}
+
+
+	// -------------------------------------------------------
+	// 					GETTER AND SETTER
+	// -------------------------------------------------------
+
+	public String getEnthalpyImageFile() {
+		return enthalpyImageFile;
+	}
+
+	public void setEnthalpyImageFile(String enthalpyImageFile) {
+		this.enthalpyImageFile = enthalpyImageFile;
+	}
+
+	public double getmHOrigine() {
+		return mOrigineH.x;
+	}
+
+	public double getmHFinal() {
+		return mOrigineH.y;
+	}
+
+	public void setmHOrigine(double hOrigine) {
+		this.mOrigineH.x = hOrigine;
+	}
+	public void setmHFinal(double hFinal) {
+		this.mOrigineH.y = hFinal;
+	}
+
+	public int getiHOrigine() {
+		return iOrigineH.x;
+	}
+
+	public int getiHFinal() {
+		return iOrigineH.y;
+	}
+
+	public void setiHOrigine(int hOrigine) {
+		this.iOrigineH.x = hOrigine;
+	}
+
+	public void setiHFinal(int hFinal) {
+		this.iOrigineH.y = hFinal;
+	}
+
+	public boolean islocateFinalH() {
+		return locateFinalH;
+	}
+
+	public void setlocateFinalH(boolean setFinalH) {
+		this.locateFinalH = setFinalH;
+	}
+
+	public boolean islocateOrigineH() {
+		return locateOrigineH;
+	}
+
+	public void setlocateOrigineH(boolean setOrigineH) {
+		this.locateOrigineH = setOrigineH;
+	}
+
+	public double getmPOrigine() {
+		return mOrigineP.x;
+	}
+
+	public double getmPFinal() {
+		return mOrigineP.y;
+	}
+
+	public void setmPOrigine(double POrigine) {
+		this.mOrigineP.x = POrigine;
+	}
+	public void setmPFinal(double PFinal) {
+		this.mOrigineP.y = PFinal;
+	}
+
+	public int getiPOrigine() {
+		return iOrigineP.x;
+	}
+
+	public int getiPFinal() {
+		return iOrigineP.y;
+	}
+
+	public void setiPOrigine(int POrigine) {
+		this.iOrigineP.x = POrigine;
+	}
+
+	public void setiPFinal(int PFinal) {
+		this.iOrigineP.y = PFinal;
+	}
+
+	public boolean islocateFinalP() {
+		return locateFinalP;
+	}
+
+	public void setlocateFinalP(boolean setFinalP) {
+		this.locateFinalP = setFinalP;
+	}
+
+	public boolean islocateOrigineP() {
+		return locateOrigineP;
+	}
+
+	public void setlocateOrigineP(boolean setOrigineP) {
+		this.locateOrigineP = setOrigineP;
+	}
+
+	/**
+	 * Set or Get the Temperature/Pressure File
+	 */
+	public String getTemperaturePressureFile() {
+		return temperaturePressureFile;
+	}
+
+	public void setTemperaturePressureFile(String temperaturePressureFile) {
+		this.temperaturePressureFile = temperaturePressureFile;
+	}
+
+	public List<Point2D.Double> getlistTempPress() {
+		return listTempPress;
+	}
+
+	public double getTempFromList(int id) {
+		return listTempPress.get(id).getX();
+	}
+
+	public double getPressFromList(int id) {
+		return listTempPress.get(id).getY();
+	}
+
+	public void setlistTempPress(List<Point2D.Double> listTempPress) {
+		this.listTempPress = listTempPress;
 	}
 
 }

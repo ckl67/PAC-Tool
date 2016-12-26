@@ -67,13 +67,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.border.BevelBorder;
 
-
 public class WinPrime {
 
 	private Enthalpy enthalpy;
-	
 	private JFrame frame;
-	
 	private JTextField textFieldH1;
 	private JTextField textFieldH2;
 	private JTextField textFieldH3;
@@ -424,7 +421,7 @@ public class WinPrime {
 		// ===============================================================================================================
 		JPanel panelSroll = new JPanel();
 		panelSroll.setForeground(Color.BLUE);
-		tabbedPane.addTab("SCROLL", null, panelSroll, null);
+		tabbedPane.addTab("Compresseur", null, panelSroll, null);
 		panelSroll.setLayout(null);
 
 		// ================================================================

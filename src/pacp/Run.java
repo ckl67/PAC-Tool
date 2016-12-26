@@ -19,20 +19,18 @@
 package pacp;
 
 /**
- * Some Helps 
- * ==========
- * Adding external Jar
- 		Create a folder called lib in your project folder.
-		copy to this folder all the jar files you need.
-		Refresh your project in eclipse.
-		Select all the jar files, then right click on one of them and select Build Path -> Add to Build Path
- *
+ * MAIN RUN
  */
-
 public class Run {
 
+	// -------------------------------------------------------
+	// 						STATIC GLOBAL VAR
+	// -------------------------------------------------------
 	public static final String PACTool_Version = "Version Alpha 0.1";
 
+	// -------------------------------------------------------
+	// 						 PAC-TOOL OBJECTS
+	// -------------------------------------------------------
 	// Pac
 	private static Pac pac = new Pac();
 
@@ -42,9 +40,9 @@ public class Run {
 	// Conf Enthalpy Image
 	private static Enthalpy enthalpy = new Enthalpy();
 	
-	// ========================================================================================
-	//                                 		MAIN
-	// ========================================================================================
+	// -------------------------------------------------------
+	// 							MAIN
+	// -------------------------------------------------------
 	public static void main(String[] args){
 		WinPrime window = new WinPrime(pac, cop, enthalpy);
 		window.WinPrimeVisible();

@@ -29,7 +29,7 @@ public class Condenser {
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
-	Condenser() {
+	public Condenser() {
 		this.name = "Condenseur";
 		this.deltaT  = 0; 	// Condenser Delta temperature in °C	
 	}

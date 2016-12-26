@@ -20,18 +20,15 @@ package pacp;
 
 import org.json.simple.JSONObject;
 
-public class Pac {
-
+public class Pac{
 	private Compressor compressor;
 	private Condenser condenser;
 	private ExpansionValve expansionValve;
 	private Evaporator evaporator;
 	private Refrigerant fluidRefri;
-
 	private Circulator circulatorS;
 	private HeatSrcDistrCircuit circuitS;
 	private HeatTransferFluid fluidCaloS;
-
 	private Circulator circulatorD;
 	private HeatSrcDistrCircuit circuitD;
 	private HeatTransferFluid fluidCaloD;

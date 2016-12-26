@@ -18,7 +18,7 @@ public class Test {
 					+ "  (2)-> Circulateur\n"
 					+ "  (3)-> Compresseur\n"
 					+ "  (4)-> Condensateur\n"
-					+ "  (-)-> Enthalpie\n"
+					+ "  (5)-> Enthalpie\n"
 					+ "  (6)-> Evaporateur\n"
 					+ "  (7)-> Détendeur\n"
 					+ "  (8)-> Distribution Chaleur --> Chauffage\n"
@@ -120,7 +120,6 @@ public class Test {
 
 		System.out.println("Héritage de PAC");
 		System.out.println("Nom du compressuer associé: " +vCOP.getCompressor().getName());
-
 	}
 
 	// ===================================================================================================================
@@ -180,7 +179,6 @@ public class Test {
 		vFluid.setT(25);
 		System.out.println("Input --> Output");
 		System.out.println(vFluid.getT()+"°C-->"+vCirlculator.transfer(vFluid).getT()+"°C");		
-
 	}
 
 	// ===================================================================================================================
@@ -222,8 +220,6 @@ public class Test {
 		JSONObject jsonObjCondenser = new JSONObject();
 		jsonObjCondenser = vCondenser.getJsonObject();
 		System.out.println(jsonObjCondenser);
-
-		
 	}
 
 	// ===================================================================================================================
@@ -232,7 +228,17 @@ public class Test {
 	private static void testEnthalpy() {
 		System.out.println("TEST ENTHALPY");
 
-		System.out.println("To define !!");
+		Enthalpy enthalpy = new Enthalpy();
+		
+		// Read conversion Temp/Press. file
+		System.out.println("Load R22 (T/P) file");
+		enthalpy.loadPressureTemperatureFile();
+		
+		System.out.println("Reference Diagram Enthalpy R22 : 2 bar (absolute) <--> -25°C");
+		System.out.println("    File R22 :  -25°C --> 1 bar (relative)");
+		System.out.println("    File R22 :  2 bar (relative) --> -15°C ");
+		System.out.println("T= -25°C" + "--> P=" + enthalpy.getPressFromTemp(-25));
+		System.out.println("P= 2 bar " + "--> T=" + enthalpy.getTempFromPress(2));
 
 	}
 		
@@ -254,7 +260,6 @@ public class Test {
 		JSONObject jsonObjEvaporator = new JSONObject();
 		jsonObjEvaporator = vEvaporator.getJsonObject();
 		System.out.println(jsonObjEvaporator);
-
 	}
 
 	// ===================================================================================================================
@@ -278,8 +283,6 @@ public class Test {
 		JSONObject jsonObjExpansionValve = new JSONObject();
 		jsonObjExpansionValve = vExpansionValve.getJsonObject();
 		System.out.println(jsonObjExpansionValve);
-
-		
 	}
 
 	// ===================================================================================================================
@@ -300,7 +303,6 @@ public class Test {
 		JSONObject jsonObj = new JSONObject();
 		jsonObj = vHeatDistribution.getJsonObject();
 		System.out.println(jsonObj);
-
 	}
 
 	// ===================================================================================================================
@@ -336,7 +338,6 @@ public class Test {
 		JSONObject jsonObj = new JSONObject();
 		jsonObj = vHeatTransferFluid.getJsonObject();
 		System.out.println(jsonObj);
-
 	}
 
 	// ===================================================================================================================
@@ -399,11 +400,9 @@ public class Test {
 			System.out.println("Fluid D T=" + pac.getFluidCaloD().getT() + "  P="+ pac.getFluidCaloD().getP());
 		}
 
-		
 		JSONObject jsonObj = new JSONObject();
 		jsonObj = pac.getJsonObject();
 		System.out.println(jsonObj);
-		
 	}
 
 	// ===================================================================================================================
@@ -422,7 +421,6 @@ public class Test {
 		JSONObject jsonObjRefrigerant = new JSONObject();
 		jsonObjRefrigerant = vRefrigerant.getJsonObject();
 		System.out.println(jsonObjRefrigerant);
-
 	}
 
 } 

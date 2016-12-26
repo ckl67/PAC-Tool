@@ -30,7 +30,7 @@ public class HeatTransferFluid {
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 	
-	HeatTransferFluid() {
+	public HeatTransferFluid() {
 		this.name = "Fluide caloporteur";
 		this.T  = 0; 	// Heat Transfer Fluid Temperature in °C	
 		this.P = 0;		// Heat Transfer Fluid Pressure in °C

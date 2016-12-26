@@ -31,12 +31,12 @@ public class HeatSrcDistrCircuit {
 	// -------------------------------------------------------
 
 	// Constructor
-	HeatSrcDistrCircuit() {
+	public HeatSrcDistrCircuit() {
 		this.name = "Captage Sol";
 		this.deltaT  = 0; 	// Heat Distribution delta temperature in °C	
 	}
 
-	HeatSrcDistrCircuit(double temp) {
+	public HeatSrcDistrCircuit(double temp) {
 		this.name = "Captage Sol";
 		this.deltaT  = temp; 	// Heat Distribution delta temperature in °C	
 	}

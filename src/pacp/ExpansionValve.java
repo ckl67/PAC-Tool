@@ -30,7 +30,7 @@ public class ExpansionValve {
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
-	ExpansionValve() {
+	public ExpansionValve() {
 		setName("Capillaire");
 		deltaT = 0;
 		deltaP = 0;

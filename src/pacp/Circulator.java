@@ -33,7 +33,7 @@ public class Circulator {
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	Circulator () {
+	public Circulator () {
 		name = "DAB A 80/180XM";
 		voltage = 220;
 
