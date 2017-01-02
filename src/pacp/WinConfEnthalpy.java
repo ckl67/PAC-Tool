@@ -293,7 +293,7 @@ public class WinConfEnthalpy {
 					//System.out.println("You chose to open this file: " + chooser.getSelectedFile().getAbsolutePath());
 					String filepath=chooser.getSelectedFile().getAbsolutePath();
 					txtFieldTemperaturePressionFile.setText(filepath);
-					enthalpy.setTemperaturePressureFile(txtFieldTemperaturePressionFile.getText());	
+					enthalpy.setFileTP(txtFieldTemperaturePressionFile.getText());	
 
 				}
 			}

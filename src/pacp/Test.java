@@ -232,13 +232,20 @@ public class Test {
 		
 		// Read conversion Temp/Press. file
 		System.out.println("Load R22 (T/P) file");
-		enthalpy.loadPressureTemperatureFile();
+		enthalpy.loadPTFile();
 		
 		System.out.println("Reference Diagram Enthalpy R22 : 2 bar (absolute) <--> -25°C");
-		System.out.println("    File R22 :  -25°C --> 1 bar (relative)");
-		System.out.println("    File R22 :  2 bar (relative) --> -15°C ");
-		System.out.println("T= -25°C" + "--> P=" + enthalpy.getPressFromTemp(-25));
-		System.out.println("P= 2 bar " + "--> T=" + enthalpy.getTempFromPress(2));
+		System.out.println("T= -25°C" + "--> P=" + enthalpy.convT2P(-25));
+		System.out.println("P= 2 bar " + "--> T=" + enthalpy.convP2T(2));
+
+		// Read Temperature [degre C] / Enthalpy (kJ/kg) Liquid / Enthalpy (kJ/kg) Vapor file
+		System.out.println("Load R22 Saturation file and pick id=2");
+		enthalpy.loadSatFile();
+		System.out.println("Enthalpy Liquid [2] = "+ enthalpy.getSatHl(2));
+		System.out.println("Enthalpy Vapor [2] = "+ enthalpy.getSatHv(2));
+		System.out.println("Pression [2] = "+ enthalpy.getSatP(2));
+		
+	
 
 	}
 		
@@ -348,6 +355,8 @@ public class Test {
 
 		System.out.println("Dergé --> Farenheit : " + 10 + "-->" + Misc.degre2farenheit(10));
 		System.out.println("BTU   --> Watt:" + 1 +"-->" + Misc.btuhr2watt(1) );
+		
+		System.out.println("Number of . in "+ "12.23.45 = " + Misc.nbCharInString("12.23.45", '.'));
 	}
 
 	// ===================================================================================================================

@@ -37,7 +37,7 @@ public class Run {
 	// Compute COP measure
 	private static Ccop cop = new Ccop();
 	
-	// Conf Enthalpy Image
+	// Enthalpy Feature
 	private static Enthalpy enthalpy = new Enthalpy();
 	
 	// -------------------------------------------------------
@@ -47,5 +47,4 @@ public class Run {
 		WinPrime window = new WinPrime(pac, cop, enthalpy);
 		window.WinPrimeVisible();
 	}
-
 }

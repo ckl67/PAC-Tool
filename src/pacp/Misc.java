@@ -136,5 +136,20 @@ public class Misc {
 		int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
 		frame.setLocation(x, y);
 	}
+	/**
+	 * Return The number of "Char c" in the sting str:
+	 * @param str
+	 * @param c
+	 * @return: integer 
+	 */
+	public static int nbCharInString(String str,char c) {
+		int res=0;
+		if(str==null)
+			return res;
+		for(int i=0;i<str.length();i++)
+			if(c==str.charAt(i))
+				res++;
+		return res;
+	}
 
 }

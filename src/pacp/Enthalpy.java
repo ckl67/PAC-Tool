@@ -20,20 +20,19 @@ package pacp;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
-import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Scanner;
+
 
 public class Enthalpy {
 
 	/* ----------------
 	 * Diagram Enthalpy  
 	 * ----------------*/
+	private String nameRefrigerant;									// Name (R22/..)
 	private String enthalpyImageFile;								// Enthalpy image file (.png)
 
 	private Point2D.Double mOrigineH = new Point2D.Double();  		// Coordinate mouse (hOrigine,hFinal)
@@ -49,9 +48,17 @@ public class Enthalpy {
 	/* -----------------------------
 	   Diagram Pressure-Temperature
 	 * ----------------------------*/
-	private String temperaturePressureFile;							// Data file with : Temperature / Pressure relation
-	private List<Point2D.Double> listTempPress;						// Coordinate Temperature / Pressure : List
-	private double correctionPressure;								// Delta pressure absolute / relative
+	private String fileTP;							// Data file with : Temperature / Pressure relation
+	private List<Point2D.Double> listTP;				// Coordinate Temperature / Pressure : List
+	private double deltaP;								// Delta pressure absolute / relative
+
+	/* -----------------------------
+	   Diagram Saturation Curve:
+	   Temperature --> Enthalpy  (Liquid / Vapor)  
+	 * ----------------------------*/
+	private String fileSat;
+	private List<Point2D.Double> listSatHlP;			// Coordinate Temperature / H : List
+	private List<Point2D.Double> listSatHvP;			// Coordinate Temperature / H : List
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -60,6 +67,8 @@ public class Enthalpy {
 		/* ----------------
 		 * Diagram Enthalpy  
 		 * ----------------*/
+		// Name Refrigerant
+		setNameRefrigerant("R22");
 		// Image
 		setEnthalpyImageFile("D:/Users/kluges1/workspace/pac-tool/ressources/R22.png");
 
@@ -82,125 +91,242 @@ public class Enthalpy {
 		/* -----------------------------
 		   Diagram Pressure-Temperature
 		 * ----------------------------*/
-		setTemperaturePressureFile("D:/Users/kluges1/workspace/pac-tool/ressources/P2T_R22.txt");
-		setlistTempPress(new ArrayList<Point2D.Double>());
-		correctionPressure = 1.0;
+		setFileTP("D:/Users/kluges1/workspace/pac-tool/ressources/P2T_R22.txt");
+		setlistTP(new ArrayList<Point2D.Double>());
+		deltaP = 0.0;
+
+		/* -----------------------------
+		   Diagram Saturation Curve:
+		   Temperature --> Enthalpy  (Liquid / Vapor)  
+		 * ----------------------------*/
+		setFileSat("D:/Users/kluges1/workspace/pac-tool/ressources/SaturationCurve_R22.txt");
+		setlistSatHlP(new ArrayList<Point2D.Double>());
+		setlistSatHvP(new ArrayList<Point2D.Double>());
 	}
 
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
-
 	/**
-	 * Read Data file containing: Pressure /Temperature relation (P. relative) 
-	 * Will fill the : listTempPress list
+	 * Read Data file containing: 
+	 * # Temperature [degre C] / Enthalpy (kJ/kg) Liquid / Enthalpy (kJ/kg) Vapor
+	 * Will fill the : setlistSatHlP / setlistSatHvP list
 	 */
-	public void loadPressureTemperatureFile() {
-		Pattern p = Pattern.compile("(-?\\d+(,\\d+)?)");
-		BufferedReader buff_in;
-		String line;
-		double temp=0;
-		double press=0;
+	public void loadSatFile() {
+		File file = new File (fileSat);
 
-		int i;
-
+		Scanner sken = null;
 		try {
-			buff_in = new BufferedReader(new FileReader(temperaturePressureFile));
-			try {
-				while ((line = buff_in.readLine()) != null)
-				{
-					if (!line.startsWith("#") ) {
-						Matcher m = p.matcher(line);
-						i=0;
-						while (m.find()) {
-							if (i ==0) 
-								temp = Double.parseDouble(m.group().replace(",", "."));
-							else 
-								press = Double.parseDouble(m.group().replace(",", "."));
-							i++;
-						}
-						listTempPress.add(new Point2D.Double(temp, press));
-					}
-				}
-			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			try {
-				buff_in.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			sken = new Scanner (file);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		while (sken.hasNext () ){
+			String first = sken.nextLine ();
+			if (!first.startsWith("#") ) {
+				String[] val = first.split ("\t");
+				double temp = Double.parseDouble(val [0].replace(",", "."));
+				double enthL = Double.parseDouble(val [1].replace(",", "."));
+				double enthV = Double.parseDouble(val [2].replace(",", "."));
+
+				listSatHlP.add(new Point2D.Double(enthL,convT2P(temp)));
+				listSatHvP.add(new Point2D.Double(enthV,convT2P(temp)));			
+			}
+		}
+	}
+
+
+	/**
+	 * Read Data file containing: Pressure /Temperature relation (P. relative) 
+	 * Will fill the : listTP list
+	 */
+	public void loadPTFile() {
+		File file = new File (fileTP);
+
+		Scanner sken = null;
+		try {
+			sken = new Scanner (file);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		while (sken.hasNext () ){
+			String first = sken.nextLine ();
+			if (!first.startsWith("#") ) {
+				String[] val = first.split ("\t");
+				double temp = Double.parseDouble(val [0].replace(",", "."));
+				double press = Double.parseDouble(val [1].replace(",", "."));
+
+				listTP.add(new Point2D.Double(temp, press));
+			}
+		}
 	}
 
 	/**
-	 * Convert Temperature(°C) and Pressure (bar) 
+	 * Conversion Saturation Enthalpy value to Pressure
+	 * @param h
+	 * @return
+	 */
+	public double  convSatH2P(double h) {
+		double p=0;
+		int idlx=0;
+		int idvx=0;
+		double x = 0, y0 = 0,y1 = 0,x0 = 0,x1 = 0;
+
+		for(int i=0;i<listSatHlP.size();i++) {
+			if (h < getSatHl(listSatHlP.size()-1)) {
+				// Zone Liquid
+				if(h >= getSatHl(i) ){
+					idlx = i;
+				}
+			} else {
+				// Zone Vapor
+				if(h <= getSatHv(i) ){
+					idvx = i;
+				}
+			}
+		}
+
+		if (idlx >= listSatHlP.size()-1) 
+			idlx = idlx-1;
+		if (idvx >= listSatHlP.size()-1) 
+			idvx = idvx-1;
+
+		if (h < getSatHl(listSatHlP.size()-1)) {
+			// Zone Liquid
+				System.out.println("Liquid");
+				x  = h;
+				x0 = getSatHl(idlx);
+				x1 = getSatHl(idlx+1);
+				y0 = getSatP(idlx);
+				y1 = getSatP(idlx+1);	
+				p = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+				System.out.println(x0+" < " + h + " < "+ x1);
+				System.out.println(y0+" < " + p + " < "+ y1);
+				System.out.println();
+		} else {
+			// Zone Vapor
+			System.out.println("Vapor");
+			x  = h;
+			x0 = getSatHv(idvx);
+			x1 = getSatHv(idvx+1);
+			y0 = getSatP(idvx);
+			y1 = getSatP(idvx+1);	
+			p = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+			System.out.println(x0+" < " + h + " < "+ x1);
+			System.out.println(y0+" < " + p + " < "+ y1);
+			System.out.println();
+		}
+		return p;
+	}
+
+	/**
+	 * Convert Temperature(°C) to Pressure (bar) 
 	 * @param temp: temperature (°C)
 	 * @return : Pressure (bar absolute)
 	 */
-	public double getPressFromTemp(double temp){
+	public double convT2P(double temp){
 		double x,presso=0;
 		int idx=0;
-		if (listTempPress.size() != 0) {
-			for(int c = 0; c < listTempPress.size(); c++){
-				if(temp >= listTempPress.get(c).getX() ){
+		if (listTP.size() != 0) {
+			for(int c = 0; c < listTP.size(); c++){
+				if(temp >= getT(c) ){
 					idx = c;
 				}
 			}
-			if (idx == listTempPress.size()-1) {
+			if (idx == listTP.size()-1) {
 				idx = idx-1;
 			} 
 
 			double y0,y1,x0,x1;
 			x  = temp;
-			x0 = listTempPress.get(idx).getX();
-			x1 = listTempPress.get(idx+1).getX();
-			y0 = listTempPress.get(idx).getY();
-			y1 = listTempPress.get(idx+1).getY();
+			x0 = getT(idx);
+			x1 = getT(idx+1);
+			y0 = getP(idx);
+			y1 = getP(idx+1);
 			presso = (x-x0)*(y1-y0)/(x1-x0)+ y0;
 		}
-		return presso+correctionPressure;
+		return presso+deltaP;
 	}
 
 	/**
-	 * Convert Temperature(°C) and Pressure (bar) 
+	 * Convert Pressure (bar) to Temperature(°C)  
 	 * @param : Pressure (absolute) press
 	 * @return : Temperature (°C)
 	 */
-	public double getTempFromPress(double press){
+	public double convP2T(double press){
 		double x,tempo=0;
 		int idx=0;
-		double pressi = press - correctionPressure; 
-		if (listTempPress.size() != 0) {
+		double pressi = press - deltaP; 
+		if (listTP.size() != 0) {
 
-			for(int c = 0; c < listTempPress.size(); c++){
-				if(pressi >= listTempPress.get(c).getY() ){
+			for(int c = 0; c < listTP.size(); c++){
+				if(pressi >= getP(c) ){
 					idx = c;
 				}
 			}
-			if (idx == listTempPress.size()-1) {
+			if (idx == listTP.size()-1) {
 				idx = idx-1;
 			} 
 
 			double y0,y1,x0,x1;
 			x  = pressi;
-			x0 = listTempPress.get(idx).getY();
-			x1 = listTempPress.get(idx+1).getY();
-			y0 = listTempPress.get(idx).getX();
-			y1 = listTempPress.get(idx+1).getX();
+			x0 = getP(idx);
+			x1 = getP(idx+1);
+			y0 = getT(idx);
+			y1 = getT(idx+1);
 			tempo = (x-x0)*(y1-y0)/(x1-x0)+ y0;
 		}
 		return tempo;
 	}
 
+	/**
+	 * Return T from List listTP
+	 * @param id
+	 * @return
+	 */
+	public double getT(int id) {
+		return listTP.get(id).getX();
+	}
+
+	/**
+	 * Return P from List listTP
+	 * @param id
+	 * @return
+	 */
+	public double getP(int id) {
+		return listTP.get(id).getY();
+	}
+
+	/**
+	 * Return Enthalpy Liquid from List listSatHlP
+	 * @param id
+	 * @return
+	 */
+	public double getSatHl(int id) {
+		return listSatHlP.get(id).getX();
+	}
+	/**
+	 * Return      P  from List listSatHlP
+	 *   same as   P  from List listSatHvP
+	 * @param id
+	 * @return
+	 */
+	public double getSatP(int id) {
+		return listSatHlP.get(id).getY();
+	}
+
+	/**
+	 * Return Enthalpy Vapor from List listSatHlP
+	 * @param id
+	 * @return
+	 */
+	public double getSatHv(int id) {
+		return listSatHvP.get(id).getX();
+	}
 
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
@@ -308,31 +434,52 @@ public class Enthalpy {
 		this.locateOrigineP = setOrigineP;
 	}
 
-	/**
-	 * Set or Get the Temperature/Pressure File
-	 */
-	public String getTemperaturePressureFile() {
-		return temperaturePressureFile;
+	public String getFileTP() {
+		return fileTP;
 	}
 
-	public void setTemperaturePressureFile(String temperaturePressureFile) {
-		this.temperaturePressureFile = temperaturePressureFile;
+	public void setFileTP(String fileTP) {
+		this.fileTP = fileTP;
 	}
 
-	public List<Point2D.Double> getlistTempPress() {
-		return listTempPress;
+	public List<Point2D.Double> getlistTP() {
+		return listTP;
 	}
 
-	public double getTempFromList(int id) {
-		return listTempPress.get(id).getX();
+	public void setlistTP(List<Point2D.Double> listTP) {
+		this.listTP = listTP;
 	}
 
-	public double getPressFromList(int id) {
-		return listTempPress.get(id).getY();
+	public String getFileSat() {
+		return fileSat;
 	}
 
-	public void setlistTempPress(List<Point2D.Double> listTempPress) {
-		this.listTempPress = listTempPress;
+	public void setFileSat(String fileSat) {
+		this.fileSat = fileSat;
+	}
+
+	public List<Point2D.Double> getlistSatHlP() {
+		return listSatHlP;
+	}
+
+	public void setlistSatHlP(List<Point2D.Double> listSatHlP) {
+		this.listSatHlP = listSatHlP;
+	}
+
+	public List<Point2D.Double> getlistSatHvP() {
+		return listSatHvP;
+	}
+
+	public void setlistSatHvP(List<Point2D.Double> listSatHvP) {
+		this.listSatHvP = listSatHvP;
+	}
+
+	public String getNameRefrigerant() {
+		return nameRefrigerant;
+	}
+
+	public void setNameRefrigerant(String nameRefrigerant) {
+		this.nameRefrigerant = nameRefrigerant;
 	}
 
 }

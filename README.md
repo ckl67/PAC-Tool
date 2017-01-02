@@ -8,7 +8,6 @@ Outil pour Pompe à Chaleur
 -------------
 Outil qui permet de vérifier les données contructeur (COP) et de calculer le COP de votre pompe à chaleur à partir de vos mesures.
 Programme écrit en Java.
-(Ce programme m'a permis de m'initier au langage Java.) (Super Language !!)
 
 ----------------
  Chaine Développement
@@ -22,7 +21,7 @@ Environnement de développement intégré / (Integrated Development Environment)
 Langage de modélisation unifié, Unified Modeling Language (UML) 
 	ObjectAid
 	http://www.objectaid.com/installation
-	Uniquement les modules ne nécessitant pas de licence.
+	Uniquement les modules ne nécessitant (pas de licences).
 	
 Java
 	jre1.8.0_111
@@ -42,13 +41,14 @@ GitHub
 	Projet sous: PAC-Tool
 
 Git
-	In case you want to use Gource to animate you development, you have to install git
+	Afin de pouvoir créer une animation montrant l'évolution du développement
+	Git est nécessaire en local sous windows
 	https://git-scm.com/download/win
 	
 Gource
-	Animated tree with the root directory of the project at its centre
+	Outil d'animation du projet
 	http://gource.io/#
-	Generate video: gource -s 1 -f
+	Generation video: gource -s 1 -f
 	
 Conversion Jar vers Exe
 	Launch4j est une application qui permet de créer des "lanceurs" (exécutables Windows classiques 

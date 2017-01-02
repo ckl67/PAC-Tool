@@ -69,7 +69,6 @@ import javax.swing.border.BevelBorder;
 
 public class WinPrime {
 
-	private Enthalpy enthalpy;
 	private JFrame frame;
 	private JTextField textFieldH1;
 	private JTextField textFieldH2;
@@ -112,27 +111,136 @@ public class WinPrime {
 
 	// List of PAC (First Pac can never been deleted!!)
 	private List<Pac> pacl = new ArrayList<Pac>();
-
-
-	// ===================================================================================================================
+	private Enthalpy enthalpy;
+	
+	// -------------------------------------------------------
+	// 						CONSTRUCTOR
+	// -------------------------------------------------------
 	/**
 	 * Create the application.
 	 * 
 	 */
-	public WinPrime(Pac paci, Ccop copi, Enthalpy vconfEnthalpy) {
-		enthalpy = vconfEnthalpy;
+	public WinPrime(Pac paci, Ccop copi, Enthalpy enthalpyi) {
+		enthalpy = enthalpyi;
 		pacl.add(paci);	
 		initialize(paci,copi);
 		fillCompressorTexField(paci.getCompressor());
 		
 	}
 
+	// -------------------------------------------------------
+	// 							METHOD
+	// -------------------------------------------------------
+	/**
+	 * Get the frame visible
+	 */
 	public void WinPrimeVisible() {
 		frame.setVisible(true);
 	}
+	
+	/**
+	 * Fill all the Compressor features field in the panel 
+	 * The data are read from the variable, where the information is stored in British value
+	 * @param pac
+	 */
+	private void fillCompressorTexField(Compressor compressor) {
+		boolean weclickf = false;
+		boolean weclickb = false;
+		boolean weclickp = false;
 
+		if (!checkoxFaren.isSelected()) {
+			checkoxFaren.doClick();
+			weclickf = true;
+		}
+		if (!checkoxBTU.isSelected()) {
+			checkoxBTU.doClick();
+			weclickb = true;
+		}
+		if (!chckbxPound.isSelected()) {
+			chckbxPound.doClick();
+			weclickp = true;
+		}
 
-	// ===================================================================================================================
+		textFieldCompressorName.setText(compressor.getName());
+
+		textFieldCompressorEvap.setText(String.valueOf(compressor.getEvap()));
+		textFieldCompressorRG.setText(String.valueOf(compressor.getRG()));
+		textFieldCompressorCond.setText(String.valueOf(compressor.getCond()));
+		textFieldCompressorLiq.setText(String.valueOf(compressor.getLiq()));
+		textFieldCompressorCapacity.setText(String.valueOf(compressor.getCapacity()));
+		textFieldCompressorPower.setText(String.valueOf(compressor.getPower()));
+		textFieldCompressorCurrent.setText(String.valueOf(compressor.getCurrent()));
+		textFieldCompressorSurchauffe.setText(String.valueOf(Math.round(compressor.getRG() - compressor.getEvap())));
+		textFieldCompressorSousRefroid.setText(String.valueOf(Math.round(compressor.getCond() - compressor.getLiq())));
+		textFieldCompressorEER.setText(String.valueOf(Math.round(compressor.getCapacity()/compressor.getPower()*10.0)/10.0));
+		textFieldCompressorMassFlow.setText(String.valueOf(compressor.getMassFlow()));
+		textFieldCompressorDeltaH0.setText("-----");
+		textFieldCompressorVoltage.setText(String.valueOf(compressor.getVoltage()));
+		double tmp = Math.round(Misc.cosphi(compressor.getPower(), compressor.getVoltage(), compressor.getCurrent())*10000.0)/10000.0;
+		textFieldCompressorCosPhi.setText(String.valueOf(tmp));
+
+		if (weclickf) {
+			checkoxFaren.doClick();
+		}
+		if (weclickb) {
+			checkoxBTU.doClick();
+		}
+		if (weclickp) {
+			chckbxPound.doClick();
+		}
+	}
+
+	/**
+	 * Will save the information from Panel TextField to PAC variable
+	 * Data will be stored in Anglo-Saxon Format
+	 * @param paci
+	 */
+	private void UpdateTextField2Pac( Pac paci) {
+		Compressor compressor = paci.getCompressor();
+
+		boolean weclickf = false;
+		boolean weclickb = false;
+		boolean weclickp = false;
+
+		if (!checkoxFaren.isSelected()) {
+			checkoxFaren.doClick();
+			weclickf = true;
+		}
+		if (!checkoxBTU.isSelected()) {
+			checkoxBTU.doClick();
+			weclickb = true;
+		}
+		if (!chckbxPound.isSelected()) {
+			chckbxPound.doClick();
+			weclickp = true;
+		}
+
+		compressor.setName(textFieldCompressorName.getText());
+
+		compressor.setEvap(Double.valueOf(textFieldCompressorEvap.getText()));
+		compressor.setRG(Double.valueOf(textFieldCompressorRG.getText()));
+		compressor.setCond(Double.valueOf(textFieldCompressorCond.getText()));
+		compressor.setLiq(Double.valueOf(textFieldCompressorLiq.getText()));
+		compressor.setCapacity(Double.valueOf(textFieldCompressorCapacity.getText()));
+		compressor.setPower(Double.valueOf(textFieldCompressorPower.getText()));
+		compressor.setCurrent(Double.valueOf(textFieldCompressorCurrent.getText()));
+		compressor.setMassFlow(Double.valueOf(textFieldCompressorMassFlow.getText()));
+		compressor.setVoltage(Double.valueOf(textFieldCompressorVoltage.getText()));
+
+		if (weclickf) {
+			checkoxFaren.doClick();
+		}
+		if (weclickb) {
+			checkoxBTU.doClick();
+		}
+		if (weclickp) {
+			chckbxPound.doClick();
+		}
+	}
+
+	// -------------------------------------------------------
+	// 				 GENERATED BY WIN BUILDER
+	// -------------------------------------------------------
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -1123,7 +1231,7 @@ public class WinPrime {
 			public void keyTyped(KeyEvent e) {
 				char vChar = e.getKeyChar();
 				if ( ( (Character.isDigit(vChar)) || (vChar == KeyEvent.VK_BACK_SPACE) || (vChar == '.') || (vChar == KeyEvent.VK_DELETE)) ) {
-					if ( (vChar == '.') && numberOf(textFieldH1.getText(),'.') >= 1) {
+					if ( (vChar == '.') && Misc.nbCharInString(textFieldH1.getText(),'.') >= 1) {
 						e.consume();
 					}
 				} else {
@@ -1154,7 +1262,7 @@ public class WinPrime {
 				char vChar = e.getKeyChar();
 				if ( ( (Character.isDigit(vChar)) || (vChar == KeyEvent.VK_BACK_SPACE) || (vChar == '.') || (vChar == KeyEvent.VK_DELETE)) ) {
 					// OK
-					if ( (vChar == '.') && numberOf(textFieldH2.getText(),'.') >= 1) {
+					if ( (vChar == '.') && Misc.nbCharInString(textFieldH2.getText(),'.') >= 1) {
 						e.consume();
 					}
 				} else {
@@ -1186,7 +1294,7 @@ public class WinPrime {
 				char vChar = e.getKeyChar();
 				if ( ( (Character.isDigit(vChar)) || (vChar == KeyEvent.VK_BACK_SPACE) || (vChar == '.') || (vChar == KeyEvent.VK_DELETE)) ) {
 					// OK
-					if ( (vChar == '.') && numberOf(textFieldH3.getText(),'.') >= 1) {
+					if ( (vChar == '.') && Misc.nbCharInString(textFieldH3.getText(),'.') >= 1) {
 						e.consume();
 					}
 				} else {
@@ -1218,7 +1326,7 @@ public class WinPrime {
 				char vChar = e.getKeyChar();
 				if ( ( (Character.isDigit(vChar)) || (vChar == KeyEvent.VK_BACK_SPACE) || (vChar == '.') || (vChar == KeyEvent.VK_DELETE)) ) {
 					// OK
-					if ( (vChar == '.') && numberOf(textFieldT0.getText(),'.') >= 1) {
+					if ( (vChar == '.') && Misc.nbCharInString(textFieldT0.getText(),'.') >= 1) {
 						e.consume();
 					}
 				} else {
@@ -1250,7 +1358,7 @@ public class WinPrime {
 				char vChar = e.getKeyChar();
 				if ( ( (Character.isDigit(vChar)) || (vChar == KeyEvent.VK_BACK_SPACE) || (vChar == '.') || (vChar == KeyEvent.VK_DELETE)) ) {
 					// OK
-					if ( (vChar == '.') && numberOf(textFieldTK.getText(),'.') >= 1) {
+					if ( (vChar == '.') && Misc.nbCharInString(textFieldTK.getText(),'.') >= 1) {
 						e.consume();
 					}
 				} else {
@@ -1311,125 +1419,6 @@ public class WinPrime {
 		txtdef.setContentType("text/html");
 		txtdef.setText("<b>Capacity : </b>Puissance Frigorifique<b><br>\r\n&nbsp;&nbsp;&nbsp; </b>(H1-H3) x D\u00E9bit Massique<br>\r\n<b>COP:</b> COefficient de Performance <br>\r\n&nbsp;&nbsp;&nbsp; COP = Puissance <u>Restitu\u00E9e</u>\r\n(Chaleur) / Puissance consomm\u00E9e <br>\r\n&nbsp;&nbsp;&nbsp; Attention sur les catalogues le COP\r\n(constructeur) <br>\r\n&nbsp;&nbsp;&nbsp; est calcul\u00E9 \u00E0 partir d'une temp\u00E9rature\r\nd'eau de nappe <br>\r\n&nbsp;&nbsp;&nbsp; phr\u00E9atique de 10\u00B0C <br>\r\n<b>COP constructeur :</b> <br>\r\n&nbsp;&nbsp;&nbsp; Performance d'une PAC d\u00E9termin\u00E9e en\r\nlaboratoire ,<br>\r\n&nbsp;&nbsp;&nbsp; donc assez loin des r\u00E9alit\u00E9s.<br>\r\n<b>COP global de la PAC :</b> <br>\r\n&nbsp;&nbsp;&nbsp; Performance qui tient compte des\r\nauxiliaires, <br>\r\n&nbsp;&nbsp;&nbsp; ventilateurs, pompes,etc..<br>\r\n<b>COP annuel (COPPA) : </b><br>\r\n&nbsp;&nbsp;&nbsp; Performance r\u00E9elle calcul\u00E9e pendant une\r\np\u00E9riode compl\u00E8te <br>\r\n&nbsp;&nbsp;&nbsp; de chauffage qui tient compte des\r\nsp\u00E9cificit\u00E9s de l'installation.<br>\r\n<b>EER (Energy Efficiency Ratio) : </b><br>\r\n&nbsp;&nbsp;&nbsp;&nbsp;Coefficient d'Efficacit\u00E9\r\nFrigorifique (ou) COP froid <br>\r\n&nbsp;&nbsp;&nbsp; EER = Puissance&nbsp;<u>Absorb\u00E9e</u>\r\n(Froid) / Puissance consomm\u00E9e<br>\r\n<b>Mass Flow :</b><br>\r\n&nbsp;&nbsp;&nbsp; D\u00E9bit Massique (Kg/s)<br>\r\n<span style=\"font-weight: bold;\">BTU/h :</span>\r\nBritish Thermal Unit per hour<span style=\"font-weight: bold;\"></span><br\r\n style=\"font-weight: bold;\">\r\n&nbsp;&nbsp;&nbsp; Unit\u00E9 anglo-saxonne de puissance: <br>\r\n&nbsp;&nbsp;&nbsp; 1 000 BTU/h valent approximativement\r\n293,071 W &nbsp;<br>\r\n");
 		scrollPane.setViewportView(txtdef);
-
-
-
-	}
-
-	/**
-	 * 
-	 * @param str
-	 * @param c
-	 * @return
-	 */
-	public static int numberOf(String str,char c) {
-		int res=0;
-		if(str==null)
-			return res;
-		for(int i=0;i<str.length();i++)
-			if(c==str.charAt(i))
-				res++;
-		return res;
-	}
-
-
-	/**
-	 * Fill all the field For Compressor 
-	 * with class Compressor infos !!
-	 * The data are read from the variable, where the information is stored in British value
-	 * @param pac
-	 */
-	private void fillCompressorTexField(Compressor compressor) {
-		boolean weclickf = false;
-		boolean weclickb = false;
-		boolean weclickp = false;
-
-		if (!checkoxFaren.isSelected()) {
-			checkoxFaren.doClick();
-			weclickf = true;
-		}
-		if (!checkoxBTU.isSelected()) {
-			checkoxBTU.doClick();
-			weclickb = true;
-		}
-		if (!chckbxPound.isSelected()) {
-			chckbxPound.doClick();
-			weclickp = true;
-		}
-
-		textFieldCompressorName.setText(compressor.getName());
-
-		textFieldCompressorEvap.setText(String.valueOf(compressor.getEvap()));
-		textFieldCompressorRG.setText(String.valueOf(compressor.getRG()));
-		textFieldCompressorCond.setText(String.valueOf(compressor.getCond()));
-		textFieldCompressorLiq.setText(String.valueOf(compressor.getLiq()));
-		textFieldCompressorCapacity.setText(String.valueOf(compressor.getCapacity()));
-		textFieldCompressorPower.setText(String.valueOf(compressor.getPower()));
-		textFieldCompressorCurrent.setText(String.valueOf(compressor.getCurrent()));
-		textFieldCompressorSurchauffe.setText(String.valueOf(Math.round(compressor.getRG() - compressor.getEvap())));
-		textFieldCompressorSousRefroid.setText(String.valueOf(Math.round(compressor.getCond() - compressor.getLiq())));
-		textFieldCompressorEER.setText(String.valueOf(Math.round(compressor.getCapacity()/compressor.getPower()*10.0)/10.0));
-		textFieldCompressorMassFlow.setText(String.valueOf(compressor.getMassFlow()));
-		textFieldCompressorDeltaH0.setText("-----");
-		textFieldCompressorVoltage.setText(String.valueOf(compressor.getVoltage()));
-		double tmp = Math.round(Misc.cosphi(compressor.getPower(), compressor.getVoltage(), compressor.getCurrent())*10000.0)/10000.0;
-		textFieldCompressorCosPhi.setText(String.valueOf(tmp));
-
-		if (weclickf) {
-			checkoxFaren.doClick();
-		}
-		if (weclickb) {
-			checkoxBTU.doClick();
-		}
-		if (weclickp) {
-			chckbxPound.doClick();
-		}
-
-	}
-
-	// Will save the information from TextField to PAC variable
-	// Data will be stored in Anglo-Saxon Format
-	private void UpdateTextField2Pac( Pac paci) {
-		Compressor compressor = paci.getCompressor();
-
-		boolean weclickf = false;
-		boolean weclickb = false;
-		boolean weclickp = false;
-
-		if (!checkoxFaren.isSelected()) {
-			checkoxFaren.doClick();
-			weclickf = true;
-		}
-		if (!checkoxBTU.isSelected()) {
-			checkoxBTU.doClick();
-			weclickb = true;
-		}
-		if (!chckbxPound.isSelected()) {
-			chckbxPound.doClick();
-			weclickp = true;
-		}
-
-		compressor.setName(textFieldCompressorName.getText());
-
-		compressor.setEvap(Double.valueOf(textFieldCompressorEvap.getText()));
-		compressor.setRG(Double.valueOf(textFieldCompressorRG.getText()));
-		compressor.setCond(Double.valueOf(textFieldCompressorCond.getText()));
-		compressor.setLiq(Double.valueOf(textFieldCompressorLiq.getText()));
-		compressor.setCapacity(Double.valueOf(textFieldCompressorCapacity.getText()));
-		compressor.setPower(Double.valueOf(textFieldCompressorPower.getText()));
-		compressor.setCurrent(Double.valueOf(textFieldCompressorCurrent.getText()));
-		compressor.setMassFlow(Double.valueOf(textFieldCompressorMassFlow.getText()));
-		compressor.setVoltage(Double.valueOf(textFieldCompressorVoltage.getText()));
-
-		if (weclickf) {
-			checkoxFaren.doClick();
-		}
-		if (weclickb) {
-			checkoxBTU.doClick();
-		}
-		if (weclickp) {
-			chckbxPound.doClick();
-		}
 
 	}
 }
