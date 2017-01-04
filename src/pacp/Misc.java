@@ -21,6 +21,7 @@ package pacp;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.Window;
+import java.util.List;
 
 public class Misc {
 
@@ -37,11 +38,16 @@ public class Misc {
 	public static final int _CONDENSER = 1;
 	public static final int _EXPANSIONVALVE = 2;
 	public static final int _EVAPORATOR = 3;
-	
+
 	public static final int _INPUT_COMPRESSOR = 0;
 	public static final int _INPUT__CONDENSER = 1;
 	public static final int _INPUT__EXPANSIONVALVE = 2;
 	public static final int _INPUT__EVAPORATOR = 3;
+
+	public static final boolean _DEBUG_STATE =  true;
+	public static final int _DEBUG_MODULE_ENTHALPY = 0x01;  //Mask
+	
+	public static final int _DEBUG_MODE = _DEBUG_MODULE_ENTHALPY;
 	
 	// -------------------------------------------------------
 	// 							METHOD
@@ -137,7 +143,7 @@ public class Misc {
 		frame.setLocation(x, y);
 	}
 	/**
-	 * Return The number of "Char c" in the sting str:
+	 * Return The numbers of "Char c" in the sting str:
 	 * @param str
 	 * @param c
 	 * @return: integer 
@@ -150,6 +156,54 @@ public class Misc {
 			if(c==str.charAt(i))
 				res++;
 		return res;
+	}
+
+	/**
+	 * Return the closest value in a list
+	 * @param of
+	 * @param in
+	 * @return
+	 */
+	public static double closestInL(double of, List<Double> in) {
+		double min = Integer.MAX_VALUE;
+		double closest = of;
+		double diff;
+		
+		for (double v : in) {
+			diff = Math.abs(v - of);
+			if (diff < min) {
+				min = diff;
+				closest = v;
+			}
+		}
+		return closest;
+	}
+
+	/**
+	 * Compute the maximum interval between 2 consecutive elements in a list.
+	 * @param lin
+	 * @return
+	 */
+	public static double maxIntervalL( List<Double> lin) {
+		double diff=0;
+		
+		for(int i=0;i<lin.size()-1;i++) {
+			if (diff < Math.abs(lin.get(i) - lin.get(i+1)) ) {
+				diff=Math.abs(lin.get(i) - lin.get(i+1));
+			}
+		}
+		return diff;
+	}
+	
+	/** 
+	 * Depending of the constant _DEBUG_STATE, _DEBUG_MODULE will display the output in the console
+	 * @param s
+	 */
+	public static void debug(int module, String s ) {
+		//if  (_DEBUG_MODE & _DEBUG_MODULE_ENTHALPY) {
+		System.out.println(s);
+		//}
+		
 	}
 
 }

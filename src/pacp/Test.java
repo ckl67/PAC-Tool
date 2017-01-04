@@ -1,5 +1,7 @@
 package pacp;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 import org.json.simple.JSONObject;
 import pacp.Misc;
@@ -235,17 +237,56 @@ public class Test {
 		enthalpy.loadPTFile();
 		
 		System.out.println("Reference Diagram Enthalpy R22 : 2 bar (absolute) <--> -25°C");
-		System.out.println("T= -25°C" + "--> P=" + enthalpy.convT2P(-25));
-		System.out.println("P= 2 bar " + "--> T=" + enthalpy.convP2T(2));
+		System.out.println("  T= -25°C" + "--> P=" + enthalpy.convT2P(-25));
+		System.out.println("  P= 2 bar " + "--> T=" + enthalpy.convP2T(2));
+		System.out.println();
 
 		// Read Temperature [degre C] / Enthalpy (kJ/kg) Liquid / Enthalpy (kJ/kg) Vapor file
 		System.out.println("Load R22 Saturation file and pick id=2");
 		enthalpy.loadSatFile();
-		System.out.println("Enthalpy Liquid [2] = "+ enthalpy.getSatHl(2));
-		System.out.println("Enthalpy Vapor [2] = "+ enthalpy.getSatHv(2));
-		System.out.println("Pression [2] = "+ enthalpy.getSatP(2));
-		
+		System.out.println("  Saturation H Min = " + enthalpy.gethSatMin());
+		System.out.println("  Saturation H Max = " + enthalpy.gethSatMax());
+		System.out.println();
+		System.out.println("  Pression [2] = "+ enthalpy.getSatP(2));
+		System.out.println("  Enthalpy Liquid [2] = "+ enthalpy.getSatHl(2));
+		System.out.println("  Enthalpy Vapor [2] = "+ enthalpy.getSatHv(2));
+		System.out.println();
+		System.out.println("Convert H to P saturation");
+
+		double h = 360;
+		double pNear = 2;
+		double pdelta = 5;
+		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear,pdelta)+"\n");
 	
+		h = 360;
+		pNear = 50;
+		pdelta = 5;
+		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear,pdelta)+"\n");
+	
+		h = 377;
+		pNear = 50;
+		pdelta = 5;
+		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear,pdelta)+"\n");
+
+		h = 408;
+		pNear = 50;
+		pdelta = 10;
+		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear,pdelta)+"\n");
+
+		h = 401;
+		pNear = 18;
+		pdelta = 20;
+		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear,pdelta)+"\n");
+
+		h = 341;
+		pNear = 46;
+		pdelta = 20;
+		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear,pdelta)+"\n");
+
+		h = 417;
+		pNear = 23;
+		pdelta = 20;
+		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear,pdelta)+"\n");
 
 	}
 		
@@ -357,6 +398,20 @@ public class Test {
 		System.out.println("BTU   --> Watt:" + 1 +"-->" + Misc.btuhr2watt(1) );
 		
 		System.out.println("Number of . in "+ "12.23.45 = " + Misc.nbCharInString("12.23.45", '.'));
+		
+		System.out.println("Test Closest in the list");
+		List<Double> list = Arrays.asList(10.0, -23.0, 20.2, 30.3, -40.0, 40.2, 50.0, -2.0);
+		System.out.println("  "+list);	
+		System.out.println("  "+Misc.closestInL(-4, list));
+		System.out.println("  "+Misc.closestInL(15, list));
+		
+		// Could be fine to create auto-test
+		//assertThat(Misc.closestInL(-4, list), is(-2));
+		
+		System.out.println("Max Intervall (between 2 consecutive elements) in the List");
+		list = Arrays.asList(10.0, 11.2, 13.0, 15.0);
+		System.out.println("  "+list);
+		System.out.println("  "+Misc.maxIntervalL(list));
 	}
 
 	// ===================================================================================================================

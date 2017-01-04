@@ -158,11 +158,11 @@ public class WinEnthalpy {
 				lblTempCoord.setText(String.format("T=%.2f °C",tRresult));	
 
 				if (rdbtnSaturation.isSelected()) {
-					lblOther.setText(String.format("H=%.2f P=%.2f",hResult,enthalpy.convSatH2P(hResult)));
+					//lblOther.setText(String.format("H=%.2f P=%.2f",hResult,enthalpy.convSatH2P(hResult,-5)));
 				} else {
 					lblOther.setText(String.format("----------"));
 				}
-				
+
 				try {
 					if (WinPressTemp.panelTempPressDrawArea.isVisible()) {
 						WinPressTemp.panelTempPressDrawArea.spotTempPressFollower(tRresult,pResult);
@@ -320,7 +320,8 @@ public class WinEnthalpy {
 		// Zoom
 		double zoomx,zoomy;		// Zoom factor relative to the figure to display and the panel width
 
-		double followX,followY;
+		private double curveFollowerX,curveFollowerY;
+
 
 		// -------------------------------------------------------
 		// 						CONSTRUCTOR
@@ -340,6 +341,50 @@ public class WinEnthalpy {
 		// 							METHOD
 		// -------------------------------------------------------
 
+		/** 
+		 * Clean the screen
+		 */
+		public void clean() {
+			repaint();
+		}
+
+		/**
+		 * Compute Enthalpy H / mouse coordinate
+		 * @param x
+		 * @return
+		 */
+		public double getHoX(int x) {
+			double xh;
+			xh = (xmin-xmax-2*marginx)/(2*zoom) + x/zoomx + (xmin+xmax)/2 - offset.x ; 
+			return xh;
+		}
+
+		/**
+		 * Compute Pressure P / mouse coordinate
+		 * @param y
+		 * @return
+		 */
+		public double getPoY(int y) {
+			double yP;
+			yP= (log10_ymax-log10_ymin)/(2*zoom)+log10_marginy/zoom-y/zoomy+(log10_ymin+log10_ymax)/2 + offset.y/mvoYf;
+			yP = Math.exp(yP*Math.log(10));			
+			return yP;
+		}
+
+		// EnthalpyImageFile
+		public void openEnthalpyImageFile() {
+			try {
+				File file = new File(enthalpy.getEnthalpyImageFile());
+				image = ImageIO.read(file);	
+			} catch (IOException e) {
+				System.out.println("Image non trouvée !");
+				e.printStackTrace(); 
+			}
+		}
+
+		// -------------------------------------------------------
+		// 						PAINT 
+		// -------------------------------------------------------
 		@Override
 		public void paintComponent(Graphics g)	{
 
@@ -441,14 +486,16 @@ public class WinEnthalpy {
 			// Follow the graph based on Eclipse
 			// The Ellipse2D class define an ellipse that is defined by a framing rectangle
 			// -----------------------------------
+			g2d.setStroke(new BasicStroke(0.03f));
 			g2d.setColor(Color.blue);
-			g2d.draw( new Ellipse2D.Double(followX, Math.log10(followY), 2, Math.log10(1.1))); 
-			//System.out.println("followX="+followX+"  followY="+followY);
+			g2d.draw( new Ellipse2D.Double(curveFollowerX, Math.log10(curveFollowerY), 2, Math.log10(1.1))); 
+			//System.out.println("curveFollowerX="+curveFollowerX+"  curveFollowerY="+curveFollowerY);
 			//System.out.println();
 
 			// -----------------------------------
 			// Other Text, Abscissa /Ordinate
 			// -----------------------------------
+			g2d.setStroke(new BasicStroke(0));
 
 			// Title
 			fontReal = fontReal.deriveFont(Font.BOLD, 16.0f);
@@ -480,58 +527,23 @@ public class WinEnthalpy {
 			g2d.drawString("T(°C)", (float)(10 + xmin - metrics.getStringBounds("T(°C)",g2d).getWidth()/2), (float)(Math.log10(yposmax+gridUnitY)));
 
 		}
+		
+		// -------------------------------------------------------
+		// 						EVENT LISTNER
+		// -------------------------------------------------------
 
-		// EnthalpyImageFile
-		public void openEnthalpyImageFile() {
-			try {
-				File file = new File(enthalpy.getEnthalpyImageFile());
-				image = ImageIO.read(file);	
-			} catch (IOException e) {
-				System.out.println("Image non trouvée !");
-				e.printStackTrace(); 
-			}
-		}
-
-		// Clean
-		/** 
-		 * Clean the screen
-		 */
-		public void clean() {
-			repaint();
-		}
-
-		/**
-		 * Compute Enthalpy H / mouse coordinate
-		 * @param x
-		 * @return
-		 */
-		public double getHoX(int x) {
-			double xh;
-			xh = (xmin-xmax-2*marginx)/(2*zoom) + x/zoomx + (xmin+xmax)/2 - offset.x ; 
-			return xh;
-		}
-
-		/**
-		 * Compute Pressure P / mouse coordinate
-		 * @param y
-		 * @return
-		 */
-		public double getPoY(int y) {
-			double yP;
-			yP= (log10_ymax-log10_ymin)/(2*zoom)+log10_marginy/zoom-y/zoomy+(log10_ymin+log10_ymax)/2 + offset.y/mvoYf;
-			yP = Math.exp(yP*Math.log(10));			
-			return yP;
-		}
-
-
-		// ===============================================================================================================
-		// 													EVENT LISTNER
-		// ===============================================================================================================
 		@Override
 		public void mousePressed(MouseEvent evt) {
 			int xMouse = evt.getX();
 			int yMouse = evt.getY();
 
+			this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+
+			if ((evt.getModifiers() & InputEvent.BUTTON2_MASK) != 0) {
+				dragStart.x = xMouse-offset.x;
+				dragStart.y = yMouse-offset.y;
+			}
+			
 			Graphics g = getGraphics();
 			Graphics2D g2 = (Graphics2D)g;
 
@@ -567,11 +579,26 @@ public class WinEnthalpy {
 		public void mouseMoved(MouseEvent evt) {
 
 			if (rdbtnSaturation.isSelected()) {
-				followX = getHoX(evt.getX());
-				followY = enthalpy.convSatH2P(followX) ;
+				double lH = getHoX(evt.getX());
+				double lPApprox = getPoY(evt.getY());
+				double lPDeltaZone; 
+				if (lPApprox < 5) 
+					lPDeltaZone = 2;
+				else if ((lPApprox>=5) && (lPApprox<10) )
+					lPDeltaZone = 5;
+				else if ((lPApprox>=10) && (lPApprox<20) )
+					lPDeltaZone = 7;
+				else if ((lPApprox>=20) && (lPApprox<40) )
+					lPDeltaZone = 10;
+				else
+					lPDeltaZone = 20;
+				
+				// P saturation = f(H,approximP,deltaPZone)
+				double lP = enthalpy.convSatH2P(lH,lPApprox,lPDeltaZone);
+				curveFollowerX = lH;
+				curveFollowerY = lP;
 			}
 			this.repaint();
-
 		}		
 
 		@Override
@@ -598,5 +625,16 @@ public class WinEnthalpy {
 
 		}
 
+		// -------------------------------------------------------
+		// 					GETTER AND SETTER
+		// -------------------------------------------------------
+		
+		public void setCurveFollowerX(double curveFollowerX) {
+			this.curveFollowerX = curveFollowerX;
+		}
+
+		public void setCurveFollowerY(double curveFollowerY) {
+			this.curveFollowerY = curveFollowerY;
+		}
 	}
 }

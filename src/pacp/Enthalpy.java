@@ -56,6 +56,11 @@ public class Enthalpy {
 	   Diagram Saturation Curve:
 	   Temperature --> Enthalpy  (Liquid / Vapor)  
 	 * ----------------------------*/
+	private double hSatMin,hSatMax;						// H Saturation Zone [hSatMin - hSatMax] --> Computed by reading the file !
+	private double hSatErrLoc;							// H saturation Error Location. --> Computed by reading the file !
+	// let h the value to search in the list
+	// let h0,h1 the nearest H found in the list, 
+	// if h0 and h1 are to faraway of h, it means that the p zone was too narrow 
 	private String fileSat;
 	private List<Point2D.Double> listSatHlP;			// Coordinate Temperature / H : List
 	private List<Point2D.Double> listSatHvP;			// Coordinate Temperature / H : List
@@ -99,6 +104,9 @@ public class Enthalpy {
 		   Diagram Saturation Curve:
 		   Temperature --> Enthalpy  (Liquid / Vapor)  
 		 * ----------------------------*/
+		hSatMin=1000;
+		hSatMax=0;
+		hSatErrLoc = 0;
 		setFileSat("D:/Users/kluges1/workspace/pac-tool/ressources/SaturationCurve_R22.txt");
 		setlistSatHlP(new ArrayList<Point2D.Double>());
 		setlistSatHvP(new ArrayList<Point2D.Double>());
@@ -114,7 +122,6 @@ public class Enthalpy {
 	 */
 	public void loadSatFile() {
 		File file = new File (fileSat);
-
 		Scanner sken = null;
 		try {
 			sken = new Scanner (file);
@@ -132,9 +139,32 @@ public class Enthalpy {
 				double enthV = Double.parseDouble(val [2].replace(",", "."));
 
 				listSatHlP.add(new Point2D.Double(enthL,convT2P(temp)));
-				listSatHvP.add(new Point2D.Double(enthV,convT2P(temp)));			
+				listSatHvP.add(new Point2D.Double(enthV,convT2P(temp)));
+
+				//	if ( Math.abs(enthL-hSatErrLoc>))
+				if (enthL < hSatMin )
+					hSatMin = enthL;
+				if (enthV < hSatMin )
+					hSatMin = enthV;
+				if (enthL > hSatMax )
+					hSatMax = enthL; 
+				if (enthV > hSatMax )
+					hSatMax = enthV; 
 			}
 		}
+		List<Double> linL = new ArrayList<Double>();
+		for(int i=0;i<listSatHlP.size();i++)
+			linL.add(getSatHl(i));
+		List<Double> linV = new ArrayList<Double>();
+		for(int i=0;i<listSatHlP.size();i++)
+			linV.add(getSatHv(i));
+
+		hSatErrLoc = Misc.maxIntervalL(linL);
+		if (hSatErrLoc < Misc.maxIntervalL(linV))
+			hSatErrLoc = Misc.maxIntervalL(linV);
+		// Security margin linked to the fact that at the limit of the list, the chosen element can be at n-1 position (due to end of list)
+		hSatErrLoc = hSatErrLoc*2;
+		//System.out.println(hSatErrLoc);
 	}
 
 
@@ -167,62 +197,107 @@ public class Enthalpy {
 
 	/**
 	 * Conversion Saturation Enthalpy value to Pressure
-	 * @param h
-	 * @return
+	 *   The table H can decrease/increase , so we have to take into account supplementary parameters 
+	 *     Zone of pressure
+	 *     Zone of H
+	 *   Zone of pressure is computed based on : Current pressure=pNear and pDelta --> Zone of pressure = pNear +- pDelta
+	 *   Zone of H is computed based on  hSatErrLoc
+	 * @param pNear
+	 * @param pDelta
+	 * @return pressure in bar !
 	 */
-	public double  convSatH2P(double h) {
-		double p=0;
-		int idlx=0;
-		int idvx=0;
+	public double  convSatH2P(double h, double pNear, double pDelta) {
+		double po=-1000;
+		double pmin = ((pNear-pDelta)>0) ? (pNear-pDelta): 0.0;
+		double pmax = (pNear+pDelta);
+		double min = 1000;
+		double diff;
+		int idlx=-1;
+		int idvx=-1;
 		double x = 0, y0 = 0,y1 = 0,x0 = 0,x1 = 0;
 
-		for(int i=0;i<listSatHlP.size();i++) {
-			if (h < getSatHl(listSatHlP.size()-1)) {
-				// Zone Liquid
-				if(h >= getSatHl(i) ){
-					idlx = i;
-				}
-			} else {
-				// Zone Vapor
-				if(h <= getSatHv(i) ){
-					idvx = i;
+		//System.out.println("-------------------------------------------------------");	
+		//System.out.println("      h="+h);	
+		//System.out.println("     "+ pmin +" < " + "  pNear= "+pNear + " < "+ pmax );
+
+		if ((h>= hSatMin) && (h <= hSatMax)) {
+
+			for(int i=0;i<listSatHlP.size();i++) {
+				if ((getSatP(i) < pmax) && (getSatP(i) > pmin)) {
+
+					diff = Math.abs(getSatHl(i)-h);
+					if (diff < min) {
+						min = diff;
+						idlx = i;
+						idvx = -1;
+					}
+
+					diff = Math.abs(getSatHv(i)-h);
+					if (diff < min) {
+						min = diff;
+						idvx = i;
+						idlx = -1;
+					}
 				}
 			}
-		}
+			// Avoid to get outside the list
+			if (idlx >= listSatHlP.size()-1) 
+				idlx = idlx-1;
+			if (idvx >= listSatHlP.size()-1) 
+				idvx = idvx-1;
+			//System.out.println("      idlx="+idlx+"   idvx="+idvx);
 
-		if (idlx >= listSatHlP.size()-1) 
-			idlx = idlx-1;
-		if (idvx >= listSatHlP.size()-1) 
-			idvx = idvx-1;
-
-		if (h < getSatHl(listSatHlP.size()-1)) {
-			// Zone Liquid
-				System.out.println("Liquid");
+			// We check that the x0 and x1 are in the H Zone (Liquid) 
+			if (idlx != -1) {
 				x  = h;
 				x0 = getSatHl(idlx);
 				x1 = getSatHl(idlx+1);
+				//System.out.println("     |h("+h+") - x0("+x0+")|="+ (Math.abs(h-x0)+ "<-->" + hSatErrLoc ));
+				//System.out.println("     |h("+h+") - x1("+x1+")|="+ (Math.abs(h-x1)+ "<-->" + hSatErrLoc ));
+				if ( (Math.abs(h-x0) > hSatErrLoc || Math.abs(h-x1) > hSatErrLoc ) ) {
+					idlx = -1;
+				}
+			}
+			// We check that the x0 and x1 are in the H Zone (Vapor) 
+			if (idvx != -1) {
+				x  = h;
+				x0 = getSatHv(idvx);
+				x1 = getSatHv(idvx+1);
+				//System.out.println("     |h("+h+") - x0("+x0+")|="+ (Math.abs(h-x0)+ "<-->" + hSatErrLoc ));
+				//System.out.println("     |h("+h+") - x1("+x1+")|="+ (Math.abs(h-x1)+ "<-->" + hSatErrLoc ));
+				if ( (Math.abs(h-x0) > hSatErrLoc || Math.abs(h-x1) > hSatErrLoc ) ) {
+					idvx = -1;
+				}
+			}
+			//System.out.println("      H Zone Checked");
+			//System.out.println("      idlx="+idlx+"   idvx="+idvx);
+			if (idlx != -1) {
+				// Zone Liquid
+				//System.out.println("       Liquid");
 				y0 = getSatP(idlx);
-				y1 = getSatP(idlx+1);	
-				p = (x-x0)*(y1-y0)/(x1-x0)+ y0;
-				System.out.println(x0+" < " + h + " < "+ x1);
-				System.out.println(y0+" < " + p + " < "+ y1);
-				System.out.println();
-		} else {
-			// Zone Vapor
-			System.out.println("Vapor");
-			x  = h;
-			x0 = getSatHv(idvx);
-			x1 = getSatHv(idvx+1);
-			y0 = getSatP(idvx);
-			y1 = getSatP(idvx+1);	
-			p = (x-x0)*(y1-y0)/(x1-x0)+ y0;
-			System.out.println(x0+" < " + h + " < "+ x1);
-			System.out.println(y0+" < " + p + " < "+ y1);
-			System.out.println();
+				y1 = getSatP(idlx+1);
+				//System.out.println("     "+"h("+idlx+")="+x0 +" < " + h + " < "+"h("+idlx+"+1"+")="+ x1);
+				//System.out.println("     "+"x="+x+"  x0="+x0+"  x1="+x1+"  y0="+y0+"  y1="+y1);
+				po = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+				//System.out.println("     "+y0+" < " + po + " < "+ y1);
+			} else 	if (idvx != -1) {
+				// Zone Vapor
+				//System.out.println("      Vapor");
+				y0 = getSatP(idvx);
+				y1 = getSatP(idvx+1);	
+				//System.out.println("     "+"h("+idvx+")="+x0+" < " + h + " < "+"h("+idvx+"+1"+")="+ x1);
+				//System.out.println("     "+"x="+x+"  x0="+x0+"  x1="+x1+"  y0="+y0+"  y1="+y1);
+				po = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+				//System.out.println("     "+y0+" < " + po + " < "+ y1);
+			} else {
+				// Zone Vapor
+				//System.out.println("      Error");
+				//System.out.println("     "+po );
+			}
 		}
-		return p;
+		return po;
 	}
-
+	
 	/**
 	 * Convert Temperature(°C) to Pressure (bar) 
 	 * @param temp: temperature (°C)
@@ -482,4 +557,11 @@ public class Enthalpy {
 		this.nameRefrigerant = nameRefrigerant;
 	}
 
+	public double gethSatMin() {
+		return hSatMin;
+	}
+
+	public double gethSatMax() {
+		return hSatMax;
+	}
 }
