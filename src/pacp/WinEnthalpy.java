@@ -43,11 +43,9 @@ import javax.swing.SwingConstants;
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.Component;
@@ -57,8 +55,10 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import java.awt.Rectangle;
 
 
 public class WinEnthalpy {
@@ -76,10 +76,9 @@ public class WinEnthalpy {
 	private JLabel lblEnthalpyCoord;
 	private JLabel lblPressureCoord;
 	private JLabel lblTempCoord;
-	private JLabel lblOther;
+	private JLabel lblFollower;
 	private JRadioButton rdbtnSaturation;
 	private JRadioButton rdbtnNothin;
-
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -143,35 +142,6 @@ public class WinEnthalpy {
 		lblMouseCoordinate.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblMouseCoordinate.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 
-		MouseAdapter ma = new MouseAdapter() {
-			@Override
-			public void mouseMoved(MouseEvent m) {
-				lblMouseCoordinate.setText(String.format("(x: %d y: %d)", m.getX(), m.getY()));
-
-				double hResult = panelEnthalpyDrawArea.getHoX(m.getX());
-				lblEnthalpyCoord.setText(String.format("H=%.2f kJ/kg",hResult));
-
-				double pResult = panelEnthalpyDrawArea.getPoY(m.getY());
-				lblPressureCoord.setText(String.format("P=%.2f bar",pResult));
-
-				double tRresult = enthalpy.convP2T(pResult);
-				lblTempCoord.setText(String.format("T=%.2f °C",tRresult));	
-
-				if (rdbtnSaturation.isSelected()) {
-					//lblOther.setText(String.format("H=%.2f P=%.2f",hResult,enthalpy.convSatH2P(hResult,-5)));
-				} else {
-					lblOther.setText(String.format("----------"));
-				}
-
-				try {
-					if (WinPressTemp.panelTempPressDrawArea.isVisible()) {
-						WinPressTemp.panelTempPressDrawArea.spotTempPressFollower(tRresult,pResult);
-					}
-				} catch (NullPointerException e) {
-
-				}
-			}
-		};
 		panelEnthalpyBottom.setLayout(new GridLayout(0, 5, 0, 0));
 
 		lblEnthalpyCoord = new JLabel("Enthalpy Coordinate");
@@ -189,91 +159,126 @@ public class WinEnthalpy {
 		lblTempCoord.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panelEnthalpyBottom.add(lblTempCoord);
 
-		lblOther = new JLabel("New label");
-		lblOther.setHorizontalAlignment(SwingConstants.CENTER);
-		lblOther.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		panelEnthalpyBottom.add(lblOther);
+		lblFollower = new JLabel("Follower");
+		lblFollower.setHorizontalAlignment(SwingConstants.CENTER);
+		lblFollower.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		panelEnthalpyBottom.add(lblFollower);
 
 		panelEnthalpyBottom.add(lblMouseCoordinate);
 
 		JPanel panelEnthalpyRight = new JPanel();
-		panelEnthalpyRight.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		panelEnthalpyRight.setBorder(new LineBorder(new Color(0, 0, 0)));
 		frame.getContentPane().add(panelEnthalpyRight, BorderLayout.EAST);
 		panelEnthalpyRight.setLayout(new GridLayout(0, 1, 0, 0));
 
-		panelEnthalpyDrawArea = new PanelEnthalpie(enthalpy, ma);	
+		panelEnthalpyDrawArea = new PanelEnthalpie(enthalpy);	
 		panelEnthalpyDrawArea.setBackground(Color.WHITE);
 
 		panelEnthalpyDrawArea.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		frame.getContentPane().add(panelEnthalpyDrawArea, BorderLayout.CENTER);
 
+		// Command 
+		// ------------------------------------------------
 		JPanel panelHight = new JPanel();
 		panelEnthalpyRight.add(panelHight);
-		panelHight.setLayout(new BoxLayout(panelHight, BoxLayout.Y_AXIS));
+		panelHight.setLayout(new BorderLayout(0, 0));
 
-		JButton btnH0 = new JButton("H0");
-		btnH0.setMaximumSize(new Dimension(85, 23));
-		btnH0.setAlignmentX(Component.CENTER_ALIGNMENT);
-		btnH0.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-
-			}
-		});
-		panelHight.add(btnH0);
+		JPanel panelHight_Hight = new JPanel();
+		panelHight.add(panelHight_Hight, BorderLayout.NORTH);
+		panelHight_Hight.setLayout(new BoxLayout(panelHight_Hight, BoxLayout.Y_AXIS));
 
 		JButton H1 = new JButton("H1");
-		H1.setMaximumSize(new Dimension(85, 23));
 		H1.setAlignmentX(Component.CENTER_ALIGNMENT);
+		H1.setMaximumSize(new Dimension(85, 23));
 		H1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
 			}
 		});
-		panelHight.add(H1);
+		panelHight_Hight.add(H1);
 
-		JPanel panelMiddle = new JPanel();
-		panelEnthalpyRight.add(panelMiddle);
-		panelMiddle.setLayout(new BorderLayout(0, 0));
+		JButton btnH0 = new JButton("H0");
+		btnH0.setAlignmentX(Component.CENTER_ALIGNMENT);
+		btnH0.setMaximumSize(new Dimension(85, 23));
+		btnH0.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+			}
+		});
+		panelHight_Hight.add(btnH0);
+
+
+		// ----------------------------------
+		JPanel panelMiddle1 = new JPanel();
+		panelEnthalpyRight.add(panelMiddle1);
+		panelMiddle1.setLayout(new BorderLayout(0, 0));
+
+		JPanel panelMiddle1_Center = new JPanel();
+		panelMiddle1.add(panelMiddle1_Center, BorderLayout.CENTER);
+		panelMiddle1_Center.setLayout(new BoxLayout(panelMiddle1_Center, BoxLayout.Y_AXIS));
 
 		JButton btnPressureTemp = new JButton("Pres/Temp");
+		btnPressureTemp.setMaximumSize(new Dimension(85, 23));
+		btnPressureTemp.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btnPressureTemp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				WinPressTemp window = new WinPressTemp(enthalpy);
 				window.WinPressTempVisible();
 			}
 		});
-		panelMiddle.add(btnPressureTemp, BorderLayout.SOUTH);
+		panelMiddle1_Center.add(btnPressureTemp);
 
-		JPanel panel = new JPanel();
-		panelEnthalpyRight.add(panel);
-		panel.setLayout(null);
+		// -----------------------
+		JPanel panelMiddle2 = new JPanel();
+		panelEnthalpyRight.add(panelMiddle2);
+		panelMiddle2.setLayout(new BorderLayout(0, 0));
 
-		ButtonGroup btGroupPosFollower = new ButtonGroup();
+		JPanel panelMiddle2_Center = new JPanel();
+		panelMiddle2.add(panelMiddle2_Center, BorderLayout.CENTER);
+		panelMiddle2_Center.setLayout(new BoxLayout(panelMiddle2_Center, BoxLayout.Y_AXIS));
 
 		rdbtnSaturation = new JRadioButton("Saturation");
 		rdbtnSaturation.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		rdbtnSaturation.setBounds(6, 32, 71, 23);
-		panel.add(rdbtnSaturation);
-		btGroupPosFollower.add(rdbtnSaturation);
+		panelMiddle2_Center.add(rdbtnSaturation);
 
 		rdbtnNothin = new JRadioButton("Nothing");
 		rdbtnNothin.setSelected(true);
 		rdbtnNothin.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		rdbtnNothin.setBounds(6, 58, 71, 23);
-		panel.add(rdbtnNothin);
+		panelMiddle2_Center.add(rdbtnNothin);
+
+		ButtonGroup btGroupPosFollower = new ButtonGroup();
+		btGroupPosFollower.add(rdbtnSaturation);
 		btGroupPosFollower.add(rdbtnNothin);
 
+		// ----------------------------------------
 		JPanel panelBottom = new JPanel();
 		panelEnthalpyRight.add(panelBottom);
 		panelBottom.setLayout(new BorderLayout(0, 0));
 
+		JPanel panelBottom_Bottom = new JPanel();
+		panelBottom.add(panelBottom_Bottom, BorderLayout.SOUTH);
+		panelBottom_Bottom.setLayout(new BoxLayout(panelBottom_Bottom, BoxLayout.Y_AXIS));
+
+		JButton btnResetZoom = new JButton("Centrer");
+		btnResetZoom.setAlignmentX(Component.CENTER_ALIGNMENT);
+		btnResetZoom.setMaximumSize(new Dimension(85, 23));
+		btnResetZoom.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				panelEnthalpyDrawArea.centerImg();
+				panelEnthalpyDrawArea.repaint();			
+			}
+		});
+		panelBottom_Bottom.add(btnResetZoom);
+
 		JButton btnClear = new JButton("Effacer");
-		panelBottom.add(btnClear, BorderLayout.SOUTH);
+		btnClear.setAlignmentX(Component.CENTER_ALIGNMENT);
+		btnClear.setMaximumSize(new Dimension(85, 23));
 		btnClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				panelEnthalpyDrawArea.clean();
 			}
 		});
+		panelBottom_Bottom.add(btnClear);
 	}
 
 	// ===================================================================================================================
@@ -296,7 +301,9 @@ public class WinEnthalpy {
 		Point offset = new Point();			// Supplementary Offset
 		double mvoYf = 100.0;				// Move Y factor: Move the mouse of 50 pixels, will corresponds to 0.5 
 		Point dragStart = new Point();		// Start point for Offset computation
-		double zoom = 1;					// Supplementary Zoom Factor
+		private double zoom = 1;					// Supplementary Zoom Factor
+
+
 
 		// Enthalpy
 		double xmin = 140;  				// Minimum of the range of values displayed.
@@ -326,7 +333,7 @@ public class WinEnthalpy {
 		// -------------------------------------------------------
 		// 						CONSTRUCTOR
 		// -------------------------------------------------------
-		public PanelEnthalpie(Enthalpy vconfEnthalpy, MouseAdapter ma) {
+		public PanelEnthalpie(Enthalpy vconfEnthalpy) {
 			enthalpy = vconfEnthalpy;
 			openEnthalpyImageFile();
 			setBackground(Color.WHITE);
@@ -334,7 +341,6 @@ public class WinEnthalpy {
 			addMouseWheelListener(this);
 			addMouseListener(this);
 			addMouseMotionListener(this);
-			addMouseMotionListener(ma);
 		}
 
 		// -------------------------------------------------------
@@ -380,6 +386,13 @@ public class WinEnthalpy {
 				System.out.println("Image non trouvée !");
 				e.printStackTrace(); 
 			}
+		}
+
+		public void centerImg() {
+			zoom =  1;
+			offset.x = 0;
+			offset.y= 0;
+			repaint();
 		}
 
 		// -------------------------------------------------------
@@ -437,7 +450,6 @@ public class WinEnthalpy {
 					(float) (xposmax-metrics.getStringBounds("H(kJ/kg)",g2d).getWidth()/2), 
 					(float) (log10_ymin-log10_marginy+0.05 ));
 
-
 			// Pressure
 			fontReal = fontReal.deriveFont(Font.PLAIN, 10.0f);
 			g2d.setFont(fontReal);
@@ -488,7 +500,7 @@ public class WinEnthalpy {
 			// -----------------------------------
 			g2d.setStroke(new BasicStroke(0.03f));
 			g2d.setColor(Color.blue);
-			g2d.draw( new Ellipse2D.Double(curveFollowerX, Math.log10(curveFollowerY), 2, Math.log10(1.1))); 
+			g2d.draw( new Ellipse2D.Double(curveFollowerX-2, Math.log10(curveFollowerY), 2, Math.log10(1))); 
 			//System.out.println("curveFollowerX="+curveFollowerX+"  curveFollowerY="+curveFollowerY);
 			//System.out.println();
 
@@ -527,7 +539,7 @@ public class WinEnthalpy {
 			g2d.drawString("T(°C)", (float)(10 + xmin - metrics.getStringBounds("T(°C)",g2d).getWidth()/2), (float)(Math.log10(yposmax+gridUnitY)));
 
 		}
-		
+
 		// -------------------------------------------------------
 		// 						EVENT LISTNER
 		// -------------------------------------------------------
@@ -543,7 +555,7 @@ public class WinEnthalpy {
 				dragStart.x = xMouse-offset.x;
 				dragStart.y = yMouse-offset.y;
 			}
-			
+
 			Graphics g = getGraphics();
 			Graphics2D g2 = (Graphics2D)g;
 
@@ -578,25 +590,48 @@ public class WinEnthalpy {
 		@Override
 		public void mouseMoved(MouseEvent evt) {
 
+			lblMouseCoordinate.setText(String.format("(x: %d y: %d)", evt.getX(), evt.getY()));
+
+			double hResult = panelEnthalpyDrawArea.getHoX(evt.getX());
+			lblEnthalpyCoord.setText(String.format("H=%.2f kJ/kg",hResult));
+
+			double pResult = panelEnthalpyDrawArea.getPoY(evt.getY());
+			lblPressureCoord.setText(String.format("P=%.2f bar",pResult));
+
+			double tRresult = enthalpy.convP2T(pResult);
+			lblTempCoord.setText(String.format("T=%.2f °C",tRresult));	
+
+			try {
+				if (WinPressTemp.panelTempPressDrawArea.isVisible()) {
+					WinPressTemp.panelTempPressDrawArea.spotTempPressFollower(tRresult,pResult);
+				}
+			} catch (NullPointerException e) {
+				// Not present ==> Do nothing !
+			}
+
 			if (rdbtnSaturation.isSelected()) {
-				double lH = getHoX(evt.getX());
-				double lPApprox = getPoY(evt.getY());
 				double lPDeltaZone; 
-				if (lPApprox < 5) 
+				if (pResult < 5) 
 					lPDeltaZone = 2;
-				else if ((lPApprox>=5) && (lPApprox<10) )
+				else if ((pResult>=5) && (pResult<10) )
 					lPDeltaZone = 5;
-				else if ((lPApprox>=10) && (lPApprox<20) )
+				else if ((pResult>=10) && (pResult<20) )
 					lPDeltaZone = 7;
-				else if ((lPApprox>=20) && (lPApprox<40) )
+				else if ((pResult>=20) && (pResult<40) )
 					lPDeltaZone = 10;
 				else
 					lPDeltaZone = 20;
-				
+
 				// P saturation = f(H,approximP,deltaPZone)
-				double lP = enthalpy.convSatH2P(lH,lPApprox,lPDeltaZone);
-				curveFollowerX = lH;
-				curveFollowerY = lP;
+				double pSat = enthalpy.convSatH2P(hResult,pResult,lPDeltaZone);
+				curveFollowerX = hResult;
+				curveFollowerY = pSat;
+				if (pSat > 0 )
+					lblFollower.setText(String.format("PSat=%.2f bar",pSat));
+				else
+					lblFollower.setText(String.format("----------"));			
+			} else {
+				lblFollower.setText(String.format("----------"));
 			}
 			this.repaint();
 		}		
@@ -628,7 +663,7 @@ public class WinEnthalpy {
 		// -------------------------------------------------------
 		// 					GETTER AND SETTER
 		// -------------------------------------------------------
-		
+
 		public void setCurveFollowerX(double curveFollowerX) {
 			this.curveFollowerX = curveFollowerX;
 		}
@@ -636,5 +671,7 @@ public class WinEnthalpy {
 		public void setCurveFollowerY(double curveFollowerY) {
 			this.curveFollowerY = curveFollowerY;
 		}
+
+
 	}
 }
