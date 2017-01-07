@@ -206,15 +206,30 @@ public class Enthalpy {
 	 * @param pDelta
 	 * @return pressure in bar !
 	 */
-	public double  convSatH2P(double h, double pNear, double pDelta) {
+	public double  convSatH2P(double h, double pNear ) {
 		double po=-1000;
-		double pmin = ((pNear-pDelta)>0) ? (pNear-pDelta): 0.0;
-		double pmax = (pNear+pDelta);
 		double min = 1000;
 		double diff;
+		double pDelta;
+		double pmin; 
+		double pmax;
 		int idlx=-1;
 		int idvx=-1;
 		double x = 0, y0 = 0,y1 = 0,x0 = 0,x1 = 0;
+		
+		if (pNear < 5) 
+			pDelta = 2;
+		else if ((pNear>=5) && (pNear<10) )
+			pDelta = 5;
+		else if ((pNear>=10) && (pNear<20) )
+			pDelta = 7;
+		else if ((pNear>=20) && (pNear<40) )
+			pDelta = 10;
+		else
+			pDelta = 20;
+
+		pmin = ((pNear-pDelta)>0) ? (pNear-pDelta): 0.0;
+		pmax = (pNear+pDelta);
 
 		//System.out.println("-------------------------------------------------------");	
 		//System.out.println("      h="+h);	

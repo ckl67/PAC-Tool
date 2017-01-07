@@ -149,6 +149,10 @@ public class WinPressTemp {
 			addMouseListener(this);
 			addMouseMotionListener(this);			
 		}
+		
+		// -------------------------------------------------------
+		// 						PAINT 
+		// -------------------------------------------------------
 
 		public void paintComponent(Graphics g) {  
 			Graphics2D g2 = (Graphics2D)g;
@@ -166,6 +170,13 @@ public class WinPressTemp {
 			g2.scale(zoomx, -zoomy);
 			g2.translate(-(xmax+xmin)/2, -(ymax+ymin)/2);
 		
+			// -----------------------------------
+			// Base font + Scaled font 
+			// -----------------------------------
+			Font font = new Font(null, Font.PLAIN, 1);
+			Font fontReal = font.deriveFont(AffineTransform.getScaleInstance(1/zoomx, -1/zoomy));
+			FontMetrics metrics;
+
 			// -----------------------------------
 			// Grid
 			// -----------------------------------
@@ -194,28 +205,19 @@ public class WinPressTemp {
 			// -----------------------------------
 			g2.setStroke(new BasicStroke(0));
 			
-			// Base font
-			Font font = new Font(null, Font.PLAIN, 1);
-		
-			// Scaled font
-			Font fontReal = font.deriveFont(AffineTransform.getScaleInstance(zoomx, -zoomy));
-			
-			// Size Scaled Font + Apply Font
-			fontReal = fontReal.deriveFont(Font.PLAIN, 1f);
-			FontMetrics metrics = g.getFontMetrics(fontReal);		
-			g2.setFont(fontReal);
-			
 			// Text
+			fontReal = fontReal.deriveFont(Font.PLAIN, 12.0f);
+			g2.setFont(fontReal);
+			metrics = g.getFontMetrics(fontReal);		
 			g2.setColor(Color.blue);
 			g2.drawString("T", (int) (xmax+metrics.stringWidth("T")), (int) (0));
 			g2.drawString("P", (int) (0), (int) (ymax)+metrics.stringWidth("P"));
 		
-			// Size Scaled Font + Apply Font
-			fontReal = fontReal.deriveFont(Font.PLAIN, 0.8f);
-			metrics = g.getFontMetrics(fontReal);		
-			g2.setFont(fontReal);
-			
 			// Coordinate
+			fontReal = fontReal.deriveFont(Font.PLAIN, 12.0f);
+			g2.setFont(fontReal);
+			metrics = g.getFontMetrics(fontReal);		
+
 			g2.setColor(Color.lightGray);
 			String s;
 			for (int x = (int) xmin; x <= xmax; x=x+2*gridUnitX) {

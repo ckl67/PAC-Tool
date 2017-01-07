@@ -255,38 +255,31 @@ public class Test {
 
 		double h = 360;
 		double pNear = 2;
-		double pdelta = 5;
-		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear,pdelta)+"\n");
+		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear)+"\n");
 	
 		h = 360;
 		pNear = 50;
-		pdelta = 5;
-		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear,pdelta)+"\n");
+		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear)+"\n");
 	
 		h = 377;
 		pNear = 50;
-		pdelta = 5;
-		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear,pdelta)+"\n");
+		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear)+"\n");
 
 		h = 408;
 		pNear = 50;
-		pdelta = 10;
-		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear,pdelta)+"\n");
+		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear)+"\n");
 
 		h = 401;
 		pNear = 18;
-		pdelta = 20;
-		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear,pdelta)+"\n");
+		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear)+"\n");
 
 		h = 341;
 		pNear = 46;
-		pdelta = 20;
-		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear,pdelta)+"\n");
+		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear)+"\n");
 
 		h = 417;
 		pNear = 23;
-		pdelta = 20;
-		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear,pdelta)+"\n");
+		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear)+"\n");
 
 	}
 		
