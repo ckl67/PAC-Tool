@@ -55,6 +55,12 @@ Conversion Jar vers Exe
 	Launch4j est une application qui permet de créer des "lanceurs" (exécutables Windows classiques 
 	pour des applications développées en Java. 
 	http://launch4j.sourceforge.net/
+	
+wxMaxima
+	Outil de calcul symbolique.
+	Très utile pour la simplification des expressions mathématiques
+	http://andrejv.github.io/wxmaxima/index.html
+
 
 ----------------
 Introduction au Java

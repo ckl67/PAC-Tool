@@ -26,8 +26,7 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.awt.image.RescaleOp;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
@@ -41,7 +40,6 @@ import java.awt.GridLayout;
 import java.awt.Point;
 import javax.swing.border.BevelBorder;
 import javax.swing.SwingConstants;
-import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import java.awt.event.ActionListener;
@@ -57,8 +55,11 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JRadioButton;
+import javax.swing.JSlider;
 import javax.swing.border.LineBorder;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 public class WinEnthalpy {
 	/*
@@ -70,6 +71,8 @@ public class WinEnthalpy {
 	 * 		INSTANCE VAR
 	 */
 	private Enthalpy enthalpy;
+	private EnthalpyImage enthalpyImage;
+	
 	private JFrame frame;
 	private JLabel lblMouseCoordinate;
 	private JLabel lblEnthalpyCoord;
@@ -83,6 +86,7 @@ public class WinEnthalpy {
 
 	// Draw elements: lines/points/...
 	private List<ElDraw> eDrawL = new ArrayList<ElDraw>();
+	
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
@@ -108,6 +112,7 @@ public class WinEnthalpy {
 	 */
 	public WinEnthalpy(Enthalpy vconfEnthalpy) {
 		enthalpy = vconfEnthalpy;
+		enthalpyImage = enthalpy.getEnthalpyImage();
 		enthalpy.loadPTFile();
 		enthalpy.loadSatFile();
 		initialize();
@@ -174,10 +179,28 @@ public class WinEnthalpy {
 		frame.getContentPane().add(panelEnthalpyRight, BorderLayout.EAST);
 		panelEnthalpyRight.setLayout(new GridLayout(0, 1, 0, 0));
 
+		// ----------------------------------------
+		// Panel Draw Enthalpy 
+		// ----------------------------------------
+
 		panelEnthalpyDrawArea = new PanelEnthalpie(enthalpy);	
+		panelEnthalpyDrawArea.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		panelEnthalpyDrawArea.setBackground(Color.WHITE);
 
-		panelEnthalpyDrawArea.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		JSlider slider = new JSlider();
+		slider.setBackground(Color.WHITE);
+		slider.setFocusable(false);
+		slider.setValue((int)(panelEnthalpyDrawArea.getImageAlphaBlure()*100));
+
+		slider.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				int v = slider.getValue();
+				panelEnthalpyDrawArea.setImageAlphaBlure((float) v / slider.getMaximum());
+				panelEnthalpyDrawArea.repaint();
+			}
+		});
+		panelEnthalpyDrawArea.add(slider, BorderLayout.NORTH);
+
 		frame.getContentPane().add(panelEnthalpyDrawArea, BorderLayout.CENTER);
 
 		// Command 
@@ -325,18 +348,16 @@ public class WinEnthalpy {
 		/* -----------------------------
   		      Instance Variables
 		 * ----------------------------*/
-		private BufferedImage image;
-
-		/* -----------------------------
-		        Internal Variables
-		 * ----------------------------*/
 		private Enthalpy enthalpy;
 
-		private Point offset = new Point();			// Supplementary Offset
+		private BufferedImage imgEnthBg;				// Image Background
+		private float imageAlphaBlure=0;
+
+		private Point offset = new Point(0,0);		// Supplementary Offset
 		private double mvoYf = 100.0;				// Move Y factor: Move the mouse of 50 pixels, will corresponds to 0.5 
-		private Point dragStart = new Point();		// Start point for Offset computation
+		private Point dragStart = new Point(0,0);	// Start point for Offset computation
 		private double zoom = 1;					// Supplementary Zoom Factor
-		private double zoomx,zoomy;					// Zoom factor relative to the figure to display and the panel width
+		private double zoomx=1,zoomy=1;					// Zoom factor relative to the figure to display and the panel width
 
 		// Enthalpy
 		private double xmin = 140;  				// Minimum of the range of values displayed.
@@ -358,17 +379,15 @@ public class WinEnthalpy {
 		private double gridUnitY = 1;	// Pressure Step, will be modified following the progression 
 
 		// Curve follower
-		private double curveFollowerX;
-		private double curveFollowerY;
-
-
+		private double curveFollowerX=0;
+		private double curveFollowerY=0;
 
 		// -------------------------------------------------------
 		// 						CONSTRUCTOR
 		// -------------------------------------------------------
 		public PanelEnthalpie(Enthalpy vconfEnthalpy) {
 			enthalpy = vconfEnthalpy;
-			openEnthalpyImageFile();
+			imgEnthBg = enthalpy.getEnthalpyImage().openEnthalpyImageFile();
 			setBackground(Color.WHITE);
 
 			addMouseWheelListener(this);
@@ -396,6 +415,14 @@ public class WinEnthalpy {
 			offset.x = 0;
 			offset.y= 0;
 			repaint();
+		}
+
+		/**
+		 *  Set The image Blurring
+		 * @param alpha
+		 */
+		public void setImageAlphaBlure(float alpha) {
+			imageAlphaBlure = alpha;
 		}
 
 		/**
@@ -444,16 +471,7 @@ public class WinEnthalpy {
 			return (int)ym;
 		}
 
-		// EnthalpyImageFile
-		public void openEnthalpyImageFile() {
-			try {
-				File file = new File(enthalpy.getEnthalpyImageFile());
-				image = ImageIO.read(file);	
-			} catch (IOException e) {
-				System.out.println("Image non trouvée !");
-				e.printStackTrace(); 
-			}
-		}
+
 
 
 		// -------------------------------------------------------
@@ -465,7 +483,8 @@ public class WinEnthalpy {
 
 			super.paintComponent(g);
 			setBackground(Color.WHITE);
-
+			//AffineTransform origTransform = g2.getTransform();
+			
 			// -----------------------------------
 			// Apply a translation so that the drawing
 			// coordinates on the display matches the Panel
@@ -476,6 +495,24 @@ public class WinEnthalpy {
 			g2.scale(zoomx, -zoomy);
 			g2.translate(offset.x-(xmax+xmin)/2, -offset.y/mvoYf-(log10_ymax+log10_ymin)/2);
 
+			// -----------------------------------
+			// Image
+			// -----------------------------------		
+			g2.drawImage(imgEnthBg, 
+					140,2,540,-4,
+					140,0,imgEnthBg.getWidth(),imgEnthBg.getHeight(),
+					null);
+
+			float[] scales = { 1f, 1f, 1f, imageAlphaBlure };
+			float[] offsets = new float[4];
+			RescaleOp rop = new RescaleOp(scales, offsets, null);
+
+			/* Draw the image, applying the filter */
+			g2.drawImage(imgEnthBg, rop, -1, -10);
+
+			//g2.setTransform(origTransform); // Restore transform
+
+			
 			// -----------------------------------
 			// Base font + Scaled font 
 			// -----------------------------------
@@ -580,6 +617,7 @@ public class WinEnthalpy {
 			}
 			g2.drawString("T(°C)", (float)(10 + xmin - metrics.getStringBounds("T(°C)",g2).getWidth()/2), (float)(Math.log10(yposmax+gridUnitY)));
 
+
 			// -----------------------------------
 			// Curve
 			// -----------------------------------		
@@ -616,6 +654,9 @@ public class WinEnthalpy {
 			int xMouse = evt.getX();
 			int yMouse = evt.getY();
 
+			if (enthalpyImage.islocateOrigineH()) {
+				
+			}
 			if ((evt.getModifiers() & InputEvent.BUTTON2_MASK) != 0) {
 				dragStart.x = xMouse-offset.x;
 				dragStart.y = yMouse-offset.y;
@@ -702,9 +743,7 @@ public class WinEnthalpy {
 
 		}
 
-		// -------------------------------------------------------
-		// 					GETTER AND SETTER
-		// -------------------------------------------------------
+
 
 		public double getXmin() {
 			return xmin;
@@ -713,6 +752,14 @@ public class WinEnthalpy {
 		public double getXmax() {
 			return xmax;
 		}
-		
+
+		public float getImageAlphaBlure() {
+			return imageAlphaBlure;
+		}
+
+		public void setImageAlphaBlureBlurring(float imageAlphaBlure) {
+			this.imageAlphaBlure = imageAlphaBlure;
+		}
+
 	}
 }

@@ -18,7 +18,6 @@
  */
 package pacp;
 
-import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,17 +32,6 @@ public class Enthalpy {
 	 * Diagram Enthalpy  
 	 * ----------------*/
 	private String nameRefrigerant;									// Name (R22/..)
-	private String enthalpyImageFile;								// Enthalpy image file (.png)
-
-	private Point2D.Double mOrigineH = new Point2D.Double();  		// Coordinate mouse (hOrigine,hFinal)
-	private Point iOrigineH = new Point();						    // Coordinate Reference for (hOrigine,hFinal) in Enthalpy image
-	private boolean locateOrigineH;									// Image Reference for H Requested :  Origin / Final
-	private boolean locateFinalH;
-
-	private Point2D.Double mOrigineP = new Point2D.Double();  		// Coordinate mouse (POrigine,PFinal)
-	private Point iOrigineP = new Point();						    // Coordinate Reference for (POrigine,PFinal) Pressure in image
-	private boolean locateOrigineP;									// Image Reference for P Requested :  Origin / Final
-	private boolean locateFinalP;
 
 	/* -----------------------------
 	   Diagram Pressure-Temperature
@@ -65,6 +53,11 @@ public class Enthalpy {
 	private List<Point2D.Double> listSatHlP;			// Coordinate Temperature / H : List
 	private List<Point2D.Double> listSatHvP;			// Coordinate Temperature / H : List
 
+	/* -----------------------------
+	   Enthalpy Image
+	 * ----------------------------*/
+	private EnthalpyImage enthalpyImage;
+
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
@@ -74,29 +67,11 @@ public class Enthalpy {
 		 * ----------------*/
 		// Name Refrigerant
 		setNameRefrigerant("R22");
-		// Image
-		setEnthalpyImageFile("D:/Users/kluges1/workspace/pac-tool/ressources/R22.png");
-
-		// -- H
-		setiHOrigine(140);
-		setiHFinal(240);
-		setmHOrigine(85.0);
-		setmHFinal(570.0);
-		locateOrigineH=false;
-		locateFinalH=false;
-
-		// -- P
-		setiPOrigine(1);
-		setiPFinal(10);
-		setmPOrigine(1000.0);
-		setmPFinal(516.0);
-		locateOrigineP=false;
-		locateFinalP=false;
 
 		/* -----------------------------
 		   Diagram Pressure-Temperature
 		 * ----------------------------*/
-		setFileTP("D:/Users/kluges1/workspace/pac-tool/ressources/P2T_R22.txt");
+		setFileTP("D:/Users/kluges1/workspace/pac-tool/ressources/R22/P2T_R22.txt");
 		setlistTP(new ArrayList<Point2D.Double>());
 		deltaP = 0.0;
 
@@ -107,10 +82,17 @@ public class Enthalpy {
 		hSatMin=1000;
 		hSatMax=0;
 		hSatErrLoc = 0;
-		setFileSat("D:/Users/kluges1/workspace/pac-tool/ressources/SaturationCurve_R22.txt");
+		setFileSat("D:/Users/kluges1/workspace/pac-tool/ressources/R22/SaturationCurve_R22.txt");
 		setlistSatHlP(new ArrayList<Point2D.Double>());
 		setlistSatHvP(new ArrayList<Point2D.Double>());
+
+		/* -----------------------------
+		   Enthalpy Image
+		 * ----------------------------*/
+		enthalpyImage = new EnthalpyImage();
+
 	}
+
 
 	// -------------------------------------------------------
 	// 							METHOD
@@ -216,7 +198,7 @@ public class Enthalpy {
 		int idlx=-1;
 		int idvx=-1;
 		double x = 0, y0 = 0,y1 = 0,x0 = 0,x1 = 0;
-		
+
 		if (pNear < 5) 
 			pDelta = 2;
 		else if ((pNear>=5) && (pNear<10) )
@@ -312,7 +294,7 @@ public class Enthalpy {
 		}
 		return po;
 	}
-	
+
 	/**
 	 * Convert Temperature(°C) to Pressure (bar) 
 	 * @param temp: temperature (°C)
@@ -422,108 +404,6 @@ public class Enthalpy {
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
 
-	public String getEnthalpyImageFile() {
-		return enthalpyImageFile;
-	}
-
-	public void setEnthalpyImageFile(String enthalpyImageFile) {
-		this.enthalpyImageFile = enthalpyImageFile;
-	}
-
-	public double getmHOrigine() {
-		return mOrigineH.x;
-	}
-
-	public double getmHFinal() {
-		return mOrigineH.y;
-	}
-
-	public void setmHOrigine(double hOrigine) {
-		this.mOrigineH.x = hOrigine;
-	}
-	public void setmHFinal(double hFinal) {
-		this.mOrigineH.y = hFinal;
-	}
-
-	public int getiHOrigine() {
-		return iOrigineH.x;
-	}
-
-	public int getiHFinal() {
-		return iOrigineH.y;
-	}
-
-	public void setiHOrigine(int hOrigine) {
-		this.iOrigineH.x = hOrigine;
-	}
-
-	public void setiHFinal(int hFinal) {
-		this.iOrigineH.y = hFinal;
-	}
-
-	public boolean islocateFinalH() {
-		return locateFinalH;
-	}
-
-	public void setlocateFinalH(boolean setFinalH) {
-		this.locateFinalH = setFinalH;
-	}
-
-	public boolean islocateOrigineH() {
-		return locateOrigineH;
-	}
-
-	public void setlocateOrigineH(boolean setOrigineH) {
-		this.locateOrigineH = setOrigineH;
-	}
-
-	public double getmPOrigine() {
-		return mOrigineP.x;
-	}
-
-	public double getmPFinal() {
-		return mOrigineP.y;
-	}
-
-	public void setmPOrigine(double POrigine) {
-		this.mOrigineP.x = POrigine;
-	}
-	public void setmPFinal(double PFinal) {
-		this.mOrigineP.y = PFinal;
-	}
-
-	public int getiPOrigine() {
-		return iOrigineP.x;
-	}
-
-	public int getiPFinal() {
-		return iOrigineP.y;
-	}
-
-	public void setiPOrigine(int POrigine) {
-		this.iOrigineP.x = POrigine;
-	}
-
-	public void setiPFinal(int PFinal) {
-		this.iOrigineP.y = PFinal;
-	}
-
-	public boolean islocateFinalP() {
-		return locateFinalP;
-	}
-
-	public void setlocateFinalP(boolean setFinalP) {
-		this.locateFinalP = setFinalP;
-	}
-
-	public boolean islocateOrigineP() {
-		return locateOrigineP;
-	}
-
-	public void setlocateOrigineP(boolean setOrigineP) {
-		this.locateOrigineP = setOrigineP;
-	}
-
 	public String getFileTP() {
 		return fileTP;
 	}
@@ -579,4 +459,14 @@ public class Enthalpy {
 	public double gethSatMax() {
 		return hSatMax;
 	}
+	
+	public EnthalpyImage getEnthalpyImage() {
+		return enthalpyImage;
+	}
+
+	public void setEnthalpyImage(EnthalpyImage enthalpyImage) {
+		this.enthalpyImage = enthalpyImage;
+	}
+
+	
 }

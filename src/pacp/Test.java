@@ -20,15 +20,16 @@ public class Test {
 					+ "  (2)-> Circulateur\n"
 					+ "  (3)-> Compresseur\n"
 					+ "  (4)-> Condensateur\n"
-					+ "  (5)-> Enthalpie\n"
-					+ "  (6)-> Evaporateur\n"
-					+ "  (7)-> Détendeur\n"
-					+ "  (8)-> Distribution Chaleur --> Chauffage\n"
-					+ "  (9)-> Source de Chaleur --> Captage\n"
-					+ "  (10)-> Fluide Caloporteur\n"
-					+ "  (11)-> Fonctions diverses\n"
-					+ "  (12)-> PAC\n"
-					+ "  (13)-> Fluide Réfrigerant\n"
+					+ "  (5)-> Object graphique pour Diagramme Enthalpy (Element Draw)\n"
+					+ "  (6)-> Enthalpie\n"
+					+ "  (7)-> Evaporateur\n"
+					+ "  (8)-> Détendeur\n"
+					+ "  (9)-> Distribution Chaleur --> Chauffage\n"
+					+ "  (10)-> Source de Chaleur --> Captage\n"
+					+ "  (11)-> Fluide Caloporteur\n"
+					+ "  (12)-> Fonctions diverses\n"
+					+ "  (13)-> PAC\n"
+					+ "  (14)-> Fluide Réfrigerant\n"
 					+ "  (X)-> Lanceur (Main)\n"
 					+ "  (X)-> Test\n"
 					+ "  (X)-> Fenêtre (Au sujet de)\n"
@@ -63,38 +64,42 @@ public class Test {
 				loop=false;
 				break;        
 			case "5":
-				testEnthalpy();
+				testElDraw();
 				loop=false;
 				break;        
 			case "6":
-				testEvaporator();
+				testEnthalpy();
 				loop=false;
 				break;        
 			case "7":
+				testEvaporator();
+				loop=false;
+				break;        
+			case "8":
 				testExpansionValve();
 				loop=false;
 				break;
-			case "8":
+			case "9":
 				testHeatDistribution();
 				loop=false;
 				break;        	
-			case "9":
+			case "10":
 				testHeatSource();
 				loop=false;
 				break;        	
-			case "10":
+			case "11":
 				testHeatTransferFluid();
 				loop=false;
 				break;        	
-			case "11":
+			case "12":
 				testMiscellaneous();
 				loop=false;
 				break;        	
-			case "12":
+			case "13":
 				testPAC();
 				loop=false;
 				break;        	
-			case "13":
+			case "14":
 				testRefrigerant();
 				loop=false;
 				break;        	
@@ -224,6 +229,14 @@ public class Test {
 		System.out.println(jsonObjCondenser);
 	}
 
+	// ===================================================================================================================
+	// 												TEST DRAW ELEMENTS
+	// ===================================================================================================================
+	private static void testElDraw() {
+		System.out.println("TEST DRAW ELEMENTS");
+		
+	}
+		
 	// ===================================================================================================================
 	// 													TEST ENTHALPY
 	// ===================================================================================================================
