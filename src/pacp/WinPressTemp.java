@@ -205,6 +205,14 @@ public class WinPressTemp {
 			// -----------------------------------
 			g2.setStroke(new BasicStroke(0));
 			
+			// Title
+			fontReal = fontReal.deriveFont(Font.BOLD, 14.0f);
+			g2.setFont(fontReal);
+			metrics = g.getFontMetrics(fontReal);		
+			g2.drawString(enthalpy.getNameRefrigerant(), 
+					(float)((xmax-marginx - metrics.getStringBounds(enthalpy.getNameRefrigerant(),g2).getWidth())), 
+					(float)(ymax+marginy/4));
+			
 			// Text
 			fontReal = fontReal.deriveFont(Font.PLAIN, 12.0f);
 			g2.setFont(fontReal);
@@ -242,9 +250,8 @@ public class WinPressTemp {
 			}
 			
 			// Follow the graph based on Eclipse
-			// The Ellipse2D class define an ellipse that is defined by a framing rectangle
-		    g2.setColor(Color.blue);
-		    g2.draw( new Ellipse2D.Double(posX-2, posY-2, 2, 2)); 
+	        g2.setPaint(Color.BLUE);
+	        g2.fill (new Ellipse2D.Double(posX-3/2, posY-3/2, 3, 3));
 		}
 
 		// -------------------------------------------------------

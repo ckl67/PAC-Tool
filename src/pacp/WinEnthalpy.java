@@ -24,15 +24,12 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.JFrame;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
@@ -57,7 +54,6 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JRadioButton;
@@ -82,7 +78,11 @@ public class WinEnthalpy {
 	private JLabel lblFollower;
 	private JRadioButton rdbtnSaturation;
 	private JRadioButton rdbtnNothin;
+	private JTextField textPHP;
+	private JTextField textPBP;
 
+	// Draw elements: lines/points/...
+	private List<ElDraw> eDrawL = new ArrayList<ElDraw>();
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
@@ -190,33 +190,51 @@ public class WinEnthalpy {
 		panelHight.add(panelHight_Hight, BorderLayout.NORTH);
 		panelHight_Hight.setLayout(new BoxLayout(panelHight_Hight, BoxLayout.Y_AXIS));
 
-		JButton btnPHP = new JButton("Pr. - HP");
-		btnPHP.setAlignmentX(Component.CENTER_ALIGNMENT);
-		btnPHP.setMaximumSize(new Dimension(85, 23));
-		btnPHP.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		JLabel lblPHP = new JLabel("P. HP = PK");
+		lblPHP.setAlignmentX(Component.CENTER_ALIGNMENT);
+		lblPHP.setHorizontalAlignment(SwingConstants.LEFT);
+		panelHight_Hight.add(lblPHP);
 
+		textPHP = new JTextField();
+		textPHP.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Remove the PK element
+				for(int i=0;i<eDrawL.size();i++) {
+					if (eDrawL.get(i).getType() == ElDraw._LineHorzInfHP)
+						eDrawL.remove(i);
+				}
+
+				double PK = Double.parseDouble(textPHP.getText());
+				ElDraw edraw = new ElDraw(ElDraw._LineHorzInfHP,Math.log10(PK),panelEnthalpyDrawArea.getXmin(),panelEnthalpyDrawArea.getXmax());
+				eDrawL.add(edraw);
+				panelEnthalpyDrawArea.repaint();
 			}
 		});
-		panelHight_Hight.add(btnPHP);
+		textPHP.setHorizontalAlignment(SwingConstants.RIGHT);
+		textPHP.setText("0");
+		panelHight_Hight.add(textPHP);
+		textPHP.setColumns(10);
 
-		JButton btnPBP = new JButton("Pr. - BP");
-		btnPBP.setAlignmentX(Component.CENTER_ALIGNMENT);
-		btnPBP.setMaximumSize(new Dimension(85, 23));
-		btnPBP.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		JLabel lblPBP = new JLabel("P. BP = P0");
+		lblPBP.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panelHight_Hight.add(lblPBP);
 
-			}
-		});
-		
-		txtPHP = new JTextField();
-		txtPHP.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtPHP.setText("0");
-		panelHight_Hight.add(txtPHP);
-		txtPHP.setColumns(10);
-		panelHight_Hight.add(btnPBP);
-		
 		textPBP = new JTextField();
+		textPBP.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Remove the P0 element
+				for(int i=0;i<eDrawL.size();i++) {
+					if (eDrawL.get(i).getType() == ElDraw._LineHorzInfBP)
+						eDrawL.remove(i);
+				}
+
+				double P0 = Double.parseDouble(textPBP.getText());
+				ElDraw edraw = new ElDraw(ElDraw._LineHorzInfBP,Math.log10(P0),panelEnthalpyDrawArea.getXmin(),panelEnthalpyDrawArea.getXmax());
+				eDrawL.add(edraw);
+				panelEnthalpyDrawArea.repaint();
+
+			}
+		});
 		textPBP.setHorizontalAlignment(SwingConstants.RIGHT);
 		textPBP.setText("0");
 		panelHight_Hight.add(textPBP);
@@ -295,52 +313,7 @@ public class WinEnthalpy {
 		panelBottom_Bottom.add(btnClear);
 	}
 
-	// ===================================================================================================================
-	//										DEFINITION OF THE DRAW ELEMENTS
-	// ===================================================================================================================
 
-	private static final int _Point = 0;
-	private static final int _Line = 1;
-
-    /**
-     * Element to draw: Is an object which stores the information to draw
-     */
-    private class ElDraw {
-        int type;  		// type of draw : Line, Point.
-        double x1,y1;     
-		double x2,y2;
-
-        public ElDraw(int type, double x1, double y1) {
-        	this.type = type;
-        	this.x1=x1;
-        	this.y1=y1;
-        }
-
-        public int getType() {
-			return type;
-		}
-
-		public double getX1() {
-			return x1;
-		}
-
-		public double getY1() {
-			return y1;
-		}
-
-		public double getX2() {
-			return x2;
-		}
-
-		public double getY2() {
-			return y2;
-		}
-    }
-    
-    private List<ElDraw> eDrawL = new ArrayList<ElDraw>();
-    private JTextField txtPHP;
-    private JTextField textPBP;
-    
 	// ===================================================================================================================
 	//												JPANEL Display
 	// ===================================================================================================================
@@ -388,6 +361,8 @@ public class WinEnthalpy {
 		private double curveFollowerX;
 		private double curveFollowerY;
 
+
+
 		// -------------------------------------------------------
 		// 						CONSTRUCTOR
 		// -------------------------------------------------------
@@ -406,9 +381,10 @@ public class WinEnthalpy {
 		// -------------------------------------------------------
 
 		/** 
-		 * Clean the screen
+		 * Clean the screen + Clear the list of the draw elements
 		 */
 		public void clean() {
+			eDrawL.clear();
 			repaint();
 		}
 
@@ -615,37 +591,22 @@ public class WinEnthalpy {
 			}
 
 			// -----------------------------------
-			// Draw All elements
+			// Draw All Elements
 			// -----------------------------------
 			for(int i=0;i<eDrawL.size();i++) {
-				if (eDrawL.get(i).getType() == _Point)
-					point(g2,eDrawL.get(i).getX1(),eDrawL.get(i).getY1(),Color.RED);
+				ElDraw.drawElDrawItem(g2, eDrawL.get(i));
 			}
 
-			
 			// -----------------------------------
 			// Follow the graph based on Eclipse
 			// The Ellipse2D class define an ellipse that is defined by a framing rectangle
 			// -----------------------------------
 			g2.setStroke(new BasicStroke(0.03f));
-			point(g2,curveFollowerX,Math.log10(curveFollowerY),Color.BLUE);
-
-			// -----------------------------------
-
-			// -----------------------------------
+			ElDraw.pointYLog(g2,curveFollowerX,Math.log10(curveFollowerY),Color.BLUE);
 
 		}
 
-		public void point(Graphics2D g2, double x,double y, Color color){
-			//Point
-			float rectWidth = 6;
-			float rectHeight = 0.08f;
-			
-	        g2.setPaint(color);
-	        g2.fill (new Ellipse2D.Double(x-rectWidth/2, y-rectHeight/2, rectWidth, rectHeight));
-	        g2.setPaint(Color.black);
- 	
-		}
+
 		// -------------------------------------------------------
 		// 						EVENT LISTNER
 		// -------------------------------------------------------
@@ -659,7 +620,7 @@ public class WinEnthalpy {
 				dragStart.x = xMouse-offset.x;
 				dragStart.y = yMouse-offset.y;
 			} else {
-				ElDraw edraw = new ElDraw(_Point,getHoXm(xMouse),Math.log10(getPoYm(yMouse)));
+				ElDraw edraw = new ElDraw(ElDraw._PointYLog,getHoXm(xMouse),Math.log10(getPoYm(yMouse)));
 				eDrawL.add(edraw);
 				this.repaint();
 			}
@@ -745,5 +706,13 @@ public class WinEnthalpy {
 		// 					GETTER AND SETTER
 		// -------------------------------------------------------
 
+		public double getXmin() {
+			return xmin;
+		}
+
+		public double getXmax() {
+			return xmax;
+		}
+		
 	}
 }
