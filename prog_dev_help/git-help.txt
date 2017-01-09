@@ -1,0 +1,54 @@
+Travailler avec Git
+https://openclassrooms.com/courses/gerez-vos-codes-source-avec-git
+
+
+Pour commencer à travailler avec Git, vous clonez un dépôt existant, 
+C’est-à-dire que vous récupérez tout l’historique des changements d’un projet pour pouvoir travailler dessus
+
+Cloner le dépot PAC-Tool
+L’adresse du dépôt est :
+https://github.com/ckl67/PAC-Tool.git
+
+Pour cloner le dépôt de PAC-Tool il suffit de lancer la commande suivante :
+	git clone https://github.com/ckl67/PAC-Tool.git
+
+Cela va créer un dossier PAC-Tool et y télécharger tous les fichiers source du projet 
+ainsi que l’historique de chacune de leurs modifications !
+
+Le seul dossier un peu particulier créé par Git est un dossier .git 
+(c’est un dossier caché situé à la racine du projet). 
+Il contient l’historique des modifications des fichiers et la configuration de Git pour ce projet.
+Mis à part ce dossier un peu « spécial », vous retrouverez tous les fichiers dans leur dernière version 
+dans le dossier du projet. Ce sont eux que vous modifierez.
+
+Vous avez sur votre disque dur tous les fichiers source du projet et vous pouvez vous amuser à les modifier 
+avec un éditeur de texte (pas de panique, les changements restent sur votre ordinateur, 
+vous ne risquez pas d’envoyer des bêtises et pouvez donc faire toutes les expériences que vous voulez).
+
+Fichiers modifiés 
+==================
+La commande
+	git status
+vous indique les fichiers que vous avez modifiés récemment :
+
+Méthode de travail
+===================
+Lorsqu’on travaille avec Git, on suit en général toujours les étapes suivantes :
+
+1) modifier le code source ;
+2) tester votre programme pour vérifier si cela fonctionne ;
+3) faire un commit pour « enregistrer » les changements et les faire connaître à Git ;
+4) recommencer à partir de l’étape 1 pour une autre modification.
+C’est un ensemble de changements qui permet soit de régler un bug, soit d’ajouter une fonctionnalité.
+
+Modifications
+==============
+Git vous liste tous les fichiers qui ont changé sur le disque. 
+Il peut aussi bien détecter les modifications que les ajouts, les suppressions et les renommages.
+
+Vous pouvez voir concrètement ce que vous avez changé en tapant
+	git diff
+	Pou quitter : q
+	
+	Les lignes ajoutées sont précédées d’un « + » tandis que les lignes supprimées sont précédées d’un « - ». 
+	Normalement les lignes sont colorées et donc faciles à repérer.

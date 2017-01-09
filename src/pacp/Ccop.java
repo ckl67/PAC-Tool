@@ -30,11 +30,11 @@ public class Ccop extends Pac {
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 	public Ccop() {
-		setT0(0.0);
-		setTK(0.0);
-		setH1(0.0);
-		setH2(0.0);
-		setH3(0.0);
+		this.T0= 0.0;
+		this.TK= 0.0;
+		this.H1= 0.0;
+		this.H2= 0.0;
+		this.H3= 0.0;
 	}
 
 	// -------------------------------------------------------
@@ -102,7 +102,7 @@ public class Ccop extends Pac {
 	}
 
 	public void setT0(double t0) {
-		T0 = t0;
+		this.T0 = t0;
 	}
 
 	public double getTK() {
@@ -110,7 +110,7 @@ public class Ccop extends Pac {
 	}
 
 	public void setTK(double tK) {
-		TK = tK;
+		this.TK = tK;
 	}
 
 	public double getH1() {
@@ -118,7 +118,7 @@ public class Ccop extends Pac {
 	}
 
 	public void setH1(double h1) {
-		H1 = h1;
+		this.H1 = h1;
 	}
 
 	public double getH2() {
@@ -126,7 +126,7 @@ public class Ccop extends Pac {
 	}
 
 	public void setH2(double h2) {
-		H2 = h2;
+		this.H2 = h2;
 	}
 
 	public double getH3() {
@@ -134,6 +134,6 @@ public class Ccop extends Pac {
 	}
 
 	public void setH3(double h3) {
-		H3 = h3;
+		this.H3 = h3;
 	}
 }

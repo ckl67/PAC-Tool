@@ -10,10 +10,15 @@ import javax.swing.UnsupportedLookAndFeelException;
 import java.awt.Color;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JCheckBox;
+import javax.swing.JTextField;
 
 public class WinTest {
 
 	private JFrame frame;
+	private JTextField textField;
 
 	public static void main(String[] args) {
 		
@@ -72,5 +77,22 @@ public class WinTest {
 		panel.add(slider);
 		slider.setBorder(null);
 		slider.setBackground(Color.WHITE);
+		
+		JButton btnNewButton = new JButton("New button");
+		btnNewButton.setBounds(29, 91, 89, 23);
+		panel.add(btnNewButton);
+		
+		JLabel lblNewLabel = new JLabel("New label");
+		lblNewLabel.setBounds(165, 95, 46, 14);
+		panel.add(lblNewLabel);
+		
+		JCheckBox chckbxNewCheckBox = new JCheckBox("New check box");
+		chckbxNewCheckBox.setBounds(279, 91, 97, 23);
+		panel.add(chckbxNewCheckBox);
+		
+		textField = new JTextField();
+		textField.setBounds(29, 11, 86, 20);
+		panel.add(textField);
+		textField.setColumns(10);
 	}
 }
