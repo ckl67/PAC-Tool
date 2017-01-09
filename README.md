@@ -1,28 +1,25 @@
-----------
  PAC-Tool
 ----------
-Outil pour Pompe Ã  Chaleur
+Outil pour Pompe à Chaleur
 
+ Définition 
 -------------
- DÃ©finition 
--------------
-Outil qui permet de vÃ©rifier les donnÃ©es contructeur (COP) et de calculer le COP de votre pompe Ã  chaleur Ã  partir de vos mesures.
-Programme Ã©crit en Java.
+Outil qui permet de vérifier les données contructeur (COP) et de calculer le COP de votre pompe à  chaleur à  partir de vos mesures.
+Programme écrit en Java.
 
-----------------
- Chaine DÃ©veloppement
-----------------
-La chaine d'outil pour le dÃ©veloppement est la suivante:
+ Chaine Développement
+-----------------------
+La chaine d'outil pour le développement est la suivante:
 
-Environnement de dÃ©veloppement intÃ©grÃ© / (Integrated Development Environment)
+Environnement de développement intégré / (Integrated Development Environment)
 	Eclipse IDE for Java Developers
 	Version minimale: Neon.1a Release (4.6.1)
 	https://eclipse.org/downloads/
 
-Langage de modÃ©lisation unifiÃ©, Unified Modeling Language (UML) intÃ©grÃ© Ã  Eclipse
+Langage de modélisation unifié, Unified Modeling Language (UML) intégré à  Eclipse
 	ObjectAid
 	http://www.objectaid.com/installation
-	Uniquement les modules ne nÃ©cessitant (pas de licences).
+	Uniquement les modules ne nécessitant (pas de licences).
 	
 Java
 	http://www.oracle.com/technetwork/java/javase/downloads/index.html
@@ -32,17 +29,20 @@ Editeur HTML
 	Par exemple: kompozer-0.7.10-win32
 
 Gestion de versions Git
-	Est intÃ©grÃ© Ã  SourceTree, mais afin de pouvoir crÃ©er une animation montrant l'Ã©volution du dÃ©veloppement
-	Git est nÃ©cessaire en local sous windows
+	Est intégré à  SourceTree, mais afin de pouvoir créer une animation montrant l'évolution du développement
+	Git est nécessaire en local sous windows
 	https://git-scm.com/download/win		
 	
 SourceTree	
-	Client graphique claire et structurÃ©e, compatible avec Git
-	Dans option Git, activer: "Update Embedded Git" afin d'avoir la version intÃ©grÃ©e de Git
+	Client graphique claire et structurée, compatible avec Git
+	Dans option Git, activer: "Update Embedded Git" afin d'avoir la version intégrée de Git
 	https://www.sourcetreeapp.com/
+
+Eclipse (EGit)
+	Git intégré directement à Eclipse
 	
 GitHub 
-	Service Web d'hÃ©bergement et de gestion de dÃ©veloppement de logiciels. 
+	Service Web d'hébergement et de gestion de développement de logiciels. 
 	https://github.com/ckl67/PAC-Tool
 	Projet sous: PAC-Tool
 	
@@ -52,21 +52,21 @@ Gource
 	Generation video: gource -s 1 -f
 	
 Conversion Jar vers Exe
-	Launch4j est une application qui permet de crÃ©er des "lanceurs" (exÃ©cutables Windows classiques 
-	pour des applications dÃ©veloppÃ©es en Java. 
+	Launch4j est une application qui permet de créer des "lanceurs" (exécutables Windows classiques 
+	pour des applications développées en Java. 
 	http://launch4j.sourceforge.net/
 	
 wxMaxima
 	Outil de calcul symbolique.
-	TrÃ¨s utile pour la simplification des expressions mathÃ©matiques
+	Très utile pour la simplification des expressions mathématiques
 	http://andrejv.github.io/wxmaxima/index.html
 
-
-----------------
 Introduction au Java
-----------------
-	Le meilleur livre gratuit que j'ai trouvÃ© pour le Java
-	* http://math.hws.edu/javanotes/
-	Sinon OpenClassRooms est une excellente introduction 
-	* https://openclassrooms.com/courses/apprenez-a-programmer-en-java
-	
+--------------------
+L'un des meilleurs livre gratuit que j'ai trouvé pour le Java
+* http://math.hws.edu/javanotes/
+
+Sinon OpenClassRooms est une excellente introduction 
+* https://openclassrooms.com/courses/apprenez-a-programmer-en-java
+
+
