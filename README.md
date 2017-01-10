@@ -4,11 +4,10 @@ Outil pour Pompe à Chaleur
 
  Définition 
 -------------
-Outil qui permet de vérifier les données contructeur (COP) et de calculer le COP de votre pompe à  chaleur à  partir de vos mesures.
-Programme écrit en Java.
+Outil qui permet de vérifier les données contructeur (COP) et de calculer le COP de votre pompe à  chaleur à  partir de vos mesures. (Programme écrit en Java)
 
- Chaine Développement
------------------------
+ Chaine de Développement
+--------------------------
 La chaine d'outil pour le développement est la suivante:
 
 Environnement de développement intégré / (Integrated Development Environment)
@@ -19,7 +18,7 @@ Environnement de développement intégré / (Integrated Development Environment)
 Langage de modélisation unifié, Unified Modeling Language (UML) intégré à  Eclipse
 	ObjectAid
 	http://www.objectaid.com/installation
-	Uniquement les modules ne nécessitant (pas de licences).
+	Installer uniquement les modules ne nécessitant pas de licences.
 	
 Java
 	http://www.oracle.com/technetwork/java/javase/downloads/index.html

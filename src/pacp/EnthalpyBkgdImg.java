@@ -26,7 +26,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class EnthalpyImage {
+public class EnthalpyBkgdImg {
 	
 	private String enthalpyImageFile;								// Enthalpy image file (.png)
 
@@ -44,7 +44,7 @@ public class EnthalpyImage {
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
-	public EnthalpyImage() {
+	public EnthalpyBkgdImg() {
 		
 		// Image
 		setEnthalpyImageFile("D:/Users/kluges1/workspace/pac-tool/ressources/R22/R22 couleur A4.png");
@@ -96,7 +96,6 @@ public class EnthalpyImage {
 	public void setEnthalpyImageFile(String enthalpyImageFile) {
 		this.enthalpyImageFile = enthalpyImageFile;
 	}
-
 
 	public double getmHOrigine() {
 		return mOrigineH.x;

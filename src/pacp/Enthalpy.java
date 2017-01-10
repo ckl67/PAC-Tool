@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-
 public class Enthalpy {
 
 	/* ----------------
@@ -56,7 +55,7 @@ public class Enthalpy {
 	/* -----------------------------
 	   Enthalpy Image
 	 * ----------------------------*/
-	private EnthalpyImage enthalpyImage;
+	private EnthalpyBkgdImg enthalpyBkgdImg;
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -89,7 +88,7 @@ public class Enthalpy {
 		/* -----------------------------
 		   Enthalpy Image
 		 * ----------------------------*/
-		enthalpyImage = new EnthalpyImage();
+		enthalpyBkgdImg = new EnthalpyBkgdImg();
 
 	}
 
@@ -460,12 +459,12 @@ public class Enthalpy {
 		return hSatMax;
 	}
 	
-	public EnthalpyImage getEnthalpyImage() {
-		return enthalpyImage;
+	public EnthalpyBkgdImg getEnthalpyImage() {
+		return enthalpyBkgdImg;
 	}
 
-	public void setEnthalpyImage(EnthalpyImage enthalpyImage) {
-		this.enthalpyImage = enthalpyImage;
+	public void setEnthalpyImage(EnthalpyBkgdImg enthalpyBkgdImg) {
+		this.enthalpyBkgdImg = enthalpyBkgdImg;
 	}
 
 	

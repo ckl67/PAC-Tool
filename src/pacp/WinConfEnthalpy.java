@@ -48,7 +48,7 @@ public class WinConfEnthalpy {
 	private JTextField textFieldPFinal;
 	private JTextField txtFieldTemperaturePressionFile;
 
-	private EnthalpyImage enthalpyImage;
+	private EnthalpyBkgdImg enthalpyBkgdImg;
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
@@ -57,7 +57,7 @@ public class WinConfEnthalpy {
 	 */
 	public WinConfEnthalpy(Enthalpy vconfEnthalpy) {
 		enthalpy = vconfEnthalpy;
-		enthalpyImage = enthalpy.getEnthalpyImage();
+		enthalpyBkgdImg = enthalpy.getEnthalpyImage();
 		initialize();
 	}
 
@@ -103,7 +103,7 @@ public class WinConfEnthalpy {
 					//System.out.println("You chose to open this file: " + chooser.getSelectedFile().getAbsolutePath());
 					String imagepath=chooser.getSelectedFile().getAbsolutePath();
 					textFieldEnthalpyFilePath.setText(imagepath);
-					enthalpyImage.setEnthalpyImageFile(textFieldEnthalpyFilePath.getText());	
+					enthalpyBkgdImg.setEnthalpyImageFile(textFieldEnthalpyFilePath.getText());	
 					try {
 						if (WinEnthalpy.panelEnthalpyDrawArea.isVisible() ) {
 							WinEnthalpy.panelEnthalpyDrawArea.clean();
@@ -153,7 +153,7 @@ public class WinConfEnthalpy {
 
 		textFieldHOrigine = new JTextField();
 		textFieldHOrigine.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldHOrigine.setText(String.valueOf(enthalpyImage.getiHOrigine()));
+		textFieldHOrigine.setText(String.valueOf(enthalpyBkgdImg.getiHOrigine()));
 		textFieldHOrigine.setToolTipText("");
 		textFieldHOrigine.setBounds(104, 23, 86, 20);
 		panel_1.add(textFieldHOrigine);
@@ -162,8 +162,8 @@ public class WinConfEnthalpy {
 		JButton btnHOrigine = new JButton("Centrer");
 		btnHOrigine.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				enthalpyImage.setlocateOrigineH(true);
-				enthalpyImage.setiHOrigine(Integer.valueOf(textFieldHOrigine.getText()));
+				enthalpyBkgdImg.setlocateOrigineH(true);
+				enthalpyBkgdImg.setiHOrigine(Integer.valueOf(textFieldHOrigine.getText()));
 			}
 		});
 		btnHOrigine.setBounds(104, 53, 89, 23);
@@ -177,7 +177,7 @@ public class WinConfEnthalpy {
 
 		textFieldHFinal = new JTextField();
 		textFieldHFinal.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldHFinal.setText(String.valueOf(enthalpyImage.getiHFinal()));
+		textFieldHFinal.setText(String.valueOf(enthalpyBkgdImg.getiHFinal()));
 		textFieldHFinal.setBounds(368, 23, 86, 20);
 		panel_1.add(textFieldHFinal);
 		textFieldHFinal.setColumns(10);
@@ -185,8 +185,8 @@ public class WinConfEnthalpy {
 		JButton btnHFinal = new JButton("Centrer");
 		btnHFinal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				enthalpyImage.setlocateFinalH(true);
-				enthalpyImage.setiHFinal(Integer.valueOf(textFieldHFinal.getText()));
+				enthalpyBkgdImg.setlocateFinalH(true);
+				enthalpyBkgdImg.setiHFinal(Integer.valueOf(textFieldHFinal.getText()));
 			}
 		});
 		btnHFinal.setBounds(365, 53, 89, 23);
@@ -215,7 +215,7 @@ public class WinConfEnthalpy {
 
 		textFieldPOrigine = new JTextField();
 		textFieldPOrigine.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldPOrigine.setText(String.valueOf(enthalpyImage.getiPOrigine()));
+		textFieldPOrigine.setText(String.valueOf(enthalpyBkgdImg.getiPOrigine()));
 		textFieldPOrigine.setBounds(104, 21, 86, 20);
 		panel_2.add(textFieldPOrigine);
 		textFieldPOrigine.setColumns(10);
@@ -223,8 +223,8 @@ public class WinConfEnthalpy {
 		JButton btnPOrigine = new JButton("Centrer");
 		btnPOrigine.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				enthalpyImage.setlocateOrigineP(true);
-				enthalpyImage.setiPOrigine(Integer.valueOf(textFieldPOrigine.getText()));									
+				enthalpyBkgdImg.setlocateOrigineP(true);
+				enthalpyBkgdImg.setiPOrigine(Integer.valueOf(textFieldPOrigine.getText()));									
 			}
 		});
 		btnPOrigine.setBounds(104, 52, 89, 23);
@@ -238,7 +238,7 @@ public class WinConfEnthalpy {
 
 		textFieldPFinal = new JTextField();
 		textFieldPFinal.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldPFinal.setText(String.valueOf(enthalpyImage.getiPFinal()));
+		textFieldPFinal.setText(String.valueOf(enthalpyBkgdImg.getiPFinal()));
 		textFieldPFinal.setBounds(370, 19, 86, 20);
 		panel_2.add(textFieldPFinal);
 		textFieldPFinal.setColumns(10);
@@ -246,8 +246,8 @@ public class WinConfEnthalpy {
 		JButton btnPFinal = new JButton("Centrer");
 		btnPFinal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				enthalpyImage.setlocateFinalP(true);
-				enthalpyImage.setiPFinal(Integer.valueOf(textFieldPFinal.getText()));
+				enthalpyBkgdImg.setlocateFinalP(true);
+				enthalpyBkgdImg.setiPFinal(Integer.valueOf(textFieldPFinal.getText()));
 			}
 		});
 		btnPFinal.setBounds(367, 49, 89, 23);

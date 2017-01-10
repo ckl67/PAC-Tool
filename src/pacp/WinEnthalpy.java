@@ -71,7 +71,7 @@ public class WinEnthalpy {
 	 * 		INSTANCE VAR
 	 */
 	private Enthalpy enthalpy;
-	private EnthalpyImage enthalpyImage;
+	private EnthalpyBkgdImg enthalpyBkgdImg;
 	
 	private JFrame frame;
 	private JLabel lblMouseCoordinate;
@@ -112,7 +112,7 @@ public class WinEnthalpy {
 	 */
 	public WinEnthalpy(Enthalpy vconfEnthalpy) {
 		enthalpy = vconfEnthalpy;
-		enthalpyImage = enthalpy.getEnthalpyImage();
+		enthalpyBkgdImg = enthalpy.getEnthalpyImage();
 		enthalpy.loadPTFile();
 		enthalpy.loadSatFile();
 		initialize();
@@ -350,7 +350,7 @@ public class WinEnthalpy {
 		 * ----------------------------*/
 		private Enthalpy enthalpy;
 
-		private BufferedImage imgEnthBg;				// Image Background
+		private BufferedImage enthBkgdImg;				// Image Background
 		private float imageAlphaBlure=0;
 
 		private Point offset = new Point(0,0);		// Supplementary Offset
@@ -364,7 +364,7 @@ public class WinEnthalpy {
 		private double xmax = 520;    				// Maximum of the range of value displayed.
 
 		// Pressure 
-		private double ymin = 0.1;  						// Minimum of the range of Pressure value
+		private double ymin = 0.5;  						// Minimum of the range of Pressure value
 		private double ymax = 60;     						// Maximum of the range of Pressure value. 
 		private double log10_ymin = Math.log10(ymin);  		// Minimum of the range of values displayed. --> Math.log10(0.01) = -1
 		private double log10_ymax = Math.log10(ymax);     	// Maximum of the range of value displayed. --> Math.log10(100) = 2
@@ -387,7 +387,7 @@ public class WinEnthalpy {
 		// -------------------------------------------------------
 		public PanelEnthalpie(Enthalpy vconfEnthalpy) {
 			enthalpy = vconfEnthalpy;
-			imgEnthBg = enthalpy.getEnthalpyImage().openEnthalpyImageFile();
+			enthBkgdImg = enthalpy.getEnthalpyImage().openEnthalpyImageFile();
 			setBackground(Color.WHITE);
 
 			addMouseWheelListener(this);
@@ -497,18 +497,32 @@ public class WinEnthalpy {
 
 			// -----------------------------------
 			// Image
+			// Background	--> Panel
 			// -----------------------------------		
-			g2.drawImage(imgEnthBg, 
-					140,2,540,-4,
-					140,0,imgEnthBg.getWidth(),imgEnthBg.getHeight(),
-					null);
+			int refCurveH1x = 140; 
+			int refCurveH2x = 520; 
+			int refCurveP1y = 0;	//Log(1) 
+			int refCurveP2y = 2;    //Log(100) 
 
+			//Zone to consider: Outside of the zone nothing --> be large !! 
+			int iBgH1x = 153;
+			int iBgH2x = 2791;
+			int iBgP1y = 1472;
+			int iBgP2y = 83;
+			
+			g2.drawImage(enthBkgdImg, 
+					refCurveH1x,refCurveP2y,refCurveH2x,-refCurveP1y,
+					iBgH1x,	iBgP2y,	iBgH2x,	iBgP1y,
+					null);
+	
+			
+			
 			float[] scales = { 1f, 1f, 1f, imageAlphaBlure };
 			float[] offsets = new float[4];
 			RescaleOp rop = new RescaleOp(scales, offsets, null);
 
 			/* Draw the image, applying the filter */
-			g2.drawImage(imgEnthBg, rop, -1, -10);
+			g2.drawImage(enthBkgdImg, rop, -1, -10);
 
 			//g2.setTransform(origTransform); // Restore transform
 
@@ -644,7 +658,6 @@ public class WinEnthalpy {
 
 		}
 
-
 		// -------------------------------------------------------
 		// 						EVENT LISTNER
 		// -------------------------------------------------------
@@ -654,7 +667,7 @@ public class WinEnthalpy {
 			int xMouse = evt.getX();
 			int yMouse = evt.getY();
 
-			if (enthalpyImage.islocateOrigineH()) {
+			if (enthalpyBkgdImg.islocateOrigineH()) {
 				
 			}
 			if ((evt.getModifiers() & InputEvent.BUTTON2_MASK) != 0) {
