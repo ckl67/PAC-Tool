@@ -349,6 +349,7 @@ public class WinEnthalpy {
   		      Instance Variables
 		 * ----------------------------*/
 		private Enthalpy enthalpy;
+		private EnthalpyBkgdImg enthalpyBkgdImg;
 
 		private BufferedImage enthBkgdImg;				// Image Background
 		private float imageAlphaBlure=0;
@@ -387,7 +388,9 @@ public class WinEnthalpy {
 		// -------------------------------------------------------
 		public PanelEnthalpie(Enthalpy vconfEnthalpy) {
 			enthalpy = vconfEnthalpy;
-			enthBkgdImg = enthalpy.getEnthalpyImage().openEnthalpyImageFile();
+			enthalpyBkgdImg = enthalpy.getEnthalpyImage();
+
+			enthBkgdImg = enthalpyBkgdImg.openEnthalpyImageFile();
 			setBackground(Color.WHITE);
 
 			addMouseWheelListener(this);
@@ -499,20 +502,10 @@ public class WinEnthalpy {
 			// Image
 			// Background	--> Panel
 			// -----------------------------------		
-			int refCurveH1x = 140; 
-			int refCurveH2x = 520; 
-			int refCurveP1y = 0;	//Log(1) 
-			int refCurveP2y = 2;    //Log(100) 
-
-			//Zone to consider: Outside of the zone nothing --> be large !! 
-			int iBgH1x = 153;
-			int iBgH2x = 2791;
-			int iBgP1y = 1472;
-			int iBgP2y = 83;
-			
+		
 			g2.drawImage(enthBkgdImg, 
-					refCurveH1x,refCurveP2y,refCurveH2x,-refCurveP1y,
-					iBgH1x,	iBgP2y,	iBgH2x,	iBgP1y,
+					enthalpyBkgdImg.getRefCurveH1x(),enthalpyBkgdImg.getRefCurveP2yLog(),enthalpyBkgdImg.getRefCurveH2x(),-enthalpyBkgdImg.getRefCurveP1yLog(),
+					enthalpyBkgdImg.getiBgH1x(),enthalpyBkgdImg.getiBgP2y(),enthalpyBkgdImg.getiBgH2x(),enthalpyBkgdImg.getiBgP1y(),
 					null);
 	
 			
@@ -667,9 +660,6 @@ public class WinEnthalpy {
 			int xMouse = evt.getX();
 			int yMouse = evt.getY();
 
-			if (enthalpyBkgdImg.islocateOrigineH()) {
-				
-			}
 			if ((evt.getModifiers() & InputEvent.BUTTON2_MASK) != 0) {
 				dragStart.x = xMouse-offset.x;
 				dragStart.y = yMouse-offset.y;
