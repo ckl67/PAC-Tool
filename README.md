@@ -28,6 +28,9 @@ Langage de modélisation unifié, Unified Modeling Language (UML) intégré à  Eclip
 	ObjectAid
 	Installer uniquement les modules ne nécessitant pas de licences.
 	http://www.objectaid.com/installation
+	Au niveau Eclipse dans Install New Software
+	Name: ObjectAid UML Explorer
+	URL: http://www.objectaid.com/update
 	
 Editeur HTML
 	Par exemple: kompozer-0.7.10-win32
