@@ -221,7 +221,7 @@ public class WinConfEnthalpy {
 		btnArrH1X_left.setBounds(100, 50, 30, 20);
 		panel_1.add(btnArrH1X_left);
 		
-		BasicArrowButton btnArrH2X_Right = new BasicArrowButton(3);
+		BasicArrowButton btnArrH2X_Right = new BasicArrowButton(BasicArrowButton.EAST);
 		btnArrH2X_Right.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				enthalpyBkgdImg.setiBgH2x(enthalpyBkgdImg.getiBgH2x()- Integer.valueOf(textFieldStepH2X.getText()));
@@ -239,7 +239,7 @@ public class WinConfEnthalpy {
 		btnArrH2X_Right.setBounds(420, 50, 30, 20);
 		panel_1.add(btnArrH2X_Right);
 		
-		BasicArrowButton btnArrH2X_left = new BasicArrowButton(7);
+		BasicArrowButton btnArrH2X_left = new BasicArrowButton(BasicArrowButton.WEST);
 		btnArrH2X_left.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				enthalpyBkgdImg.setiBgH2x(enthalpyBkgdImg.getiBgH2x()+Integer.valueOf(textFieldStepH2X.getText()));
@@ -312,19 +312,72 @@ public class WinConfEnthalpy {
 		lblBar01.setBounds(466, 24, 26, 14);
 		panel_2.add(lblBar01);
 		
-		BasicArrowButton btnArrP1Y_Right = new BasicArrowButton(3);
+		BasicArrowButton btnArrP1Y_Right = new BasicArrowButton(BasicArrowButton.NORTH);
+		btnArrP1Y_Right.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				enthalpyBkgdImg.setiBgP1y(enthalpyBkgdImg.getiBgP1y()+ Integer.valueOf(textFieldStepP1Y.getText()));
+				try {
+					if (WinEnthalpy.panelEnthalpyDrawArea.isVisible()) {
+						WinEnthalpy.panelEnthalpyDrawArea.repaint();
+						System.out.println("repaint");
+					}
+				} catch (NullPointerException e) {
+					// Not present ==> Do nothing !
+				}		
+
+			}
+		});
 		btnArrP1Y_Right.setBounds(160, 50, 30, 20);
 		panel_2.add(btnArrP1Y_Right);
 		
-		BasicArrowButton btnArrP1Y_left = new BasicArrowButton(7);
+		BasicArrowButton btnArrP1Y_left = new BasicArrowButton(BasicArrowButton.SOUTH);
+		btnArrP1Y_left.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {			
+				enthalpyBkgdImg.setiBgP1y(enthalpyBkgdImg.getiBgP1y()- Integer.valueOf(textFieldStepP1Y.getText()));
+				try {
+					if (WinEnthalpy.panelEnthalpyDrawArea.isVisible()) {
+						WinEnthalpy.panelEnthalpyDrawArea.repaint();
+						System.out.println("repaint");
+					}
+				} catch (NullPointerException e) {
+					// Not present ==> Do nothing !
+				}		
+			}
+		});
 		btnArrP1Y_left.setBounds(100, 50, 30, 20);
 		panel_2.add(btnArrP1Y_left);
 		
-		BasicArrowButton btnArrP2Y_Right = new BasicArrowButton(3);
+		BasicArrowButton btnArrP2Y_Right = new BasicArrowButton(BasicArrowButton.NORTH);
+		btnArrP2Y_Right.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				enthalpyBkgdImg.setiBgP2y(enthalpyBkgdImg.getiBgP2y()+ Integer.valueOf(textFieldStepP2Y.getText()));
+				try {
+					if (WinEnthalpy.panelEnthalpyDrawArea.isVisible()) {
+						WinEnthalpy.panelEnthalpyDrawArea.repaint();
+						System.out.println("repaint");
+					}
+				} catch (NullPointerException e) {
+					// Not present ==> Do nothing !
+				}		
+			}
+		});
 		btnArrP2Y_Right.setBounds(420, 50, 30, 20);
 		panel_2.add(btnArrP2Y_Right);
 		
-		BasicArrowButton btnArrP2Y_left = new BasicArrowButton(7);
+		BasicArrowButton btnArrP2Y_left = new BasicArrowButton(BasicArrowButton.SOUTH);
+		btnArrP2Y_left.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				enthalpyBkgdImg.setiBgP2y(enthalpyBkgdImg.getiBgP2y()- Integer.valueOf(textFieldStepP2Y.getText()));
+				try {
+					if (WinEnthalpy.panelEnthalpyDrawArea.isVisible()) {
+						WinEnthalpy.panelEnthalpyDrawArea.repaint();
+						System.out.println("repaint");
+					}
+				} catch (NullPointerException e) {
+					// Not present ==> Do nothing !
+				}		
+			}
+		});
 		btnArrP2Y_left.setBounds(360, 50, 30, 20);
 		panel_2.add(btnArrP2Y_left);
 		

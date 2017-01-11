@@ -10,29 +10,31 @@ Outil qui permet de vérifier les données contructeur (COP) et de calculer le COP
 --------------------------
 La chaine d'outil pour le développement est la suivante:
 
+Java
+	http://www.oracle.com/technetwork/java/javase/downloads/index.html
+	Version minimale: jre8u111
+	Je conseille d'utiliser JDK
+
 Environnement de développement intégré / (Integrated Development Environment)
 	Eclipse IDE for Java Developers
 	Version minimale: Neon.1a Release (4.6.1)
 	https://eclipse.org/downloads/
-	Choisir
-	* Eclipse IDE for Java Developers
-	Plugin
-	* Installation WindowBuilder à travers Marketplace dans Eclipse
+	Choisir: Eclipse IDE for Java Developers
 
+WindowBuilder (Eclipse)
+	Installation WindowBuilder à travers Marketplace dans Eclipse
+	
 Langage de modélisation unifié, Unified Modeling Language (UML) intégré à  Eclipse
 	ObjectAid
-	http://www.objectaid.com/installation
 	Installer uniquement les modules ne nécessitant pas de licences.
+	http://www.objectaid.com/installation
 	
-Java
-	http://www.oracle.com/technetwork/java/javase/downloads/index.html
-	Version minimale: jre8u111
-
 Editeur HTML
 	Par exemple: kompozer-0.7.10-win32
 
 Gestion de versions Git
-	Est intégré à SourceTree, mais afin de pouvoir créer une animation montrant l'évolution du développement
+	Git est intégré à Eclipse, mais je préfère utiliser SourceTree.
+	Git est donc intégré à SourceTree, mais afin de pouvoir créer une animation montrant l'évolution du développement
 	Git est nécessaire en local sous windows
 	https://git-scm.com/download/win		
 	
@@ -58,8 +60,10 @@ Conversion Jar vers Exe
 	Pour avoir une version standalone (Java bundled) il faut que Java soit installé dans un répertoire
 	relatif.
 	Je conseille d'utiliser JDK, et de le copier sous: ...\pac-tool\jar
-	http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
-	
+
+Creation d'un installateur avec Inno.
+	Inno permet de créer un installeur Window
+	http://www.jrsoftware.org/isinfo.php
 	
 wxMaxima
 	Outil de calcul symbolique.
@@ -68,10 +72,8 @@ wxMaxima
 
 Introduction au Java
 --------------------
-L'un des meilleurs livre gratuit que j'ai trouvé pour le Java
-* http://math.hws.edu/javanotes/
-
-Sinon OpenClassRooms est une excellente introduction 
+OpenClassRooms est une excellente introduction au Java
 * https://openclassrooms.com/courses/apprenez-a-programmer-en-java
 
-
+L'un des meilleurs livre gratuit que j'ai trouvé pour le Java
+* http://math.hws.edu/javanotes/

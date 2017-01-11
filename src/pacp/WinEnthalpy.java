@@ -637,7 +637,7 @@ public class WinEnthalpy {
 			// Draw All Elements
 			// -----------------------------------
 			for(int i=0;i<eDrawL.size();i++) {
-				ElDraw.drawElDrawItem(g2, eDrawL.get(i));
+				ElDraw.drawElDrawItem(g2, eDrawL.get(i),zoom);
 			}
 
 			// -----------------------------------

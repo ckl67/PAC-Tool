@@ -85,7 +85,7 @@ public class ElDraw {
 	// 							METHOD
 	// -------------------------------------------------------
 
-	public static void drawElDrawItem(Graphics2D g2, ElDraw elDraw){
+	public static void drawElDrawItem(Graphics2D g2, ElDraw elDraw, double zoom){
 		float rectWidth = 6;
 		float rectHeight = 0.08f;
 
@@ -97,7 +97,7 @@ public class ElDraw {
         if (elDraw.type == _LineHorzInfBP)
         	g2.draw( new Line2D.Double(elDraw.getX2(),elDraw.getY1(),elDraw.getY2(),elDraw.getY1()));			 	
         if (elDraw.type == _PointYLog)
-            g2.fill (new Ellipse2D.Double(elDraw.getX1()-rectWidth/2, elDraw.getY1()-rectHeight/2, rectWidth, rectHeight));
+            g2.fill (new Ellipse2D.Double(elDraw.getX1()-rectWidth/zoom/2, elDraw.getY1()-rectHeight/zoom/2, rectWidth/zoom, rectHeight/zoom));
 		
 	}
 	
