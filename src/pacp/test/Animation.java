@@ -4,6 +4,8 @@ import java.applet.*;
 import java.awt.*; 
 
 public class Animation extends Applet implements Runnable {  
+
+	private static final long serialVersionUID = 1L;
 	Thread runner = null;         //variables de classe 
 	double t; 
 

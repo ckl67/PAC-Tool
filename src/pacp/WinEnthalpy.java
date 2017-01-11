@@ -71,7 +71,6 @@ public class WinEnthalpy {
 	 * 		INSTANCE VAR
 	 */
 	private Enthalpy enthalpy;
-	private EnthalpyBkgdImg enthalpyBkgdImg;
 	
 	private JFrame frame;
 	private JLabel lblMouseCoordinate;
@@ -112,7 +111,6 @@ public class WinEnthalpy {
 	 */
 	public WinEnthalpy(Enthalpy vconfEnthalpy) {
 		enthalpy = vconfEnthalpy;
-		enthalpyBkgdImg = enthalpy.getEnthalpyImage();
 		enthalpy.loadPTFile();
 		enthalpy.loadSatFile();
 		initialize();

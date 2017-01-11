@@ -11,20 +11,16 @@
   <downloadUrl>http://java.com/download</downloadUrl>
   <supportUrl></supportUrl>
   <stayAlive>false</stayAlive>
-  <restartOnCrash>false</restartOnCrash>
+  <restartOnCrash>true</restartOnCrash>
   <manifest></manifest>
   <icon>D:\Users\kluges1\workspace\pac-tool\src\pacp\images\PAC-Tool.ico</icon>
-  <classPath>
-    <mainClass>pacp.Run</mainClass>
-    <cp>.</cp>
-  </classPath>
   <jre>
-    <path>C:\Program Files\Java\jre1.8.0_111</path>
-    <bundledJre64Bit>false</bundledJre64Bit>
+    <path>/jdk1.8.0_111</path>
+    <bundledJre64Bit>true</bundledJre64Bit>
     <bundledJreAsFallback>false</bundledJreAsFallback>
     <minVersion>1.4.0</minVersion>
     <maxVersion></maxVersion>
-    <jdkPreference>preferJre</jdkPreference>
-    <runtimeBits>32</runtimeBits>
+    <jdkPreference>jreOnly</jdkPreference>
+    <runtimeBits>64/32</runtimeBits>
   </jre>
 </launch4jConfig>
