@@ -24,6 +24,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
+import java.util.List;
 
 // ===================================================================================================================
 //										DEFINITION OF THE DRAW ELEMENTS
@@ -49,7 +50,6 @@ public class ElDraw {
 	private double x2,y2;	// Coordinate
 	private Color color;
 	
-
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
@@ -100,7 +100,7 @@ public class ElDraw {
             g2.fill (new Ellipse2D.Double(elDraw.getX1()-rectWidth/zoom/2, elDraw.getY1()-rectHeight/zoom/2, rectWidth/zoom, rectHeight/zoom));
 		
 	}
-	
+		
 	// -------------------------------------------------------
 	// 						METHOD OTHERS
 	// -------------------------------------------------------
