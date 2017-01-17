@@ -14,6 +14,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.Font;
 
 public class WinTest {
 
@@ -91,6 +95,15 @@ public class WinTest {
 		panel.add(chckbxNewCheckBox);
 		
 		textField = new JTextField();
+		textField.setFont(new Font("Tahoma", Font.BOLD, 11));
+		textField.setForeground(Color.BLUE);
+		textField.setBackground(Color.YELLOW);
+		textField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("hello");
+			}
+		});
+		textField.setHorizontalAlignment(SwingConstants.RIGHT);
 		textField.setBounds(29, 11, 86, 20);
 		panel.add(textField);
 		textField.setColumns(10);
