@@ -1186,7 +1186,7 @@ public class WinPrime {
 		// Button Compute
 		// ---------------------------------------------------------------
 		JButton btnComp = new JButton("Calcul");
-		btnComp.setBounds(66, 271, 89, 23);
+		btnComp.setBounds(294, 327, 89, 23);
 		btnComp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				copi.setH1(Double.parseDouble(textFieldH1.getText()));
@@ -1373,24 +1373,24 @@ public class WinPrime {
 		// Image
 		// ---------------------------------------------------------------
 
-		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		lblNewLabel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		lblNewLabel.addMouseListener(new MouseAdapter() {
+		JLabel lblEnthalpyView = new JLabel("New label");
+		lblEnthalpyView.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		lblEnthalpyView.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		lblEnthalpyView.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent arg0) {
 					WinEnthalpy window = new WinEnthalpy(enthalpy);
 					window.WinEnthalpieVisible();
 			}
 		});
-		lblNewLabel.setIcon(new ImageIcon(WinPrime.class.getResource("/pacp/images/enthalpie.jpg")));
-		lblNewLabel.setBounds(233, 11, 150, 100);
-		panelCompCOP.add(lblNewLabel);
+		lblEnthalpyView.setIcon(new ImageIcon(WinPrime.class.getResource("/pacp/images/enthalpie_150.jpg")));
+		lblEnthalpyView.setBounds(233, 11, 150, 100);
+		panelCompCOP.add(lblEnthalpyView);
 
 		// ---------------------------------------------------------------
 		// Carnot Froid
 		// ---------------------------------------------------------------
 		JLabel labelCarnotFroid = new JLabel("Carnot Froid :");
-		labelCarnotFroid.setBounds(212, 138, 75, 14);
+		labelCarnotFroid.setBounds(219, 299, 75, 14);
 		panelCompCOP.add(labelCarnotFroid);
 
 		textFieldCarnotFroid = new JTextField();
@@ -1399,8 +1399,21 @@ public class WinPrime {
 		textFieldCarnotFroid.setText("0");
 		textFieldCarnotFroid.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldCarnotFroid.setColumns(10);
-		textFieldCarnotFroid.setBounds(297, 135, 86, 20);
+		textFieldCarnotFroid.setBounds(304, 296, 86, 20);
 		panelCompCOP.add(textFieldCarnotFroid);
+		
+		JLabel lblMeasurePointView = new JLabel("New label");
+		lblMeasurePointView.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				WinMeasurePoints window = new WinMeasurePoints();
+				window.WinMeasurePointsVisible();
+			}
+		});
+		lblMeasurePointView.setIcon(new ImageIcon(WinPrime.class.getResource("/pacp/images/Cycle_150.PNG")));
+		lblMeasurePointView.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		lblMeasurePointView.setBounds(233, 141, 150, 93);
+		panelCompCOP.add(lblMeasurePointView);
 
 		// ===============================================================================================================
 		//									        PANEL DEFINITION 

@@ -154,7 +154,7 @@ public class WinMeasurePoints {
 
 		frame.setTitle("Points de Mesure");
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(WinEnthalpy.class.getResource("/pacp/images/PAC-Tool_32.png")));
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setBackground(Color.WHITE);
 		frame.setSize(imgWidth+10, imgHeight+40);
 		frame.getContentPane().setLayout(null);
