@@ -23,7 +23,9 @@ import org.json.simple.JSONObject;
 public class Condenser {
 
 	private String name;
-	private double deltaT;
+	private double deltaT;	// Delta temperature in °C
+	private double deltaP;	// Delta pressure in bar = Charge Loss
+
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -31,7 +33,8 @@ public class Condenser {
 
 	public Condenser() {
 		this.name = "Condenseur";
-		this.deltaT  = 0; 	// Condenser Delta temperature in °C	
+		this.deltaT  = 0; 
+		this.deltaP  = 0; 	
 	}
 	
 	// -------------------------------------------------------
@@ -45,6 +48,7 @@ public class Condenser {
 	 */
 	public Refrigerant transfer(Refrigerant vinGas) {
 		vinGas.setT(  vinGas.getT() + deltaT );
+		vinGas.setP(vinGas.getP()+ deltaP);
 		return vinGas;
 	}
 
@@ -57,6 +61,7 @@ public class Condenser {
 		JSONObject ObjComp = new JSONObject();  
 		ObjComp.put("Name", this.name);
 		ObjComp.put("DeltaT", this.deltaT);	
+		ObjComp.put("DeltaP", this.deltaP);	
 		return ObjComp ;
 	}
 	
@@ -67,6 +72,7 @@ public class Condenser {
 	public void setJsonObject(JSONObject jsonObj) {
 		this.name = (String) jsonObj.get("Name");
 		this.deltaT = (double) jsonObj.get("DeltaT");
+		this.deltaP = (double) jsonObj.get("DeltaP");
 	}
 
 	
@@ -91,4 +97,12 @@ public class Condenser {
 		this.deltaT = deltaT;
 	}
 
+	public double getDeltaP() {
+		return deltaP;
+	}
+
+	public void setDeltaP(double deltaP) {
+		this.deltaP = deltaP;
+	}
+	
 }

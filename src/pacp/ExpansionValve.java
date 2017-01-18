@@ -23,8 +23,8 @@ import org.json.simple.JSONObject;
 public class ExpansionValve {
 
 	private String name;
-	private double deltaP;
-	private double deltaT;
+	private double deltaT;	// Delta temperature in °C
+	private double deltaP;	// Delta pressure in bar = Charge Loss
 	
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR

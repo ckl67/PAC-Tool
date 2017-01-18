@@ -60,8 +60,7 @@ public class Pac{
 	/**
 	 * Will simulate a complete PAC cycle (Gaz/Heat Source and Distribution)
 	 * 
-	 * @param GazInjected in :  _COMPRESSOR,_CONDENSER,
-	 * 							_EXPANSIONVALVE or _EVAPORATOR
+	 * @param GazInjected in :  _COMPRESSOR,_CONDENSER, _EXPANSIONVALVE or _EVAPORATOR
 	 * 				The : HeatTransferFluid will always be injected in the circulatuer !! 
 	 */
 	public void PacCycle(int GazInject) {
@@ -261,7 +260,5 @@ public class Pac{
 	public void setFluidCaloD(HeatTransferFluid fluidCaloD) {
 		this.fluidCaloD = fluidCaloD;
 	}
-
-
 
 }

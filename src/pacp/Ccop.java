@@ -97,40 +97,20 @@ public class Ccop extends Pac {
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
 
-	public double getT0() {
-		return T0;
-	}
-
 	public void setT0(double t0) {
 		this.T0 = t0;
-	}
-
-	public double getTK() {
-		return TK;
 	}
 
 	public void setTK(double tK) {
 		this.TK = tK;
 	}
 
-	public double getH1() {
-		return H1;
-	}
-
 	public void setH1(double h1) {
 		this.H1 = h1;
 	}
 
-	public double getH2() {
-		return H2;
-	}
-
 	public void setH2(double h2) {
 		this.H2 = h2;
-	}
-
-	public double getH3() {
-		return H3;
 	}
 
 	public void setH3(double h3) {

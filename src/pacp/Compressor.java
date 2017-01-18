@@ -32,7 +32,7 @@ public class Compressor {
 	private double massFlow;
 	private double voltage;
 	
-	private double deltaP;
+	private double deltaP;	
 	private double deltaT;
 		
 	// -------------------------------------------------------

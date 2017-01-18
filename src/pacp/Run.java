@@ -26,7 +26,7 @@ public class Run {
 	// -------------------------------------------------------
 	// 						STATIC GLOBAL VAR
 	// -------------------------------------------------------
-	public static final String PACTool_Version = "Version Alpha 0.1";
+	public static final String PACTool_Version = "Version Alpha 0.3";
 
 	// -------------------------------------------------------
 	// 						 PAC-TOOL OBJECTS

@@ -345,7 +345,8 @@ public class Test {
 	private static void testHeatDistribution() {
 		System.out.println("TEST HEATDISTRIBUTION");
 
-		HeatSrcDistrCircuit vHeatDistribution = new HeatSrcDistrCircuit(-50);
+		HeatSrcDistrCircuit vHeatDistribution = new HeatSrcDistrCircuit();
+		vHeatDistribution.setDeltaT(-50);
 		System.out.println(vHeatDistribution.getName());
 		
 		HeatTransferFluid vFluid = new HeatTransferFluid(); 
@@ -365,7 +366,8 @@ public class Test {
 	private static void testHeatSource() {
 		System.out.println("TEST HEATSOURCE");
 
-		HeatSrcDistrCircuit vHeatSource = new HeatSrcDistrCircuit(50);
+		HeatSrcDistrCircuit vHeatSource = new HeatSrcDistrCircuit();
+		vHeatSource.setDeltaT(20);
 		
 		HeatTransferFluid vFluid = new HeatTransferFluid(); 
 		
@@ -449,13 +451,13 @@ public class Test {
 		pac.getFluidCaloS().setT(2);
 		pac.getFluidCaloS().setP(0.5);
 		System.out.println("Circuit Source : deltaT=5");
-		pac.getCircuitS().setdeltaT(5);
+		pac.getCircuitS().setDeltaT(5);
 		
 		System.out.println("Fluid Distribution: T=25, P=0.5");
 		pac.getFluidCaloD().setT(25);
 		pac.getFluidCaloD().setP(0.5);
 		System.out.println("Circuit Distribution : deltaT=23");
-		pac.getCircuitD().setdeltaT(23);
+		pac.getCircuitD().setDeltaT(23);
 
 		System.out.println();
 		for (int i=0;i<4;i++) {

@@ -30,24 +30,22 @@ public class Enthalpy {
 	/* ----------------
 	 * Diagram Enthalpy  
 	 * ----------------*/
-	private String nameRefrigerant;									// Name (R22/..)
+	private String nameRefrigerant;					// Name (R22/..)
 
 	/* -----------------------------
 	   Diagram Pressure-Temperature
 	 * ----------------------------*/
 	private String fileTP;							// Data file with : Temperature / Pressure relation
-	private List<Point2D.Double> listTP;				// Coordinate Temperature / Pressure : List
-	private double deltaP;								// Delta pressure absolute / relative
+	private List<Point2D.Double> listTP;			// Coordinate Temperature / Pressure : List
+	private double deltaP;							// Delta pressure absolute / relative
 
 	/* -----------------------------
 	   Diagram Saturation Curve:
 	   Temperature --> Enthalpy  (Liquid / Vapor)  
 	 * ----------------------------*/
-	private double hSatMin,hSatMax;						// H Saturation Zone [hSatMin - hSatMax] --> Computed by reading the file !
-	private double hSatErrLoc;							// H saturation Error Location. --> Computed by reading the file !
-	// let h the value to search in the list
-	// let h0,h1 the nearest H found in the list, 
-	// if h0 and h1 are to faraway of h, it means that the p zone was too narrow 
+	private double hSatMin,hSatMax;					// H Saturation Zone [hSatMin - hSatMax] --> Computed by reading the file !
+	private double hSatErrLoc;						// H saturation Error Location. --> Computed by reading the file !
+
 	private String fileSat;
 	private List<Point2D.Double> listSatHlP;			// Coordinate Temperature / H : List
 	private List<Point2D.Double> listSatHvP;			// Coordinate Temperature / H : List
@@ -77,6 +75,9 @@ public class Enthalpy {
 		/* -----------------------------
 		   Diagram Saturation Curve:
 		   Temperature --> Enthalpy  (Liquid / Vapor)  
+		   		let h the value to search in the list
+				let h0,h1 the nearest H found in the list, 
+				if h0 and h1 are to faraway of h, it means that the p zone was too narrow 
 		 * ----------------------------*/
 		hSatMin=1000;
 		hSatMax=0;

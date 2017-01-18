@@ -221,8 +221,6 @@ public class WinMeasurePoints {
 		// -------------------------------------------------------
 
 
-
-
 		// -------------------------------------------------------
 		// 						PAINT 
 		// -------------------------------------------------------
@@ -261,7 +259,7 @@ public class WinMeasurePoints {
 
 			    // Background Text zone 
 			    g2d.setColor(Color.YELLOW);
-			    g2d.fillRoundRect(x-10, y+20, widthFRRmax+20, heightFRRmax+20,10,10);
+			    g2d.fillRoundRect(x-10, y+20, widthFRRmax+20, heightFRRmax+15,10,10);
 
 			    // Write Text in the zone
 			    g2d.setColor(Color.BLACK);	

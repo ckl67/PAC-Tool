@@ -23,8 +23,8 @@ import org.json.simple.JSONObject;
 public class HeatTransferFluid {
 
 	private String name;
-	private double T;
-	private double P; 
+	private double T;	// Heat Transfer Fluid Temperature in °C
+	private double P; 	// Heat Transfer Fluid Pressure in bar
 	
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -32,8 +32,8 @@ public class HeatTransferFluid {
 	
 	public HeatTransferFluid() {
 		this.name = "Fluide caloporteur";
-		this.T  = 0; 	// Heat Transfer Fluid Temperature in °C	
-		this.P = 0;		// Heat Transfer Fluid Pressure in °C
+		this.T  = 0; 		
+		this.P = 0;		
 	}
 	
 	// -------------------------------------------------------

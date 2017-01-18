@@ -23,14 +23,16 @@ import org.json.simple.JSONObject;
 public class Evaporator {
 
 	private String name;
-	private double deltaT;
+	private double deltaT;  // Delta temperature in °C
+	private double deltaP;	// Delta pressure in bar = Charge Loss 
 	
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 	public Evaporator() {
 		this.name = "Evaporateur";
-		this.deltaT  = 0; 	// Evaporator Delta temperature in °C	
+		this.deltaT  = 0; 		
+		this.deltaP  = 0; 		
 	}
 	
 	// -------------------------------------------------------
@@ -44,6 +46,7 @@ public class Evaporator {
 	 */
 	public Refrigerant transfer(Refrigerant vinGas) {
 		vinGas.setT(  vinGas.getT() + deltaT );
+		vinGas.setP(  vinGas.getP() + deltaP );
 		return vinGas;
 	}
 	
@@ -86,6 +89,14 @@ public class Evaporator {
 
 	public void setDeltaT(double deltaT) {
 		this.deltaT = deltaT;
+	}
+	
+	public double getDeltaP() {
+		return deltaP;
+	}
+
+	public void setDeltaP(double deltaP) {
+		this.deltaP = deltaP;
 	}
 
 }

@@ -24,23 +24,22 @@ import org.json.simple.JSONObject;
 public class HeatSrcDistrCircuit {
 
 	private String name;
-	private double deltaT;
-	
+	private double deltaT;	// Delta temperature in °C
+	private double deltaP;	// Delta pressure in bar = Charge Loss
+
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
+	
+
 	// Constructor
 	public HeatSrcDistrCircuit() {
 		this.name = "Captage Sol";
-		this.deltaT  = 0; 	// Heat Distribution delta temperature in °C	
+		this.deltaT  = 0; 	
+		this.deltaP  = 0; 	
 	}
 
-	public HeatSrcDistrCircuit(double temp) {
-		this.name = "Captage Sol";
-		this.deltaT  = temp; 	// Heat Distribution delta temperature in °C	
-	}
-	
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
@@ -52,6 +51,7 @@ public class HeatSrcDistrCircuit {
 	 */
 	public HeatTransferFluid transfer(HeatTransferFluid vFluid) {
 		vFluid.setT(  vFluid.getT() + deltaT );
+		vFluid.setP(  vFluid.getP() + deltaP );
 		return vFluid;
 	}
 
@@ -64,6 +64,7 @@ public class HeatSrcDistrCircuit {
 		JSONObject ObjComp = new JSONObject();  
 		ObjComp.put("Name", this.name);
 		ObjComp.put("DeltaT", this.deltaT);	
+		ObjComp.put("DeltaP", this.deltaP);	
 		return ObjComp ;
 	}
 	
@@ -74,6 +75,7 @@ public class HeatSrcDistrCircuit {
 	public void setJsonObject(JSONObject jsonObj) {
 		this.name = (String) jsonObj.get("Name");
 		this.deltaT = (double) jsonObj.get("DeltaT");
+		this.deltaP = (double) jsonObj.get("DeltaP");
 	}
 
 	
@@ -90,11 +92,20 @@ public class HeatSrcDistrCircuit {
 		this.name = name;
 	}
 	
-	public double getdeltaT() {
+	public double getDeltaT() {
 		return deltaT;
 	}
-	public void setdeltaT(double deltaT) {
+
+	public void setDeltaT(double deltaT) {
 		this.deltaT = deltaT;
 	}
 
+	public double getDeltaP() {
+		return deltaP;
+	}
+
+	public void setDeltaP(double deltaP) {
+		this.deltaP = deltaP;
+	}
+	
 }

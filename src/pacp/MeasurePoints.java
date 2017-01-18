@@ -38,6 +38,7 @@ public class MeasurePoints {
 		this.value = value;
 		this.unity = unity;
 	}
+	
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
@@ -75,7 +76,6 @@ public class MeasurePoints {
 	public String getUnity() {
 		return unity;
 	}
-
 
 	public void setUnity(String unity) {
 		this.unity = unity;
