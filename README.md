@@ -50,11 +50,26 @@ GitHub
 	Service Web d'hébergement et de gestion de développement de logiciels. 
 	https://github.com/ckl67/PAC-Tool
 	Projet sous: PAC-Tool
+
+ffmpeg
+	converteur video
+	Après installation modifier variable d'environnement pour pointer sur ffmpeg
+	https://ffmpeg.zeranoe.com/builds/
 	
 Gource
 	Outil d'animation du projet
 	http://gource.io/#
-	Generation video: gource -s 1 -f
+	Generation video: gource -s 1 -f 
+	Ne fonctionne pas ..
+	
+	Convert to file
+	gource -1024x768 --stop-position 1.0 --highlight-all-users --hide-filenames --seconds-per-day 5 --output-framerate 60 --output-ppm-stream output.ppm
+	ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i output.ppm  -vcodec wmv1 -r 60 -qscale 0 out.wmv
+	
+	ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i output.ppm -vcodec libvpx -fpre "C:\\Program Files\\ffmpeg\\presets\\libvpx-360p.ffpreset" gource.avi
+	
+	
+
 	
 Conversion Jar vers Exe
 	Launch4j est une application qui permet de créer des "lanceurs" (exécutables Windows classiques 

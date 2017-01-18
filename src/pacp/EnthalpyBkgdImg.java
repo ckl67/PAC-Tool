@@ -24,6 +24,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.json.simple.JSONObject;
+
 public class EnthalpyBkgdImg {
 	
 	// Enthalpy image file (.png)
@@ -41,8 +43,7 @@ public class EnthalpyBkgdImg {
 	private int iBgH2x;
 	private int iBgP1y;
 	private int iBgP2y;
-	
-	
+		
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
@@ -83,6 +84,42 @@ public class EnthalpyBkgdImg {
 		}
 		return image;
 	}
+	
+	/**
+	 * Return the JSON data
+	 * @return : JSONObject
+	 */
+	@SuppressWarnings("unchecked")
+	public JSONObject getJsonObject() {
+		JSONObject ObjComp = new JSONObject();  
+		ObjComp.put("EnthalpyImageFile", this.enthalpyImageFile);
+		ObjComp.put("refCurveH1x", this.refCurveH1x);	
+		ObjComp.put("refCurveH2x", this.refCurveH2x);	
+		ObjComp.put("refCurveP1y", this.refCurveP1y);	
+		ObjComp.put("refCurveP2y", this.refCurveP2y);	
+		ObjComp.put("iBgH1x", this.iBgH1x);	
+		ObjComp.put("iBgH2x", this.iBgH2x);	
+		ObjComp.put("iBgP1y", this.iBgP1y);	
+		ObjComp.put("iBgP2y", this.iBgP2y);	
+		return ObjComp ;
+	}
+	
+	/**
+	 * Set Class with the element coming from a the JSON object
+	 * @param jsonObj : JSON Object
+	 */
+	public void setJsonObject(JSONObject jsonObj) {
+		this.enthalpyImageFile = (String) jsonObj.get("enthalpyImageFile");
+		this.refCurveH1x = (int) jsonObj.get("refCurveH1x");
+		this.refCurveH2x = (int) jsonObj.get("refCurveH2x");
+		this.refCurveP1y = (int) jsonObj.get("refCurveP1y");
+		this.refCurveP2y = (int) jsonObj.get("refCurveP2y");
+		this.iBgH1x = (int) jsonObj.get("iBgH1x");
+		this.iBgH2x = (int) jsonObj.get("iBgH2x");
+		this.iBgP1y = (int) jsonObj.get("iBgP1y");
+		this.iBgP2y = (int) jsonObj.get("iBgP2y");
+	}
+
 	
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER

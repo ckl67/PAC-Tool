@@ -20,23 +20,29 @@ package pacp;
 
 public class MeasurePoints {
 	
+	/* ----------------------------------------
+	 *  	STATIC GLOBAL VAR PUBLIC
+	 * ---------------------------------------- */	
 	private String name;
 	private int x;
 	private int y;
 	private String definition;
 	private double value;
 	private String unity;
+	private int group; 
 	
+
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public MeasurePoints(String name, int x, int y,String definition,double value, String unity) {
+	public MeasurePoints(String name, int x, int y,String definition,double value, String unity, int group) {
 		this.name = name;
 		this.x = x;
 		this.y=y;
 		this.definition=definition;
 		this.value = value;
 		this.unity = unity;
+		this.group = group;	//HP or BP
 	}
 	
 	// -------------------------------------------------------
@@ -72,13 +78,16 @@ public class MeasurePoints {
 		this.value = value;
 	}
 
-
 	public String getUnity() {
 		return unity;
 	}
 
 	public void setUnity(String unity) {
 		this.unity = unity;
+	}
+
+	public int getGroup() {
+		return group;
 	}
 
 }

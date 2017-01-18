@@ -1,3 +1,21 @@
+/*
+ * - PAC-Tool - 
+ * Tool for understanding basics and computation of PAC (Pompe à Chaleur)
+ * Copyright (C) 2016 christian.klugesherz@gmail.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License (version 2)
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package pacp;
 
 import java.awt.BasicStroke;
@@ -8,9 +26,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.InputEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
@@ -27,7 +45,7 @@ import javax.swing.JPanel;
 // ===================================================================================================================
 // ===================================================================================================================
 
-public class PanelEnthalpy extends JPanel implements MouseWheelListener, MouseListener, MouseMotionListener {
+public class PanelEnthalpy extends JPanel {
 
 	private static final long serialVersionUID = 1L;	
 
@@ -63,7 +81,7 @@ public class PanelEnthalpy extends JPanel implements MouseWheelListener, MouseLi
 	private double gridUnitX;				// Grid Enthalpy Step
 	private double gridUnitY;				// Grid Pressure Step, will be modified following the progression 
 
-	
+
 	private double curveFollowerX;			// Curve follower
 
 
@@ -75,7 +93,7 @@ public class PanelEnthalpy extends JPanel implements MouseWheelListener, MouseLi
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public PanelEnthalpy(Enthalpy vconfEnthalpy, List<ElDraw> veDrawL, MouseMotionListener ml) {
+	public PanelEnthalpy(Enthalpy vconfEnthalpy, List<ElDraw> veDrawL) {
 		enthalpy = vconfEnthalpy;
 		enthalpyBkgdImg = enthalpy.getEnthalpyImage();
 
@@ -110,11 +128,50 @@ public class PanelEnthalpy extends JPanel implements MouseWheelListener, MouseLi
 		eDrawL = veDrawL;
 
 		setBackground(Color.WHITE);
-		addMouseWheelListener(this);
-		addMouseListener(this);
-		addMouseMotionListener(this);
-		
-		addMouseMotionListener(ml);
+
+		//	EVENT LISTNER
+		this.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent evt) {
+				int xMouse = evt.getX();
+				int yMouse = evt.getY();
+
+				// Middle
+				if ((evt.getModifiers() & InputEvent.BUTTON2_MASK) != 0) {
+					dragStart.x = xMouse-offset.x;
+					dragStart.y = yMouse-offset.y;
+				} else {
+					if ((evt.getModifiers() & InputEvent.BUTTON1_MASK) != 0) {			
+						ElDraw edraw = new ElDraw(ElDraw._PointYLog,getHoXm(xMouse),Math.log10(getPoYm(yMouse)));
+						eDrawL.add(edraw);
+						repaint();
+					}
+				}
+			}
+		});
+
+		this.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent evt) {
+				if ((evt.getModifiers() & InputEvent.BUTTON2_MASK) != 0) {
+					offset.x = (evt.getX() - dragStart.x);
+					offset.y = (evt.getY() - dragStart.y);
+					repaint();
+				}
+			}
+		} );
+
+
+		this.addMouseWheelListener(new MouseWheelListener() {
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent evt) {
+				zoom -= evt.getPreciseWheelRotation() * .03;
+				if (zoom < 0) zoom = 0;
+				repaint();
+			}
+		} );
+
+
 	}
 
 	// -------------------------------------------------------
@@ -387,72 +444,9 @@ public class PanelEnthalpy extends JPanel implements MouseWheelListener, MouseLi
 
 	}
 
-	// -------------------------------------------------------
-	// 						EVENT LISTNER
-	// -------------------------------------------------------
 
-	// Mouse pressed : Left / Middle / Right
-	@Override
-	public void mousePressed(MouseEvent evt) {
-		int xMouse = evt.getX();
-		int yMouse = evt.getY();
 
-		// Middle
-		if ((evt.getModifiers() & InputEvent.BUTTON2_MASK) != 0) {
-			dragStart.x = xMouse-offset.x;
-			dragStart.y = yMouse-offset.y;
-		} else {
-			if ((evt.getModifiers() & InputEvent.BUTTON1_MASK) != 0) {			
-				ElDraw edraw = new ElDraw(ElDraw._PointYLog,getHoXm(xMouse),Math.log10(getPoYm(yMouse)));
-				eDrawL.add(edraw);
-				this.repaint();
-			}
-		}
-	}
 
-	// Mouse dragged
-	@Override
-	public void mouseDragged(MouseEvent evt) {
-		if ((evt.getModifiers() & InputEvent.BUTTON2_MASK) != 0) {
-			offset.x = (evt.getX() - dragStart.x);
-			offset.y = (evt.getY() - dragStart.y);
-			this.repaint();
-		}
-	}
-
-	// Mouse Wheel moved
-	@Override
-	public void mouseWheelMoved(MouseWheelEvent evt) {
-		zoom -= evt.getPreciseWheelRotation() * .03;
-		if (zoom < 0) zoom = 0;
-		this.repaint();
-	}
-
-	
-
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
-	}
 
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
@@ -480,12 +474,6 @@ public class PanelEnthalpy extends JPanel implements MouseWheelListener, MouseLi
 
 	public void setCurveFollowerY(double curveFollowerY) {
 		this.curveFollowerY = curveFollowerY;
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
