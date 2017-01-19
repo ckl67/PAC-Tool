@@ -25,17 +25,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import org.json.simple.JSONObject;
+
 public class Enthalpy {
 
 	/* ----------------
 	 * Diagram Enthalpy  
 	 * ----------------*/
-	private String nameRefrigerant;					// Name (R22/..)
+	private String nameRefrigerant;			// Name (R22/..)
+	private double xHmin;  					//  Enthalpy Minimum of the range of values displayed.
+	private double xHmax;    				//  Enthalpy Maximum of the range of value displayed.
+
+	private double yPmin;  					// Pressure Minimum of the range of Pressure value
+	private double yPmax;     				// Pressure Maximum of the range of Pressure value. 
+
 
 	/* -----------------------------
 	   Diagram Pressure-Temperature
 	 * ----------------------------*/
-	private String fileTP;							// Data file with : Temperature / Pressure relation
+	private String fileNameTP;						// Data file with : Temperature / Pressure relation
 	private List<Point2D.Double> listTP;			// Coordinate Temperature / Pressure : List
 	private double deltaP;							// Delta pressure absolute / relative
 
@@ -46,7 +54,7 @@ public class Enthalpy {
 	private double hSatMin,hSatMax;					// H Saturation Zone [hSatMin - hSatMax] --> Computed by reading the file !
 	private double hSatErrLoc;						// H saturation Error Location. --> Computed by reading the file !
 
-	private String fileSat;
+	private String fileNameSAT;
 	private List<Point2D.Double> listSatHlP;			// Coordinate Temperature / H : List
 	private List<Point2D.Double> listSatHvP;			// Coordinate Temperature / H : List
 
@@ -62,13 +70,17 @@ public class Enthalpy {
 		/* ----------------
 		 * Diagram Enthalpy  
 		 * ----------------*/
-		// Name Refrigerant
 		setNameRefrigerant("R22");
+		xHmin = 140;  				
+		xHmax = 520;    				
 
+		yPmin = 0.5;  
+		yPmax = 60;    
+		
 		/* -----------------------------
 		   Diagram Pressure-Temperature
 		 * ----------------------------*/
-		setFileTP("D:/Users/kluges1/workspace/pac-tool/ressources/R22/P2T_R22.txt");
+		setFileNameTP("D:/Users/kluges1/workspace/pac-tool/ressources/R22/P2T_R22.txt");
 		setlistTP(new ArrayList<Point2D.Double>());
 		deltaP = 0.0;
 
@@ -82,7 +94,7 @@ public class Enthalpy {
 		hSatMin=1000;
 		hSatMax=0;
 		hSatErrLoc = 0;
-		setFileSat("D:/Users/kluges1/workspace/pac-tool/ressources/R22/SaturationCurve_R22.txt");
+		setFileNameSAT("D:/Users/kluges1/workspace/pac-tool/ressources/R22/SaturationCurve_R22.txt");
 		setlistSatHlP(new ArrayList<Point2D.Double>());
 		setlistSatHvP(new ArrayList<Point2D.Double>());
 
@@ -93,7 +105,6 @@ public class Enthalpy {
 
 	}
 
-
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
@@ -103,7 +114,7 @@ public class Enthalpy {
 	 * Will fill the : setlistSatHlP / setlistSatHvP list
 	 */
 	public void loadSatFile() {
-		File file = new File (fileSat);
+		File file = new File (fileNameSAT);
 		Scanner sken = null;
 		try {
 			sken = new Scanner (file);
@@ -155,7 +166,7 @@ public class Enthalpy {
 	 * Will fill the : listTP list
 	 */
 	public void loadPTFile() {
-		File file = new File (fileTP);
+		File file = new File (fileNameTP);
 
 		Scanner sken = null;
 		try {
@@ -401,15 +412,56 @@ public class Enthalpy {
 	}
 
 	// -------------------------------------------------------
+	// 							JSON
+	// -------------------------------------------------------
+
+	/**
+	 * Return the JSON data
+	 * @return : JSONObject
+	 */
+	@SuppressWarnings("unchecked")
+	public JSONObject getJsonObject() {
+		JSONObject jsonObj = new JSONObject();  
+		jsonObj.put("nameRefrigerant", this.nameRefrigerant);
+		jsonObj.put("xHmin", this.xHmin);	
+		jsonObj.put("xHmax", this.xHmax);	
+		jsonObj.put("yPmin", this.yPmin);	
+		jsonObj.put("yPmax", this.yPmax);	
+		jsonObj.put("fileNameTP", this.fileNameTP);	
+		jsonObj.put("deltaP", this.deltaP);	
+		jsonObj.put("fileNameSAT", this.fileNameSAT);	
+		jsonObj.put("enthalpyBkgdImg", enthalpyBkgdImg.getJsonObject());	
+		return jsonObj ;
+	}
+	
+	/**
+	 * Set Class with the element coming from a the JSON object
+	 * @param jsonObj : JSON Object
+	 */
+	public void setJsonObject(JSONObject jsonObj) {
+		this.nameRefrigerant = (String) jsonObj.get("nameRefrigerant");
+		this.xHmin = (double) jsonObj.get("xHmin");
+		this.xHmax = (double) jsonObj.get("xHmax");
+		this.yPmin = (double) jsonObj.get("yPmin");
+		this.yPmax = (double) jsonObj.get("yPmax");
+		this.fileNameTP = (String) jsonObj.get("fileNameTP");
+		this.deltaP = (double) jsonObj.get("deltaP");
+		this.fileNameSAT = (String) jsonObj.get("fileNameSAT");
+		enthalpyBkgdImg.setJsonObject(jsonObj); 
+	}
+
+	
+	
+	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
 
-	public String getFileTP() {
-		return fileTP;
+	public String getFileNameTP() {
+		return fileNameTP;
 	}
 
-	public void setFileTP(String fileTP) {
-		this.fileTP = fileTP;
+	public void setFileNameTP(String fileNameTP) {
+		this.fileNameTP = fileNameTP;
 	}
 
 	public List<Point2D.Double> getlistTP() {
@@ -420,12 +472,12 @@ public class Enthalpy {
 		this.listTP = listTP;
 	}
 
-	public String getFileSat() {
-		return fileSat;
+	public String getFileNameSAT() {
+		return fileNameSAT;
 	}
 
-	public void setFileSat(String fileSat) {
-		this.fileSat = fileSat;
+	public void setFileNameSAT(String fileNameSAT) {
+		this.fileNameSAT = fileNameSAT;
 	}
 
 	public List<Point2D.Double> getlistSatHlP() {
@@ -460,12 +512,60 @@ public class Enthalpy {
 		return hSatMax;
 	}
 	
-	public EnthalpyBkgdImg getEnthalpyImage() {
+	public EnthalpyBkgdImg getEnthalpyBkgImage() {
 		return enthalpyBkgdImg;
 	}
 
-	public void setEnthalpyImage(EnthalpyBkgdImg enthalpyBkgdImg) {
+	public void setEnthalpyBkgImage(EnthalpyBkgdImg enthalpyBkgdImg) {
 		this.enthalpyBkgdImg = enthalpyBkgdImg;
+	}
+
+	public double getxHmin() {
+		return xHmin;
+	}
+
+
+	public void setxHmin(double xHmin) {
+		this.xHmin = xHmin;
+	}
+
+
+	public double getxHmax() {
+		return xHmax;
+	}
+
+
+	public void setxHmax(double xHmax) {
+		this.xHmax = xHmax;
+	}
+
+
+	public double getyPmin() {
+		return yPmin;
+	}
+
+
+	public void setyPmin(double yPmin) {
+		this.yPmin = yPmin;
+	}
+
+
+	public double getyPmax() {
+		return yPmax;
+	}
+
+
+	public void setyPmax(double yPmax) {
+		this.yPmax = yPmax;
+	}
+
+	public double getDeltaP() {
+		return deltaP;
+	}
+
+
+	public void setDeltaP(double deltaP) {
+		this.deltaP = deltaP;
 	}
 
 	

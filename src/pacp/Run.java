@@ -29,21 +29,14 @@ public class Run {
 	public static final String PACTool_Version = "Version Alpha 0.3";
 
 	// -------------------------------------------------------
-	// 						 PAC-TOOL OBJECTS
-	// -------------------------------------------------------
-	// Pac
-	private static Pac pac = new Pac();
-
-	// Compute COP measure
-	private static Ccop cop = new Ccop();
-	
-	// Enthalpy Feature
-	private static Enthalpy enthalpy = new Enthalpy();
-	
-	// -------------------------------------------------------
 	// 							MAIN
 	// -------------------------------------------------------
 	public static void main(String[] args){
+		
+		Pac pac = new Pac();					// Pac
+		Ccop cop = new Ccop();					// Compute COP measure
+		Enthalpy enthalpy = new Enthalpy();		// Enthalpy Feature
+		
 		WinPrime window = new WinPrime(pac, cop, enthalpy);
 		window.WinPrimeVisible();
 	}

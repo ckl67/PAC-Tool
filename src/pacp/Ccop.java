@@ -18,7 +18,7 @@
  */
 package pacp;
 
-public class Ccop extends Pac {
+public class Ccop  {
 
 	private double T0;
 	private double TK;
@@ -91,7 +91,6 @@ public class Ccop extends Pac {
 		}
 		return result;		
 	}
-
 
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER

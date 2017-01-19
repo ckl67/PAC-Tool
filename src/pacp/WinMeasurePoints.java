@@ -45,7 +45,6 @@ import javax.imageio.ImageIO;
 
 public class WinMeasurePoints {
 
-	private static int _GROUP_NO = 0;
 	private static int _GROUP_BP = 1;
 	private static int _GROUP_HP = 2;
 	private static int _GROUP_HEAT = 3;
@@ -207,7 +206,7 @@ public class WinMeasurePoints {
 			public void actionPerformed(ActionEvent arg0) {
 				int id = getIdNearest((int)textField.getX(),(int)textField.getY());
 				measurePL.get(id).setValue(Double.valueOf(textField.getText()));
-				// Type of Group of selected point, determine pressure
+				// Type of Group of selected point, determine pressure and H
 				double pv = 0;
 				if (measurePL.get(id).getGroup() == _GROUP_HP) {
 					pv =measurePL.get(getIdForHP()).getValue();

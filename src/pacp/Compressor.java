@@ -68,6 +68,10 @@ public class Compressor {
 		vinGas.setP(vinGas.getP()+ deltaP);
 		return vinGas;
 	}
+
+	// -------------------------------------------------------
+	// 							JSON
+	// -------------------------------------------------------
 	
 	/**
 	 * Return the Compressor JSON data

@@ -52,17 +52,21 @@ public class Condenser {
 		return vinGas;
 	}
 
+	// -------------------------------------------------------
+	// 							JSON
+	// -------------------------------------------------------
+
 	/**
 	 * Return the JSON data
 	 * @return : JSONObject
 	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
-		JSONObject ObjComp = new JSONObject();  
-		ObjComp.put("Name", this.name);
-		ObjComp.put("DeltaT", this.deltaT);	
-		ObjComp.put("DeltaP", this.deltaP);	
-		return ObjComp ;
+		JSONObject jsonObj = new JSONObject();  
+		jsonObj.put("Name", this.name);
+		jsonObj.put("DeltaT", this.deltaT);	
+		jsonObj.put("DeltaP", this.deltaP);	
+		return jsonObj ;
 	}
 	
 	/**
@@ -75,7 +79,6 @@ public class Condenser {
 		this.deltaP = (double) jsonObj.get("DeltaP");
 	}
 
-	
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------

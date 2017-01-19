@@ -52,6 +52,10 @@ public class Dehydrator {
 		return vinGas;
 	}
 
+	// -------------------------------------------------------
+	// 							JSON
+	// -------------------------------------------------------
+
 	/**
 	 * Return the JSON data
 	 * @return : JSONObject
@@ -75,7 +79,6 @@ public class Dehydrator {
 		this.deltaP = (double) jsonObj.get("DeltaP");
 	}
 
-	
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------

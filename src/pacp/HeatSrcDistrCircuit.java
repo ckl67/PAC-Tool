@@ -31,8 +31,6 @@ public class HeatSrcDistrCircuit {
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
-	
-
 	// Constructor
 	public HeatSrcDistrCircuit() {
 		this.name = "Captage Sol";
@@ -54,6 +52,10 @@ public class HeatSrcDistrCircuit {
 		vFluid.setP(  vFluid.getP() + deltaP );
 		return vFluid;
 	}
+	
+	// -------------------------------------------------------
+	// 							JSON
+	// -------------------------------------------------------
 
 	/**
 	 * Return the JSON data
@@ -77,7 +79,6 @@ public class HeatSrcDistrCircuit {
 		this.deltaT = (double) jsonObj.get("DeltaT");
 		this.deltaP = (double) jsonObj.get("DeltaP");
 	}
-
 	
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER

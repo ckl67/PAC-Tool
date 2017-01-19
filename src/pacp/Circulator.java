@@ -86,6 +86,39 @@ public class Circulator {
 		this.currentL.clear();
 	}
 
+	// -------------------------------------------------------
+	// 							JSON
+	// -------------------------------------------------------
+	//	Squiggly brackets {} act as containers  
+	//	Names and values are separated by a colon(:) 	--> put
+	//  Square brackets[] represents arrays.			--> add
+	//  {  "Planet": "Earth" , "Countries": [  { "Name": "India", "Capital": "Delhi"}, { "Name": "France", "Major": "Paris" } ]  }  
+	// -------------------------------------------------------
+
+	/**
+	 * Construct the JSON data
+	 * @return : JSONObject
+	 *      {"Features":[{"Current":0.91,"Power":190},{"Current".....
+	 */
+	@SuppressWarnings("unchecked")
+	public JSONObject getJsonObject() {
+		JSONObject jsonObj = new JSONObject();  
+		JSONArray ObjFeatureL = new JSONArray();
+
+		jsonObj.put("Name", this.name);
+		jsonObj.put("Voltage", this.voltage);
+
+		for(int i=0; i< currentL.size();i++) {
+			JSONObject ObjFeature = new JSONObject();  
+			ObjFeature.put("Current", this.currentL.get(i));
+			ObjFeature.put("Power", this.powerL.get(i));
+			ObjFeature.put("RotatePerMinutes", this.rotatePerMinutesL.get(i));
+			ObjFeatureL.add(ObjFeature);
+		}
+		jsonObj.put("Features", ObjFeatureL);
+		return jsonObj;
+	}
+
 	/**
 	 * Set Class with the element coming from a the JSON object
 	 * @param jsonObj : JSON Object
@@ -107,32 +140,7 @@ public class Circulator {
 			this.currentL.add((double)jsonObjectL2.get("Current"));
 		}
 	}
-
-	/**
-	 * Return (after to have fill the class), the Circulator's JSON data
-	 * @return : JSONObject
-	 *      {"Features":[{"Current":0.91,"Power":190},{"Current".....
-	 */
-	@SuppressWarnings("unchecked")
-	public JSONObject getJsonObject() {
-		JSONObject ObjCirculator = new JSONObject();  
-		JSONObject ObjFeature;
-		JSONArray ObjFeatureL = new JSONArray();
-
-		ObjCirculator.put("Name", this.name);
-		ObjCirculator.put("Voltage", this.voltage);
-
-		for(int i=0; i< currentL.size();i++) {
-			ObjFeature = new JSONObject();  
-			ObjFeature.put("Current", this.currentL.get(i));
-			ObjFeature.put("Power", this.powerL.get(i));
-			ObjFeature.put("RotatePerMinutes", this.rotatePerMinutesL.get(i));
-			ObjFeatureL.add(ObjFeature);
-		}
-		ObjCirculator.put("Features", ObjFeatureL);
-		return ObjCirculator;
-	}
-
+	
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------

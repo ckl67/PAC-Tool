@@ -123,6 +123,8 @@ public class WinPrime {
 	public WinPrime(Pac paci, Ccop copi, Enthalpy enthalpyi) {
 		enthalpy = enthalpyi;
 		pacl.add(paci);	
+
+		// Create Window
 		initialize(paci,copi);
 		fillCompressorTexField(paci.getCompressor());
 		
@@ -303,13 +305,25 @@ public class WinPrime {
 						e.printStackTrace();
 					}  
 
-					//System.out.println("READ JSON object to file");  
-					//System.out.println("-----------------------");  
-					//System.out.print(jsonObjectR);  
+					System.out.println("READ JSON object to file");  
+					System.out.println("-----------------------");  
+					System.out.print(jsonObjectR);  
 
 					JSONArray jsonObjectCompressorL = (JSONArray) jsonObjectR.get("Compressor");
 					JSONObject jsonObjectCompressorn;
 					JSONObject jsonObjectCfg = (JSONObject) jsonObjectR.get("Cfg");
+					JSONObject jObjEBImg = (JSONObject) jsonObjectR.get("EnthalpyBkgdImg");
+
+					
+					EnthalpyBkgdImg vEnthalpyBkgdImg;
+					vEnthalpyBkgdImg = enthalpy.getEnthalpyBkgImage();
+					
+					vEnthalpyBkgdImg.setJsonObject(jObjEBImg);
+					
+					System.out.println(vEnthalpyBkgdImg.getEnthalpyImageFile());
+					System.out.println(vEnthalpyBkgdImg.getiBgH1x());
+
+					System.exit(0);
 
 					// Read Configuration & Preferences
 					long nbCompressorList = (long) jsonObjectCfg.get("nbCompressorList");
@@ -358,25 +372,40 @@ public class WinPrime {
 			@SuppressWarnings("unchecked")
 			public void actionPerformed(ActionEvent arg0) {
 
-				// Create JSON Compressor list
-				JSONArray listOfCompressor = new JSONArray();
-				JSONObject ObjCompressor = new JSONObject();  
+				// Creation of a JSON object which will contain all configuration to save
+					// Squiggly brackets{} act as containers
+					// Square brackets [] represents arrays.
+					// Names and values are separated by a colon:
+					// Array elements are separated by commas
+					
+				// Create PAC Array JSON Object
+				JSONArray jsonObjPacL = new JSONArray();			
 				for(int i=0;i<pacl.size();i++) {
-					ObjCompressor = pacl.get(i).getCompressor().getJsonObject();  
-					listOfCompressor.add(ObjCompressor);
+					JSONObject jsonObj = new JSONObject();
+					jsonObj = pacl.get(i).getJsonObject();
+					jsonObjPacL.add(jsonObj);
 				}
 
-				// Create JSON data for the PAC-Tool : Configuration + preferences 
+				// Create JSON data for the PAC-Tool : 
+				// Configuration + preferences 
 				JSONObject ObjCfg = new JSONObject();  
-				ObjCfg.put("nbCompressorList", pacl.size());
 				ObjCfg.put("checkoxBTU", checkoxBTU.isSelected());
 				ObjCfg.put("chckbxPound", chckbxPound.isSelected());
 				ObjCfg.put("checkoxFaren", checkoxFaren.isSelected());
 
+
+				EnthalpyBkgdImg vEnthalpyBkgdImg;
+				vEnthalpyBkgdImg = enthalpy.getEnthalpyBkgImage();
+				
+				JSONObject jObjEBImg = new JSONObject();
+				jObjEBImg = vEnthalpyBkgdImg.getJsonObject();
+				
+			
 				// Compact in JSON Data: PacTool
 				JSONObject ObjPacTool = new JSONObject();  
-				ObjPacTool.put("Compressor", listOfCompressor);  
+				ObjPacTool.put("PacList", jsonObjPacL);  
 				ObjPacTool.put("Cfg", ObjCfg);  
+				ObjPacTool.put("EnthalpyBkgdImg", jObjEBImg);  
 
 				JFileChooser chooser = new JFileChooser();
 				FileNameExtensionFilter filter = new FileNameExtensionFilter( "Conf. files", "cfg");

@@ -18,6 +18,8 @@
  */
 package pacp;
 
+import org.json.simple.JSONObject;
+
 public class MeasurePoints {
 	
 	/* ----------------------------------------
@@ -38,8 +40,8 @@ public class MeasurePoints {
 	public MeasurePoints(String name, int x, int y,String definition,double value, String unity, int group) {
 		this.name = name;
 		this.x = x;
-		this.y=y;
-		this.definition=definition;
+		this.y = y;
+		this.definition = definition;
 		this.value = value;
 		this.unity = unity;
 		this.group = group;	//HP or BP
@@ -48,6 +50,41 @@ public class MeasurePoints {
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
+
+	// -------------------------------------------------------
+	// 							JSON
+	// -------------------------------------------------------
+
+	/**
+	 * Return the JSON data
+	 * @return : JSONObject
+	 */
+	@SuppressWarnings("unchecked")
+	public JSONObject getJsonObject() {
+		JSONObject ObjComp = new JSONObject();  
+		ObjComp.put("Name", this.name);
+		ObjComp.put("X", this.x);	
+		ObjComp.put("Y", this.y);	
+		ObjComp.put("Definition", this.definition);	
+		ObjComp.put("Value", this.value);	
+		ObjComp.put("Unity", this.unity);	
+		ObjComp.put("Group", this.group);	
+		return ObjComp ;
+	}
+	
+	/**
+	 * Set Class with the element coming from a the JSON object
+	 * @param jsonObj : JSON Object
+	 */
+	public void setJsonObject(JSONObject jsonObj) {
+		this.name = (String) jsonObj.get("Name");
+		this.x = (int) jsonObj.get("X");
+		this.y = (int) jsonObj.get("Y");
+		this.definition = (String) jsonObj.get("Definition");
+		this.value = (double) jsonObj.get("Value");
+		this.unity = (String) jsonObj.get("Unity");
+		this.group = (int) jsonObj.get("Group");
+	}
 
 	
 	// -------------------------------------------------------

@@ -66,13 +66,8 @@ public class PanelEnthalpy extends JPanel {
 	private double zoomx;
 	private double zoomy;					// Zoom factor relative to the figure to display and the panel width
 
-	private double xmin;  					//  Enthalpy Minimum of the range of values displayed.
-	private double xmax;    				//  Enthalpy Maximum of the range of value displayed.
-
-	private double ymin;  					// Pressure Minimum of the range of Pressure value
-	private double ymax;     				// Pressure Maximum of the range of Pressure value. 
-	private double log10_ymin; 				// Pressure Minimum of the range of values displayed. --> Math.log10(0.01) = -1
-	private double log10_ymax;     			// Pressure Maximum of the range of value displayed. --> Math.log10(100) = 2
+	private double log10_yPmin; 			// Pressure Minimum of the range of values displayed. --> Math.log10(0.01) = -1
+	private double log10_yPmax;     		// Pressure Maximum of the range of value displayed. --> Math.log10(100) = 2
 
 	private double marginx;					// Supplementary margin on both sides of the display relative to the scale used !!
 	private double marginy;
@@ -89,15 +84,28 @@ public class PanelEnthalpy extends JPanel {
 
 	private List<ElDraw> eDrawL;			// Draw elements: lines/points/...
 
+	/// Will be recovered by Class Enthalpy
+	private double xHmin;  					//  Enthalpy Minimum of the range of values displayed.
+	private double xHmax;    				//  Enthalpy Maximum of the range of value displayed.
+
+	private double yPmin;  					// Pressure Minimum of the range of Pressure value
+	private double yPmax;     				// Pressure Maximum of the range of Pressure value. 
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 	public PanelEnthalpy(Enthalpy vconfEnthalpy, List<ElDraw> veDrawL) {
 		enthalpy = vconfEnthalpy;
-		enthalpyBkgdImg = enthalpy.getEnthalpyImage();
+		enthalpyBkgdImg = enthalpy.getEnthalpyBkgImage();
+		xHmin = enthalpy.getxHmin();  				
+		xHmax = enthalpy.getxHmax();    				
+		yPmin = enthalpy.getyPmin();  
+		yPmax = enthalpy.getyPmax();    
+		log10_yPmin = Math.log10(yPmin);
+		log10_yPmax = Math.log10(yPmax);
 
 		enthBkgdImg = enthalpyBkgdImg.openEnthalpyImageFile();
+
 		imageAlphaBlur=0;
 
 		offset = new Point(0,0);		
@@ -106,14 +114,6 @@ public class PanelEnthalpy extends JPanel {
 		zoom = 1;					
 		zoomx=1;
 		zoomy=1;					
-
-		xmin = 140;  				
-		xmax = 520;    				
-
-		ymin = 0.5;  
-		ymax = 60;    
-		log10_ymin = Math.log10(ymin);
-		log10_ymax = Math.log10(ymax);
 
 		marginx = 20;
 		marginy = 3;
@@ -237,7 +237,7 @@ public class PanelEnthalpy extends JPanel {
 	 */
 	public double getHoXm(int x) {
 		double xh;
-		xh = (xmin-xmax-2*marginx)/(2*zoom) + x/zoomx + (xmin+xmax)/2 - offset.x ; 
+		xh = (xHmin-xHmax-2*marginx)/(2*zoom) + x/zoomx + (xHmin+xHmax)/2 - offset.x ; 
 		return xh;
 	}
 
@@ -248,7 +248,7 @@ public class PanelEnthalpy extends JPanel {
 	 */
 	public int getXmoH(double h) {
 		double xm;
-		xm = -((xmin+xmax-2*h-2*offset.x)*zoomx*zoom+(xmin-xmax-2*marginx)*zoomx)/(2*zoom);
+		xm = -((xHmin+xHmax-2*h-2*offset.x)*zoomx*zoom+(xHmin-xHmax-2*marginx)*zoomx)/(2*zoom);
 		return (int)xm;
 	}
 
@@ -259,7 +259,7 @@ public class PanelEnthalpy extends JPanel {
 	 */
 	public double getPoYm(int y) {
 		double yP;
-		yP= (log10_ymax-log10_ymin)/(2*zoom)+log10_marginy/zoom-y/zoomy+(log10_ymin+log10_ymax)/2 + offset.y/mvoYf;
+		yP= (log10_yPmax-log10_yPmin)/(2*zoom)+log10_marginy/zoom-y/zoomy+(log10_yPmin+log10_yPmax)/2 + offset.y/mvoYf;
 		yP = Math.exp(yP*Math.log(10));			
 		return yP;
 	}
@@ -271,8 +271,8 @@ public class PanelEnthalpy extends JPanel {
 	 */
 	public int getYmoP(double p) {
 		double ym;	
-		ym=-(log10_ymin*zoomy)/(2*zoom)+(log10_ymax*zoomy)/(2*zoom)+(log10_marginy*zoomy)/zoom-(Math.log(p)*zoomy)/Math.log(10)+
-				(offset.y*zoomy)/mvoYf+(log10_ymin*zoomy)/2+(log10_ymax*zoomy)/2;
+		ym=-(log10_yPmin*zoomy)/(2*zoom)+(log10_yPmax*zoomy)/(2*zoom)+(log10_marginy*zoomy)/zoom-(Math.log(p)*zoomy)/Math.log(10)+
+				(offset.y*zoomy)/mvoYf+(log10_yPmin*zoomy)/2+(log10_yPmax*zoomy)/2;
 		return (int)ym;
 	}
 
@@ -290,11 +290,11 @@ public class PanelEnthalpy extends JPanel {
 		// Apply a translation so that the drawing
 		// coordinates on the display matches the Panel
 		// -----------------------------------
-		zoomx = getWidth()/(xmax-xmin+2*marginx)*zoom;
-		zoomy = getHeight()/(log10_ymax-log10_ymin+2*log10_marginy)*zoom;
+		zoomx = getWidth()/(xHmax-xHmin+2*marginx)*zoom;
+		zoomy = getHeight()/(log10_yPmax-log10_yPmin+2*log10_marginy)*zoom;
 		g2.translate(getWidth()/2,getHeight()/2);
 		g2.scale(zoomx, -zoomy);
-		g2.translate(offset.x-(xmax+xmin)/2, -offset.y/mvoYf-(log10_ymax+log10_ymin)/2);
+		g2.translate(offset.x-(xHmax+xHmin)/2, -offset.y/mvoYf-(log10_yPmax+log10_yPmin)/2);
 
 		// -----------------------------------
 		// Image
@@ -331,14 +331,14 @@ public class PanelEnthalpy extends JPanel {
 
 		g2.setStroke(new BasicStroke((float)0));
 		int xposmax=0;
-		for (int x = (int) xmin; x <= (int)xmax; x=(int)(x+gridUnitX)) {
+		for (int x = (int) xHmin; x <= (int)xHmax; x=(int)(x+gridUnitX)) {
 			g2.setColor(Color.lightGray);	
-			g2.draw( new Line2D.Double(x,log10_ymin,x,log10_ymax));	
+			g2.draw( new Line2D.Double(x,log10_yPmin,x,log10_yPmax));	
 
 			g2.setColor(Color.blue);
 			String s = String.format("%d",x);
 			int xd = (int) (x - metrics.getStringBounds(s,g2).getWidth()/2); 
-			g2.drawString(s, (float)xd, (float)(log10_ymin-log10_marginy/2));
+			g2.drawString(s, (float)xd, (float)(log10_yPmin-log10_marginy/2));
 			xposmax = x;
 		}
 
@@ -347,7 +347,7 @@ public class PanelEnthalpy extends JPanel {
 		metrics = g.getFontMetrics(fontReal);		
 		g2.drawString("H(kJ/kg)", 
 				(float) (xposmax-metrics.getStringBounds("H(kJ/kg)",g2).getWidth()/2), 
-				(float) (log10_ymin-log10_marginy+0.05 ));
+				(float) (log10_yPmin-log10_marginy+0.05 ));
 
 		// Pressure
 		fontReal = fontReal.deriveFont(Font.PLAIN, 10.0f);
@@ -356,7 +356,7 @@ public class PanelEnthalpy extends JPanel {
 		int yposmax=0;
 
 		g2.setStroke(new BasicStroke(0));
-		for (int y = (int) ymin; y <= (int)ymax; y= (int)(y+gridUnitY)) {
+		for (int y = (int) yPmin; y <= (int)yPmax; y= (int)(y+gridUnitY)) {
 			if (y < 6) 
 				gridUnitY = 1;
 			else if ((y>=6) && (y<10) )
@@ -370,17 +370,17 @@ public class PanelEnthalpy extends JPanel {
 
 			double log10_y = Math.log10(y); 
 			g2.setColor(Color.lightGray);	
-			g2.draw( new Line2D.Double(xmin-2,log10_y,xmax,log10_y));
+			g2.draw( new Line2D.Double(xHmin-2,log10_y,xHmax,log10_y));
 
 			g2.setColor(Color.blue);
 			String s = String.format("%d",y);
-			double xd = xmin-marginx/2 - metrics.getStringBounds(s,g2).getWidth()/2; 
+			double xd = xHmin-marginx/2 - metrics.getStringBounds(s,g2).getWidth()/2; 
 			g2.setColor(Color.blue);
 			g2.drawString(s, (float)(xd), (float)(log10_y));
 			yposmax = y;
 		}
 		g2.drawString("P(bar)", 
-				(float)(xmin-marginx/2 - metrics.getStringBounds("P(bar)",g2).getWidth()/2), 
+				(float)(xHmin-marginx/2 - metrics.getStringBounds("P(bar)",g2).getWidth()/2), 
 				(float)(Math.log10(yposmax+gridUnitY)));
 
 		// -----------------------------------
@@ -393,15 +393,15 @@ public class PanelEnthalpy extends JPanel {
 		g2.setFont(fontReal);
 		metrics = g.getFontMetrics(fontReal);		
 		g2.drawString(enthalpy.getNameRefrigerant(), 
-				(float)((xmax-marginx - metrics.getStringBounds(enthalpy.getNameRefrigerant(),g2).getWidth())), 
-				(float)(log10_ymax+log10_marginy/2));
+				(float)((xHmax-marginx - metrics.getStringBounds(enthalpy.getNameRefrigerant(),g2).getWidth())), 
+				(float)(log10_yPmax+log10_marginy/2));
 
 		// Temperature
 		fontReal = fontReal.deriveFont(Font.PLAIN, 10.0f);
 		g2.setFont(fontReal);
 		metrics = g.getFontMetrics(fontReal);		
 		g2.setColor(Color.red);
-		for (int y = (int) enthalpy.convP2T(ymin); y <= (int)enthalpy.convP2T(ymax); y= (int)(y+gridUnitY)) {
+		for (int y = (int) enthalpy.convP2T(yPmin); y <= (int)enthalpy.convP2T(yPmax); y= (int)(y+gridUnitY)) {
 			if (y < 60) 
 				gridUnitY = 10;
 			else
@@ -409,13 +409,13 @@ public class PanelEnthalpy extends JPanel {
 
 			String s = String.format("%d",y);
 
-			double xd = 10 + xmin - metrics.getStringBounds(s,g2).getWidth()/2; 
+			double xd = 10 + xHmin - metrics.getStringBounds(s,g2).getWidth()/2; 
 			double log10_y = Math.log10(enthalpy.convT2P(y)); 
 			g2.drawString(s, (float)(xd), (float)(log10_y));
 
-			g2.draw( new Line2D.Double(xmin-2,log10_y,xmin+2,log10_y));
+			g2.draw( new Line2D.Double(xHmin-2,log10_y,xHmin+2,log10_y));
 		}
-		g2.drawString("T(°C)", (float)(10 + xmin - metrics.getStringBounds("T(°C)",g2).getWidth()/2), (float)(Math.log10(yposmax+gridUnitY)));
+		g2.drawString("T(°C)", (float)(10 + xHmin - metrics.getStringBounds("T(°C)",g2).getWidth()/2), (float)(Math.log10(yposmax+gridUnitY)));
 
 
 		// -----------------------------------
@@ -453,11 +453,11 @@ public class PanelEnthalpy extends JPanel {
 	// -------------------------------------------------------
 
 	public double getXmin() {
-		return xmin;
+		return xHmin;
 	}
 
 	public double getXmax() {
-		return xmax;
+		return xHmax;
 	}
 
 	public float getImageAlphaBlure() {

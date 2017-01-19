@@ -50,6 +50,10 @@ public class ExpansionValve {
 		return vinGas;
 	}
 
+	// -------------------------------------------------------
+	// 							JSON
+	// -------------------------------------------------------
+
 	/**
 	 * Return the JSON data
 	 * @return : JSONObject
@@ -72,7 +76,6 @@ public class ExpansionValve {
 		this.deltaT = (double) jsonObj.get("DeltaT");
 		this.deltaP = (double) jsonObj.get("DeltaP");
 	}
-
 	
 	// -------------------------------------------------------
 	// 				Getter and Setter

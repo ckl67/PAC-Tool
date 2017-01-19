@@ -50,6 +50,10 @@ public class Evaporator {
 		return vinGas;
 	}
 	
+	// -------------------------------------------------------
+	// 							JSON
+	// -------------------------------------------------------
+
 	/**
 	 * Return the JSON data
 	 * @return : JSONObject

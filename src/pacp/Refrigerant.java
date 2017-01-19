@@ -7,7 +7,7 @@ public class Refrigerant extends Enthalpy {
 	private String name;
 	private double P;
 	private double T;
-	
+
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
@@ -21,6 +21,12 @@ public class Refrigerant extends Enthalpy {
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
+
+
+	// -------------------------------------------------------
+	// 							JSON
+	// -------------------------------------------------------
+
 	/**
 	 * Return the JSON data
 	 * @return : JSONObject
@@ -33,7 +39,7 @@ public class Refrigerant extends Enthalpy {
 		ObjComp.put("P", this.P);	
 		return ObjComp ;
 	}
-	
+
 	/**
 	 * Set Class with the element coming from a the JSON object
 	 * @param jsonObj : JSON Object
@@ -71,5 +77,5 @@ public class Refrigerant extends Enthalpy {
 	public void setT(double t) {
 		T = t;
 	}
-	
+
 }

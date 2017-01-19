@@ -23,6 +23,7 @@ import org.json.simple.JSONObject;
 public class Pac{
 	private Compressor compressor;
 	private Condenser condenser;
+	private Dehydrator dehydrator;
 	private ExpansionValve expansionValve;
 	private Evaporator evaporator;
 	private Refrigerant fluidRefri;
@@ -40,6 +41,7 @@ public class Pac{
 
 		this.compressor = new Compressor();
 		this.condenser = new Condenser();
+		this.dehydrator = new Dehydrator();
 		this.expansionValve = new ExpansionValve();
 		this.evaporator = new Evaporator();
 		this.fluidRefri = new Refrigerant();
@@ -69,10 +71,12 @@ public class Pac{
 		if (GazInject == Misc._COMPRESSOR) {
 			fluidRefri = compressor.transfer(fluidRefri);
 			fluidRefri = condenser.transfer(fluidRefri);
+			fluidRefri = dehydrator.transfer(fluidRefri);
 			fluidRefri = expansionValve.transfer(fluidRefri);
 			fluidRefri = evaporator.transfer(fluidRefri);
 		} else if (GazInject == Misc._CONDENSER) {
 			fluidRefri = condenser.transfer(fluidRefri);
+			fluidRefri = dehydrator.transfer(fluidRefri);
 			fluidRefri = expansionValve.transfer(fluidRefri);
 			fluidRefri = evaporator.transfer(fluidRefri);
 			fluidRefri = compressor.transfer(fluidRefri);
@@ -81,10 +85,12 @@ public class Pac{
 			fluidRefri = evaporator.transfer(fluidRefri);
 			fluidRefri = compressor.transfer(fluidRefri);
 			fluidRefri = condenser.transfer(fluidRefri);
+			fluidRefri = dehydrator.transfer(fluidRefri);
 		} else {
 			fluidRefri = evaporator.transfer(fluidRefri);
 			fluidRefri = compressor.transfer(fluidRefri);
 			fluidRefri = condenser.transfer(fluidRefri);
+			fluidRefri = dehydrator.transfer(fluidRefri);
 			fluidRefri = expansionValve.transfer(fluidRefri);	
 		}	
 
@@ -106,6 +112,7 @@ public class Pac{
 	public void setJsonObject(JSONObject jsonObj) {
 		this.compressor = (Compressor) jsonObj.get("Compressor");
 		this.condenser = (Condenser) jsonObj.get("Condenser");
+		this.dehydrator = (Dehydrator) jsonObj.get("Dehydrator");
 		this.evaporator = (Evaporator) jsonObj.get("Evaporator");
 		this.expansionValve = (ExpansionValve) jsonObj.get("ExpansionValve");
 		this.fluidRefri = (Refrigerant) jsonObj.get("fluidRefri");
@@ -120,7 +127,7 @@ public class Pac{
 	}
 
 	/**
-	 * Return (after to have fill the class), the Circulator's JSON data
+	 * Return (after to have fill the class), the JSON data
 	 * @return : JSONObject
 	 *      {"Features":[{"Current":0.91,"Power":190},{"Current".....
 	 */
@@ -132,6 +139,8 @@ public class Pac{
 		jsonObjCompressor = compressor.getJsonObject();
 		JSONObject jsonObjCondenser = new JSONObject();
 		jsonObjCondenser = condenser.getJsonObject();
+		JSONObject jsonObjDehydrator = new JSONObject();
+		jsonObjDehydrator = dehydrator.getJsonObject();
 		JSONObject jsonObjEvaporator = new JSONObject();
 		jsonObjEvaporator = evaporator.getJsonObject();
 		JSONObject jsonObjExpansionValve = new JSONObject();
@@ -153,6 +162,7 @@ public class Pac{
 
 		obj.put("Compressor", jsonObjCompressor);
 		obj.put("Condenser", jsonObjCondenser);
+		obj.put("Dehydrator", jsonObjDehydrator);
 		obj.put("Evaporator", jsonObjEvaporator);
 		obj.put("ExpansionValve", jsonObjExpansionValve);
 		obj.put("FluidRefri", jsonObjfluidRefri);
@@ -259,6 +269,14 @@ public class Pac{
 
 	public void setFluidCaloD(HeatTransferFluid fluidCaloD) {
 		this.fluidCaloD = fluidCaloD;
+	}
+
+	public Dehydrator getDehydrator() {
+		return dehydrator;
+	}
+
+	public void setDehydrator(Dehydrator dehydrator) {
+		this.dehydrator = dehydrator;
 	}
 
 }

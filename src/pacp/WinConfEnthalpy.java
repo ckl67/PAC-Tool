@@ -64,7 +64,7 @@ public class WinConfEnthalpy {
 	 */
 	public WinConfEnthalpy(Enthalpy vconfEnthalpy) {
 		enthalpy = vconfEnthalpy;
-		enthalpyBkgdImg = enthalpy.getEnthalpyImage();
+		enthalpyBkgdImg = enthalpy.getEnthalpyBkgImage();
 		initialize();
 	}
 
@@ -428,7 +428,7 @@ public class WinConfEnthalpy {
 					//System.out.println("You chose to open this file: " + chooser.getSelectedFile().getAbsolutePath());
 					String filepath=chooser.getSelectedFile().getAbsolutePath();
 					txtFieldTemperaturePressionFile.setText(filepath);
-					enthalpy.setFileTP(txtFieldTemperaturePressionFile.getText());	
+					enthalpy.setFileNameTP(txtFieldTemperaturePressionFile.getText());	
 
 				}
 			}
@@ -470,7 +470,7 @@ public class WinConfEnthalpy {
 					//System.out.println("You chose to open this file: " + chooser.getSelectedFile().getAbsolutePath());
 					String filepath=chooser.getSelectedFile().getAbsolutePath();
 					txtFieldSatCurveFile.setText(filepath);
-					enthalpy.setFileSat(txtFieldSatCurveFile.getText());	
+					enthalpy.setFileNameSAT(txtFieldSatCurveFile.getText());	
 
 				}
 			}

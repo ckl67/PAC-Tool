@@ -85,6 +85,10 @@ public class EnthalpyBkgdImg {
 		return image;
 	}
 	
+	// -------------------------------------------------------
+	// 							JSON
+	// -------------------------------------------------------
+
 	/**
 	 * Return the JSON data
 	 * @return : JSONObject
