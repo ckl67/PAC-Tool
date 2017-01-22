@@ -103,37 +103,22 @@ public class Pac{
 		fluidCaloD = circuitD.transfer(fluidCaloD);	
 	}
 
+	// -------------------------------------------------------
+	// 							JSON
+	// -------------------------------------------------------
+	//	Squiggly brackets {} act as containers  
+	//	Names and values are separated by a colon(:) 	--> put
+	//  Square brackets[] represents arrays.			--> add
+	//  {  "Planet": "Earth" , "Countries": [  { "Name": "India", "Capital": "Delhi"}, { "Name": "France", "Major": "Paris" } ]  }  
+	// -------------------------------------------------------
 
 	/**
-	 * Set Class with the element coming from a the JSON object
-	 * @param jsonObj : JSON Object
-	 * 			
-	 */
-	public void setJsonObject(JSONObject jsonObj) {
-		this.compressor = (Compressor) jsonObj.get("Compressor");
-		this.condenser = (Condenser) jsonObj.get("Condenser");
-		this.dehydrator = (Dehydrator) jsonObj.get("Dehydrator");
-		this.evaporator = (Evaporator) jsonObj.get("Evaporator");
-		this.expansionValve = (ExpansionValve) jsonObj.get("ExpansionValve");
-		this.fluidRefri = (Refrigerant) jsonObj.get("fluidRefri");
-
-		this.circulatorS = (Circulator) jsonObj.get("circulatorS");
-		this.circuitS = (HeatSrcDistrCircuit) jsonObj.get("circuitS");
-		this.fluidCaloS = (HeatTransferFluid) jsonObj.get("fluidCaloS");
-
-		this.circulatorD = (Circulator) jsonObj.get("circulatorD");
-		this.circuitD = (HeatSrcDistrCircuit) jsonObj.get("circuitD");
-		this.fluidCaloD = (HeatTransferFluid) jsonObj.get("fluidCaloD");
-	}
-
-	/**
-	 * Return (after to have fill the class), the JSON data
+	 * Construct the JSON data
 	 * @return : JSONObject
-	 *      {"Features":[{"Current":0.91,"Power":190},{"Current".....
 	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
-		JSONObject obj = new JSONObject();
+		JSONObject jsonObj = new JSONObject();
 
 		JSONObject jsonObjCompressor = new JSONObject();
 		jsonObjCompressor = compressor.getJsonObject();
@@ -160,24 +145,45 @@ public class Pac{
 		JSONObject jsonObjfluidCaloD = new JSONObject();
 		jsonObjfluidCaloD = fluidCaloD.getJsonObject();
 
-		obj.put("Compressor", jsonObjCompressor);
-		obj.put("Condenser", jsonObjCondenser);
-		obj.put("Dehydrator", jsonObjDehydrator);
-		obj.put("Evaporator", jsonObjEvaporator);
-		obj.put("ExpansionValve", jsonObjExpansionValve);
-		obj.put("FluidRefri", jsonObjfluidRefri);
+		jsonObj.put("Compressor", jsonObjCompressor);
+		jsonObj.put("Condenser", jsonObjCondenser);
+		jsonObj.put("Dehydrator", jsonObjDehydrator);
+		jsonObj.put("Evaporator", jsonObjEvaporator);
+		jsonObj.put("ExpansionValve", jsonObjExpansionValve);
+		jsonObj.put("FluidRefri", jsonObjfluidRefri);
 
-		obj.put("CirculatorS",jsonObjcirculatorS);
-		obj.put("CircuitS",jsonObjcircuitS);
-		obj.put("FluidCaloS",jsonObjfluidCaloS);
+		jsonObj.put("CirculatorS",jsonObjcirculatorS);
+		jsonObj.put("CircuitS",jsonObjcircuitS);
+		jsonObj.put("FluidCaloS",jsonObjfluidCaloS);
 
-		obj.put("CirculatorD",jsonObjcirculatorD);
-		obj.put("CircuitD",jsonObjcircuitD);
-		obj.put("FluidCaloD",jsonObjfluidCaloD);
+		jsonObj.put("CirculatorD",jsonObjcirculatorD);
+		jsonObj.put("CircuitD",jsonObjcircuitD);
+		jsonObj.put("FluidCaloD",jsonObjfluidCaloD);
 
-		return obj;
+		return jsonObj;
 	}
 
+	
+	/**
+	 * Set the JSON data, to the Class instance
+	 * @param jsonObj : JSON Object
+	 */
+	public void setJsonObject(JSONObject jsonObj) {
+		this.compressor = (Compressor) jsonObj.get("Compressor");
+		this.condenser = (Condenser) jsonObj.get("Condenser");
+		this.dehydrator = (Dehydrator) jsonObj.get("Dehydrator");
+		this.evaporator = (Evaporator) jsonObj.get("Evaporator");
+		this.expansionValve = (ExpansionValve) jsonObj.get("ExpansionValve");
+		this.fluidRefri = (Refrigerant) jsonObj.get("fluidRefri");
+
+		this.circulatorS = (Circulator) jsonObj.get("circulatorS");
+		this.circuitS = (HeatSrcDistrCircuit) jsonObj.get("circuitS");
+		this.fluidCaloS = (HeatTransferFluid) jsonObj.get("fluidCaloS");
+
+		this.circulatorD = (Circulator) jsonObj.get("circulatorD");
+		this.circuitD = (HeatSrcDistrCircuit) jsonObj.get("circuitD");
+		this.fluidCaloD = (HeatTransferFluid) jsonObj.get("fluidCaloD");
+	}
 
 
 	// -------------------------------------------------------

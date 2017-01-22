@@ -33,7 +33,9 @@ public class Misc {
 	// -------------------------------------------------------
 	// 						CONSTANTES (DEFINE)
 	// -------------------------------------------------------
+	public static final String PACTool_Version = "Version Alpha 0.3";
 
+	
 	public static final int _COMPRESSOR = 0;
 	public static final int _CONDENSER = 1;
 	public static final int _EXPANSIONVALVE = 2;
@@ -158,6 +160,19 @@ public class Misc {
 		return res;
 	}
 
+	/**
+	 * Generate a String of n repeated characters
+	 * @param c
+	 * @param n
+	 * @return
+	 */
+	public static String genRepeatChar(char c, Integer n) {
+	    StringBuilder b = new StringBuilder();
+	    for (int x = 0; x < n; x++)
+	        b.append(c);
+	    return b.toString();
+	}
+	
 	/**
 	 * Return the closest value in a list
 	 * @param of

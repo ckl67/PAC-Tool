@@ -414,9 +414,14 @@ public class Enthalpy {
 	// -------------------------------------------------------
 	// 							JSON
 	// -------------------------------------------------------
+	//	Squiggly brackets {} act as containers  
+	//	Names and values are separated by a colon(:) 	--> put
+	//  Square brackets[] represents arrays.			--> add
+	//  {  "Planet": "Earth" , "Countries": [  { "Name": "India", "Capital": "Delhi"}, { "Name": "France", "Major": "Paris" } ]  }  
+	// -------------------------------------------------------
 
 	/**
-	 * Return the JSON data
+	 * Construct the JSON data
 	 * @return : JSONObject
 	 */
 	@SuppressWarnings("unchecked")
@@ -435,7 +440,7 @@ public class Enthalpy {
 	}
 	
 	/**
-	 * Set Class with the element coming from a the JSON object
+	 * Set the JSON data, to the Class instance
 	 * @param jsonObj : JSON Object
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
@@ -447,7 +452,8 @@ public class Enthalpy {
 		this.fileNameTP = (String) jsonObj.get("fileNameTP");
 		this.deltaP = (double) jsonObj.get("deltaP");
 		this.fileNameSAT = (String) jsonObj.get("fileNameSAT");
-		enthalpyBkgdImg.setJsonObject(jsonObj); 
+		
+		this.getEnthalpyBkgImage().setJsonObject((JSONObject) jsonObj.get("enthalpyBkgdImg")); 
 	}
 
 	

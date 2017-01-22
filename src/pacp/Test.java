@@ -147,14 +147,16 @@ public class Test {
 
 		Circulator vCirlculator = new Circulator();
 
-		// Display Name
-		System.out.println("Name = " + vCirlculator.getName());
-
-		// Display features
+		// Class Instance
+		System.out.println("\n---> Class Instance");
+		System.out.println("    Name = " + vCirlculator.getName());
+		System.out.println("    Voltage = " + vCirlculator.getVoltage());
+		System.out.println("    ---> Display features");
 		for (int i=0;i<vCirlculator.getCurrentL().size();i++) {
-			System.out.println(" Feature (" + i + ")");
-			System.out.println("    Current =" + vCirlculator.getCurrentL().get(i));
-			System.out.println("    Power  =" + vCirlculator.getPowerL().get(i));
+			System.out.println("     Feature (" + i + ")");
+			System.out.println("        Current =" + vCirlculator.getCurrentL().get(i));
+			System.out.println("        RotatePerMinutes  =" + vCirlculator.getRotatePerMinutesL().get(i));
+			System.out.println("        Power  =" + vCirlculator.getPowerL().get(i));
 		}
 
 		// ADD 1 feature + Display features
@@ -163,38 +165,47 @@ public class Test {
 		for (int i=0;i<vCirlculator.getCurrentL().size();i++) {
 			System.out.println(" Feature (" + i + ")");
 			System.out.println("    Current =" + vCirlculator.getCurrentL().get(i));
+			System.out.println("    RotatePerMinutes  =" + vCirlculator.getRotatePerMinutesL().get(i));
 			System.out.println("    Power  =" + vCirlculator.getPowerL().get(i));
 		}
 
-		// get Circulator-JSON object
+		// construct JSON object
+		System.out.println("\n---> Construct JSON data (with he new element !)");
 		JSONObject jsonObj = new JSONObject();
 		jsonObj = vCirlculator.getJsonObject();
-
+		System.out.println(jsonObj);
+		
 		// Create a new instance + clear Features 
 		System.out.println("\n---> New Instance + Clear features");
 		Circulator vCirlculatorn = new Circulator();
 		vCirlculatorn.clearFeatures();
 		vCirlculatorn.setName("Toto");
-		System.out.println("Name = " + vCirlculatorn.getName());
+		System.out.println("    Name = " + vCirlculatorn.getName());
 		if (vCirlculatorn.getCurrentL().size() == 0)
-			System.out.println("No features");
+			System.out.println("    --> No features");
 
-		// set Class with the Circulator-JSON object
-		System.out.println("\n---> Set the Instance with the data of Circulator-JSON object");
+		// set Class with the JSON object
+		System.out.println("\n---> Set the Instance Class with the JSON data");
 		vCirlculatorn.setJsonObject(jsonObj);
-		System.out.println("Name = " + vCirlculatorn.getName());
-		System.out.println("Voltage = " + vCirlculatorn.getVoltage());
-		for (int i=0;i<vCirlculatorn.getCurrentL().size();i++) {
-			System.out.println(" Feature (" + i + ")");
-			System.out.println("    Current =" + vCirlculatorn.getCurrentL().get(i));
-			System.out.println("    Power  =" + vCirlculatorn.getPowerL().get(i));
-			System.out.println("    RotatePerMinutes  =" + vCirlculatorn.getRotatePerMinutesL().get(i));
+		System.out.println(jsonObj);
+		
+		// Display the features afterwards 
+		System.out.println("\n---> Class Instance");
+		System.out.println("    Name = " + vCirlculator.getName());
+		System.out.println("    Voltage = " + vCirlculator.getVoltage());
+		System.out.println("    --> Display features");
+		for (int i=0;i<vCirlculator.getCurrentL().size();i++) {
+			System.out.println("     Feature (" + i + ")");
+			System.out.println("        Current =" + vCirlculator.getCurrentL().get(i));
+			System.out.println("        RotatePerMinutes  =" + vCirlculator.getRotatePerMinutesL().get(i));
+			System.out.println("        Power  =" + vCirlculator.getPowerL().get(i));
 		}
 
+		System.out.println("\n--->Transfer Function");
 		HeatTransferFluid vFluid = new HeatTransferFluid() ;
 		vFluid.setT(25);
-		System.out.println("Input --> Output");
-		System.out.println(vFluid.getT()+"°C-->"+vCirlculator.transfer(vFluid).getT()+"°C");		
+		System.out.println("    Input --> Output");
+		System.out.println("    " + vFluid.getT()+"°C-->"+vCirlculator.transfer(vFluid).getT()+"°C");		
 	}
 
 	// ===================================================================================================================
@@ -205,17 +216,30 @@ public class Test {
 		System.out.println("TEST COMPRESSOR");
 
 		Compressor vCompressor = new Compressor();
-		System.out.println(vCompressor.getName());
+		System.out.println("    "+vCompressor.getName());
 
+		System.out.println("\n---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();
 		jsonObj = vCompressor.getJsonObject();
 		System.out.println(jsonObj);
 
+		System.out.println("\n---> Modify the instance ");
+		vCompressor.setName("Toto");
+		System.out.println("    Name ="+vCompressor.getName());
+		
+		System.out.println("\n---> Set the Class Instance with JSON data");
+		vCompressor.setJsonObject(jsonObj);
+
+		System.out.println("\n---> Read afterwards ");
+		System.out.println("    Name="+vCompressor.getName());
+		
 		Refrigerant vRefrigeranR22 =  new Refrigerant();
 		vRefrigeranR22.setP(25);
 		vCompressor.setDeltaP(40);
-		System.out.println("Input --> Output");
-		System.out.println(vRefrigeranR22.getP() + "-->" + vCompressor.transfer(vRefrigeranR22).getP());
+		
+		System.out.println("\n--->Transfer Function");
+		System.out.println("    Input --> Output");
+		System.out.println("    "+vRefrigeranR22.getP() + "-->" + vCompressor.transfer(vRefrigeranR22).getP());
 	}
 
 	// ===================================================================================================================
@@ -225,17 +249,32 @@ public class Test {
 		System.out.println("TEST CONDENSER");
 
 		Condenser vCondenser = new Condenser();
-		Refrigerant vGas = new Refrigerant();
 
-		vCondenser.setDeltaT(50.0);
-		vGas.setT(10);
+		System.out.println("    "+vCondenser.getName());
 
-		System.out.println("Input --> Output");
-		System.out.println(vGas.getT()+"°C-->"+vCondenser.transfer(vGas).getT()+"°C");
-
+		System.out.println("\n---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();
 		jsonObj = vCondenser.getJsonObject();
 		System.out.println(jsonObj);
+
+		System.out.println("\n---> Modify the instance ");
+		vCondenser.setName("Toto");
+		System.out.println("    Name ="+vCondenser.getName());
+
+
+		System.out.println("\n---> Set the Class Instance with JSON data");
+		vCondenser.setJsonObject(jsonObj);
+
+		System.out.println("\n---> Read afterwards ");
+		System.out.println("    Name="+vCondenser.getName());
+
+		Refrigerant vGas = new Refrigerant();
+		vGas.setT(10);
+
+		System.out.println("\n--->Transfer Function");
+		System.out.println("Input --> Output");
+		System.out.println(vGas.getT()+"°C-->"+vCondenser.transfer(vGas).getT()+"°C");
+
 	}
 
 	// ===================================================================================================================
@@ -250,12 +289,19 @@ public class Test {
 		vDehydrator.setDeltaT(50.0);
 		vGas.setT(10);
 
-		System.out.println("Input --> Output");
-		System.out.println(vGas.getT()+"°C-->"+vDehydrator.transfer(vGas).getT()+"°C");
-
+		System.out.println("\n---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();
 		jsonObj = vDehydrator.getJsonObject();
 		System.out.println(jsonObj);
+
+		System.out.println("\n---> Set the Class Instance with JSON data");
+		vDehydrator.setJsonObject(jsonObj);
+		System.out.println(jsonObj);
+
+		System.out.println("\n--->Transfer Function");
+		System.out.println("Input --> Output");
+		System.out.println(vGas.getT()+"°C-->"+vDehydrator.transfer(vGas).getT()+"°C");
+
 	}
 
 
@@ -264,7 +310,7 @@ public class Test {
 	// ===================================================================================================================
 	private static void testElDraw() {
 		System.out.println("TEST DRAW ELEMENTS");
-
+		System.out.println("Not implemeted for now");
 	}
 
 	// ===================================================================================================================
@@ -324,6 +370,30 @@ public class Test {
 		pNear = 23;
 		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear)+"\n");
 
+		System.out.println("\n---> Construct JSON data");
+		JSONObject jsonObj = new JSONObject();
+		jsonObj = enthalpy.getJsonObject();
+		System.out.println(jsonObj);
+
+		System.out.println("\n---> Perform some minor changes in Enthalpy" );
+		System.out.println("    setxHmin (before)=" + enthalpy.getxHmin());
+		enthalpy.setxHmin(333);
+		System.out.println("    setxHmin (after)=" + enthalpy.getxHmin());
+		
+		
+		System.out.println("\n---> Perform some minor changes in EnthalpyBkgImage" );
+		System.out.println("    iBgH1x (EnthalpyBkgImage) (before) = " +enthalpy.getEnthalpyBkgImage().getiBgH1x());
+		enthalpy.getEnthalpyBkgImage().setiBgH1x(300);
+		System.out.println("    iBgH1x (EnthalpyBkgImage) (after) = " +enthalpy.getEnthalpyBkgImage().getiBgH1x());
+		
+		System.out.println("\n---> Set the Class Instance with JSON data");
+		enthalpy.setJsonObject(jsonObj);
+
+		System.out.println("\n---> Read afterwards");
+		System.out.println("    setxHmin=" + enthalpy.getxHmin());
+		System.out.println("    iBgH1x (EnthalpyBkgImage) = " +enthalpy.getEnthalpyBkgImage().getiBgH1x());
+
+		
 	}
 
 	// ===================================================================================================================
@@ -335,19 +405,21 @@ public class Test {
 		
 		EnthalpyBkgdImg vEnthalpyBkgdImg = new EnthalpyBkgdImg();
 		
-		// Save in json
+		System.out.println("\n---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();
 		jsonObj = vEnthalpyBkgdImg.getJsonObject();
 		System.out.println(jsonObj);
 		
 		// Read value, then modify
-		System.out.println(vEnthalpyBkgdImg.getiBgH1x());
+		System.out.println("\n---> Modify value");
+		System.out.println("iBgH1x = " +vEnthalpyBkgdImg.getiBgH1x());
 		vEnthalpyBkgdImg.setiBgH1x(300);
-		System.out.println(vEnthalpyBkgdImg.getiBgH1x());
+		System.out.println("iBgH1x = " +vEnthalpyBkgdImg.getiBgH1x());
 		
 		// Set with Json
+		System.out.println("\n---> Set the Class Instance with JSON data");
 		vEnthalpyBkgdImg.setJsonObject(jsonObj);
-		System.out.println(vEnthalpyBkgdImg.getiBgH1x());
+		System.out.println(jsonObj);
 		
 	}
 

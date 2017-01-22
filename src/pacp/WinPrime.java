@@ -35,7 +35,6 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +94,7 @@ public class WinPrime {
 
 	private JCheckBox checkoxFaren;
 	private JCheckBox checkoxBTU;
-	private JCheckBox chckbxPound;
+	private JCheckBox checkoxPound;
 	private JComboBox<String> comboBoxCompressor;
 	
 	private JLabel lblCapacity;
@@ -109,6 +108,9 @@ public class WinPrime {
 	private JLabel lblCond;
 	private JLabel lblLiq;
 
+	// Config
+	private PrimeConfig primeConfig;
+	
 	// List of PAC (First Pac can never been deleted!!)
 	private List<Pac> pacl = new ArrayList<Pac>();
 	private Enthalpy enthalpy;
@@ -121,12 +123,14 @@ public class WinPrime {
 	 * 
 	 */
 	public WinPrime(Pac paci, Ccop copi, Enthalpy enthalpyi) {
+		primeConfig = new PrimeConfig();
+
 		enthalpy = enthalpyi;
 		pacl.add(paci);	
 
 		// Create Window
 		initialize(paci,copi);
-		fillCompressorTexField(paci.getCompressor());
+		fillCompressorTexField(paci);
 		
 	}
 
@@ -141,25 +145,27 @@ public class WinPrime {
 	}
 	
 	/**
-	 * Fill all the Compressor features field in the panel 
-	 * The data are read from the variable, where the information is stored in British value
-	 * @param pac
+	 * Fill all the Compressor features to Text field in the panel 
+	 * The data are read from the variable, where the information is stored
+	 * @param paci : Will be one of the different Pac in the List
 	 */
-	private void fillCompressorTexField(Compressor compressor) {
+	private void fillCompressorTexField(Pac paci) {
+		Compressor compressor = paci.getCompressor();
+
 		boolean weclickf = false;
 		boolean weclickb = false;
 		boolean weclickp = false;
-
-		if (!checkoxFaren.isSelected()) {
+		
+		if (!primeConfig.isUnitFaren()) {
 			checkoxFaren.doClick();
 			weclickf = true;
 		}
-		if (!checkoxBTU.isSelected()) {
+		if (!primeConfig.isUnitBTU()) {
 			checkoxBTU.doClick();
 			weclickb = true;
 		}
-		if (!chckbxPound.isSelected()) {
-			chckbxPound.doClick();
+		if (!primeConfig.isUnitPound()) {
+			checkoxPound.doClick();
 			weclickp = true;
 		}
 
@@ -188,13 +194,13 @@ public class WinPrime {
 			checkoxBTU.doClick();
 		}
 		if (weclickp) {
-			chckbxPound.doClick();
+			checkoxPound.doClick();
 		}
 	}
 
 	/**
 	 * Will save the information from Panel TextField to PAC variable
-	 * Data will be stored in Anglo-Saxon Format
+	 * Data will ALWAYS be stored in Anglo-Saxon Format
 	 * @param paci
 	 */
 	private void UpdateTextField2Pac( Pac paci) {
@@ -204,16 +210,16 @@ public class WinPrime {
 		boolean weclickb = false;
 		boolean weclickp = false;
 
-		if (!checkoxFaren.isSelected()) {
+		if (!primeConfig.isUnitFaren()) {
 			checkoxFaren.doClick();
 			weclickf = true;
 		}
-		if (!checkoxBTU.isSelected()) {
+		if (!primeConfig.isUnitBTU()) {
 			checkoxBTU.doClick();
 			weclickb = true;
 		}
-		if (!chckbxPound.isSelected()) {
-			chckbxPound.doClick();
+		if (!primeConfig.isUnitPound()) {
+			checkoxPound.doClick();
 			weclickp = true;
 		}
 
@@ -236,7 +242,7 @@ public class WinPrime {
 			checkoxBTU.doClick();
 		}
 		if (weclickp) {
-			chckbxPound.doClick();
+			checkoxPound.doClick();
 		}
 	}
 
@@ -251,7 +257,7 @@ public class WinPrime {
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(WinPrime.class.getResource("/pacp/images/PAC-Tool_32.png")));
-		frame.setTitle("PAC Tool (" + Run.PACTool_Version+ ")");
+		frame.setTitle("PAC Tool (" + Misc.PACTool_Version+ ")");
 		frame.setBounds(100, 100, 443, 574);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//PacCommon.centreWindow(frame);
@@ -349,15 +355,15 @@ public class WinPrime {
 						}
 					}
 					comboBoxCompressor.setSelectedIndex(0);
-					fillCompressorTexField(pacl.get(0).getCompressor());
+					fillCompressorTexField(pacl.get(0));
 
 					// Read Configuration & Preferences WITH ACTION TO PERFORM --> MUST BE THE LAST ACTION !!
 					if (!(boolean)(jsonObjectCfg.get("checkoxFaren")))
 						checkoxFaren.doClick(); 		
 					if (!(boolean)(jsonObjectCfg.get("checkoxBTU")))
 						checkoxBTU.doClick(); 		
-					if (!(boolean)(jsonObjectCfg.get("chckbxPound")))
-						chckbxPound.doClick(); 		
+					if (!(boolean)(jsonObjectCfg.get("checkoxPound")))
+						checkoxPound.doClick(); 		
 				} 
 			}
 		});
@@ -369,43 +375,7 @@ public class WinPrime {
 		JMenuItem msavecfg = new JMenuItem("Sauver Config.");
 		msavecfg.setIcon(new ImageIcon(WinPrime.class.getResource("/com/sun/javafx/scene/web/skin/Undo_16x16_JFX.png")));
 		msavecfg.addActionListener(new ActionListener() {
-			@SuppressWarnings("unchecked")
 			public void actionPerformed(ActionEvent arg0) {
-
-				// Creation of a JSON object which will contain all configuration to save
-					// Squiggly brackets{} act as containers
-					// Square brackets [] represents arrays.
-					// Names and values are separated by a colon:
-					// Array elements are separated by commas
-					
-				// Create PAC Array JSON Object
-				JSONArray jsonObjPacL = new JSONArray();			
-				for(int i=0;i<pacl.size();i++) {
-					JSONObject jsonObj = new JSONObject();
-					jsonObj = pacl.get(i).getJsonObject();
-					jsonObjPacL.add(jsonObj);
-				}
-
-				// Create JSON data for the PAC-Tool : 
-				// Configuration + preferences 
-				JSONObject ObjCfg = new JSONObject();  
-				ObjCfg.put("checkoxBTU", checkoxBTU.isSelected());
-				ObjCfg.put("chckbxPound", chckbxPound.isSelected());
-				ObjCfg.put("checkoxFaren", checkoxFaren.isSelected());
-
-
-				EnthalpyBkgdImg vEnthalpyBkgdImg;
-				vEnthalpyBkgdImg = enthalpy.getEnthalpyBkgImage();
-				
-				JSONObject jObjEBImg = new JSONObject();
-				jObjEBImg = vEnthalpyBkgdImg.getJsonObject();
-				
-			
-				// Compact in JSON Data: PacTool
-				JSONObject ObjPacTool = new JSONObject();  
-				ObjPacTool.put("PacList", jsonObjPacL);  
-				ObjPacTool.put("Cfg", ObjCfg);  
-				ObjPacTool.put("EnthalpyBkgdImg", jObjEBImg);  
 
 				JFileChooser chooser = new JFileChooser();
 				FileNameExtensionFilter filter = new FileNameExtensionFilter( "Conf. files", "cfg");
@@ -413,27 +383,9 @@ public class WinPrime {
 				chooser.setFileFilter(filter);
 				File workingDirectory = new File(System.getProperty("user.dir"));
 				chooser.setCurrentDirectory(workingDirectory);
-				int returnVal = chooser.showOpenDialog(frame);
-				if(returnVal == JFileChooser.APPROVE_OPTION) {
+				if(chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
 					//System.out.println("You chose to open this file: " + chooser.getSelectedFile().getAbsolutePath());
-
-					// Writing to a file  
-					//file.createNewFile();  
-					FileWriter fileWriter;
-					try {
-						fileWriter = new FileWriter(chooser.getSelectedFile().getAbsolutePath());
-						fileWriter.write(ObjPacTool.toJSONString());  
-						fileWriter.flush();  
-						fileWriter.close();  
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}  
-					//System.out.println("Writing JSON object to file");  
-					//System.out.println("-----------------------");  
-					//System.out.print(ObjPacTool);  
-
-
+					PacToolConfig.saveConfigFile(pacl, enthalpy, primeConfig, chooser.getSelectedFile().getAbsolutePath());
 				} 
 			}
 		});
@@ -728,10 +680,12 @@ public class WinPrime {
 		// ---------------------------------------------------------------
 		checkoxFaren = new JCheckBox("Farenheit");
 		checkoxFaren.setBounds(302, 131, 95, 23);
+		checkoxFaren.setSelected(primeConfig.getUnitFaren());
 		panel_pc1.add(checkoxFaren);
 		checkoxFaren.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if (checkoxFaren.isSelected()) {
+					primeConfig.setUnitFaren(true);
 					lblTemp_unity1.setText("°F");
 					lblTemp_unity2.setText("°F");
 					lblTemp_unity3.setText("°F");
@@ -755,6 +709,7 @@ public class WinPrime {
 					tmp = Math.round(tcond - tliq);
 					textFieldCompressorSousRefroid.setText(String.valueOf(tmp));
 				} else {
+					primeConfig.setUnitFaren(false);
 					lblTemp_unity1.setText("°C");
 					lblTemp_unity2.setText("°C");
 					lblTemp_unity3.setText("°C");
@@ -791,9 +746,7 @@ public class WinPrime {
 		panel_pc2.setLayout(null);
 		panelSroll.add(panel_pc2);
 
-		checkoxBTU = new JCheckBox("BTU/hr");
-		checkoxBTU.setToolTipText("British Thermal Unit / hour");
-		chckbxPound = new JCheckBox("lbs/h");
+		
 
 		// ---------------------------------------------------------------
 		// Capacity
@@ -815,7 +768,7 @@ public class WinPrime {
 				double tmp = Math.round(vCapacity/vPower*10.0)/10.0;
 				textFieldCompressorEER.setText(String.valueOf(tmp));
 
-				if (checkoxBTU.isSelected() | chckbxPound.isSelected())  {
+				if (primeConfig.isUnitBTU() | primeConfig.isUnitPound())  {
 					textFieldCompressorDeltaH0.setText("-----");
 				} else {
 					tmp = Math.round(vCapacity/vMassFlow/1000.0);
@@ -933,7 +886,7 @@ public class WinPrime {
 				double vCapacity = Double.valueOf( textFieldCompressorCapacity.getText());
 				double vMassFlow = Double.valueOf(textFieldCompressorMassFlow.getText());
 
-				if (checkoxBTU.isSelected() | chckbxPound.isSelected())  {
+				if (primeConfig.isUnitBTU() | primeConfig.isUnitPound())  {
 					textFieldCompressorDeltaH0.setText("-----");
 				} else {
 					double tmp = Math.round(vCapacity/vMassFlow/1000.0);
@@ -954,11 +907,14 @@ public class WinPrime {
 		// ---------------------------------------------------------------
 		// Check Box BTU/HR or Watt
 		// ---------------------------------------------------------------
-
+		checkoxBTU = new JCheckBox("BTU/hr");
+		checkoxBTU.setToolTipText("British Thermal Unit / hour");
+		checkoxBTU.setSelected(primeConfig.getUnitBTU());
 		checkoxBTU.setBounds(324, 171, 68, 23);
 		checkoxBTU.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if (checkoxBTU.isSelected()) {
+					primeConfig.setUnitBTU(true);
 					lblCapacity_unity.setText("Btu/hr");
 					lblEER_unity.setText("BTU/(hr.W)");
 
@@ -970,6 +926,7 @@ public class WinPrime {
 					textFieldCompressorDeltaH0.setText("-----");
 
 				} else {
+					primeConfig.setUnitBTU(false);
 					lblCapacity_unity.setText("Watt");
 					lblEER_unity.setText("");
 
@@ -980,7 +937,7 @@ public class WinPrime {
 					textFieldCompressorCapacity.setText(String.valueOf(Math.round(vCapacity*100.0)/100.0));
 					textFieldCompressorEER.setText(String.valueOf(Math.round(vCapacity/vPower*10.0)/10.0));
 
-					if (checkoxBTU.isSelected() | chckbxPound.isSelected())  {
+					if (primeConfig.isUnitBTU() | primeConfig.isUnitPound())  {
 						textFieldCompressorDeltaH0.setText("-----");
 					} else {
 						double tmp = Math.round(vCapacity/vMassFlow/1000.0);
@@ -995,11 +952,13 @@ public class WinPrime {
 		// ---------------------------------------------------------------
 		// Pound
 		// ---------------------------------------------------------------
-
-		chckbxPound.setToolTipText("Pounds/hour");
-		chckbxPound.addActionListener(new ActionListener() {
+		checkoxPound = new JCheckBox("lbs/h");
+		checkoxPound.setToolTipText("Pounds/hour");
+		checkoxPound.setSelected(primeConfig.getUnitPound());
+		checkoxPound.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (chckbxPound.isSelected()) {
+				if (checkoxPound.isSelected()) {
+					primeConfig.setUnitPound(true);
 					lblMassFlow_unity.setText("lbs/hr");
 
 					double vMassFlow = Misc.kg2pound(Double.valueOf(textFieldCompressorMassFlow.getText()));
@@ -1008,13 +967,14 @@ public class WinPrime {
 					textFieldCompressorDeltaH0.setText("-----");
 
 				} else {
+					primeConfig.setUnitPound(false);
 					lblMassFlow_unity.setText("Kg/s");
 
 					double vCapacity = Double.valueOf( textFieldCompressorCapacity.getText());
 					double vMassFlow = Misc.pound2kg(Double.valueOf(textFieldCompressorMassFlow.getText()));
 					textFieldCompressorMassFlow.setText(String.valueOf(Math.round(vMassFlow*10000.0)/10000.0));		
 
-					if (checkoxBTU.isSelected() | chckbxPound.isSelected())  {
+					if (primeConfig.isUnitBTU() | primeConfig.isUnitPound())  {
 						textFieldCompressorDeltaH0.setText("-----");
 					} else {
 						double tmp = Math.round(vCapacity/vMassFlow/1000.0);
@@ -1024,9 +984,9 @@ public class WinPrime {
 				}
 			}
 		});
-		chckbxPound.setSelected(true);
-		chckbxPound.setBounds(324, 201, 68, 23);
-		panel_pc2.add(chckbxPound);
+		checkoxPound.setSelected(true);
+		checkoxPound.setBounds(324, 201, 68, 23);
+		panel_pc2.add(checkoxPound);
 
 		// ---------------------------------------------------------------
 		// H1-H3
@@ -1119,7 +1079,7 @@ public class WinPrime {
 		comboBoxCompressor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int ComboId = comboBoxCompressor.getSelectedIndex();
-				fillCompressorTexField(pacl.get(ComboId).getCompressor());
+				fillCompressorTexField(pacl.get(ComboId));
 			}
 		});
 		comboBoxCompressor.setBounds(243, 10, 131, 20);

@@ -72,31 +72,34 @@ public class Compressor {
 	// -------------------------------------------------------
 	// 							JSON
 	// -------------------------------------------------------
+	//	Squiggly brackets {} act as containers  
+	//	Names and values are separated by a colon(:) 	--> put
+	//  Square brackets[] represents arrays.			--> add
+	//  {  "Planet": "Earth" , "Countries": [  { "Name": "India", "Capital": "Delhi"}, { "Name": "France", "Major": "Paris" } ]  }  
+	// -------------------------------------------------------
 	
 	/**
-	 * Return the Compressor JSON data
-	 * Style of return:
- 	 *      {"Current":0.91,"Power":190,".....
+	 * Construct the JSON data
 	 * @return : JSONObject
 	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
-		JSONObject ObjComp = new JSONObject();  
-		ObjComp.put("Name", this.name);
-		ObjComp.put("Evap", this.evap);	
-		ObjComp.put("Cond", this.cond);	
-		ObjComp.put("RG", this.rg);	
-		ObjComp.put("Liq", this.liq);	
-		ObjComp.put("Capacity", this.capacity);	
-		ObjComp.put("Power", this.power);	
-		ObjComp.put("Current", this.current);	
-		ObjComp.put("MassFlow", this.massFlow);	
-		ObjComp.put("Voltage", this.voltage);	
-		return ObjComp ;
+		JSONObject jsonObj = new JSONObject();  
+		jsonObj.put("Name", this.name);
+		jsonObj.put("Evap", this.evap);	
+		jsonObj.put("Cond", this.cond);	
+		jsonObj.put("RG", this.rg);	
+		jsonObj.put("Liq", this.liq);	
+		jsonObj.put("Capacity", this.capacity);	
+		jsonObj.put("Power", this.power);	
+		jsonObj.put("Current", this.current);	
+		jsonObj.put("MassFlow", this.massFlow);	
+		jsonObj.put("Voltage", this.voltage);	
+		return jsonObj ;
 	}
 	
 	/**
-	 * Set Class with the element coming from a the JSON object
+	 * Set the JSON data, to the Class instance
 	 * @param jsonObj : JSON Object
 	 */
 	public void setJsonObject(JSONObject jsonObj) {

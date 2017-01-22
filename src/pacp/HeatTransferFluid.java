@@ -25,40 +25,45 @@ public class HeatTransferFluid {
 	private String name;
 	private double T;	// Heat Transfer Fluid Temperature in °C
 	private double P; 	// Heat Transfer Fluid Pressure in bar
-	
+
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	
+
 	public HeatTransferFluid() {
 		this.name = "Fluide caloporteur";
 		this.T  = 0; 		
 		this.P = 0;		
 	}
-	
+
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
-	
+
 	// -------------------------------------------------------
 	// 							JSON
 	// -------------------------------------------------------
+	//	Squiggly brackets {} act as containers  
+	//	Names and values are separated by a colon(:) 	--> put
+	//  Square brackets[] represents arrays.			--> add
+	//  {  "Planet": "Earth" , "Countries": [  { "Name": "India", "Capital": "Delhi"}, { "Name": "France", "Major": "Paris" } ]  }  
+	// -------------------------------------------------------
 
 	/**
-	 * Return the JSON data
+	 * Construct the JSON data
 	 * @return : JSONObject
 	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
-		JSONObject ObjComp = new JSONObject();  
-		ObjComp.put("Name", this.name);
-		ObjComp.put("T", this.T);	
-		ObjComp.put("P", this.P);	
-		return ObjComp ;
+		JSONObject jsonObj = new JSONObject();  
+		jsonObj.put("Name", this.name);
+		jsonObj.put("T", this.T);	
+		jsonObj.put("P", this.P);	
+		return jsonObj ;
 	}
-	
+
 	/**
-	 * Set Class with the element coming from a the JSON object
+	 * Set the JSON data, to the Class instance
 	 * @param jsonObj : JSON Object
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
@@ -77,7 +82,7 @@ public class HeatTransferFluid {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public double getT() {
 		return T;
 	}

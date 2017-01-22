@@ -54,26 +54,31 @@ public class MeasurePoints {
 	// -------------------------------------------------------
 	// 							JSON
 	// -------------------------------------------------------
-
+	//	Squiggly brackets {} act as containers  
+	//	Names and values are separated by a colon(:) 	--> put
+	//  Square brackets[] represents arrays.			--> add
+	//  {  "Planet": "Earth" , "Countries": [  { "Name": "India", "Capital": "Delhi"}, { "Name": "France", "Major": "Paris" } ]  }  
+	// -------------------------------------------------------
+	
 	/**
-	 * Return the JSON data
+	 * Construct the JSON data
 	 * @return : JSONObject
 	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
-		JSONObject ObjComp = new JSONObject();  
-		ObjComp.put("Name", this.name);
-		ObjComp.put("X", this.x);	
-		ObjComp.put("Y", this.y);	
-		ObjComp.put("Definition", this.definition);	
-		ObjComp.put("Value", this.value);	
-		ObjComp.put("Unity", this.unity);	
-		ObjComp.put("Group", this.group);	
-		return ObjComp ;
+		JSONObject jsonObj = new JSONObject();  
+		jsonObj.put("Name", this.name);
+		jsonObj.put("X", this.x);	
+		jsonObj.put("Y", this.y);	
+		jsonObj.put("Definition", this.definition);	
+		jsonObj.put("Value", this.value);	
+		jsonObj.put("Unity", this.unity);	
+		jsonObj.put("Group", this.group);	
+		return jsonObj ;
 	}
 	
 	/**
-	 * Set Class with the element coming from a the JSON object
+	 * Set the JSON data, to the Class instance
 	 * @param jsonObj : JSON Object
 	 */
 	public void setJsonObject(JSONObject jsonObj) {

@@ -59,7 +59,7 @@ ffmpeg
 Gource
 	Outil d'animation du projet
 	http://gource.io/#
-	Generation video: gource -s 1 -f 
+	Generation video: gource -s 1 -f --output-ppm-stream output.ppm
 	Ne fonctionne pas ..
 	
 	Convert to file
@@ -67,6 +67,7 @@ Gource
 	ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i output.ppm  -vcodec wmv1 -r 60 -qscale 0 out.wmv
 	
 	ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i output.ppm -vcodec libvpx -fpre "C:\\Program Files\\ffmpeg\\presets\\libvpx-360p.ffpreset" gource.avi
+	ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i output.ppm -vcodec libvpx gource.avi
 	
 	
 

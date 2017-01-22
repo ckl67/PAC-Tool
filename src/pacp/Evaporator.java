@@ -53,21 +53,26 @@ public class Evaporator {
 	// -------------------------------------------------------
 	// 							JSON
 	// -------------------------------------------------------
+	//	Squiggly brackets {} act as containers  
+	//	Names and values are separated by a colon(:) 	--> put
+	//  Square brackets[] represents arrays.			--> add
+	//  {  "Planet": "Earth" , "Countries": [  { "Name": "India", "Capital": "Delhi"}, { "Name": "France", "Major": "Paris" } ]  }  
+	// -------------------------------------------------------
 
 	/**
-	 * Return the JSON data
+	 * Construct the JSON data
 	 * @return : JSONObject
 	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
-		JSONObject ObjComp = new JSONObject();  
-		ObjComp.put("Name", this.name);
-		ObjComp.put("DeltaT", this.deltaT);	
-		return ObjComp ;
+		JSONObject jsonObj = new JSONObject();  
+		jsonObj.put("Name", this.name);
+		jsonObj.put("DeltaT", this.deltaT);	
+		return jsonObj ;
 	}
 	
 	/**
-	 * Set Class with the element coming from a the JSON object
+	 * Set the JSON data, to the Class instance
 	 * @param jsonObj : JSON Object
 	 */
 	public void setJsonObject(JSONObject jsonObj) {

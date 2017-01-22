@@ -24,11 +24,6 @@ package pacp;
 public class Run {
 
 	// -------------------------------------------------------
-	// 						STATIC GLOBAL VAR
-	// -------------------------------------------------------
-	public static final String PACTool_Version = "Version Alpha 0.3";
-
-	// -------------------------------------------------------
 	// 							MAIN
 	// -------------------------------------------------------
 	public static void main(String[] args){

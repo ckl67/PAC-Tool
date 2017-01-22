@@ -88,28 +88,33 @@ public class EnthalpyBkgdImg {
 	// -------------------------------------------------------
 	// 							JSON
 	// -------------------------------------------------------
+	//	Squiggly brackets {} act as containers  
+	//	Names and values are separated by a colon(:) 	--> put
+	//  Square brackets[] represents arrays.			--> add
+	//  {  "Planet": "Earth" , "Countries": [  { "Name": "India", "Capital": "Delhi"}, { "Name": "France", "Major": "Paris" } ]  }  
+	// -------------------------------------------------------
 
 	/**
-	 * Return the JSON data
+	 * Construct the JSON data
 	 * @return : JSONObject
 	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
-		JSONObject ObjComp = new JSONObject();  
-		ObjComp.put("EnthalpyImageFile", this.enthalpyImageFile);
-		ObjComp.put("refCurveH1x", this.refCurveH1x);	
-		ObjComp.put("refCurveH2x", this.refCurveH2x);	
-		ObjComp.put("refCurveP1y", this.refCurveP1y);	
-		ObjComp.put("refCurveP2y", this.refCurveP2y);	
-		ObjComp.put("iBgH1x", this.iBgH1x);	
-		ObjComp.put("iBgH2x", this.iBgH2x);	
-		ObjComp.put("iBgP1y", this.iBgP1y);	
-		ObjComp.put("iBgP2y", this.iBgP2y);	
-		return ObjComp ;
+		JSONObject jsonObj = new JSONObject();  
+		jsonObj.put("EnthalpyImageFile", this.enthalpyImageFile);
+		jsonObj.put("refCurveH1x", this.refCurveH1x);	
+		jsonObj.put("refCurveH2x", this.refCurveH2x);	
+		jsonObj.put("refCurveP1y", this.refCurveP1y);	
+		jsonObj.put("refCurveP2y", this.refCurveP2y);	
+		jsonObj.put("iBgH1x", this.iBgH1x);	
+		jsonObj.put("iBgH2x", this.iBgH2x);	
+		jsonObj.put("iBgP1y", this.iBgP1y);	
+		jsonObj.put("iBgP2y", this.iBgP2y);	
+		return jsonObj ;
 	}
 	
 	/**
-	 * Set Class with the element coming from a the JSON object
+	 * Set the JSON d<ata, to the Class instance
 	 * @param jsonObj : JSON Object
 	 */
 	public void setJsonObject(JSONObject jsonObj) {

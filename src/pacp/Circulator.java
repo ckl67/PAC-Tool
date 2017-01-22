@@ -98,7 +98,6 @@ public class Circulator {
 	/**
 	 * Construct the JSON data
 	 * @return : JSONObject
-	 *      {"Features":[{"Current":0.91,"Power":190},{"Current".....
 	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
@@ -120,9 +119,8 @@ public class Circulator {
 	}
 
 	/**
-	 * Set Class with the element coming from a the JSON object
+	 * Set the JSON d<ata, to the Class instance
 	 * @param jsonObj : JSON Object
-	 * 			
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
 		this.name = (String) jsonObj.get("Name");
