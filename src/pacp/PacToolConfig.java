@@ -18,16 +18,22 @@
  */
 package pacp;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class PacToolConfig {
 
@@ -40,7 +46,13 @@ public class PacToolConfig {
 	// 							METHOD
 	// -------------------------------------------------------
 
-	// Save PAC-Tool overall configuration file
+	/**
+	 * Save PAC-Tool overall configuration file
+	 * @param pacl
+	 * @param enthalpy
+	 * @param primeConfig
+	 * @param fileName
+	 */
 	@SuppressWarnings("unchecked")
 	public static void saveConfigFile(List<Pac> pacl, Enthalpy enthalpy, PrimeConfig primeConfig, String fileName) {
 
@@ -77,7 +89,7 @@ public class PacToolConfig {
 			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			Date date = new Date();
 			System.out.println(dateFormat.format(date)); //2016/11/16 12:08:43
-			
+
 			String tmpi= jsonObjPacTool.toJSONString();
 			String tmpo = "# ---------------------------------------------------\n" + "# PAC-Tool: " + Misc.PACTool_Version + "\n# Configuration File generated: " + dateFormat.format(date) + "\n# ---------------------------------------------------\n";
 			String tab = "";
@@ -92,7 +104,6 @@ public class PacToolConfig {
 				if (tmpi.charAt(i) == '}') {
 					ntab = ntab - 3; 
 					tab = Misc.genRepeatChar(' ', ntab);
-					//tmpo = tmpo + "\n" + tab;
 				}
 				if (tmpi.charAt(i) == '[') {
 					ntab = ntab + 3; 
@@ -102,7 +113,6 @@ public class PacToolConfig {
 				if (tmpi.charAt(i) == ']') {
 					ntab = ntab - 3; 
 					tab = Misc.genRepeatChar(' ', ntab);
-					//tmpo = tmpo + "\n" + tab;
 				}
 				if (tmpi.charAt(i) == ',') 
 					tmpo = tmpo + "\n" + tab;
@@ -115,6 +125,47 @@ public class PacToolConfig {
 		} catch (IOException e) {  
 			e.printStackTrace();  
 		}  
-
 	}
+
+	/**
+	 * Read PAC-Tool overall configuration file
+	 * @param pacl
+	 * @param enthalpy
+	 * @param primeConfig
+	 * @param fileName
+	 */
+	public static void readConfigFile(List<Pac> pacl, Enthalpy enthalpy, PrimeConfig primeConfig, String fileName) {
+		File file = new File (fileName);
+		Scanner sken = null;
+
+		try {
+			sken = new Scanner (file);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.err.println("Unable to read the file: fileName");
+		}
+
+		String strLineJSON = "";
+		while (sken.hasNext () ){
+			String strLine  = sken.nextLine ();
+			if (!strLine .startsWith("#") ) {
+				strLineJSON = strLineJSON + strLine;
+			}
+		}
+
+		// Parse to JSON Object
+		JSONParser parser = new JSONParser();  
+		JSONObject jsonObj = null;
+		try {
+			jsonObj = (JSONObject) parser.parse(strLineJSON);
+		} catch (ParseException e) {
+			System.err.println("Unable to Parse JSON read the file: fileName");
+		}  
+
+		// PrimeConfig: Set the Class Instance with JSON data
+		JSONObject jsonObjPrimeConfig = (JSONObject) jsonObj.get("PrimeConfig") ;
+		primeConfig.setJsonObject(jsonObjPrimeConfig);
+	}
+
+
 }

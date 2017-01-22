@@ -295,77 +295,13 @@ public class WinPrime {
 				int returnVal = chooser.showOpenDialog(frame);
 				if(returnVal == JFileChooser.APPROVE_OPTION) {
 					//System.out.println("You chose to open this file: " + chooser.getSelectedFile().getAbsolutePath());
-
-					JSONParser parser = new JSONParser(); 
-					JSONObject jsonObjectR = null;
-					try {
-						jsonObjectR = (JSONObject) parser.parse(new FileReader(chooser.getSelectedFile().getAbsolutePath()));
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}  
-
-					System.out.println("READ JSON object to file");  
-					System.out.println("-----------------------");  
-					System.out.print(jsonObjectR);  
-
-					JSONArray jsonObjectCompressorL = (JSONArray) jsonObjectR.get("Compressor");
-					JSONObject jsonObjectCompressorn;
-					JSONObject jsonObjectCfg = (JSONObject) jsonObjectR.get("Cfg");
-					JSONObject jObjEBImg = (JSONObject) jsonObjectR.get("EnthalpyBkgdImg");
-
 					
-					EnthalpyBkgdImg vEnthalpyBkgdImg;
-					vEnthalpyBkgdImg = enthalpy.getEnthalpyBkgImage();
+					PacToolConfig.readConfigFile(pacl, enthalpy, primeConfig, chooser.getSelectedFile().getAbsolutePath());
+					System.out.println(primeConfig.getUnitFaren());
 					
-					vEnthalpyBkgdImg.setJsonObject(jObjEBImg);
-					
-					System.out.println(vEnthalpyBkgdImg.getEnthalpyImageFile());
-					System.out.println(vEnthalpyBkgdImg.getiBgH1x());
-
-					System.exit(0);
-
-					// Read Configuration & Preferences
-					long nbCompressorList = (long) jsonObjectCfg.get("nbCompressorList");
-
-					// Read Compressor List + Affect to pacl compressor
-					for(int i=1;i<pacl.size();i++) {
-						pacl.remove(i);
-						comboBoxCompressor.removeItemAt(i);
-					}
-					//System.out.println("size="+pacl.size());
-					//System.out.println("comboBoxCompressor size="+comboBoxCompressor.getItemCount());
-
-					for(int i=0;i<nbCompressorList;i++) {
-						jsonObjectCompressorn = (JSONObject) jsonObjectCompressorL.get(i);
-						if(i==0) {
-							//pacl.add(i, paci);
-							pacl.get(i).getCompressor().setJsonObject(jsonObjectCompressorn);
-						}
-						else {
-							pacl.add(i, new Pac());
-							pacl.get(i).getCompressor().setJsonObject(jsonObjectCompressorn);
-							comboBoxCompressor.insertItemAt(pacl.get(i).getCompressor().getName(),i);
-						}
-					}
-					comboBoxCompressor.setSelectedIndex(0);
-					fillCompressorTexField(pacl.get(0));
-
-					// Read Configuration & Preferences WITH ACTION TO PERFORM --> MUST BE THE LAST ACTION !!
-					if (!(boolean)(jsonObjectCfg.get("checkoxFaren")))
-						checkoxFaren.doClick(); 		
-					if (!(boolean)(jsonObjectCfg.get("checkoxBTU")))
-						checkoxBTU.doClick(); 		
-					if (!(boolean)(jsonObjectCfg.get("checkoxPound")))
-						checkoxPound.doClick(); 		
-				} 
+				}
 			}
+				
 		});
 		mfile.add(mloadcfg);
 
@@ -1094,14 +1030,12 @@ public class WinPrime {
 		btnSaveCompressor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int ComboId = comboBoxCompressor.getSelectedIndex();
-				if ( ComboId > 0 ) {
-					String tmp = textFieldCompressorName.getText();
+				if ( ComboId >= 0 ) {
 					UpdateTextField2Pac(pacl.get(ComboId));
-					comboBoxCompressor.removeItemAt(ComboId);
+					String tmp = textFieldCompressorName.getText();
+					//Impossible to rename an item, so we will create a new one, and delete the old
 					comboBoxCompressor.insertItemAt(tmp, ComboId);
-					comboBoxCompressor.setSelectedIndex(ComboId);
-					pacl.get(ComboId).getCompressor().setName(tmp);
-					textFieldCompressorName.setText(tmp);
+					comboBoxCompressor.removeItemAt(ComboId+1);
 				}
 			}
 		});
