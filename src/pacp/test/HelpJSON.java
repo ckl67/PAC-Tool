@@ -90,8 +90,7 @@ public class HelpJSON {
 		 */
 		public void setJsonObject(JSONObject jsonObj) {
 			this.enthalpyImageFile = (String) jsonObj.get("enthalpyImageFile");
-			this.refCurveH1x = Integer.valueOf(((Long) jsonObj.get("refCurveH1x")).intValue()) ;
-			//this.refCurveH1x = (int) jsonObj.get("refCurveH1x");
+			this.refCurveH1x = ((Number) jsonObj.get("refCurveH1x")).intValue();
 		}
 
 	}
@@ -139,7 +138,7 @@ public class HelpJSON {
 		 */
 		public void setJsonObject(JSONObject jsonObj) {
 			this.nameRefrigerant = (String) jsonObj.get("nameRefrigerant");
-			this.xHmin = (double) jsonObj.get("xHmin");
+			this.xHmin = ((Number) jsonObj.get("xHmin")).doubleValue();
 			JSONObject jsonObjEImg = (JSONObject) jsonObj.get("enthalpyBkgdImg");
 			this.enthalpyBkgdImg.setJsonObject(jsonObjEImg); 
 		}

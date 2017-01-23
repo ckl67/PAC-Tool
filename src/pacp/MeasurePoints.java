@@ -31,20 +31,20 @@ public class MeasurePoints {
 	private String definition;
 	private double value;
 	private String unity;
-	private int group; 
+	private int groupHpBp; 
 	
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public MeasurePoints(String name, int x, int y,String definition,double value, String unity, int group) {
+	public MeasurePoints(String name, int x, int y,String definition,double value, String unity, int groupHpBp) {
 		this.name = name;
 		this.x = x;
 		this.y = y;
 		this.definition = definition;
 		this.value = value;
 		this.unity = unity;
-		this.group = group;	//HP or BP
+		this.groupHpBp = groupHpBp;	//HP or BP
 	}
 	
 	// -------------------------------------------------------
@@ -73,7 +73,7 @@ public class MeasurePoints {
 		jsonObj.put("Definition", this.definition);	
 		jsonObj.put("Value", this.value);	
 		jsonObj.put("Unity", this.unity);	
-		jsonObj.put("Group", this.group);	
+		jsonObj.put("GroupHpOrBp", this.groupHpBp);	
 		return jsonObj ;
 	}
 	
@@ -83,12 +83,12 @@ public class MeasurePoints {
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
 		this.name = (String) jsonObj.get("Name");
-		this.x = (int) jsonObj.get("X");
-		this.y = (int) jsonObj.get("Y");
+		this.x = ((Number) jsonObj.get("X")).intValue();
+		this.y = ((Number) jsonObj.get("Y")).intValue();
 		this.definition = (String) jsonObj.get("Definition");
-		this.value = (double) jsonObj.get("Value");
+		this.value = ((Number) jsonObj.get("Value")).doubleValue();
 		this.unity = (String) jsonObj.get("Unity");
-		this.group = (int) jsonObj.get("Group");
+		this.groupHpBp = ((Number) jsonObj.get("GroupHpOrBp")).intValue();
 	}
 
 	
@@ -128,8 +128,8 @@ public class MeasurePoints {
 		this.unity = unity;
 	}
 
-	public int getGroup() {
-		return group;
+	public int getGroupHpBp() {
+		return groupHpBp;
 	}
 
 }

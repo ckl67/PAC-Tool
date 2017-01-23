@@ -427,15 +427,15 @@ public class Enthalpy {
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
 		JSONObject jsonObj = new JSONObject();  
-		jsonObj.put("nameRefrigerant", this.nameRefrigerant);
+		jsonObj.put("NameRefrigerant", this.nameRefrigerant);
 		jsonObj.put("xHmin", this.xHmin);	
 		jsonObj.put("xHmax", this.xHmax);	
 		jsonObj.put("yPmin", this.yPmin);	
 		jsonObj.put("yPmax", this.yPmax);	
-		jsonObj.put("fileNameTP", this.fileNameTP);	
-		jsonObj.put("deltaP", this.deltaP);	
-		jsonObj.put("fileNameSAT", this.fileNameSAT);	
-		jsonObj.put("enthalpyBkgdImg", enthalpyBkgdImg.getJsonObject());	
+		jsonObj.put("FileNameTP", this.fileNameTP);	
+		jsonObj.put("DeltaP", this.deltaP);	
+		jsonObj.put("FileNameSAT", this.fileNameSAT);	
+		jsonObj.put("EnthalpyBkgdImg", enthalpyBkgdImg.getJsonObject());	
 		return jsonObj ;
 	}
 	
@@ -444,16 +444,16 @@ public class Enthalpy {
 	 * @param jsonObj : JSON Object
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
-		this.nameRefrigerant = (String) jsonObj.get("nameRefrigerant");
-		this.xHmin = (double) jsonObj.get("xHmin");
-		this.xHmax = (double) jsonObj.get("xHmax");
-		this.yPmin = (double) jsonObj.get("yPmin");
-		this.yPmax = (double) jsonObj.get("yPmax");
-		this.fileNameTP = (String) jsonObj.get("fileNameTP");
-		this.deltaP = (double) jsonObj.get("deltaP");
-		this.fileNameSAT = (String) jsonObj.get("fileNameSAT");
+		this.nameRefrigerant = (String) jsonObj.get("NameRefrigerant");
+		this.xHmin = ((Number) jsonObj.get("xHmin")).doubleValue();
+		this.xHmax = ((Number) jsonObj.get("xHmax")).doubleValue();
+		this.yPmin = ((Number) jsonObj.get("yPmin")).doubleValue();
+		this.yPmax = ((Number) jsonObj.get("yPmax")).doubleValue();
+		this.fileNameTP = (String) jsonObj.get("FileNameTP");
+		this.deltaP = ((Number) jsonObj.get("DeltaP")).doubleValue();
+		this.fileNameSAT = (String) jsonObj.get("FileNameSAT");
 		
-		JSONObject jsonObjEImg = (JSONObject) jsonObj.get("enthalpyBkgdImg");
+		JSONObject jsonObjEImg = (JSONObject) jsonObj.get("EnthalpyBkgdImg");
 		this.enthalpyBkgdImg.setJsonObject(jsonObjEImg); 
 	}
 

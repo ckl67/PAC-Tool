@@ -68,6 +68,7 @@ public class Evaporator {
 		JSONObject jsonObj = new JSONObject();  
 		jsonObj.put("Name", this.name);
 		jsonObj.put("DeltaT", this.deltaT);	
+		jsonObj.put("DeltaP", this.deltaP);	
 		return jsonObj ;
 	}
 	
@@ -77,7 +78,8 @@ public class Evaporator {
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
 		this.name = (String) jsonObj.get("Name");
-		this.deltaT = (double) jsonObj.get("DeltaT");
+		this.deltaT = ((Number) jsonObj.get("DeltaT")).doubleValue();
+		this.deltaP = ((Number) jsonObj.get("DeltaP")).doubleValue();
 	}
 
 	// -------------------------------------------------------

@@ -51,8 +51,8 @@ public class Refrigerant extends Enthalpy {
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
 		this.name = (String) jsonObj.get("Name");
-		this.T = (double) jsonObj.get("T");
-		this.P = (double) jsonObj.get("P");
+		this.T = ((Number) jsonObj.get("T")).doubleValue();
+		this.P = ((Number) jsonObj.get("P")).doubleValue();
 	}
 
 	// -------------------------------------------------------

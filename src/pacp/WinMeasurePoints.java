@@ -208,9 +208,9 @@ public class WinMeasurePoints {
 				measurePL.get(id).setValue(Double.valueOf(textField.getText()));
 				// Type of Group of selected point, determine pressure and H
 				double pv = 0;
-				if (measurePL.get(id).getGroup() == _GROUP_HP) {
+				if (measurePL.get(id).getGroupHpBp() == _GROUP_HP) {
 					pv =measurePL.get(getIdForHP()).getValue();
-				} else if (measurePL.get(id).getGroup() == _GROUP_BP) {
+				} else if (measurePL.get(id).getGroupHpBp() == _GROUP_BP) {
 					pv =measurePL.get(getIdForBP()).getValue();				
 				} else {
 					pv = -1;

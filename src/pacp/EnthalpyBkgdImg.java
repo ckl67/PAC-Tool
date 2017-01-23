@@ -99,15 +99,15 @@ public class EnthalpyBkgdImg {
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
 		JSONObject jsonObj = new JSONObject();  
-		jsonObj.put("enthalpyImageFile", this.enthalpyImageFile);
-		jsonObj.put("refCurveH1x", this.refCurveH1x);	
-		jsonObj.put("refCurveH2x", this.refCurveH2x);	
-		jsonObj.put("refCurveP1y", this.refCurveP1y);	
-		jsonObj.put("refCurveP2y", this.refCurveP2y);	
-		jsonObj.put("iBgH1x", this.iBgH1x);	
-		jsonObj.put("iBgH2x", this.iBgH2x);	
-		jsonObj.put("iBgP1y", this.iBgP1y);	
-		jsonObj.put("iBgP2y", this.iBgP2y);	
+		jsonObj.put("EnthalpyImageFile", this.enthalpyImageFile);
+		jsonObj.put("RefCurveH1x", this.refCurveH1x);	
+		jsonObj.put("RefCurveH2x", this.refCurveH2x);	
+		jsonObj.put("RefCurveP1y", this.refCurveP1y);	
+		jsonObj.put("RefCurveP2y", this.refCurveP2y);	
+		jsonObj.put("IBgH1x", this.iBgH1x);	
+		jsonObj.put("IBgH2x", this.iBgH2x);	
+		jsonObj.put("IBgP1y", this.iBgP1y);	
+		jsonObj.put("IBgP2y", this.iBgP2y);	
 		return jsonObj ;
 	}
 	
@@ -118,14 +118,14 @@ public class EnthalpyBkgdImg {
 	public void setJsonObject(JSONObject jsonObj) {
 		this.enthalpyImageFile = (String) jsonObj.get("enthalpyImageFile");
 		
-		this.refCurveH1x = Integer.valueOf(((Long) jsonObj.get("refCurveH1x")).intValue()) ;
-		this.refCurveH2x = Integer.valueOf(((Long) jsonObj.get("refCurveH2x")).intValue()) ;
-		this.refCurveP1y = Integer.valueOf(((Long) jsonObj.get("refCurveP1y")).intValue()) ;
-		this.refCurveP2y = Integer.valueOf(((Long) jsonObj.get("refCurveP2y")).intValue()) ;
-		this.iBgH1x = Integer.valueOf(((Long) jsonObj.get("iBgH1x")).intValue()) ;
-		this.iBgH2x = Integer.valueOf(((Long) jsonObj.get("iBgH2x")).intValue()) ;
-		this.iBgP1y = Integer.valueOf(((Long) jsonObj.get("iBgP1y")).intValue()) ;
-		this.iBgP2y = Integer.valueOf(((Long) jsonObj.get("iBgP2y")).intValue()) ;
+		this.refCurveH1x = ((Number) jsonObj.get("RefCurveH1x")).intValue() ;
+		this.refCurveH2x = ((Number) jsonObj.get("RefCurveH2x")).intValue() ;
+		this.refCurveP1y = ((Number) jsonObj.get("RefCurveP1y")).intValue() ;
+		this.refCurveP2y = ((Number) jsonObj.get("RefCurveP2y")).intValue() ;
+		this.iBgH1x = ((Number) jsonObj.get("IBgH1x")).intValue() ;
+		this.iBgH2x = ((Number) jsonObj.get("IBgH2x")).intValue() ;
+		this.iBgP1y = ((Number) jsonObj.get("IBgP1y")).intValue() ;
+		this.iBgP2y = ((Number) jsonObj.get("IBgP2y")).intValue() ;
 	}
 
 	// -------------------------------------------------------

@@ -81,8 +81,8 @@ public class HeatSrcDistrCircuit {
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
 		this.name = (String) jsonObj.get("Name");
-		this.deltaT = (double) jsonObj.get("DeltaT");
-		this.deltaP = (double) jsonObj.get("DeltaP");
+		this.deltaT = ((Number) jsonObj.get("DeltaT")).doubleValue();
+		this.deltaP = ((Number) jsonObj.get("DeltaP")).doubleValue();
 	}
 	
 	// -------------------------------------------------------

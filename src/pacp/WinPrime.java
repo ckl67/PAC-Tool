@@ -44,6 +44,9 @@ import javax.swing.JPanel;
 import javax.swing.JCheckBox;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import org.json.simple.JSONObject;
+
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import javax.swing.JEditorPane;
@@ -287,13 +290,31 @@ public class WinPrime {
 				chooser.setCurrentDirectory(workingDirectory);
 				int returnVal = chooser.showOpenDialog(frame);
 				if(returnVal == JFileChooser.APPROVE_OPTION) {
-					//System.out.println("You chose to open this file: " + chooser.getSelectedFile().getAbsolutePath());
-					
+	
+					// Remove all item in ComboBox (excpet the first)
+					for(int i=1;i<pacl.size();i++) {
+						comboBoxCompressor.removeItemAt(i);
+					}
+
+					// Read the configuration from File
 					PacToolConfig.readConfigFile(pacl, enthalpy, primeConfig, chooser.getSelectedFile().getAbsolutePath());
-					//System.out.println(primeConfig.getUnitFaren());
 					
+					// Fill ComboBox
+					for(int i=1;i<pacl.size();i++) {
+						if(i>0) {
+							comboBoxCompressor.insertItemAt(pacl.get(i).getCompressor().getName(),i);
+						}
+					}
 					comboBoxCompressor.setSelectedIndex(0);
 					fillCompressorTexField(pacl.get(0));
+					
+					// Read Configuration & Preferences WITH ACTION TO PERFORM --> MUST BE THE LAST ACTION !!
+					if (!primeConfig.isUnitFaren())
+						checkoxFaren.doClick(); 		
+					if (!primeConfig.isUnitBTU())
+						checkoxBTU.doClick(); 		
+					if (!primeConfig.isUnitPound())
+						checkoxPound.doClick(); 		
 				}
 			}
 				
@@ -309,13 +330,13 @@ public class WinPrime {
 			public void actionPerformed(ActionEvent arg0) {
 
 				JFileChooser chooser = new JFileChooser();
-				FileNameExtensionFilter filter = new FileNameExtensionFilter( "Configuratin file (.cfg)", ".cfg");
+				FileNameExtensionFilter filter = new FileNameExtensionFilter( "Configuratin file (.cfg)", "cfg");
 				chooser.setApproveButtonText("Sauvegarder");
 				chooser.setFileFilter(filter);
 				File workingDirectory = new File(System.getProperty("user.dir"));
 				chooser.setCurrentDirectory(workingDirectory);
 				if(chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
-					//System.out.println("You chose to open this file: " + chooser.getSelectedFile().getAbsolutePath());
+					//System.out.println("You chose to save to file: " + chooser.getSelectedFile().getAbsolutePath());
 					PacToolConfig.saveConfigFile(pacl, enthalpy, primeConfig, chooser.getSelectedFile().getAbsolutePath());
 				} 
 			}

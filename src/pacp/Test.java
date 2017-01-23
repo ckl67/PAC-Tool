@@ -48,7 +48,7 @@ public class Test {
 					+ "  (1)-> COP Compute\n"
 					+ "  (2)-> Circulator\n"
 					+ "  (3)-> Compressor\n"
-					+ "  (4)-> Condensatorr\n"
+					+ "  (4)-> Condensator\n"
 					+ "  (5)-> Dehydrator\n"
 					+ "  (6)-> Object graphic for Enthalpy (Element elDraw)\n"
 					+ "  (7)-> Enthalpy\n"
@@ -527,13 +527,14 @@ public class Test {
 	}
 
 	// ===================================================================================================================
-	// 													TEST HEATDISTRIBUTION
+	// 													TEST HEAT DISTRIBUTION
 	// ===================================================================================================================
 	private static void testHeatDistribution() {
-		System.out.println("TEST HEATDISTRIBUTION");
+		System.out.println("TEST HEAT DISTRIBUTION");
 
 		HeatSrcDistrCircuit vHeatDistribution = new HeatSrcDistrCircuit();
 		vHeatDistribution.setDeltaT(-50);
+		vHeatDistribution.setName("Chauffage Maison");
 		System.out.println(vHeatDistribution.getName());
 
 		HeatTransferFluid vFluid = new HeatTransferFluid(); 
@@ -561,36 +562,37 @@ public class Test {
 	}
 
 	// ===================================================================================================================
-	// 													TEST HEATSOURCE
+	// 													TEST HEAT SOURCE
 	// ===================================================================================================================
 	private static void testHeatSource() {
-		System.out.println("TEST HEATSOURCE");
+		System.out.println("TEST HEAT SOURCE");
 
-		HeatSrcDistrCircuit vDistrCircuit = new HeatSrcDistrCircuit();
-		vDistrCircuit.setDeltaT(+20);
-		System.out.println(vDistrCircuit.getName());
+		HeatSrcDistrCircuit vHeatSource = new HeatSrcDistrCircuit();
+		vHeatSource.setDeltaT(+20);
+		vHeatSource.setName("Captage");
+		System.out.println(vHeatSource.getName());
 
 		HeatTransferFluid vFluid = new HeatTransferFluid(); 
 
 		System.out.println("\n---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();
-		jsonObj = vDistrCircuit.getJsonObject();
+		jsonObj = vHeatSource.getJsonObject();
 		System.out.println(jsonObj);
 
 		System.out.println("\n---> Modify the instance ");
-		vDistrCircuit.setName("Toto");
-		System.out.println("    Name ="+vDistrCircuit.getName());
+		vHeatSource.setName("Toto");
+		System.out.println("    Name ="+vHeatSource.getName());
 
 		System.out.println("\n---> Set the Class Instance with JSON data");
-		vDistrCircuit.setJsonObject(jsonObj);
+		vHeatSource.setJsonObject(jsonObj);
 		System.out.println(jsonObj);
 
 		System.out.println("\n---> Read afterwards ");
-		System.out.println("    Name="+vDistrCircuit.getName());
+		System.out.println("    Name="+vHeatSource.getName());
 
 		vFluid.setT(25);
 		System.out.println("Input --> Output");
-		System.out.println(vFluid.getT()+"°C-->"+vDistrCircuit.transfer(vFluid).getT()+"°C");
+		System.out.println(vFluid.getT()+"°C-->"+vHeatSource.transfer(vFluid).getT()+"°C");
 
 	}
 
@@ -632,7 +634,21 @@ public class Test {
 
 	private static void testMeasurePoints () { 
 		System.out.println("TEST MEASUREPOINTS");
-		System.out.println("--> Not implemented");
+		
+		MeasurePoints vMeasurePoints = new MeasurePoints("Mesures",23,56,"Point H1",23.567,"bar",1);
+		System.out.println(vMeasurePoints.getName());
+	
+		System.out.println("\n---> Construct JSON data");
+		JSONObject jsonObj = new JSONObject();
+		jsonObj = vMeasurePoints.getJsonObject();
+		System.out.println(jsonObj);
+
+		System.out.println("\n---> Set the Class Instance with JSON data");
+		vMeasurePoints.setJsonObject(jsonObj);
+		System.out.println(jsonObj);
+
+		System.out.println("\n---> Read afterwards ");
+		System.out.println("    Name="+vMeasurePoints.getName());
 
 	}
 
@@ -762,14 +778,14 @@ public class Test {
 	}
 
 	// ===================================================================================================================
-	// 													TES PAC-Tool CONFIGURATION
+	// 													TEST PAC-Tool CONFIGURATION
 	// ===================================================================================================================
 	private static void testPACToolConfig() {
 		System.out.println("TEST PAC-Tool CONFIGURATION");
 
 		Scanner sken = null;
 		try {
-			sken = new Scanner (new File ("D:/Users/kluges1/workspace/pac-tool/conf.cfg"));
+			sken = new Scanner (new File ("D:/Users/kluges1/workspace/pac-tool/config/PAC-Tool-Test.cfg"));
 		} catch (FileNotFoundException e) {
 			System.err.println("Unable to read the file: fileName");
 		}
@@ -809,13 +825,16 @@ public class Test {
 
 		// Create PAC List
 		List<Pac> pacl = new ArrayList<Pac>();
+		Pac pac = new Pac();
+		pacl.add(pac);
 
 		for(int i=1;i<pacl.size();i++) {
 			pacl.remove(i);
 		}
-		JSONArray ObjFeatureL = (JSONArray) jsonObj.get("PacList");
-		for(int i=0; i< ObjFeatureL.size();i++) {
-			JSONObject jsonObjectPac = (JSONObject) ObjFeatureL.get(i);
+		JSONArray jsonObjectPacL = (JSONArray) jsonObj.get("PacList");
+		for(int i=0; i< jsonObjectPacL.size();i++) {
+			JSONObject jsonObjectPac = (JSONObject) jsonObjectPacL.get(i);
+			System.out.println(jsonObjectPac);
 			if(i==0) {
 				pacl.get(i).setJsonObject(jsonObjectPac);				
 			} else {
@@ -823,6 +842,7 @@ public class Test {
 				pacl.get(i).setJsonObject(jsonObjectPac);
 			}
 		}
+		
 
 
 	}

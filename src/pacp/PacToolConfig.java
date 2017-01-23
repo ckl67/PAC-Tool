@@ -87,7 +87,6 @@ public class PacToolConfig {
 			// Format easy readable JSON 			
 			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			Date date = new Date();
-			System.out.println(dateFormat.format(date)); //2016/11/16 12:08:43
 
 			String tmpi= jsonObjPacTool.toJSONString();
 			String tmpo = "# ---------------------------------------------------\n" + "# PAC-Tool: " + Misc.PACTool_Version + "\n# Configuration File generated: " + dateFormat.format(date) + "\n# ---------------------------------------------------\n";
@@ -175,14 +174,16 @@ public class PacToolConfig {
 		for(int i=1;i<pacl.size();i++) {
 			pacl.remove(i);
 		}
-		JSONArray ObjFeatureL = (JSONArray) jsonObj.get("PacList");
-		for(int i=0; i< ObjFeatureL.size();i++) {
-			JSONObject jsonObjectPac = (JSONObject) ObjFeatureL.get(i);
+		JSONArray jsonObjectPacL = (JSONArray) jsonObj.get("PacList");
+		for(int i=0; i< jsonObjectPacL.size();i++) {
+			JSONObject jsonObjectPac = (JSONObject) jsonObjectPacL.get(i);
 			if(i==0) {
 				pacl.get(i).setJsonObject(jsonObjectPac);				
 			} else {
 				pacl.add(i, new Pac());
 				pacl.get(i).setJsonObject(jsonObjectPac);
+				//comboBoxCompressor.insertItemAt(pacl.get(i).getCompressor().getName(),i);
+
 			}
 		}
 			

@@ -71,6 +71,8 @@ public class PrimeConfig {
 		this.unitBTU = (boolean) jsonObj.get("unitBTU");
 		this.unitPound = (boolean) jsonObj.get("unitPound");
 		this.unitFaren = (boolean) jsonObj.get("unitFaren");
+		// To use afterward this principle
+		//this.xHmin = ((Number) jsonObj.get("xHmin")).doubleValue();
 	}
 
 	// -------------------------------------------------------

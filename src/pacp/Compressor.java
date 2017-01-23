@@ -104,15 +104,15 @@ public class Compressor {
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
 		this.name = (String) jsonObj.get("Name");
-		this.evap = (double) jsonObj.get("Evap");
-		this.cond = (double) jsonObj.get("Cond");
-		this.rg = (double) jsonObj.get("RG");
-		this.liq = (double) jsonObj.get("Liq");
-		this.capacity = (double) jsonObj.get("Capacity");
-		this.power = (double) jsonObj.get("Power");
-		this.current = (double) jsonObj.get("Current");
-		this.massFlow = (double) jsonObj.get("MassFlow");
-		this.voltage = (double) jsonObj.get("Voltage");
+		this.evap = ((Number) jsonObj.get("Evap")).doubleValue();
+		this.cond = ((Number) jsonObj.get("Cond")).doubleValue();
+		this.rg = ((Number) jsonObj.get("RG")).doubleValue();
+		this.liq = ((Number) jsonObj.get("Liq")).doubleValue();
+		this.capacity = ((Number) jsonObj.get("Capacity")).doubleValue();
+		this.power = ((Number) jsonObj.get("Power")).doubleValue();
+		this.current = ((Number) jsonObj.get("Current")).doubleValue();
+		this.massFlow = ((Number) jsonObj.get("MassFlow")).doubleValue();
+		this.voltage = ((Number) jsonObj.get("Voltage")).doubleValue();
 	}
 	
 	// -------------------------------------------------------

@@ -124,7 +124,7 @@ public class Circulator {
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
 		this.name = (String) jsonObj.get("Name");
-		this.voltage = (double)jsonObj.get("Voltage");
+		this.voltage = ((Number)jsonObj.get("Voltage")).doubleValue();
 
 		// Clear all Features
 		this.clearFeatures();
@@ -133,9 +133,9 @@ public class Circulator {
 		JSONArray ObjFeatureL = (JSONArray) jsonObj.get("Features");
 		for(int i=0; i< ObjFeatureL.size();i++) {
 			JSONObject jsonObjectL2 = (JSONObject) ObjFeatureL.get(i);
-			this.rotatePerMinutesL.add((int)jsonObjectL2.get("RotatePerMinutes"));
-			this.powerL.add((int)jsonObjectL2.get("Power"));
-			this.currentL.add((double)jsonObjectL2.get("Current"));
+			this.rotatePerMinutesL.add( ((Number)jsonObjectL2.get("RotatePerMinutes")).intValue());
+			this.powerL.add( ((Number)jsonObjectL2.get("Power")).intValue());
+			this.currentL.add( ((Number)jsonObjectL2.get("Current")).doubleValue());
 		}
 	}
 	
