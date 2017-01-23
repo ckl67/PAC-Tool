@@ -18,17 +18,22 @@
  */
 package pacp;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import pacp.Misc;
+
 // ------------------------------------------------------
 // Could be fine to create auto-test function
 //	assertThat(Misc.closestInL(-4, list), is(-2));
 //------------------------------------------------------
-
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
-import org.json.simple.JSONObject;
-import pacp.Misc;
 
 public class Test {
 
@@ -345,7 +350,6 @@ public class Test {
 		System.out.println(vGas.getT()+"°C-->"+vDehydrator.transfer(vGas).getT()+"°C");
 
 	}
-
 
 	// ===================================================================================================================
 	// 												TEST DRAW ELEMENTS
@@ -762,6 +766,64 @@ public class Test {
 	// ===================================================================================================================
 	private static void testPACToolConfig() {
 		System.out.println("TEST PAC-Tool CONFIGURATION");
+
+		Scanner sken = null;
+		try {
+			sken = new Scanner (new File ("D:/Users/kluges1/workspace/pac-tool/conf.cfg"));
+		} catch (FileNotFoundException e) {
+			System.err.println("Unable to read the file: fileName");
+		}
+
+		String strLineJSON = "";
+		while (sken.hasNext () ){
+			String strLine  = sken.nextLine ();
+			if (!strLine .startsWith("#") ) {
+				strLineJSON = strLineJSON + strLine;
+			}
+		}
+
+		// Parse to JSON Object
+		JSONParser parser = new JSONParser();  
+		JSONObject jsonObj = null;
+		try {
+			jsonObj = (JSONObject) parser.parse(strLineJSON);
+		} catch (ParseException e) {
+			System.err.println("Unable to Parse JSON read the file: fileName");
+		}  
+
+		// PrimeConfig: Set the Class Instance with JSON data
+		PrimeConfig primeConfig = new PrimeConfig();
+		JSONObject jsonObjPrimeConfig = (JSONObject) jsonObj.get("PrimeConfig") ;
+		System.out.println(jsonObjPrimeConfig);
+		primeConfig.setJsonObject(jsonObjPrimeConfig);
+		
+		System.out.println("   BTU=" +	primeConfig.getUnitBTU());
+		System.out.println("   Pound=" +	primeConfig.getUnitPound());
+		System.out.println("   Faren=" +	primeConfig.getUnitFaren());
+				
+		// Enthalpy (containing also EnthalpyBkgdImg)
+		Enthalpy enthalpy = new Enthalpy();
+		JSONObject jsonObjEnthalpy = (JSONObject) jsonObj.get("Enthalpy");
+		System.out.println(jsonObjEnthalpy);
+		enthalpy.setJsonObject(jsonObjEnthalpy);
+
+		// Create PAC List
+		List<Pac> pacl = new ArrayList<Pac>();
+
+		for(int i=1;i<pacl.size();i++) {
+			pacl.remove(i);
+		}
+		JSONArray ObjFeatureL = (JSONArray) jsonObj.get("PacList");
+		for(int i=0; i< ObjFeatureL.size();i++) {
+			JSONObject jsonObjectPac = (JSONObject) ObjFeatureL.get(i);
+			if(i==0) {
+				pacl.get(i).setJsonObject(jsonObjectPac);				
+			} else {
+				pacl.add(i, new Pac());
+				pacl.get(i).setJsonObject(jsonObjectPac);
+			}
+		}
+
 
 	}
 

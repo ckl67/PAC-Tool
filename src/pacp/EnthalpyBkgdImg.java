@@ -21,9 +21,7 @@ package pacp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-
 import org.json.simple.JSONObject;
 
 public class EnthalpyBkgdImg {
@@ -101,7 +99,7 @@ public class EnthalpyBkgdImg {
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
 		JSONObject jsonObj = new JSONObject();  
-		jsonObj.put("EnthalpyImageFile", this.enthalpyImageFile);
+		jsonObj.put("enthalpyImageFile", this.enthalpyImageFile);
 		jsonObj.put("refCurveH1x", this.refCurveH1x);	
 		jsonObj.put("refCurveH2x", this.refCurveH2x);	
 		jsonObj.put("refCurveP1y", this.refCurveP1y);	
@@ -119,17 +117,17 @@ public class EnthalpyBkgdImg {
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
 		this.enthalpyImageFile = (String) jsonObj.get("enthalpyImageFile");
-		this.refCurveH1x = (int) jsonObj.get("refCurveH1x");
-		this.refCurveH2x = (int) jsonObj.get("refCurveH2x");
-		this.refCurveP1y = (int) jsonObj.get("refCurveP1y");
-		this.refCurveP2y = (int) jsonObj.get("refCurveP2y");
-		this.iBgH1x = (int) jsonObj.get("iBgH1x");
-		this.iBgH2x = (int) jsonObj.get("iBgH2x");
-		this.iBgP1y = (int) jsonObj.get("iBgP1y");
-		this.iBgP2y = (int) jsonObj.get("iBgP2y");
+		
+		this.refCurveH1x = Integer.valueOf(((Long) jsonObj.get("refCurveH1x")).intValue()) ;
+		this.refCurveH2x = Integer.valueOf(((Long) jsonObj.get("refCurveH2x")).intValue()) ;
+		this.refCurveP1y = Integer.valueOf(((Long) jsonObj.get("refCurveP1y")).intValue()) ;
+		this.refCurveP2y = Integer.valueOf(((Long) jsonObj.get("refCurveP2y")).intValue()) ;
+		this.iBgH1x = Integer.valueOf(((Long) jsonObj.get("iBgH1x")).intValue()) ;
+		this.iBgH2x = Integer.valueOf(((Long) jsonObj.get("iBgH2x")).intValue()) ;
+		this.iBgP1y = Integer.valueOf(((Long) jsonObj.get("iBgP1y")).intValue()) ;
+		this.iBgP2y = Integer.valueOf(((Long) jsonObj.get("iBgP2y")).intValue()) ;
 	}
 
-	
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------

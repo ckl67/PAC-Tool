@@ -28,7 +28,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-import javax.swing.JComboBox;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -165,9 +164,8 @@ public class PacToolConfig {
 		JSONObject jsonObjPrimeConfig = (JSONObject) jsonObj.get("PrimeConfig") ;
 		System.out.println(jsonObjPrimeConfig);
 		primeConfig.setJsonObject(jsonObjPrimeConfig);
-		
-		
-		
+				
+
 		// Enthalpy (containing also EnthalpyBkgdImg)
 		JSONObject jsonObjEnthalpy = (JSONObject) jsonObj.get("Enthalpy");
 		System.out.println(jsonObjEnthalpy);
@@ -187,7 +185,6 @@ public class PacToolConfig {
 				pacl.get(i).setJsonObject(jsonObjectPac);
 			}
 		}
-
 			
 		
 	}

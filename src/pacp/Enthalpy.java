@@ -454,7 +454,7 @@ public class Enthalpy {
 		this.fileNameSAT = (String) jsonObj.get("fileNameSAT");
 		
 		JSONObject jsonObjEImg = (JSONObject) jsonObj.get("enthalpyBkgdImg");
-		this.getEnthalpyBkgImage().setJsonObject(jsonObjEImg); 
+		this.enthalpyBkgdImg.setJsonObject(jsonObjEImg); 
 	}
 
 	
