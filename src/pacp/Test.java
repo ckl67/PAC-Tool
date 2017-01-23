@@ -1,4 +1,28 @@
+/*
+ * - PAC-Tool - 
+ * Tool for understanding basics and computation of PAC (Pompe à Chaleur)
+ * Copyright (C) 2016 christian.klugesherz@gmail.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License (version 2)
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package pacp;
+
+// ------------------------------------------------------
+// Could be fine to create auto-test function
+//	assertThat(Misc.closestInL(-4, list), is(-2));
+//------------------------------------------------------
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,26 +40,29 @@ public class Test {
 			System.out.println();
 			System.out.println(" <==========================================");
 			System.out.println("Veuillez saisir la Class à Tester:\n"
-					+ "  (1)-> COP Calcul\n"
-					+ "  (2)-> Circulateur\n"
-					+ "  (3)-> Compresseur\n"
-					+ "  (4)-> Condensateur\n"
+					+ "  (1)-> COP Compute\n"
+					+ "  (2)-> Circulator\n"
+					+ "  (3)-> Compressor\n"
+					+ "  (4)-> Condensatorr\n"
 					+ "  (5)-> Dehydrator\n"
-					+ "  (6)-> Object graphique pour Diagramme Enthalpy (Element elDraw)\n"
-					+ "  (7)-> Enthalpie\n"
-					+ "  (8)-> Image de Fond Enthalpie (EnthalpyBkgdImg)\n"
-					+ "  (9)-> Evaporateur\n"
-					+ "  (10)-> Détendeur\n"
-					+ "  (11)-> Distribution Chaleur --> Chauffage\n"
-					+ "  (12)-> Source de Chaleur --> Captage\n"
-					+ "  (13)-> Fluide Caloporteur\n"
-					+ "  (14)-> Point de mesure lu (MeasurePoints)\n"
-					+ "  (15)-> Fonctions diverses\n"
-					+ "  (16)-> PAC\n"
-					+ "  (17)-> Fluide Réfrigerant\n"
-					+ "  (X)-> Lanceur (Main)\n"
+					+ "  (6)-> Object graphic for Enthalpy (Element elDraw)\n"
+					+ "  (7)-> Enthalpy\n"
+					+ "  (8)-> EnthalpyBkgdImg Background Image for Enthalpy \n"
+					+ "  (9)-> Evaporator\n"
+					+ "  (10)-> Expansion Valve\n"
+					+ "  (11)-> Head Distribution Circuit \n"
+					+ "  (12)-> Head Source Circuit \n"
+					+ "  (13)-> Heat Transfert Fluid\n"
+					+ "  (14)-> Measure Points\n"
+					+ "  (15)-> Miscellaneous\n"
+					+ "  (16)-> PAC (Including all elements of a PAC)\n"
+					+ "  (17)-> PAC-Tool Configuration information\n"
+					+ "  (X)-> Panel Enthalpy\n"
+					+ "  (18)-> Prime Windows configuration (Main window) \n"
+					+ "  (19)-> Refrigerant Fluid\n"
+					+ "  (X)-> Run (Main)\n"
 					+ "  (X)-> Test\n"
-					+ "  (X)-> Fenêtre (....)\n"
+					+ "  (X)-> Windows (....)\n"
 					+ "  (0)->Exit");
 			System.out.println(" ===========================================>");
 			String rep = sc.nextLine();
@@ -111,6 +138,14 @@ public class Test {
 				loop=false;
 				break;        	
 			case "17":
+				testPACToolConfig();
+				loop=false;
+				break;        	
+			case "18":
+				testPrimeConfig();
+				loop=false;
+				break;        	
+			case "19":
 				testRefrigerant();
 				loop=false;
 				break;        	
@@ -170,23 +205,23 @@ public class Test {
 		}
 
 		// construct JSON object
-		System.out.println("\n---> Construct JSON data (with he new element !)");
+		System.out.println("\n---> Construct JSON data (with the new element !)");
 		JSONObject jsonObj = new JSONObject();
 		jsonObj = vCirlculator.getJsonObject();
 		System.out.println(jsonObj);
 		
 		// Create a new instance + clear Features 
-		System.out.println("\n---> New Instance + Clear features");
-		Circulator vCirlculatorn = new Circulator();
-		vCirlculatorn.clearFeatures();
-		vCirlculatorn.setName("Toto");
-		System.out.println("    Name = " + vCirlculatorn.getName());
-		if (vCirlculatorn.getCurrentL().size() == 0)
+		System.out.println("\n---> New Instance + Clear  all features");
+		Circulator vCirlculatorNew = new Circulator();
+		vCirlculatorNew.clearFeatures();
+		vCirlculatorNew.setName("Toto");
+		System.out.println("    Name = " + vCirlculatorNew.getName());
+		if (vCirlculatorNew.getCurrentL().size() == 0)
 			System.out.println("    --> No features");
 
 		// set Class with the JSON object
 		System.out.println("\n---> Set the Instance Class with the JSON data");
-		vCirlculatorn.setJsonObject(jsonObj);
+		vCirlculatorNew.setJsonObject(jsonObj);
 		System.out.println(jsonObj);
 		
 		// Display the features afterwards 
@@ -294,9 +329,16 @@ public class Test {
 		jsonObj = vDehydrator.getJsonObject();
 		System.out.println(jsonObj);
 
+		System.out.println("\n---> Modify the instance ");
+		vDehydrator.setName("Toto");
+		System.out.println("    Name ="+vDehydrator.getName());
+
 		System.out.println("\n---> Set the Class Instance with JSON data");
 		vDehydrator.setJsonObject(jsonObj);
 		System.out.println(jsonObj);
+
+		System.out.println("\n---> Read afterwards ");
+		System.out.println("    Name="+vDehydrator.getName());
 
 		System.out.println("\n--->Transfer Function");
 		System.out.println("Input --> Output");
@@ -340,35 +382,13 @@ public class Test {
 		System.out.println("  Enthalpy Liquid [2] = "+ enthalpy.getSatHl(2));
 		System.out.println("  Enthalpy Vapor [2] = "+ enthalpy.getSatHv(2));
 		System.out.println();
-		System.out.println("Convert H to P saturation");
 
+		// Recover the corresponding P Saturation for a specific H  
+		System.out.println("Convert H to P saturation");
 		double h = 360;
 		double pNear = 2;
 		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear)+"\n");
 
-		h = 360;
-		pNear = 50;
-		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear)+"\n");
-
-		h = 377;
-		pNear = 50;
-		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear)+"\n");
-
-		h = 408;
-		pNear = 50;
-		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear)+"\n");
-
-		h = 401;
-		pNear = 18;
-		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear)+"\n");
-
-		h = 341;
-		pNear = 46;
-		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear)+"\n");
-
-		h = 417;
-		pNear = 23;
-		System.out.println("  h=" + h + "  pNear=" + pNear + "  P_Sat="+enthalpy.convSatH2P(h,pNear)+"\n");
 
 		System.out.println("\n---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();
@@ -386,13 +406,17 @@ public class Test {
 		enthalpy.getEnthalpyBkgImage().setiBgH1x(300);
 		System.out.println("    iBgH1x (EnthalpyBkgImage) (after) = " +enthalpy.getEnthalpyBkgImage().getiBgH1x());
 		
+		System.out.println("\n--->Rembered Chances");
+		System.out.println("    setxHmin=" + enthalpy.getxHmin());
+		System.out.println("    iBgH1x (EnthalpyBkgImage) = " +enthalpy.getEnthalpyBkgImage().getiBgH1x());
+
 		System.out.println("\n---> Set the Class Instance with JSON data");
+		System.out.println(jsonObj);
 		enthalpy.setJsonObject(jsonObj);
 
 		System.out.println("\n---> Read afterwards");
 		System.out.println("    setxHmin=" + enthalpy.getxHmin());
 		System.out.println("    iBgH1x (EnthalpyBkgImage) = " +enthalpy.getEnthalpyBkgImage().getiBgH1x());
-
 		
 	}
 
@@ -410,37 +434,55 @@ public class Test {
 		jsonObj = vEnthalpyBkgdImg.getJsonObject();
 		System.out.println(jsonObj);
 		
+		
 		// Read value, then modify
-		System.out.println("\n---> Modify value");
-		System.out.println("iBgH1x = " +vEnthalpyBkgdImg.getiBgH1x());
+		System.out.println("\n---> Perform some minor changes in Enthalpy" );
+		System.out.println("    iBgH1x = " +vEnthalpyBkgdImg.getiBgH1x());
 		vEnthalpyBkgdImg.setiBgH1x(300);
-		System.out.println("iBgH1x = " +vEnthalpyBkgdImg.getiBgH1x());
+		System.out.println("    iBgH1x = " +vEnthalpyBkgdImg.getiBgH1x());
 		
 		// Set with Json
 		System.out.println("\n---> Set the Class Instance with JSON data");
 		vEnthalpyBkgdImg.setJsonObject(jsonObj);
 		System.out.println(jsonObj);
 		
+		System.out.println("\n---> Read afterwards");
+		System.out.println("    iBgH1x = " +vEnthalpyBkgdImg.getiBgH1x());
+		
 	}
 
 	// ===================================================================================================================
 	// 													TEST EVAPORATOR
 	// ===================================================================================================================
+	
 	private static void testEvaporator() {
 		System.out.println("TEST EVAPORATOR");
-
 		Evaporator vEvaporator = new Evaporator();
 		Refrigerant vGas = new Refrigerant();
 
-		vEvaporator.setDeltaT(-50.0);
+		vEvaporator.setDeltaT(50.0);
 		vGas.setT(10);
 
-		System.out.println("Input --> Output");
-		System.out.println(vGas.getT()+"°C-->"+vEvaporator.transfer(vGas).getT()+"°C");		
-
+		System.out.println("\n---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();
 		jsonObj = vEvaporator.getJsonObject();
 		System.out.println(jsonObj);
+
+		System.out.println("\n---> Modify the instance ");
+		vEvaporator.setName("Toto");
+		System.out.println("    Name ="+vEvaporator.getName());
+
+		System.out.println("\n---> Set the Class Instance with JSON data");
+		vEvaporator.setJsonObject(jsonObj);
+		System.out.println(jsonObj);
+
+		System.out.println("\n---> Read afterwards ");
+		System.out.println("    Name="+vEvaporator.getName());
+
+		System.out.println("\n--->Transfer Function");
+		System.out.println("Input --> Output");
+		System.out.println(vGas.getT()+"°C-->"+vEvaporator.transfer(vGas).getT()+"°C");
+
 	}
 
 	// ===================================================================================================================
@@ -455,15 +497,29 @@ public class Test {
 		Refrigerant vRefrigeranR22 =  new Refrigerant();
 		vRefrigeranR22.setP(25);
 		vRefrigeranR22.setT(5);
+		
 		vExpansionValve.setDeltaP(-40);
 		vExpansionValve.setDeltaT(+75);
-		System.out.println("Input --> Output");
-		System.out.println("P:" + vRefrigeranR22.getP() + "-->" + vExpansionValve.transfer(vRefrigeranR22).getP());
-		System.out.println("T:" + vRefrigeranR22.getT() + "-->" + vExpansionValve.transfer(vRefrigeranR22).getT());
 
 		JSONObject jsonObj = new JSONObject();
 		jsonObj = vExpansionValve.getJsonObject();
 		System.out.println(jsonObj);
+		
+		System.out.println("\n---> Modify the instance ");
+		vExpansionValve.setName("Toto");
+		System.out.println("    Name ="+vExpansionValve.getName());
+
+		System.out.println("\n---> Set the Class Instance with JSON data");
+		vExpansionValve.setJsonObject(jsonObj);
+		System.out.println(jsonObj);
+
+		System.out.println("\n---> Read afterwards ");
+		System.out.println("    Name="+vExpansionValve.getName());
+		
+		System.out.println("Input --> Output");
+		System.out.println("P:" + vRefrigeranR22.getP() + "-->" + vExpansionValve.transfer(vRefrigeranR22).getP());
+		System.out.println("T:" + vRefrigeranR22.getT() + "-->" + vExpansionValve.transfer(vRefrigeranR22).getT());
+
 	}
 
 	// ===================================================================================================================
@@ -478,13 +534,26 @@ public class Test {
 
 		HeatTransferFluid vFluid = new HeatTransferFluid(); 
 
+		System.out.println("\n---> Construct JSON data");
+		JSONObject jsonObj = new JSONObject();
+		jsonObj = vHeatDistribution.getJsonObject();
+		System.out.println(jsonObj);
+
+		System.out.println("\n---> Modify the instance ");
+		vHeatDistribution.setName("Toto");
+		System.out.println("    Name ="+vHeatDistribution.getName());
+
+		System.out.println("\n---> Set the Class Instance with JSON data");
+		vHeatDistribution.setJsonObject(jsonObj);
+		System.out.println(jsonObj);
+
+		System.out.println("\n---> Read afterwards ");
+		System.out.println("    Name="+vHeatDistribution.getName());
+
 		vFluid.setT(25);
 		System.out.println("Input --> Output");
 		System.out.println(vFluid.getT()+"°C-->"+vHeatDistribution.transfer(vFluid).getT()+"°C");
 
-		JSONObject jsonObj = new JSONObject();
-		jsonObj = vHeatDistribution.getJsonObject();
-		System.out.println(jsonObj);
 	}
 
 	// ===================================================================================================================
@@ -493,34 +562,64 @@ public class Test {
 	private static void testHeatSource() {
 		System.out.println("TEST HEATSOURCE");
 
-		HeatSrcDistrCircuit vHeatSource = new HeatSrcDistrCircuit();
-		vHeatSource.setDeltaT(20);
+		HeatSrcDistrCircuit vDistrCircuit = new HeatSrcDistrCircuit();
+		vDistrCircuit.setDeltaT(+20);
+		System.out.println(vDistrCircuit.getName());
 
 		HeatTransferFluid vFluid = new HeatTransferFluid(); 
 
-		vFluid.setT(-25);
-		System.out.println("Input --> Output");
-		System.out.println(vFluid.getT()+"°C-->"+vHeatSource.transfer(vFluid).getT()+"°C");
-
+		System.out.println("\n---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();
-		jsonObj = vHeatSource.getJsonObject();
+		jsonObj = vDistrCircuit.getJsonObject();
 		System.out.println(jsonObj);
+
+		System.out.println("\n---> Modify the instance ");
+		vDistrCircuit.setName("Toto");
+		System.out.println("    Name ="+vDistrCircuit.getName());
+
+		System.out.println("\n---> Set the Class Instance with JSON data");
+		vDistrCircuit.setJsonObject(jsonObj);
+		System.out.println(jsonObj);
+
+		System.out.println("\n---> Read afterwards ");
+		System.out.println("    Name="+vDistrCircuit.getName());
+
+		vFluid.setT(25);
+		System.out.println("Input --> Output");
+		System.out.println(vFluid.getT()+"°C-->"+vDistrCircuit.transfer(vFluid).getT()+"°C");
+
 	}
 
 	// ===================================================================================================================
 	// 													TEST HEATTRANSFERFLUID
 	// ===================================================================================================================
 	private static void testHeatTransferFluid() {
-		System.out.println("TEST HEATTRANSFERFLUID");
+		System.out.println("TEST HEATTRANSFER FLUID");
 
 		HeatTransferFluid vHeatTransferFluid = new HeatTransferFluid();
+		vHeatTransferFluid.setP(44);
+		vHeatTransferFluid.setT(55);
+
+		System.out.println("\n---> Construct JSON data");
+		JSONObject jsonObj = new JSONObject();
+		jsonObj = vHeatTransferFluid.getJsonObject();
+		System.out.println(jsonObj);
+
+		System.out.println("\n---> Modify the instance ");
+		vHeatTransferFluid.setName("Toto");
+		System.out.println("    Name ="+vHeatTransferFluid.getName());
+
+		System.out.println("\n---> Set the Class Instance with JSON data");
+		vHeatTransferFluid.setJsonObject(jsonObj);
+		System.out.println(jsonObj);
+
+		System.out.println("\n---> Read afterwards ");
+		System.out.println("    Name="+vHeatTransferFluid.getName());
+
 		System.out.println(vHeatTransferFluid.getName());	
 		System.out.println("Temp. / Pression");
 		System.out.println(vHeatTransferFluid.getT()+"°C -- "+vHeatTransferFluid.getP()+"bar");		
 
-		JSONObject jsonObj = new JSONObject();
-		jsonObj = vHeatTransferFluid.getJsonObject();
-		System.out.println(jsonObj);
 	}
 
 	// ===================================================================================================================
@@ -528,7 +627,9 @@ public class Test {
 	// ===================================================================================================================
 
 	private static void testMeasurePoints () { 
-		
+		System.out.println("TEST MEASUREPOINTS");
+		System.out.println("--> Not implemented");
+
 	}
 
 	// ===================================================================================================================
@@ -548,9 +649,6 @@ public class Test {
 		System.out.println("  "+Misc.closestInL(-4, list));
 		System.out.println("  "+Misc.closestInL(15, list));
 
-		// Could be fine to create auto-test
-		//assertThat(Misc.closestInL(-4, list), is(-2));
-
 		System.out.println("Max Intervall (between 2 consecutive elements) in the List");
 		list = Arrays.asList(10.0, 11.2, 13.0, 15.0);
 		System.out.println("  "+list);
@@ -565,6 +663,56 @@ public class Test {
 
 		Pac pac = new Pac();
 
+		System.out.println("\n---> Construct JSON data");
+		JSONObject jsonObj = new JSONObject();
+		jsonObj = pac.getJsonObject();
+		System.out.println(jsonObj);
+
+		System.out.println("\n---> Modify all instances ");
+		pac.getCirculatorS().setName("Toto1");
+		pac.getCirculatorD().setName("Toto2");
+		pac.getCompressor().setName("Toto3");
+		pac.getCondenser().setName("Toto4");
+		pac.getDehydrator().setName("Toto5");
+		pac.getEvaporator().setName("Toto6");
+		pac.getExpansionValve().setName("Toto7");
+		pac.getCircuitS().setName("Toto8");
+		pac.getCircuitD().setName("Toto9");
+		pac.getFluidCaloD().setName("Toto10");
+		pac.getFluidCaloS().setName("Toto11");
+		pac.getFluidRefri().setName("Toto12");
+		
+		System.out.println("    Name CirculatorS =" + pac.getCirculatorS().getName());
+		System.out.println("    Name CirculatorD =" + pac.getCirculatorD().getName());
+		System.out.println("    Name Compressor =" + pac.getCompressor().getName());
+		System.out.println("    Name Condenser =" + pac.getCondenser().getName());
+		System.out.println("    Name Dehydrator =" + pac.getDehydrator().getName());
+		System.out.println("    Name Evaporator =" + pac.getEvaporator().getName());
+		System.out.println("    Name ExpansionVa =" + pac.getExpansionValve().getName());
+		System.out.println("    Name CircuitS =" + pac.getCircuitS().getName());
+		System.out.println("    Name CircuitD =" + pac.getCircuitD().getName());
+		System.out.println("    Name FluidCaloD =" + pac.getFluidCaloD().getName());
+		System.out.println("    Name FluidCaloS =" + pac.getFluidCaloS().getName());
+		System.out.println("    Name FluidRefri =" + pac.getFluidRefri().getName());
+
+		System.out.println("\n---> Set the Class Instance with JSON data");
+		pac.setJsonObject(jsonObj);
+		System.out.println(jsonObj);
+
+		System.out.println("\n---> Read afterwards ");
+		System.out.println("    Name CirculatorS =" + pac.getCirculatorS().getName());
+		System.out.println("    Name CirculatorD =" + pac.getCirculatorD().getName());
+		System.out.println("    Name Compressor =" + pac.getCompressor().getName());
+		System.out.println("    Name Condenser =" + pac.getCondenser().getName());
+		System.out.println("    Name Dehydrator =" + pac.getDehydrator().getName());
+		System.out.println("    Name Evaporator =" + pac.getEvaporator().getName());
+		System.out.println("    Name ExpansionVa =" + pac.getExpansionValve().getName());
+		System.out.println("    Name CircuitS =" + pac.getCircuitS().getName());
+		System.out.println("    Name CircuitD =" + pac.getCircuitD().getName());
+		System.out.println("    Name FluidCaloD =" + pac.getFluidCaloD().getName());
+		System.out.println("    Name FluidCaloS =" + pac.getFluidCaloS().getName());
+		System.out.println("    Name FluidRefri =" + pac.getFluidRefri().getName());
+		
 		System.out.println("Very very simple simulation of the PAC Cycle");
 		System.out.println("We start to configure the different elements");
 		System.out.println("Compressor : deltaP=+52, deltaT=+25");
@@ -607,11 +755,25 @@ public class Test {
 			System.out.println("Fluid D T=" + pac.getFluidCaloD().getT() + "  P="+ pac.getFluidCaloD().getP());
 		}
 
-		JSONObject jsonObj = new JSONObject();
-		jsonObj = pac.getJsonObject();
-		System.out.println(jsonObj);
 	}
 
+	// ===================================================================================================================
+	// 													TES PAC-Tool CONFIGURATION
+	// ===================================================================================================================
+	private static void testPACToolConfig() {
+		System.out.println("TEST PAC-Tool CONFIGURATION");
+
+	}
+
+	// ===================================================================================================================
+	// 													TEST PRIME CONFIGURATION
+	// ===================================================================================================================
+	private static void testPrimeConfig() {
+		System.out.println("TEST PAC-Tool CONFIGURATION");
+		
+	}
+
+		
 	// ===================================================================================================================
 	// 													TEST REFRIGERANT
 	// ===================================================================================================================

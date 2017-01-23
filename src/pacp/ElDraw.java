@@ -97,7 +97,6 @@ public class ElDraw {
         	g2.draw( new Line2D.Double(elDraw.getX2(),elDraw.getY1(),elDraw.getY2(),elDraw.getY1()));			 	
         if (elDraw.type == _PointYLog)
             g2.fill (new Ellipse2D.Double(elDraw.getX1()-rectWidth/zoom/2, elDraw.getY1()-rectHeight/zoom/2, rectWidth/zoom, rectHeight/zoom));
-		
 	}
 		
 	// -------------------------------------------------------

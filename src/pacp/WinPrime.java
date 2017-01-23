@@ -288,7 +288,7 @@ public class WinPrime {
 			public void actionPerformed(ActionEvent arg0) {
 
 				JFileChooser chooser = new JFileChooser();
-				FileNameExtensionFilter filter = new FileNameExtensionFilter( "Conf. files", "cfg");
+				FileNameExtensionFilter filter = new FileNameExtensionFilter( "Configuratin file (.cfg)", "cfg");
 				chooser.setFileFilter(filter);
 				File workingDirectory = new File(System.getProperty("user.dir"));
 				chooser.setCurrentDirectory(workingDirectory);
@@ -297,8 +297,10 @@ public class WinPrime {
 					//System.out.println("You chose to open this file: " + chooser.getSelectedFile().getAbsolutePath());
 					
 					PacToolConfig.readConfigFile(pacl, enthalpy, primeConfig, chooser.getSelectedFile().getAbsolutePath());
-					System.out.println(primeConfig.getUnitFaren());
+					//System.out.println(primeConfig.getUnitFaren());
 					
+					comboBoxCompressor.setSelectedIndex(0);
+					fillCompressorTexField(pacl.get(0));
 				}
 			}
 				
@@ -314,7 +316,7 @@ public class WinPrime {
 			public void actionPerformed(ActionEvent arg0) {
 
 				JFileChooser chooser = new JFileChooser();
-				FileNameExtensionFilter filter = new FileNameExtensionFilter( "Conf. files", "cfg");
+				FileNameExtensionFilter filter = new FileNameExtensionFilter( "Configuratin file (.cfg)", ".cfg");
 				chooser.setApproveButtonText("Sauvegarder");
 				chooser.setFileFilter(filter);
 				File workingDirectory = new File(System.getProperty("user.dir"));

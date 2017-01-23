@@ -18,10 +18,8 @@
  */
 package pacp;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -29,6 +27,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+
+import javax.swing.JComboBox;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -141,7 +141,6 @@ public class PacToolConfig {
 		try {
 			sken = new Scanner (file);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			System.err.println("Unable to read the file: fileName");
 		}
 
@@ -164,7 +163,33 @@ public class PacToolConfig {
 
 		// PrimeConfig: Set the Class Instance with JSON data
 		JSONObject jsonObjPrimeConfig = (JSONObject) jsonObj.get("PrimeConfig") ;
+		System.out.println(jsonObjPrimeConfig);
 		primeConfig.setJsonObject(jsonObjPrimeConfig);
+		
+		
+		
+		// Enthalpy (containing also EnthalpyBkgdImg)
+		JSONObject jsonObjEnthalpy = (JSONObject) jsonObj.get("Enthalpy");
+		System.out.println(jsonObjEnthalpy);
+		enthalpy.setJsonObject(jsonObjEnthalpy);
+
+		// Create PAC List
+		for(int i=1;i<pacl.size();i++) {
+			pacl.remove(i);
+		}
+		JSONArray ObjFeatureL = (JSONArray) jsonObj.get("PacList");
+		for(int i=0; i< ObjFeatureL.size();i++) {
+			JSONObject jsonObjectPac = (JSONObject) ObjFeatureL.get(i);
+			if(i==0) {
+				pacl.get(i).setJsonObject(jsonObjectPac);				
+			} else {
+				pacl.add(i, new Pac());
+				pacl.get(i).setJsonObject(jsonObjectPac);
+			}
+		}
+
+			
+		
 	}
 
 
