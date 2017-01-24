@@ -45,8 +45,6 @@ import javax.swing.JCheckBox;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.json.simple.JSONObject;
-
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import javax.swing.JEditorPane;
@@ -92,7 +90,7 @@ public class WinPrime {
 	private JCheckBox checkoxBTU;
 	private JCheckBox checkoxPound;
 	private JComboBox<String> comboBoxCompressor;
-	
+
 	private JLabel lblCapacity;
 	private JLabel lblPower;
 	private JLabel lblCurrent;
@@ -103,14 +101,16 @@ public class WinPrime {
 	private JLabel lblRG;
 	private JLabel lblCond;
 	private JLabel lblLiq;
+	private JLabel lblSurchauffe;
+	private JLabel lblSousRefroid;
 
-	// Config
+	// Windows Prime configuration
 	private PrimeConfig primeConfig;
-	
+
 	// List of PAC (First Pac can never been deleted!!)
 	private List<Pac> pacl = new ArrayList<Pac>();
 	private Enthalpy enthalpy;
-	
+
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
@@ -126,8 +126,8 @@ public class WinPrime {
 
 		// Create Window
 		initialize(paci,copi);
-		fillCompressorTexField(paci);
-		
+		//	fillCompressorTexField(paci);
+
 	}
 
 	// -------------------------------------------------------
@@ -139,10 +139,12 @@ public class WinPrime {
 	public void WinPrimeVisible() {
 		frame.setVisible(true);
 	}
-	
+
 	/**
 	 * Fill all the Compressor features to Text field in the panel 
 	 * The data are read from the variable, where the information is stored
+	 * The data are always stored in SI format !
+	 * BY DEFAULT CHECKBOX MUST NOT BEEN SET, OTHERWHISE .doClick() will be called without data in the textfield !!
 	 * @param paci : Will be one of the different Pac in the List
 	 */
 	private void fillCompressorTexField(Pac paci) {
@@ -151,16 +153,24 @@ public class WinPrime {
 		boolean weclickf = false;
 		boolean weclickb = false;
 		boolean weclickp = false;
-		
-		if (!primeConfig.isUnitFaren()) {
+
+		// If button Fahrenheit is pressed, we will simulate a non-selection  
+		// By default MUST NOT BE selected
+		if (checkoxFaren.isSelected()) {
 			checkoxFaren.doClick();
 			weclickf = true;
 		}
-		if (!primeConfig.isUnitBTU()) {
+
+		// If button BTU is pressed, we will simulate a non-selection  
+		// By default MUST NOT BE selected
+		if (checkoxBTU.isSelected()) {
 			checkoxBTU.doClick();
 			weclickb = true;
 		}
-		if (!primeConfig.isUnitPound()) {
+
+		// If button Pound is pressed, we will simulate a non-selection  
+		// By default MUST NOT BE selected
+		if (checkoxPound.isSelected()) {
 			checkoxPound.doClick();
 			weclickp = true;
 		}
@@ -174,15 +184,16 @@ public class WinPrime {
 		textFieldCompressorCapacity.setText(String.valueOf(compressor.getCapacity()));
 		textFieldCompressorPower.setText(String.valueOf(compressor.getPower()));
 		textFieldCompressorCurrent.setText(String.valueOf(compressor.getCurrent()));
-		textFieldCompressorSurchauffe.setText(String.valueOf(Math.round(compressor.getRG() - compressor.getEvap())));
-		textFieldCompressorSousRefroid.setText(String.valueOf(Math.round(compressor.getCond() - compressor.getLiq())));
+		textFieldCompressorSurchauffe.setText(String.valueOf((double)Math.round(compressor.getRG() - compressor.getEvap())));	
+		textFieldCompressorSousRefroid.setText(String.valueOf((double)Math.round(compressor.getCond() - compressor.getLiq())));
 		textFieldCompressorEER.setText(String.valueOf(Math.round(compressor.getCapacity()/compressor.getPower()*10.0)/10.0));
 		textFieldCompressorMassFlow.setText(String.valueOf(compressor.getMassFlow()));
-		textFieldCompressorDeltaH0.setText("-----");
+		textFieldCompressorDeltaH0.setText(String.valueOf(Math.round(compressor.getCapacity()/compressor.getMassFlow()/1000.0)));
 		textFieldCompressorVoltage.setText(String.valueOf(compressor.getVoltage()));
 		double tmp = Math.round(Misc.cosphi(compressor.getPower(), compressor.getVoltage(), compressor.getCurrent())*10000.0)/10000.0;
 		textFieldCompressorCosPhi.setText(String.valueOf(tmp));
 
+		// If needed we go back to the Check box selection
 		if (weclickf) {
 			checkoxFaren.doClick();
 		}
@@ -196,7 +207,7 @@ public class WinPrime {
 
 	/**
 	 * Will save the information from Panel TextField to PAC variable
-	 * Data will ALWAYS be stored in Anglo-Saxon Format
+	 * Data will ALWAYS be stored in International System : SI Format
 	 * @param paci
 	 */
 	private void UpdateTextField2Pac( Pac paci) {
@@ -206,19 +217,25 @@ public class WinPrime {
 		boolean weclickb = false;
 		boolean weclickp = false;
 
-		if (!primeConfig.isUnitFaren()) {
+		// If button Fahrenheit is pressed, we will simulate a non-selection  
+		if (checkoxFaren.isSelected()) {
 			checkoxFaren.doClick();
 			weclickf = true;
 		}
-		if (!primeConfig.isUnitBTU()) {
+
+		// If button BTU is pressed, we will simulate a non-selection  
+		if (checkoxBTU.isSelected()) {
 			checkoxBTU.doClick();
 			weclickb = true;
 		}
-		if (!primeConfig.isUnitPound()) {
+
+		// If button Pound is pressed, we will simulate a non-selection  
+		if (checkoxPound.isSelected()) {
 			checkoxPound.doClick();
 			weclickp = true;
 		}
 
+		// AT that stage all information are in SI !
 		compressor.setName(textFieldCompressorName.getText());
 
 		compressor.setEvap(Double.valueOf(textFieldCompressorEvap.getText()));
@@ -231,6 +248,7 @@ public class WinPrime {
 		compressor.setMassFlow(Double.valueOf(textFieldCompressorMassFlow.getText()));
 		compressor.setVoltage(Double.valueOf(textFieldCompressorVoltage.getText()));
 
+		// If needed we go back to the Check box selection
 		if (weclickf) {
 			checkoxFaren.doClick();
 		}
@@ -290,7 +308,7 @@ public class WinPrime {
 				chooser.setCurrentDirectory(workingDirectory);
 				int returnVal = chooser.showOpenDialog(frame);
 				if(returnVal == JFileChooser.APPROVE_OPTION) {
-	
+
 					// Remove all item in ComboBox (excpet the first)
 					for(int i=1;i<pacl.size();i++) {
 						comboBoxCompressor.removeItemAt(i);
@@ -298,7 +316,13 @@ public class WinPrime {
 
 					// Read the configuration from File
 					PacToolConfig.readConfigFile(pacl, enthalpy, primeConfig, chooser.getSelectedFile().getAbsolutePath());
-					
+
+					// Set the Compressor Check Box (Fahrenheit/Pound/BTU) before to affect the data to text field, 
+					// no actions will be performed by this settings 
+					checkoxFaren.setSelected(primeConfig.getUnitCompFaren());
+					checkoxBTU.setSelected(primeConfig.getUnitCompBTU()); 		
+					checkoxPound.setSelected(primeConfig.getUnitCompPound()); 		
+
 					// Fill ComboBox
 					for(int i=1;i<pacl.size();i++) {
 						if(i>0) {
@@ -307,17 +331,10 @@ public class WinPrime {
 					}
 					comboBoxCompressor.setSelectedIndex(0);
 					fillCompressorTexField(pacl.get(0));
-					
-					// Read Configuration & Preferences WITH ACTION TO PERFORM --> MUST BE THE LAST ACTION !!
-					if (!primeConfig.isUnitFaren())
-						checkoxFaren.doClick(); 		
-					if (!primeConfig.isUnitBTU())
-						checkoxBTU.doClick(); 		
-					if (!primeConfig.isUnitPound())
-						checkoxPound.doClick(); 		
+
 				}
 			}
-				
+
 		});
 		mfile.add(mloadcfg);
 
@@ -366,42 +383,45 @@ public class WinPrime {
 		// ---------------------------------------------------------------
 		JMenu mpreference = new JMenu("Pr\u00E9f\u00E9rences");
 		menubar.add(mpreference);
-		
+
 		JMenuItem mImgEnthalpyCfg = new JMenuItem("Enthalpie Conf.");
 		mImgEnthalpyCfg.setIcon(new ImageIcon(WinPrime.class.getResource("/pacp/images/configuration16.png")));
 		mImgEnthalpyCfg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+
 				try {
 					WinConfEnthalpy window = new WinConfEnthalpy(enthalpy);
 					window.WinConfEnthalpyVisible();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
+
 			}
 		});
 		mpreference.add(mImgEnthalpyCfg);
+
+		ButtonGroup buttonGroup = new ButtonGroup();
 
 		JMenu mlangue = new JMenu("Langues");
 		mlangue.setIcon(new ImageIcon(WinPrime.class.getResource("/pacp/images/flag-frgb16x16.png")));
 		mpreference.add(mlangue);
 
-		ButtonGroup buttonGroup = new ButtonGroup();
-
 		JRadioButtonMenuItem mRationItemFrench = new JRadioButtonMenuItem("Francais");
 		mRationItemFrench.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				lblCapacity.setText("Puis. Frigo.:");
-				lblPower.setText("Puis. Absorb.:");
-				lblCurrent.setText("Courant:");
-				lblEer.setText("COP Froid:");
-				lblVoltage.setText("Tension:");
-				lblMassflow.setText("Débit Massique:");
-				lblEvap.setText("T. Evap. (T0):");
-				lblRG.setText("T. Asp. Comp.(P1)");
-				lblCond.setText("T. Cond. (TK):");
-				lblLiq.setText("T. Détend.(P3):");
+				String vlang = "fr";
+				lblCapacity.setText(primeConfig.TranslateText("Capacity",vlang));
+				lblPower.setText(primeConfig.TranslateText("Power",vlang));
+				lblCurrent.setText(primeConfig.TranslateText("Current",vlang));
+				lblEer.setText(primeConfig.TranslateText("EER",vlang));
+				lblVoltage.setText(primeConfig.TranslateText("Voltage",vlang));
+				lblMassflow.setText(primeConfig.TranslateText("Mass flow",vlang));
+				lblEvap.setText(primeConfig.TranslateText("Evap",vlang));
+				lblRG.setText(primeConfig.TranslateText("RG",vlang));
+				lblCond.setText(primeConfig.TranslateText("Cond",vlang));
+				lblLiq.setText(primeConfig.TranslateText("Liq",vlang));
+				lblSurchauffe.setText(primeConfig.TranslateText("Overheated",vlang));
+				lblSousRefroid.setText(primeConfig.TranslateText("Under cooling",vlang));
 			}
 		});
 		buttonGroup.add(mRationItemFrench);
@@ -411,16 +431,19 @@ public class WinPrime {
 		JRadioButtonMenuItem mRationItemEnglisch = new JRadioButtonMenuItem("Anglais");
 		mRationItemEnglisch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				lblCapacity.setText("Capacity:");
-				lblPower.setText("Power:");
-				lblCurrent.setText("Current:");
-				lblEer.setText("EER:");
-				lblVoltage.setText("Voltage:");
-				lblMassflow.setText("Mass flow:");
-				lblEvap.setText("Evap:");
-				lblRG.setText("RG:");
-				lblCond.setText("Cond:");
-				lblLiq.setText("Liq:");
+				String vlang = "eng";
+				lblCapacity.setText(primeConfig.TranslateText("Capacity",vlang));
+				lblPower.setText(primeConfig.TranslateText("Power",vlang));
+				lblCurrent.setText(primeConfig.TranslateText("Current",vlang));
+				lblEer.setText(primeConfig.TranslateText("EER",vlang));
+				lblVoltage.setText(primeConfig.TranslateText("Voltage",vlang));
+				lblMassflow.setText(primeConfig.TranslateText("Mass flow",vlang));
+				lblEvap.setText(primeConfig.TranslateText("Evap",vlang));
+				lblRG.setText(primeConfig.TranslateText("RG",vlang));
+				lblCond.setText(primeConfig.TranslateText("Cond",vlang));
+				lblLiq.setText(primeConfig.TranslateText("Liq",vlang));
+				lblSurchauffe.setText(primeConfig.TranslateText("Overheated",vlang));
+				lblSousRefroid.setText(primeConfig.TranslateText("Under cooling",vlang));
 			}
 		});
 		mRationItemEnglisch.setSelected(true);
@@ -498,7 +521,7 @@ public class WinPrime {
 		textFieldCompressorEvap.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldCompressorEvap.setColumns(10);
 
-		JLabel lblTemp_unity1 = new JLabel("\u00B0F");
+		JLabel lblTemp_unity1 = new JLabel("\u00B0C");
 		lblTemp_unity1.setBounds(176, 28, 25, 14);
 		panel_pc1.add(lblTemp_unity1);
 
@@ -525,14 +548,14 @@ public class WinPrime {
 		textFieldCompressorRG.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldCompressorRG.setColumns(10);
 
-		JLabel lblTemp_unity2 = new JLabel("\u00B0F");
+		JLabel lblTemp_unity2 = new JLabel("\u00B0C");
 		lblTemp_unity2.setBounds(176, 67, 25, 14);
 		panel_pc1.add(lblTemp_unity2);
 
 		// ---------------------------------------------------------------
 		// SURCHAUFFE
 		// ---------------------------------------------------------------
-		JLabel lblSurchauffe = new JLabel("Surchauffe :");
+		lblSurchauffe = new JLabel("Overheated :");
 		lblSurchauffe.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblSurchauffe.setBounds(38, 101, 81, 14);
 		panel_pc1.add(lblSurchauffe);
@@ -546,7 +569,7 @@ public class WinPrime {
 		panel_pc1.add(textFieldCompressorSurchauffe);
 		textFieldCompressorSurchauffe.setColumns(10);
 
-		JLabel lblTemp_unity5 = new JLabel("\u00B0F");
+		JLabel lblTemp_unity5 = new JLabel("\u00B0C");
 		lblTemp_unity5.setBounds(176, 101, 25, 14);
 		panel_pc1.add(lblTemp_unity5);
 
@@ -573,7 +596,7 @@ public class WinPrime {
 		textFieldCompressorCond.setColumns(10);
 		panel_pc1.add(textFieldCompressorCond);
 
-		JLabel lblTemp_unity3 = new JLabel("\u00B0F");
+		JLabel lblTemp_unity3 = new JLabel("\u00B0C");
 		lblTemp_unity3.setBounds(380, 28, 23, 14);
 		panel_pc1.add(lblTemp_unity3);
 
@@ -601,7 +624,7 @@ public class WinPrime {
 		textFieldCompressorLiq.setColumns(10);
 		panel_pc1.add(textFieldCompressorLiq);
 
-		JLabel lblTemp_unity4 = new JLabel("\u00B0F");
+		JLabel lblTemp_unity4 = new JLabel("\u00B0C");
 		lblTemp_unity4.setBounds(380, 64, 23, 14);
 		panel_pc1.add(lblTemp_unity4);
 
@@ -609,7 +632,7 @@ public class WinPrime {
 		// SOUS REFROIDISSEMENT
 		// ---------------------------------------------------------------
 
-		JLabel lblSousRefroid = new JLabel("S-Refroidissement :");
+		lblSousRefroid = new JLabel("Under cooling :");
 		lblSousRefroid.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblSousRefroid.setBounds(226, 101, 103, 14);
 		panel_pc1.add(lblSousRefroid);
@@ -623,7 +646,7 @@ public class WinPrime {
 		textFieldCompressorSousRefroid.setBounds(331, 98, 46, 20);
 		panel_pc1.add(textFieldCompressorSousRefroid);
 
-		JLabel lblTemp_unity6 = new JLabel("\u00B0F");
+		JLabel lblTemp_unity6 = new JLabel("\u00B0C");
 		lblTemp_unity6.setBounds(380, 101, 23, 14);
 		panel_pc1.add(lblTemp_unity6);
 
@@ -632,12 +655,11 @@ public class WinPrime {
 		// ---------------------------------------------------------------
 		checkoxFaren = new JCheckBox("Farenheit");
 		checkoxFaren.setBounds(302, 131, 95, 23);
-		checkoxFaren.setSelected(primeConfig.getUnitFaren());
 		panel_pc1.add(checkoxFaren);
 		checkoxFaren.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if (checkoxFaren.isSelected()) {
-					primeConfig.setUnitFaren(true);
+					primeConfig.setUnitCompFaren(true);
 					lblTemp_unity1.setText("°F");
 					lblTemp_unity2.setText("°F");
 					lblTemp_unity3.setText("°F");
@@ -661,7 +683,7 @@ public class WinPrime {
 					tmp = Math.round(tcond - tliq);
 					textFieldCompressorSousRefroid.setText(String.valueOf(tmp));
 				} else {
-					primeConfig.setUnitFaren(false);
+					primeConfig.setUnitCompFaren(false);
 					lblTemp_unity1.setText("°C");
 					lblTemp_unity2.setText("°C");
 					lblTemp_unity3.setText("°C");
@@ -687,7 +709,6 @@ public class WinPrime {
 				}
 			}
 		});
-		checkoxFaren.setSelected(true);
 
 		// ================================================================
 		// 					   	Performance 2 Panel
@@ -698,7 +719,7 @@ public class WinPrime {
 		panel_pc2.setLayout(null);
 		panelSroll.add(panel_pc2);
 
-		
+
 
 		// ---------------------------------------------------------------
 		// Capacity
@@ -720,7 +741,7 @@ public class WinPrime {
 				double tmp = Math.round(vCapacity/vPower*10.0)/10.0;
 				textFieldCompressorEER.setText(String.valueOf(tmp));
 
-				if (primeConfig.isUnitBTU() | primeConfig.isUnitPound())  {
+				if (checkoxBTU.isSelected() | checkoxPound.isSelected())  {
 					textFieldCompressorDeltaH0.setText("-----");
 				} else {
 					tmp = Math.round(vCapacity/vMassFlow/1000.0);
@@ -734,7 +755,7 @@ public class WinPrime {
 		textFieldCompressorCapacity.setColumns(10);
 		panel_pc2.add(textFieldCompressorCapacity);
 
-		JLabel lblCapacity_unity = new JLabel("Btu/hr");
+		JLabel lblCapacity_unity = new JLabel("Watt");
 		lblCapacity_unity.setToolTipText("(BUT/hr) British Thermal Unit / hour = Unit\u00E9 de mesure d'\u00E9nergie thermique / Heure. L'unit\u00E9 de puissance du SI est le watt (symbole : W), qui correspond \u00E0  un joule fourni par seconde.");
 		lblCapacity_unity.setBounds(154, 28, 46, 14);
 		panel_pc2.add(lblCapacity_unity);
@@ -819,7 +840,7 @@ public class WinPrime {
 		textFieldCompressorEER.setBounds(82, 125, 62, 20);
 		panel_pc2.add(textFieldCompressorEER);
 
-		JLabel lblEER_unity = new JLabel("BTU/(hr.W)");
+		JLabel lblEER_unity = new JLabel("");
 		lblEER_unity.setBounds(154, 125, 73, 22);
 		panel_pc2.add(lblEER_unity);
 
@@ -838,7 +859,7 @@ public class WinPrime {
 				double vCapacity = Double.valueOf( textFieldCompressorCapacity.getText());
 				double vMassFlow = Double.valueOf(textFieldCompressorMassFlow.getText());
 
-				if (primeConfig.isUnitBTU() | primeConfig.isUnitPound())  {
+				if (checkoxBTU.isSelected() | checkoxPound.isSelected())  {
 					textFieldCompressorDeltaH0.setText("-----");
 				} else {
 					double tmp = Math.round(vCapacity/vMassFlow/1000.0);
@@ -852,7 +873,7 @@ public class WinPrime {
 		textFieldCompressorMassFlow.setBounds(295, 25, 51, 20);
 		panel_pc2.add(textFieldCompressorMassFlow);
 
-		JLabel lblMassFlow_unity = new JLabel("lbs/hr");
+		JLabel lblMassFlow_unity = new JLabel("Kg/s");
 		lblMassFlow_unity.setBounds(356, 28, 36, 14);
 		panel_pc2.add(lblMassFlow_unity);
 
@@ -861,12 +882,11 @@ public class WinPrime {
 		// ---------------------------------------------------------------
 		checkoxBTU = new JCheckBox("BTU/hr");
 		checkoxBTU.setToolTipText("British Thermal Unit / hour");
-		checkoxBTU.setSelected(primeConfig.getUnitBTU());
 		checkoxBTU.setBounds(324, 171, 68, 23);
 		checkoxBTU.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if (checkoxBTU.isSelected()) {
-					primeConfig.setUnitBTU(true);
+					primeConfig.setUnitCompBTU(true);
 					lblCapacity_unity.setText("Btu/hr");
 					lblEER_unity.setText("BTU/(hr.W)");
 
@@ -878,7 +898,7 @@ public class WinPrime {
 					textFieldCompressorDeltaH0.setText("-----");
 
 				} else {
-					primeConfig.setUnitBTU(false);
+					primeConfig.setUnitCompBTU(false);
 					lblCapacity_unity.setText("Watt");
 					lblEER_unity.setText("");
 
@@ -889,7 +909,7 @@ public class WinPrime {
 					textFieldCompressorCapacity.setText(String.valueOf(Math.round(vCapacity*100.0)/100.0));
 					textFieldCompressorEER.setText(String.valueOf(Math.round(vCapacity/vPower*10.0)/10.0));
 
-					if (primeConfig.isUnitBTU() | primeConfig.isUnitPound())  {
+					if (checkoxBTU.isSelected() | checkoxPound.isSelected())  {
 						textFieldCompressorDeltaH0.setText("-----");
 					} else {
 						double tmp = Math.round(vCapacity/vMassFlow/1000.0);
@@ -898,7 +918,6 @@ public class WinPrime {
 				}
 			}
 		});
-		checkoxBTU.setSelected(true);
 		panel_pc2.add(checkoxBTU);
 
 		// ---------------------------------------------------------------
@@ -906,11 +925,10 @@ public class WinPrime {
 		// ---------------------------------------------------------------
 		checkoxPound = new JCheckBox("lbs/h");
 		checkoxPound.setToolTipText("Pounds/hour");
-		checkoxPound.setSelected(primeConfig.getUnitPound());
 		checkoxPound.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (checkoxPound.isSelected()) {
-					primeConfig.setUnitPound(true);
+					primeConfig.setUnitCompPound(true);
 					lblMassFlow_unity.setText("lbs/hr");
 
 					double vMassFlow = Misc.kg2pound(Double.valueOf(textFieldCompressorMassFlow.getText()));
@@ -919,14 +937,14 @@ public class WinPrime {
 					textFieldCompressorDeltaH0.setText("-----");
 
 				} else {
-					primeConfig.setUnitPound(false);
+					primeConfig.setUnitCompPound(false);
 					lblMassFlow_unity.setText("Kg/s");
 
 					double vCapacity = Double.valueOf( textFieldCompressorCapacity.getText());
 					double vMassFlow = Misc.pound2kg(Double.valueOf(textFieldCompressorMassFlow.getText()));
 					textFieldCompressorMassFlow.setText(String.valueOf(Math.round(vMassFlow*10000.0)/10000.0));		
 
-					if (primeConfig.isUnitBTU() | primeConfig.isUnitPound())  {
+					if (checkoxBTU.isSelected() | checkoxPound.isSelected())  {
 						textFieldCompressorDeltaH0.setText("-----");
 					} else {
 						double tmp = Math.round(vCapacity/vMassFlow/1000.0);
@@ -936,7 +954,6 @@ public class WinPrime {
 				}
 			}
 		});
-		checkoxPound.setSelected(true);
 		checkoxPound.setBounds(324, 201, 68, 23);
 		panel_pc2.add(checkoxPound);
 
@@ -1317,8 +1334,8 @@ public class WinPrime {
 		lblEnthalpyView.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		lblEnthalpyView.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent arg0) {
-					WinEnthalpy window = new WinEnthalpy(enthalpy);
-					window.WinEnthalpieVisible();
+				WinEnthalpy window = new WinEnthalpy(enthalpy);
+				window.WinEnthalpieVisible();
 			}
 		});
 		lblEnthalpyView.setIcon(new ImageIcon(WinPrime.class.getResource("/pacp/images/enthalpie_150.jpg")));
@@ -1340,8 +1357,9 @@ public class WinPrime {
 		textFieldCarnotFroid.setColumns(10);
 		textFieldCarnotFroid.setBounds(304, 296, 86, 20);
 		panelCompCOP.add(textFieldCarnotFroid);
-		
+
 		JLabel lblMeasurePointView = new JLabel("New label");
+		lblMeasurePointView.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		lblMeasurePointView.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {

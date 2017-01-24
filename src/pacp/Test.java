@@ -813,9 +813,9 @@ public class Test {
 		System.out.println(jsonObjPrimeConfig);
 		primeConfig.setJsonObject(jsonObjPrimeConfig);
 		
-		System.out.println("   BTU=" +	primeConfig.getUnitBTU());
-		System.out.println("   Pound=" +	primeConfig.getUnitPound());
-		System.out.println("   Faren=" +	primeConfig.getUnitFaren());
+		System.out.println("   BTU=" +	primeConfig.getUnitCompBTU());
+		System.out.println("   Pound=" +	primeConfig.getUnitCompPound());
+		System.out.println("   Faren=" +	primeConfig.getUnitCompFaren());
 				
 		// Enthalpy (containing also EnthalpyBkgdImg)
 		Enthalpy enthalpy = new Enthalpy();
@@ -852,6 +852,16 @@ public class Test {
 	// ===================================================================================================================
 	private static void testPrimeConfig() {
 		System.out.println("TEST PAC-Tool CONFIGURATION");
+		
+		PrimeConfig primeConfig = new PrimeConfig();
+
+		System.out.println(primeConfig.TranslateText("Capacity","eng"));
+		System.out.println(primeConfig.TranslateText("Power","eng"));
+				
+		System.out.println(primeConfig.TranslateText("Capacity","fr"));
+		System.out.println(primeConfig.TranslateText("Power","fr"));
+		System.out.println(primeConfig.TranslateText("Capacitydd","fr"));
+
 		
 	}
 

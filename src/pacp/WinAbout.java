@@ -86,7 +86,7 @@ public class WinAbout {
 			}
 		});
 		txtpnabout.setContentType("text/html");
-		txtpnabout.setText("<span\r\n style=\"font-family: Helvetica,Arial,sans-serif; color: rgb(102, 102, 204);\"><span\r\n style=\"font-weight: bold;\">\r\nPAC-Tool </span><br>\r\n&nbsp;&nbsp;&nbsp; Outil pour Pompe \u00E0 Chaleur <br>\r\n<br>\r\n<b>Auteur:</b>\r\nChristian\r\nKlugesherz<br>\r\n<b>email:</b>\r\n<a href=\"mailto:christian.klugesherz@gmail.com?Subject=PAC-Tool\"\r\n target=\"_top\">christian.klugesherz@gmail.com</a></span>\r\n");
+		txtpnabout.setText("<span\r\n style=\"font-family: Helvetica,Arial,sans-serif; color: rgb(102, 102, 204);\"><span\r\n style=\"font-weight: bold;\">\r\nPAC-Tool:" + Misc.PACTool_Version +"</span><br>\r\n&nbsp;&nbsp;&nbsp; Outil pour Pompe \u00E0 Chaleur <br>\r\n<br>\r\n<b>Auteur:</b>\r\nChristian\r\nKlugesherz<br>\r\n<b>email:</b>\r\n<a href=\"mailto:christian.klugesherz@gmail.com?Subject=PAC-Tool\"\r\n target=\"_top\">christian.klugesherz@gmail.com</a></span>\r\n");
 		txtpnabout.setBounds(84, 11, 275, 111);
 
 		frame.getContentPane().add(txtpnabout);

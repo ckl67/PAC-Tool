@@ -34,7 +34,6 @@ public class Misc {
 	// 						CONSTANTES (DEFINE)
 	// -------------------------------------------------------
 	public static final String PACTool_Version = "Version Alpha 0.3";
-
 	
 	public static final int _COMPRESSOR = 0;
 	public static final int _CONDENSER = 1;

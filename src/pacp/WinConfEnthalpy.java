@@ -38,6 +38,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.UIManager;
 import javax.swing.border.EtchedBorder;
 import javax.swing.SwingConstants;
+import java.awt.Font;
 
 public class WinConfEnthalpy {
 
@@ -134,12 +135,12 @@ public class WinConfEnthalpy {
 			}
 		});
 
-		JLabel lblEnthalpyFile = new JLabel("Fichier Enthalpie");
-		lblEnthalpyFile.setBounds(10, 28, 78, 14);
+		JLabel lblEnthalpyFile = new JLabel("Fichier Image Enthalpie :");
+		lblEnthalpyFile.setBounds(10, 28, 125, 14);
 		panel.add(lblEnthalpyFile);
 
 		textFieldEnthalpyFilePath = new JTextField();
-		textFieldEnthalpyFilePath.setBounds(104, 25, 313, 20);
+		textFieldEnthalpyFilePath.setBounds(145, 25, 272, 20);
 		textFieldEnthalpyFilePath.setText("D:/Users/kluges1/workspace/pac-tool/ressources/R22.png");
 		textFieldEnthalpyFilePath.setColumns(10);
 		panel.add(textFieldEnthalpyFilePath);
@@ -162,25 +163,25 @@ public class WinConfEnthalpy {
 		textFieldH1X.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldH1X.setText(String.valueOf(enthalpyBkgdImg.getRefCurveH1x()));
 		textFieldH1X.setToolTipText("");
-		textFieldH1X.setBounds(104, 23, 86, 20);
+		textFieldH1X.setBounds(156, 25, 46, 20);
 		panel_1.add(textFieldH1X);
 		textFieldH1X.setColumns(10);
 
 		JLabel lblHFinal = new JLabel("New label");
 		lblHFinal.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		lblHFinal.setIcon(new ImageIcon(WinConfEnthalpy.class.getResource("/pacp/images/HFinalLocation.png")));
-		lblHFinal.setBounds(276, 22, 64, 53);
+		lblHFinal.setBounds(274, 21, 64, 53);
 		panel_1.add(lblHFinal);
 
 		textFieldH2X = new JTextField();
 		textFieldH2X.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldH2X.setText(String.valueOf(enthalpyBkgdImg.getRefCurveH2x()));
-		textFieldH2X.setBounds(360, 23, 94, 20);
+		textFieldH2X.setBounds(408, 23, 46, 20);
 		panel_1.add(textFieldH2X);
 		textFieldH2X.setColumns(10);
 
 		JLabel lblKjkg0 = new JLabel("kJ/kg");
-		lblKjkg0.setBounds(199, 26, 46, 14);
+		lblKjkg0.setBounds(211, 28, 46, 14);
 		panel_1.add(lblKjkg0);
 
 		JLabel lblKjkg01 = new JLabel("kJ/kg");
@@ -201,7 +202,7 @@ public class WinConfEnthalpy {
 				}		
 			}
 		});
-		btnArrH1X_Right.setBounds(160, 50, 30, 20);
+		btnArrH1X_Right.setBounds(172, 52, 30, 20);
 		panel_1.add(btnArrH1X_Right);
 		
 		BasicArrowButton btnArrH1X_left = new BasicArrowButton(BasicArrowButton.WEST);
@@ -218,7 +219,7 @@ public class WinConfEnthalpy {
 				}			
 			}
 		});
-		btnArrH1X_left.setBounds(100, 50, 30, 20);
+		btnArrH1X_left.setBounds(112, 52, 30, 20);
 		panel_1.add(btnArrH1X_left);
 		
 		BasicArrowButton btnArrH2X_Right = new BasicArrowButton(BasicArrowButton.EAST);
@@ -260,7 +261,7 @@ public class WinConfEnthalpy {
 		textFieldStepH1X = new JTextField();
 		textFieldStepH1X.setHorizontalAlignment(SwingConstants.CENTER);
 		textFieldStepH1X.setText("1");
-		textFieldStepH1X.setBounds(130, 50, 30, 20);
+		textFieldStepH1X.setBounds(142, 52, 30, 20);
 		panel_1.add(textFieldStepH1X);
 		textFieldStepH1X.setColumns(10);
 		
@@ -270,6 +271,14 @@ public class WinConfEnthalpy {
 		textFieldStepH2X.setColumns(10);
 		textFieldStepH2X.setBounds(390, 50, 30, 20);
 		panel_1.add(textFieldStepH2X);
+		
+		JLabel lblMinH = new JLabel("Min H:");
+		lblMinH.setBounds(116, 28, 46, 14);
+		panel_1.add(lblMinH);
+		
+		JLabel lblMaxH = new JLabel("Max H:");
+		lblMaxH.setBounds(363, 26, 46, 14);
+		panel_1.add(lblMaxH);
 
 		JPanel panel_2 = new JPanel();
 		panel_2.setBorder(new TitledBorder(null, "Pression", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -285,27 +294,29 @@ public class WinConfEnthalpy {
 		panel_2.add(lblPOrigine);
 
 		textFieldP1Y = new JTextField();
+		textFieldP1Y.setToolTipText("Multiple / Log10 ");
 		textFieldP1Y.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldP1Y.setText(String.valueOf(enthalpyBkgdImg.getRefCurveP1y()));
-		textFieldP1Y.setBounds(104, 21, 86, 20);
+		textFieldP1Y.setBounds(155, 22, 46, 20);
 		panel_2.add(textFieldP1Y);
 		textFieldP1Y.setColumns(10);
 
 		JLabel lblPFinal = new JLabel("New label");
 		lblPFinal.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		lblPFinal.setIcon(new ImageIcon(WinConfEnthalpy.class.getResource("/pacp/images/PFinalLocation.png")));
-		lblPFinal.setBounds(272, 22, 64, 50);
+		lblPFinal.setBounds(275, 22, 64, 50);
 		panel_2.add(lblPFinal);
 
 		textFieldP2Y = new JTextField();
+		textFieldP2Y.setToolTipText("Multiple / Log10 ");
 		textFieldP2Y.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldP2Y.setText(String.valueOf(enthalpyBkgdImg.getRefCurveP2y()));
-		textFieldP2Y.setBounds(358, 19, 98, 20);
+		textFieldP2Y.setBounds(410, 19, 46, 20);
 		panel_2.add(textFieldP2Y);
 		textFieldP2Y.setColumns(10);
 
 		JLabel lblBar0 = new JLabel("bar");
-		lblBar0.setBounds(197, 24, 46, 14);
+		lblBar0.setBounds(208, 25, 57, 14);
 		panel_2.add(lblBar0);
 
 		JLabel lblBar01 = new JLabel("bar");
@@ -327,7 +338,7 @@ public class WinConfEnthalpy {
 
 			}
 		});
-		btnArrP1Y_Right.setBounds(160, 50, 30, 20);
+		btnArrP1Y_Right.setBounds(171, 51, 30, 20);
 		panel_2.add(btnArrP1Y_Right);
 		
 		BasicArrowButton btnArrP1Y_left = new BasicArrowButton(BasicArrowButton.SOUTH);
@@ -344,7 +355,7 @@ public class WinConfEnthalpy {
 				}		
 			}
 		});
-		btnArrP1Y_left.setBounds(100, 50, 30, 20);
+		btnArrP1Y_left.setBounds(111, 51, 30, 20);
 		panel_2.add(btnArrP1Y_left);
 		
 		BasicArrowButton btnArrP2Y_Right = new BasicArrowButton(BasicArrowButton.NORTH);
@@ -385,7 +396,7 @@ public class WinConfEnthalpy {
 		textFieldStepP1Y.setText("1");
 		textFieldStepP1Y.setHorizontalAlignment(SwingConstants.CENTER);
 		textFieldStepP1Y.setColumns(10);
-		textFieldStepP1Y.setBounds(130, 50, 30, 20);
+		textFieldStepP1Y.setBounds(141, 51, 30, 20);
 		panel_2.add(textFieldStepP1Y);
 		
 		textFieldStepP2Y = new JTextField();
@@ -394,6 +405,24 @@ public class WinConfEnthalpy {
 		textFieldStepP2Y.setColumns(10);
 		textFieldStepP2Y.setBounds(390, 50, 30, 20);
 		panel_2.add(textFieldStepP2Y);
+		
+		JLabel lblMaxP = new JLabel("Max P:");
+		lblMaxP.setBounds(360, 22, 46, 14);
+		panel_2.add(lblMaxP);
+		
+		JLabel lblMinP = new JLabel("Min P:");
+		lblMinP.setBounds(113, 25, 37, 14);
+		panel_2.add(lblMinP);
+		
+		JLabel lbllog = new JLabel("/(Log10)");
+		lbllog.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		lbllog.setBounds(211, 40, 46, 14);
+		panel_2.add(lbllog);
+		
+		JLabel label = new JLabel("/(Log10)");
+		label.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		label.setBounds(466, 40, 46, 14);
+		panel_2.add(label);
 
 		JPanel panel_3 = new JPanel();
 		panel_3.setLayout(null);

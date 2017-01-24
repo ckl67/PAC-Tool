@@ -116,7 +116,7 @@ public class EnthalpyBkgdImg {
 	 * @param jsonObj : JSON Object
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
-		this.enthalpyImageFile = (String) jsonObj.get("enthalpyImageFile");
+		this.enthalpyImageFile = (String) jsonObj.get("EnthalpyImageFile");
 		
 		this.refCurveH1x = ((Number) jsonObj.get("RefCurveH1x")).intValue() ;
 		this.refCurveH2x = ((Number) jsonObj.get("RefCurveH2x")).intValue() ;

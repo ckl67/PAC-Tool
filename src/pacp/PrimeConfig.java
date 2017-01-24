@@ -18,28 +18,82 @@
  */
 package pacp;
 
+import java.util.HashMap;
+
 import org.json.simple.JSONObject;
 
 public class PrimeConfig {
 
-	boolean unitBTU;		// checkoxBTU
-	boolean unitPound;		// chckbxPound
-	boolean unitFaren;		// checkoxFaren
-	
+
+	private boolean unitCompBTU;		// checkoxBTU
+	private boolean unitCompPound;		// chckbxPound
+	private boolean unitCompFaren;		// checkoxFaren
+
+	private HashMap<String, String> hmapTranslate = new HashMap<String, String>();
+	private HashMap<String, String> hmapTranslate_fr = new HashMap<String, String>();
+
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
 	public PrimeConfig() {
-		unitBTU = true;
-		unitPound = true;
-		unitFaren = true;
+		unitCompBTU = true;
+		unitCompPound = true;
+		unitCompFaren = true;
+
+		//By default in English
+		hmapTranslate.put("Capacity", 		"Capacity: ");
+		hmapTranslate.put("Power", 			"Power: ");
+		hmapTranslate.put("Current", 		"Current: ");
+		hmapTranslate.put("EER", 			"EER: ");
+		hmapTranslate.put("Voltage", 		"Voltage: ");
+		hmapTranslate.put("Mass flow", 		"Mass flow: ");
+		hmapTranslate.put("Evap", 			"Evap: ");
+		hmapTranslate.put("RG", 			"RG: ");
+		hmapTranslate.put("Cond", 			"Cond: ");
+		hmapTranslate.put("Liq", 			"Liq: ");
+		hmapTranslate.put("Under cooling", 	"Under cooling: ");
+		hmapTranslate.put("Overheated", 	"Overheated: ");
+
+		//By French
+		hmapTranslate_fr.put("Capacity", 	"Capacité: ");
+		hmapTranslate_fr.put("Capacity",	"P. Frigo.: ");
+		hmapTranslate_fr.put("Power", 		"P. Absorb.: ");
+		hmapTranslate_fr.put("Current", 	"Courant: ");
+		hmapTranslate_fr.put("EER", 		"COP Froid: ");
+		hmapTranslate_fr.put("Voltage", 	"Tension: ");
+		hmapTranslate_fr.put("Mass flow", 	"Débit Massique: ");
+		hmapTranslate_fr.put("Evap", 		"T0. Evap.: ");
+		hmapTranslate_fr.put("RG", 			"T. Asp. Comp.: ");
+		hmapTranslate_fr.put("Cond", 		"TK. Cond.: ");
+		hmapTranslate_fr.put("Liq", 		"T. Détent.: ");
+		hmapTranslate.put("Under cooling", 	"S/Refroidissement: ");
+		hmapTranslate.put("Overheated", 	"Surchauffe: ");
+
 	}
 
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
 
+	public String TranslateText(String key, String dic) {
+		String result = "Wrong Key in TranslateText method";
+
+		// By default English
+		String out = hmapTranslate.get(key);
+
+		// French : revert to default if not found
+		if (dic.equals("fr")) {
+			String outfr = hmapTranslate_fr.get(key);
+			if (outfr != null)
+				out = outfr; 
+		}
+
+		if (out != null)
+			result = out;
+		
+		return result;
+	}
 	// -------------------------------------------------------
 	// 							JSON
 	// -------------------------------------------------------
@@ -48,7 +102,7 @@ public class PrimeConfig {
 	//  Square brackets[] represents arrays.			--> add
 	//  {  "Planet": "Earth" , "Countries": [  { "Name": "India", "Capital": "Delhi"}, { "Name": "France", "Major": "Paris" } ]  }  
 	// -------------------------------------------------------
-	
+
 	/**
 	 * Construct the JSON data
 	 * @return : JSONObject
@@ -56,21 +110,21 @@ public class PrimeConfig {
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
 		JSONObject jsonObj = new JSONObject();  
-		jsonObj.put("unitBTU", this.unitBTU);	
-		jsonObj.put("unitPound", this.unitPound);
-		jsonObj.put("unitFaren", this.unitFaren);
+		jsonObj.put("unitCompBTU", this.unitCompBTU);	
+		jsonObj.put("unitCompPound", this.unitCompPound);
+		jsonObj.put("unitCompFaren", this.unitCompFaren);
 		return jsonObj ;
 
 	}
-	
+
 	/**
 	 * Set the JSON data, to the Class instance
 	 * @param jsonObj : JSON Object
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
-		this.unitBTU = (boolean) jsonObj.get("unitBTU");
-		this.unitPound = (boolean) jsonObj.get("unitPound");
-		this.unitFaren = (boolean) jsonObj.get("unitFaren");
+		this.unitCompBTU = (boolean) jsonObj.get("unitCompBTU");
+		this.unitCompPound = (boolean) jsonObj.get("unitCompPound");
+		this.unitCompFaren = (boolean) jsonObj.get("unitCompFaren");
 		// To use afterward this principle
 		//this.xHmin = ((Number) jsonObj.get("xHmin")).doubleValue();
 	}
@@ -79,42 +133,42 @@ public class PrimeConfig {
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
 
-	public boolean getUnitBTU() {
-		return unitBTU;
+	public boolean getUnitCompBTU() {
+		return unitCompBTU;
 	}
 
-	public boolean isUnitBTU() {
-		return unitBTU;
+	public boolean isUnitCompBTU() {
+		return unitCompBTU;
 	}
 
-	public void setUnitBTU(boolean unitBTU) {
-		this.unitBTU = unitBTU;
+	public void setUnitCompBTU(boolean unitCompBTU) {
+		this.unitCompBTU = unitCompBTU;
 	}
 
-	public boolean getUnitPound() {
-		return unitPound;
+	public boolean getUnitCompPound() {
+		return unitCompPound;
 	}
 
-	public boolean isUnitPound() {
-		return unitPound;
+	public boolean isUnitCompPound() {
+		return unitCompPound;
 	}
 
-	public void setUnitPound(boolean unitPound) {
-		this.unitPound = unitPound;
+	public void setUnitCompPound(boolean unitCompPound) {
+		this.unitCompPound = unitCompPound;
 	}
 
-	public boolean getUnitFaren() {
-		return unitFaren;
+	public boolean getUnitCompFaren() {
+		return unitCompFaren;
 	}
 
-	public boolean isUnitFaren() {
-		return unitFaren;
+	public boolean isUnitCompFaren() {
+		return unitCompFaren;
 	}
 
-	public void setUnitFaren(boolean unitFaren) {
-		this.unitFaren = unitFaren;
+	public void setUnitCompFaren(boolean unitCompFaren) {
+		this.unitCompFaren = unitCompFaren;
 	}
-	
-	
-	
+
+
+
 }

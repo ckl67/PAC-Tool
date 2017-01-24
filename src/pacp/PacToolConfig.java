@@ -159,16 +159,16 @@ public class PacToolConfig {
 			System.err.println("Unable to Parse JSON read the file: fileName");
 		}  
 
-		// PrimeConfig: Set the Class Instance with JSON data
+		// PrimeConfig
 		JSONObject jsonObjPrimeConfig = (JSONObject) jsonObj.get("PrimeConfig") ;
-		System.out.println(jsonObjPrimeConfig);
 		primeConfig.setJsonObject(jsonObjPrimeConfig);
+		//System.out.println(jsonObjPrimeConfig);
 				
 
 		// Enthalpy (containing also EnthalpyBkgdImg)
 		JSONObject jsonObjEnthalpy = (JSONObject) jsonObj.get("Enthalpy");
-		System.out.println(jsonObjEnthalpy);
 		enthalpy.setJsonObject(jsonObjEnthalpy);
+		//System.out.println(jsonObjEnthalpy);
 
 		// Create PAC List
 		for(int i=1;i<pacl.size();i++) {
@@ -177,17 +177,14 @@ public class PacToolConfig {
 		JSONArray jsonObjectPacL = (JSONArray) jsonObj.get("PacList");
 		for(int i=0; i< jsonObjectPacL.size();i++) {
 			JSONObject jsonObjectPac = (JSONObject) jsonObjectPacL.get(i);
+			//System.out.println(jsonObjectPac);
 			if(i==0) {
 				pacl.get(i).setJsonObject(jsonObjectPac);				
 			} else {
 				pacl.add(i, new Pac());
 				pacl.get(i).setJsonObject(jsonObjectPac);
-				//comboBoxCompressor.insertItemAt(pacl.get(i).getCompressor().getName(),i);
-
 			}
-		}
-			
-		
+		}	
 	}
 
 

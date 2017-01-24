@@ -41,14 +41,14 @@ public class Compressor {
 
 	public Compressor() {
 			setName("ZR40K3-PFG");
-			evap = 45;
-			cond = 130;
-			rg = 65;
-			liq = 115;
-			capacity = 33300;
+			evap =  Math.round(Misc.farenheit2degre(45)*100.0)/100.0;
+			cond = Math.round(Misc.farenheit2degre(130)*100.0)/100.0;
+			rg = Math.round(Misc.farenheit2degre(65)*100.0)/100.0;
+			liq = Math.round(Misc.farenheit2degre(115)*100.0)/100.0;
+			capacity = Math.round(Misc.btuhr2watt(33300)*100.0)/100.0;
 			power = 3000;
 			current = 14.7;
-			massFlow = 488;		
+			massFlow = Math.round(Misc.pound2kg(488)*1000.0)/1000.0;		
 			voltage = 220;	
 			deltaT = 0;
 			deltaP = 0;

@@ -4,3 +4,5 @@ evaporator
 refrigerant
 dehydrator
 squiggly
+fahrenheit
+pac
