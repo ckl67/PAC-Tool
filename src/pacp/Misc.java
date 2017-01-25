@@ -34,6 +34,19 @@ public class Misc {
 	// 						CONSTANTES (DEFINE)
 	// -------------------------------------------------------
 	public static final String PACTool_Version = "Version Alpha 0.3";
+
+	public static final int _COMP=0;
+	public static final int _COND=1;
+	public static final int _DEHY=2;
+	public static final int _EPVA=3;
+	public static final int _EVAP=4;
+	public static final int _FLFRG=5;
+	public static final int _CRCLS=6;
+	public static final int _CIRTS=7;
+	public static final int _FLCAS=8;
+	public static final int _CRCLD=9;
+	public static final int _CIRTD=10;
+	public static final int _FLCAD=11;
 	
 	public static final int _COMPRESSOR = 0;
 	public static final int _CONDENSER = 1;

@@ -18,41 +18,44 @@
  */
 package pacp;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class Pac{
-	private Compressor compressor;
-	private Condenser condenser;
-	private Dehydrator dehydrator;
-	private ExpansionValve expansionValve;
-	private Evaporator evaporator;
-	private Refrigerant fluidRefri;
-	private Circulator circulatorS;
-	private HeatSrcDistrCircuit circuitS;
-	private HeatTransferFluid fluidCaloS;
-	private Circulator circulatorD;
-	private HeatSrcDistrCircuit circuitD;
-	private HeatTransferFluid fluidCaloD;
+	private List<Compressor> compressorL = new ArrayList<Compressor>();
+	private List<Condenser> condenserL = new ArrayList<Condenser>();
+	private List<Dehydrator> dehydratorL = new ArrayList<Dehydrator>();
+	private List<ExpansionValve> expansionValveL = new ArrayList<ExpansionValve>();
+	private List<Evaporator> evaporatorL = new ArrayList<Evaporator>();
+	private List<Refrigerant> fluidRefriL = new ArrayList<Refrigerant>();
+	private List<Circulator> circulatorSrcL = new ArrayList<Circulator>();
+	private List<HeatSrcDistrCircuit> circuitSrcL = new ArrayList<HeatSrcDistrCircuit>();
+	private List<HeatTransferFluid> fluidCaloSrcL = new ArrayList<HeatTransferFluid>();
+	private List<Circulator> circulatorDistrL = new ArrayList<Circulator>();
+	private List<HeatSrcDistrCircuit> circuitDistrL = new ArrayList<HeatSrcDistrCircuit>();
+	private List<HeatTransferFluid> fluidCaloDistrL = new ArrayList<HeatTransferFluid>();
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 	public Pac() {
+		compressorL.add(new Compressor());
+		condenserL.add(new Condenser());
+		dehydratorL.add(new Dehydrator());
+		expansionValveL.add(new ExpansionValve());
+		evaporatorL.add(new Evaporator());
+		fluidRefriL.add(new Refrigerant());
 
-		this.compressor = new Compressor();
-		this.condenser = new Condenser();
-		this.dehydrator = new Dehydrator();
-		this.expansionValve = new ExpansionValve();
-		this.evaporator = new Evaporator();
-		this.fluidRefri = new Refrigerant();
+		circulatorSrcL.add(new Circulator());
+		circuitSrcL.add(new HeatSrcDistrCircuit());
+		fluidCaloSrcL.add(new HeatTransferFluid());
 
-		this.circulatorS = new Circulator();
-		this.circuitS = new HeatSrcDistrCircuit();
-		this.fluidCaloS = new HeatTransferFluid();
-
-		this.circulatorD = new Circulator();
-		this.circuitD = new HeatSrcDistrCircuit();
-		this.fluidCaloD = new HeatTransferFluid();	
+		circulatorDistrL.add(new Circulator());
+		circuitDistrL.add(new HeatSrcDistrCircuit());
+		fluidCaloDistrL.add(new HeatTransferFluid());	
 	}
 
 	// -------------------------------------------------------
@@ -63,45 +66,49 @@ public class Pac{
 	 * Will simulate a complete PAC cycle (Gaz/Heat Source and Distribution)
 	 * 
 	 * @param GazInjected in :  _COMPRESSOR,_CONDENSER, _EXPANSIONVALVE or _EVAPORATOR
-	 * 				The : HeatTransferFluid will always be injected in the circulatuer !! 
+	 * 				The : HeatTransferFluid will always be injected in the circulator !!
+	 * @itemFor : Correspond to the item element index to simulate:
+	 * 			Example: In case we want to test with the N°2 compressor:  itemFor[Misc._COMP] = 2;
 	 */
-	public void PacCycle(int GazInject) {
+	public void PacCycle(int GazInject, int[] itemFor) {
 
-		// Cycle Gaz
+		// Cycle Gaze
 		if (GazInject == Misc._COMPRESSOR) {
-			fluidRefri = compressor.transfer(fluidRefri);
-			fluidRefri = condenser.transfer(fluidRefri);
-			fluidRefri = dehydrator.transfer(fluidRefri);
-			fluidRefri = expansionValve.transfer(fluidRefri);
-			fluidRefri = evaporator.transfer(fluidRefri);
+			fluidRefriL.set(itemFor[Misc._FLFRG],compressorL.get(itemFor[Misc._COMP]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
+			fluidRefriL.set(itemFor[Misc._FLFRG],condenserL.get(itemFor[Misc._COND]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
+			fluidRefriL.set(itemFor[Misc._FLFRG],dehydratorL.get(itemFor[Misc._DEHY]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
+			fluidRefriL.set(itemFor[Misc._FLFRG],expansionValveL.get(itemFor[Misc._EPVA]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
+			fluidRefriL.set(itemFor[Misc._FLFRG],evaporatorL.get(itemFor[Misc._EVAP]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
 		} else if (GazInject == Misc._CONDENSER) {
-			fluidRefri = condenser.transfer(fluidRefri);
-			fluidRefri = dehydrator.transfer(fluidRefri);
-			fluidRefri = expansionValve.transfer(fluidRefri);
-			fluidRefri = evaporator.transfer(fluidRefri);
-			fluidRefri = compressor.transfer(fluidRefri);
+			fluidRefriL.set(itemFor[Misc._FLFRG],condenserL.get(itemFor[Misc._COND]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
+			fluidRefriL.set(itemFor[Misc._FLFRG],dehydratorL.get(itemFor[Misc._DEHY]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
+			fluidRefriL.set(itemFor[Misc._FLFRG],expansionValveL.get(itemFor[Misc._EPVA]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
+			fluidRefriL.set(itemFor[Misc._FLFRG],evaporatorL.get(itemFor[Misc._EVAP]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
+			fluidRefriL.set(itemFor[Misc._FLFRG],compressorL.get(itemFor[Misc._COMP]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
 		} else if (GazInject == Misc._EXPANSIONVALVE) {
-			fluidRefri = expansionValve.transfer(fluidRefri);
-			fluidRefri = evaporator.transfer(fluidRefri);
-			fluidRefri = compressor.transfer(fluidRefri);
-			fluidRefri = condenser.transfer(fluidRefri);
-			fluidRefri = dehydrator.transfer(fluidRefri);
+			fluidRefriL.set(itemFor[Misc._FLFRG],expansionValveL.get(itemFor[Misc._EPVA]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
+			fluidRefriL.set(itemFor[Misc._FLFRG],evaporatorL.get(itemFor[Misc._EVAP]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
+			fluidRefriL.set(itemFor[Misc._FLFRG],compressorL.get(itemFor[Misc._COMP]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
+			fluidRefriL.set(itemFor[Misc._FLFRG],condenserL.get(itemFor[Misc._COND]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
+			fluidRefriL.set(itemFor[Misc._FLFRG],dehydratorL.get(itemFor[Misc._DEHY]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
 		} else {
-			fluidRefri = evaporator.transfer(fluidRefri);
-			fluidRefri = compressor.transfer(fluidRefri);
-			fluidRefri = condenser.transfer(fluidRefri);
-			fluidRefri = dehydrator.transfer(fluidRefri);
-			fluidRefri = expansionValve.transfer(fluidRefri);	
+			fluidRefriL.set(itemFor[Misc._FLFRG],evaporatorL.get(itemFor[Misc._EVAP]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
+			fluidRefriL.set(itemFor[Misc._FLFRG],compressorL.get(itemFor[Misc._COMP]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
+			fluidRefriL.set(itemFor[Misc._FLFRG],condenserL.get(itemFor[Misc._COND]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
+			fluidRefriL.set(itemFor[Misc._FLFRG],dehydratorL.get(itemFor[Misc._DEHY]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
+			fluidRefriL.set(itemFor[Misc._FLFRG],expansionValveL.get(itemFor[Misc._EPVA]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));	
 		}	
 
-		// Cycle Heat Source (Home)
-		fluidCaloS = circulatorS.transfer(fluidCaloS);
-		fluidCaloS = circuitS.transfer(fluidCaloS);
+		// Cycle Heat Source 
+		fluidCaloSrcL.set(itemFor[Misc._FLCAS],circulatorSrcL.get(itemFor[Misc._CRCLS]).transfer(fluidCaloSrcL.get(itemFor[Misc._FLCAS])));
+		fluidCaloSrcL.set(itemFor[Misc._FLCAS],circuitSrcL.get(itemFor[Misc._CIRTS]).transfer(fluidCaloSrcL.get(itemFor[Misc._FLCAS])));
 
-		// Cycle Heat Distribution (Captage)
-		fluidCaloD = circulatorD.transfer(fluidCaloD);
-		fluidCaloD = circuitD.transfer(fluidCaloD);	
-	}
+		// Cycle Heat Distribution
+		fluidCaloDistrL.set(itemFor[Misc._FLCAD],circulatorDistrL.get(itemFor[Misc._CRCLD]).transfer(fluidCaloDistrL.get(itemFor[Misc._FLCAD])));
+		fluidCaloDistrL.set(itemFor[Misc._FLCAD],circuitDistrL.get(itemFor[Misc._CIRTD]).transfer(fluidCaloDistrL.get(itemFor[Misc._FLCAD])));	
+
+	}			
+
 
 	// -------------------------------------------------------
 	// 							JSON
@@ -120,182 +127,263 @@ public class Pac{
 	public JSONObject getJsonObject() {
 		JSONObject jsonObj = new JSONObject();
 
-		JSONObject jsonObjCompressor = new JSONObject();
-		jsonObjCompressor = compressor.getJsonObject();
-		JSONObject jsonObjCondenser = new JSONObject();
-		jsonObjCondenser = condenser.getJsonObject();
-		JSONObject jsonObjDehydrator = new JSONObject();
-		jsonObjDehydrator = dehydrator.getJsonObject();
-		JSONObject jsonObjEvaporator = new JSONObject();
-		jsonObjEvaporator = evaporator.getJsonObject();
-		JSONObject jsonObjExpansionValve = new JSONObject();
-		jsonObjExpansionValve = expansionValve.getJsonObject();
-		JSONObject jsonObjfluidRefri = new JSONObject();
-		jsonObjfluidRefri = fluidRefri.getJsonObject();
-		JSONObject jsonObjcirculatorS = new JSONObject();
-		jsonObjcirculatorS = circulatorS.getJsonObject();
-		JSONObject jsonObjcircuitS = new JSONObject();
-		jsonObjcircuitS = circuitS.getJsonObject();
-		JSONObject jsonObjfluidCaloS = new JSONObject();
-		jsonObjfluidCaloS = fluidCaloS.getJsonObject();
-		JSONObject jsonObjcirculatorD = new JSONObject();
-		jsonObjcirculatorD = circulatorD.getJsonObject();
-		JSONObject jsonObjcircuitD = new JSONObject();
-		jsonObjcircuitD = circuitD.getJsonObject();
-		JSONObject jsonObjfluidCaloD = new JSONObject();
-		jsonObjfluidCaloD = fluidCaloD.getJsonObject();
+		JSONArray ObjCompressorL = new JSONArray();
+		for(int i=0; i< compressorL.size();i++) {
+			JSONObject Obj = new JSONObject();  
+			Obj.put("Compressor", this.compressorL.get(i).getJsonObject());
+			ObjCompressorL.add(Obj);
+		}
+		jsonObj.put("CompressorL", ObjCompressorL);
 
-		jsonObj.put("Compressor", jsonObjCompressor);
-		jsonObj.put("Condenser", jsonObjCondenser);
-		jsonObj.put("Dehydrator", jsonObjDehydrator);
-		jsonObj.put("Evaporator", jsonObjEvaporator);
-		jsonObj.put("ExpansionValve", jsonObjExpansionValve);
-		jsonObj.put("FluidRefri", jsonObjfluidRefri);
+		JSONArray ObjCondenserL = new JSONArray();
+		for(int i=0; i< condenserL.size();i++) {
+			JSONObject Obj = new JSONObject();  
+			Obj.put("Condenser", this.condenserL.get(i).getJsonObject());
+			ObjCondenserL.add(Obj);
+		}
+		jsonObj.put("CondenserL", ObjCondenserL);
+		
+		JSONArray ObjDehydratorL = new JSONArray();
+		for(int i=0; i< dehydratorL.size();i++) {
+			JSONObject Obj = new JSONObject();  
+			Obj.put("Dehydrator", this.dehydratorL.get(i).getJsonObject());
+			ObjDehydratorL.add(Obj);
+		}
+		jsonObj.put("DehydratorL", ObjDehydratorL);
 
-		jsonObj.put("CirculatorS",jsonObjcirculatorS);
-		jsonObj.put("CircuitS",jsonObjcircuitS);
-		jsonObj.put("FluidCaloS",jsonObjfluidCaloS);
+		JSONArray ObjEvaporatorL = new JSONArray();
+		for(int i=0; i< evaporatorL.size();i++) {
+			JSONObject Obj = new JSONObject();  
+			Obj.put("Evaporator", this.evaporatorL.get(i).getJsonObject());
+			ObjEvaporatorL.add(Obj);
+		}
+		jsonObj.put("EvaporatorL", ObjEvaporatorL);
 
-		jsonObj.put("CirculatorD",jsonObjcirculatorD);
-		jsonObj.put("CircuitD",jsonObjcircuitD);
-		jsonObj.put("FluidCaloD",jsonObjfluidCaloD);
+		JSONArray ObjExpansionValveL = new JSONArray();
+		for(int i=0; i< expansionValveL.size();i++) {
+			JSONObject Obj = new JSONObject();  
+			Obj.put("ExpansionValve", this.expansionValveL.get(i).getJsonObject());
+			ObjExpansionValveL.add(Obj);
+		}
+		jsonObj.put("ExpansionValveL", ObjExpansionValveL);
 
+		JSONArray ObjFluidRefriL = new JSONArray();
+		for(int i=0; i< fluidRefriL.size();i++) {
+			JSONObject Obj = new JSONObject();  
+			Obj.put("FluidRefri", this.fluidRefriL.get(i).getJsonObject());
+			ObjFluidRefriL.add(Obj);
+		}
+		jsonObj.put("FluidRefriL", ObjFluidRefriL);
+
+		JSONArray ObjCirculatorSrcL = new JSONArray();
+		for(int i=0; i< circulatorSrcL.size();i++) {
+			JSONObject Obj = new JSONObject();  
+			Obj.put("CirculatorSrc", this.circulatorSrcL.get(i).getJsonObject());
+			ObjCirculatorSrcL.add(Obj);
+		}
+		jsonObj.put("CirculatorSrcL", ObjCirculatorSrcL);
+
+		JSONArray ObjCircuitSrcL = new JSONArray();
+		for(int i=0; i< circuitSrcL.size();i++) {
+			JSONObject Obj = new JSONObject();  
+			Obj.put("CircuitSrc", this.circuitSrcL.get(i).getJsonObject());
+			ObjCircuitSrcL.add(Obj);
+		}
+		jsonObj.put("CircuitSrcL", ObjCircuitSrcL);
+
+		JSONArray ObjFluidCaloSrcL = new JSONArray();
+		for(int i=0; i< fluidCaloSrcL.size();i++) {
+			JSONObject Obj = new JSONObject();  
+			Obj.put("FluidCaloSrc", this.fluidCaloSrcL.get(i).getJsonObject());
+			ObjFluidCaloSrcL.add(Obj);
+		}
+		jsonObj.put("FluidCaloSrcL", ObjFluidCaloSrcL);
+
+		JSONArray ObjCirculatorDistrL = new JSONArray();
+		for(int i=0; i< circulatorDistrL.size();i++) {
+			JSONObject Obj = new JSONObject();  
+			Obj.put("CirculatorDistr", this.circulatorDistrL.get(i).getJsonObject());
+			ObjCirculatorDistrL.add(Obj);
+		}
+		jsonObj.put("CirculatorDistrL", ObjCirculatorDistrL);
+
+		JSONArray ObjCircuitDistrL = new JSONArray();
+		for(int i=0; i< circuitDistrL.size();i++) {
+			JSONObject Obj = new JSONObject();  
+			Obj.put("CircuitDistr", this.circuitDistrL.get(i).getJsonObject());
+			ObjCircuitDistrL.add(Obj);
+		}
+		jsonObj.put("CircuitDistrL", ObjCircuitDistrL);
+
+		JSONArray ObjFluidCaloDistrL = new JSONArray();
+		for(int i=0; i< fluidCaloDistrL.size();i++) {
+			JSONObject Obj = new JSONObject();  
+			Obj.put("FluidCaloDistr", this.fluidCaloDistrL.get(i).getJsonObject());
+			ObjFluidCaloDistrL.add(Obj);
+		}
+		jsonObj.put("FluidCaloDistrL", ObjFluidCaloDistrL);
+		
 		return jsonObj;
 	}
 
-	
+
 	/**
 	 * Set the JSON data, to the Class instance
 	 * @param jsonObj : JSON Object
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
-		
-		JSONObject jsonObjCompressor = (JSONObject) jsonObj.get("Compressor");
-		this.compressor.setJsonObject(jsonObjCompressor);
-		JSONObject jsonObjCondenser = (JSONObject) jsonObj.get("Condenser");
-		this.condenser.setJsonObject(jsonObjCondenser);
-		JSONObject jsonObjDehydrator = (JSONObject) jsonObj.get("Dehydrator");
-		this.dehydrator.setJsonObject(jsonObjDehydrator);
-		JSONObject jsonObjEvaporator = (JSONObject) jsonObj.get("Evaporator");
-		this.evaporator.setJsonObject(jsonObjEvaporator);
-		JSONObject jsonObjExpansionValve = (JSONObject) jsonObj.get("ExpansionValve");
-		this.expansionValve.setJsonObject(jsonObjExpansionValve);
-		JSONObject jsonObjFluidRefri = (JSONObject) jsonObj.get("FluidRefri");
-		this.fluidRefri.setJsonObject(jsonObjFluidRefri);
 
-		JSONObject jsonObjCirculatorS = (JSONObject) jsonObj.get("CirculatorS");
-		this.circulatorS.setJsonObject(jsonObjCirculatorS);
-		JSONObject jsonObjCircuitS = (JSONObject) jsonObj.get("CircuitS");
-		this.circuitS.setJsonObject(jsonObjCircuitS);
-		JSONObject jsonObjHeatTransferFluidS = (JSONObject) jsonObj.get("FluidCaloS");
-		this.fluidCaloS.setJsonObject(jsonObjHeatTransferFluidS);
-		
-		JSONObject jsonObjCirculatorD = (JSONObject) jsonObj.get("CirculatorD");
-		this.circulatorD.setJsonObject(jsonObjCirculatorD);
-		JSONObject jsonObjCircuitD = (JSONObject) jsonObj.get("CircuitD");
-		this.circuitD.setJsonObject(jsonObjCircuitD);
-		JSONObject jsonObjHeatTransferFluidD = (JSONObject) jsonObj.get("FluidCaloD");
-		this.fluidCaloD.setJsonObject(jsonObjHeatTransferFluidD);
+		JSONArray ObjL;
+		ObjL = (JSONArray) jsonObj.get("CompressorL");
+		compressorL.clear();
+		for(int i=0; i< ObjL.size();i++) {
+			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
+			compressorL.add(i, new Compressor());
+			compressorL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("Compressor")));
+		}
+
+		ObjL = (JSONArray) jsonObj.get("CondenserL");
+		condenserL.clear();
+		for(int i=0; i< ObjL.size();i++) {
+			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
+			condenserL.add(i, new Condenser());
+			condenserL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("Condenser")));
+		}
+
+		ObjL = (JSONArray) jsonObj.get("DehydratorL");
+		dehydratorL.clear();
+		for(int i=0; i< ObjL.size();i++) {
+			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
+			dehydratorL.add(i, new Dehydrator());
+			dehydratorL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("Dehydrator")));
+		}
+
+		ObjL = (JSONArray) jsonObj.get("EvaporatorL");
+		evaporatorL.clear();
+		for(int i=0; i< ObjL.size();i++) {
+			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
+			evaporatorL.add(i, new Evaporator());
+			evaporatorL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("Evaporator")));
+		}
+
+		ObjL = (JSONArray) jsonObj.get("ExpansionValveL");
+		expansionValveL.clear();
+		for(int i=0; i< ObjL.size();i++) {
+			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
+			expansionValveL.add(i, new ExpansionValve());
+			expansionValveL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("ExpansionValve")));
+		}
+
+		ObjL = (JSONArray) jsonObj.get("FluidRefriL");
+		fluidRefriL.clear();
+		for(int i=0; i< ObjL.size();i++) {
+			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
+			fluidRefriL.add(i, new Refrigerant());
+			fluidRefriL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("FluidRefri")));
+		}
+
+		ObjL = (JSONArray) jsonObj.get("CirculatorSrcL");
+		circulatorSrcL.clear();
+		for(int i=0; i< ObjL.size();i++) {
+			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
+			circulatorSrcL.add(i, new Circulator());
+			circulatorSrcL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("CirculatorSrc")));
+		}
+
+		ObjL = (JSONArray) jsonObj.get("CircuitSrcL");
+		circuitSrcL.clear();
+		for(int i=0; i< ObjL.size();i++) {
+			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
+			circuitSrcL.add(i, new HeatSrcDistrCircuit());
+			circuitSrcL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("CircuitSrc")));
+		}
+
+		ObjL = (JSONArray) jsonObj.get("FluidCaloSrcL");
+		fluidCaloSrcL.clear();
+		for(int i=0; i< ObjL.size();i++) {
+			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
+			fluidCaloSrcL.add(i, new HeatTransferFluid());
+			fluidCaloSrcL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("FluidCaloSrc")));
+		}
+
+		ObjL = (JSONArray) jsonObj.get("CirculatorDistrL");
+		circulatorDistrL.clear();
+		for(int i=0; i< ObjL.size();i++) {
+			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
+			circulatorDistrL.add(i, new Circulator());
+			circulatorDistrL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("CirculatorDistr")));
+		}
+
+		ObjL = (JSONArray) jsonObj.get("CircuitDistrL");
+		circuitDistrL.clear();
+		for(int i=0; i< ObjL.size();i++) {
+			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
+			circuitDistrL.add(i, new HeatSrcDistrCircuit());
+			circuitDistrL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("CircuitDistr")));
+		}
+
+		ObjL = (JSONArray) jsonObj.get("FluidCaloDistrL");
+		fluidCaloDistrL.clear();
+		for(int i=0; i< ObjL.size();i++) {
+			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
+			fluidCaloDistrL.add(i, new HeatTransferFluid());
+			fluidCaloDistrL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("FluidCaloDistr")));
+		}
 
 	}
 
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
-	public Compressor getCompressor() {
-		return compressor;
+
+
+	public List<Compressor> getCompressorL() {
+		return compressorL;
 	}
 
-	public void setCompressor(Compressor compressor) {
-		this.compressor = compressor;
+	public List<Condenser> getCondenserL() {
+		return condenserL;
 	}
 
-	public Condenser getCondenser() {
-		return condenser;
+
+	public List<Dehydrator> getDehydratorL() {
+		return dehydratorL;
 	}
 
-	public void setCondenser(Condenser condenser) {
-		this.condenser = condenser;
+	public List<ExpansionValve> getExpansionValveL() {
+		return expansionValveL;
 	}
 
-	public ExpansionValve getExpansionValve() {
-		return expansionValve;
+	public List<Evaporator> getEvaporatorL() {
+		return evaporatorL;
 	}
 
-	public void setExpansionValve(ExpansionValve expansionValve) {
-		this.expansionValve = expansionValve;
+	public List<Refrigerant> getFluidRefriL() {
+		return fluidRefriL;
 	}
 
-	public Evaporator getEvaporator() {
-		return evaporator;
+	public List<Circulator> getCirculatorSrcL() {
+		return circulatorSrcL;
 	}
 
-	public void setEvaporator(Evaporator evaporator) {
-		this.evaporator = evaporator;
+	public List<HeatSrcDistrCircuit> getCircuitSrcL() {
+		return circuitSrcL;
 	}
 
-	public Refrigerant getFluidRefri() {
-		return fluidRefri;
+	public List<HeatTransferFluid> getFluidCaloSrcL() {
+		return fluidCaloSrcL;
 	}
 
-	public void setFluidRefri(Refrigerant fluidRefri) {
-		this.fluidRefri = fluidRefri;
+	public List<Circulator> getCirculatorDistrL() {
+		return circulatorDistrL;
 	}
 
-	public Circulator getCirculatorS() {
-		return circulatorS;
+	public List<HeatSrcDistrCircuit> getCircuitDistrL() {
+		return circuitDistrL;
 	}
 
-	public void setCirculatorS(Circulator circulatorS) {
-		this.circulatorS = circulatorS;
-	}
-
-	public HeatSrcDistrCircuit getCircuitS() {
-		return circuitS;
-	}
-
-	public void setCircuitS(HeatSrcDistrCircuit circuitS) {
-		this.circuitS = circuitS;
-	}
-
-	public HeatTransferFluid getFluidCaloS() {
-		return fluidCaloS;
-	}
-
-	public void setFluidCaloS(HeatTransferFluid fluidCaloS) {
-		this.fluidCaloS = fluidCaloS;
-	}
-
-	public Circulator getCirculatorD() {
-		return circulatorD;
-	}
-
-	public void setCirculatorD(Circulator circulatorD) {
-		this.circulatorD = circulatorD;
-	}
-
-	public HeatSrcDistrCircuit getCircuitD() {
-		return circuitD;
-	}
-
-	public void setCircuitD(HeatSrcDistrCircuit circuitD) {
-		this.circuitD = circuitD;
-	}
-
-	public HeatTransferFluid getFluidCaloD() {
-		return fluidCaloD;
-	}
-
-	public void setFluidCaloD(HeatTransferFluid fluidCaloD) {
-		this.fluidCaloD = fluidCaloD;
-	}
-
-	public Dehydrator getDehydrator() {
-		return dehydrator;
-	}
-
-	public void setDehydrator(Dehydrator dehydrator) {
-		this.dehydrator = dehydrator;
+	public List<HeatTransferFluid> getFluidCaloDistrL() {
+		return fluidCaloDistrL;
 	}
 
 }

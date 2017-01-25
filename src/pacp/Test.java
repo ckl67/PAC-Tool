@@ -214,7 +214,7 @@ public class Test {
 		JSONObject jsonObj = new JSONObject();
 		jsonObj = vCirlculator.getJsonObject();
 		System.out.println(jsonObj);
-		
+
 		// Create a new instance + clear Features 
 		System.out.println("\n---> New Instance + Clear  all features");
 		Circulator vCirlculatorNew = new Circulator();
@@ -228,7 +228,7 @@ public class Test {
 		System.out.println("\n---> Set the Instance Class with the JSON data");
 		vCirlculatorNew.setJsonObject(jsonObj);
 		System.out.println(jsonObj);
-		
+
 		// Display the features afterwards 
 		System.out.println("\n---> Class Instance");
 		System.out.println("    Name = " + vCirlculator.getName());
@@ -266,17 +266,17 @@ public class Test {
 		System.out.println("\n---> Modify the instance ");
 		vCompressor.setName("Toto");
 		System.out.println("    Name ="+vCompressor.getName());
-		
+
 		System.out.println("\n---> Set the Class Instance with JSON data");
 		vCompressor.setJsonObject(jsonObj);
 
 		System.out.println("\n---> Read afterwards ");
 		System.out.println("    Name="+vCompressor.getName());
-		
+
 		Refrigerant vRefrigeranR22 =  new Refrigerant();
 		vRefrigeranR22.setP(25);
 		vCompressor.setDeltaP(40);
-		
+
 		System.out.println("\n--->Transfer Function");
 		System.out.println("    Input --> Output");
 		System.out.println("    "+vRefrigeranR22.getP() + "-->" + vCompressor.transfer(vRefrigeranR22).getP());
@@ -403,13 +403,13 @@ public class Test {
 		System.out.println("    setxHmin (before)=" + enthalpy.getxHmin());
 		enthalpy.setxHmin(333);
 		System.out.println("    setxHmin (after)=" + enthalpy.getxHmin());
-		
-		
+
+
 		System.out.println("\n---> Perform some minor changes in EnthalpyBkgImage" );
 		System.out.println("    iBgH1x (EnthalpyBkgImage) (before) = " +enthalpy.getEnthalpyBkgImage().getiBgH1x());
 		enthalpy.getEnthalpyBkgImage().setiBgH1x(300);
 		System.out.println("    iBgH1x (EnthalpyBkgImage) (after) = " +enthalpy.getEnthalpyBkgImage().getiBgH1x());
-		
+
 		System.out.println("\n--->Rembered Chances");
 		System.out.println("    setxHmin=" + enthalpy.getxHmin());
 		System.out.println("    iBgH1x (EnthalpyBkgImage) = " +enthalpy.getEnthalpyBkgImage().getiBgH1x());
@@ -421,7 +421,7 @@ public class Test {
 		System.out.println("\n---> Read afterwards");
 		System.out.println("    setxHmin=" + enthalpy.getxHmin());
 		System.out.println("    iBgH1x (EnthalpyBkgImage) = " +enthalpy.getEnthalpyBkgImage().getiBgH1x());
-		
+
 	}
 
 	// ===================================================================================================================
@@ -430,35 +430,35 @@ public class Test {
 
 	private static void testEnthalpyBkgdImg () {
 		System.out.println("TEST ENTHALPYBKGDIMG");
-		
+
 		EnthalpyBkgdImg vEnthalpyBkgdImg = new EnthalpyBkgdImg();
-		
+
 		System.out.println("\n---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();
 		jsonObj = vEnthalpyBkgdImg.getJsonObject();
 		System.out.println(jsonObj);
-		
-		
+
+
 		// Read value, then modify
 		System.out.println("\n---> Perform some minor changes in Enthalpy" );
 		System.out.println("    iBgH1x = " +vEnthalpyBkgdImg.getiBgH1x());
 		vEnthalpyBkgdImg.setiBgH1x(300);
 		System.out.println("    iBgH1x = " +vEnthalpyBkgdImg.getiBgH1x());
-		
+
 		// Set with Json
 		System.out.println("\n---> Set the Class Instance with JSON data");
 		vEnthalpyBkgdImg.setJsonObject(jsonObj);
 		System.out.println(jsonObj);
-		
+
 		System.out.println("\n---> Read afterwards");
 		System.out.println("    iBgH1x = " +vEnthalpyBkgdImg.getiBgH1x());
-		
+
 	}
 
 	// ===================================================================================================================
 	// 													TEST EVAPORATOR
 	// ===================================================================================================================
-	
+
 	private static void testEvaporator() {
 		System.out.println("TEST EVAPORATOR");
 		Evaporator vEvaporator = new Evaporator();
@@ -501,14 +501,14 @@ public class Test {
 		Refrigerant vRefrigeranR22 =  new Refrigerant();
 		vRefrigeranR22.setP(25);
 		vRefrigeranR22.setT(5);
-		
+
 		vExpansionValve.setDeltaP(-40);
 		vExpansionValve.setDeltaT(+75);
 
 		JSONObject jsonObj = new JSONObject();
 		jsonObj = vExpansionValve.getJsonObject();
 		System.out.println(jsonObj);
-		
+
 		System.out.println("\n---> Modify the instance ");
 		vExpansionValve.setName("Toto");
 		System.out.println("    Name ="+vExpansionValve.getName());
@@ -519,7 +519,7 @@ public class Test {
 
 		System.out.println("\n---> Read afterwards ");
 		System.out.println("    Name="+vExpansionValve.getName());
-		
+
 		System.out.println("Input --> Output");
 		System.out.println("P:" + vRefrigeranR22.getP() + "-->" + vExpansionValve.transfer(vRefrigeranR22).getP());
 		System.out.println("T:" + vRefrigeranR22.getT() + "-->" + vExpansionValve.transfer(vRefrigeranR22).getT());
@@ -634,10 +634,10 @@ public class Test {
 
 	private static void testMeasurePoints () { 
 		System.out.println("TEST MEASUREPOINTS");
-		
+
 		MeasurePoints vMeasurePoints = new MeasurePoints("Mesures",23,56,"Point H1",23.567,"bar",1);
 		System.out.println(vMeasurePoints.getName());
-	
+
 		System.out.println("\n---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();
 		jsonObj = vMeasurePoints.getJsonObject();
@@ -683,96 +683,202 @@ public class Test {
 
 		Pac pac = new Pac();
 
+		System.out.println("\n---> Read PAC");
+		System.out.println("    Name CirculatorSrc =" + pac.getCirculatorSrcL().get(0).getName());
+		System.out.println("    Name CirculatorDistr =" + pac.getCirculatorDistrL().get(0).getName());
+		System.out.println("    Name Compressor =" + pac.getCompressorL().get(0).getName());
+		System.out.println("    Name Condenser =" + pac.getCondenserL().get(0).getName());
+		System.out.println("    Name Dehydrator =" + pac.getDehydratorL().get(0).getName());
+		System.out.println("    Name Evaporator =" + pac.getEvaporatorL().get(0).getName());
+		System.out.println("    Name ExpansionVa =" + pac.getExpansionValveL().get(0).getName());
+		System.out.println("    Name CircuitSrc =" + pac.getCircuitSrcL().get(0).getName());
+		System.out.println("    Name CircuitDistr =" + pac.getCircuitDistrL().get(0).getName());
+		System.out.println("    Name FluidCaloDistr =" + pac.getFluidCaloDistrL().get(0).getName());
+		System.out.println("    Name FluidCaloSrc =" + pac.getFluidCaloSrcL().get(0).getName());
+		System.out.println("    Name FluidRefri =" + pac.getFluidRefriL().get(0).getName());
+
 		System.out.println("\n---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();
 		jsonObj = pac.getJsonObject();
 		System.out.println(jsonObj);
 
 		System.out.println("\n---> Modify all instances ");
-		pac.getCirculatorS().setName("Toto1");
-		pac.getCirculatorD().setName("Toto2");
-		pac.getCompressor().setName("Toto3");
-		pac.getCondenser().setName("Toto4");
-		pac.getDehydrator().setName("Toto5");
-		pac.getEvaporator().setName("Toto6");
-		pac.getExpansionValve().setName("Toto7");
-		pac.getCircuitS().setName("Toto8");
-		pac.getCircuitD().setName("Toto9");
-		pac.getFluidCaloD().setName("Toto10");
-		pac.getFluidCaloS().setName("Toto11");
-		pac.getFluidRefri().setName("Toto12");
-		
-		System.out.println("    Name CirculatorS =" + pac.getCirculatorS().getName());
-		System.out.println("    Name CirculatorD =" + pac.getCirculatorD().getName());
-		System.out.println("    Name Compressor =" + pac.getCompressor().getName());
-		System.out.println("    Name Condenser =" + pac.getCondenser().getName());
-		System.out.println("    Name Dehydrator =" + pac.getDehydrator().getName());
-		System.out.println("    Name Evaporator =" + pac.getEvaporator().getName());
-		System.out.println("    Name ExpansionVa =" + pac.getExpansionValve().getName());
-		System.out.println("    Name CircuitS =" + pac.getCircuitS().getName());
-		System.out.println("    Name CircuitD =" + pac.getCircuitD().getName());
-		System.out.println("    Name FluidCaloD =" + pac.getFluidCaloD().getName());
-		System.out.println("    Name FluidCaloS =" + pac.getFluidCaloS().getName());
-		System.out.println("    Name FluidRefri =" + pac.getFluidRefri().getName());
+		pac.getCirculatorSrcL().get(0).setName("Toto1");
+		pac.getCirculatorDistrL().get(0).setName("Toto2");
+		pac.getCompressorL().get(0).setName("Toto3");
+		pac.getCondenserL().get(0).setName("Toto4");
+		pac.getDehydratorL().get(0).setName("Toto5");
+		pac.getEvaporatorL().get(0).setName("Toto6");
+		pac.getExpansionValveL().get(0).setName("Toto7");
+		pac.getCircuitSrcL().get(0).setName("Toto8");
+		pac.getCircuitDistrL().get(0).setName("Toto9");
+		pac.getFluidCaloDistrL().get(0).setName("Toto10");
+		pac.getFluidCaloSrcL().get(0).setName("Toto11");
+		pac.getFluidRefriL().get(0).setName("Toto12");
+
+		System.out.println("    Name CirculatorSrc =" + pac.getCirculatorSrcL().get(0).getName());
+		System.out.println("    Name CirculatorDistr =" + pac.getCirculatorDistrL().get(0).getName());
+		System.out.println("    Name Compressor =" + pac.getCompressorL().get(0).getName());
+		System.out.println("    Name Condenser =" + pac.getCondenserL().get(0).getName());
+		System.out.println("    Name Dehydrator =" + pac.getDehydratorL().get(0).getName());
+		System.out.println("    Name Evaporator =" + pac.getEvaporatorL().get(0).getName());
+		System.out.println("    Name ExpansionVa =" + pac.getExpansionValveL().get(0).getName());
+		System.out.println("    Name CircuitSrc =" + pac.getCircuitSrcL().get(0).getName());
+		System.out.println("    Name CircuitDistr =" + pac.getCircuitDistrL().get(0).getName());
+		System.out.println("    Name FluidCaloDistr =" + pac.getFluidCaloDistrL().get(0).getName());
+		System.out.println("    Name FluidCaloSrc =" + pac.getFluidCaloSrcL().get(0).getName());
+		System.out.println("    Name FluidRefri =" + pac.getFluidRefriL().get(0).getName());
 
 		System.out.println("\n---> Set the Class Instance with JSON data");
 		pac.setJsonObject(jsonObj);
 		System.out.println(jsonObj);
 
 		System.out.println("\n---> Read afterwards ");
-		System.out.println("    Name CirculatorS =" + pac.getCirculatorS().getName());
-		System.out.println("    Name CirculatorD =" + pac.getCirculatorD().getName());
-		System.out.println("    Name Compressor =" + pac.getCompressor().getName());
-		System.out.println("    Name Condenser =" + pac.getCondenser().getName());
-		System.out.println("    Name Dehydrator =" + pac.getDehydrator().getName());
-		System.out.println("    Name Evaporator =" + pac.getEvaporator().getName());
-		System.out.println("    Name ExpansionVa =" + pac.getExpansionValve().getName());
-		System.out.println("    Name CircuitS =" + pac.getCircuitS().getName());
-		System.out.println("    Name CircuitD =" + pac.getCircuitD().getName());
-		System.out.println("    Name FluidCaloD =" + pac.getFluidCaloD().getName());
-		System.out.println("    Name FluidCaloS =" + pac.getFluidCaloS().getName());
-		System.out.println("    Name FluidRefri =" + pac.getFluidRefri().getName());
-		
+		System.out.println("    Name CirculatorSrc =" + pac.getCirculatorSrcL().get(0).getName());
+		System.out.println("    Name CirculatorDistr =" + pac.getCirculatorDistrL().get(0).getName());
+		System.out.println("    Name Compressor =" + pac.getCompressorL().get(0).getName());
+		System.out.println("    Name Condenser =" + pac.getCondenserL().get(0).getName());
+		System.out.println("    Name Dehydrator =" + pac.getDehydratorL().get(0).getName());
+		System.out.println("    Name Evaporator =" + pac.getEvaporatorL().get(0).getName());
+		System.out.println("    Name ExpansionVa =" + pac.getExpansionValveL().get(0).getName());
+		System.out.println("    Name CircuitSrc =" + pac.getCircuitSrcL().get(0).getName());
+		System.out.println("    Name CircuitDistr =" + pac.getCircuitDistrL().get(0).getName());
+		System.out.println("    Name FluidCaloDistr =" + pac.getFluidCaloDistrL().get(0).getName());
+		System.out.println("    Name FluidCaloSrc =" + pac.getFluidCaloSrcL().get(0).getName());
+		System.out.println("    Name FluidRefri =" + pac.getFluidRefriL().get(0).getName());
+
 		System.out.println("Very very simple simulation of the PAC Cycle");
 		System.out.println("We start to configure the different elements");
 		System.out.println("Compressor : deltaP=+52, deltaT=+25");
-		pac.getCompressor().setDeltaP(52);
-		pac.getCompressor().setDeltaT(25);
+		pac.getCompressorL().get(0).setDeltaP(52);
+		pac.getCompressorL().get(0).setDeltaT(25);
 		System.out.println("Condenser : deltaT=-10");
-		pac.getCondenser().setDeltaT(-10);
+		pac.getCondenserL().get(0).setDeltaT(-10);
 		System.out.println("Expansion Valve : deltaT=-7 , deltaP=-33");
-		pac.getExpansionValve().setDeltaP(-33);
-		pac.getExpansionValve().setDeltaT(-7);
+		pac.getExpansionValveL().get(0).setDeltaP(-33);
+		pac.getExpansionValveL().get(0).setDeltaT(-7);
 		System.out.println("Evaporator : deltaT=22");
-		pac.getEvaporator().setDeltaT(+22);
+		pac.getEvaporatorL().get(0).setDeltaT(+22);
 
 		System.out.println("R22 feature : T=-5, P=5");
-		pac.getFluidRefri().setT(-5);
-		pac.getFluidRefri().setP(5);
+		pac.getFluidRefriL().get(0).setT(-5);
+		pac.getFluidRefriL().get(0).setP(5);
 
 		System.out.println("Fluid Source : T=2, P=0.5");
-		pac.getFluidCaloS().setT(2);
-		pac.getFluidCaloS().setP(0.5);
+		pac.getFluidCaloSrcL().get(0).setT(2);
+		pac.getFluidCaloSrcL().get(0).setP(0.5);
 		System.out.println("Circuit Source : deltaT=5");
-		pac.getCircuitS().setDeltaT(5);
+		pac.getCircuitSrcL().get(0).setDeltaT(5);
 
 		System.out.println("Fluid Distribution: T=25, P=0.5");
-		pac.getFluidCaloD().setT(25);
-		pac.getFluidCaloD().setP(0.5);
+		pac.getFluidCaloDistrL().get(0).setT(25);
+		pac.getFluidCaloDistrL().get(0).setP(0.5);
 		System.out.println("Circuit Distribution : deltaT=23");
-		pac.getCircuitD().setDeltaT(23);
+		pac.getCircuitDistrL().get(0).setDeltaT(23);
+
 
 		System.out.println();
+		System.out.println();
+		int[] itemFor = new int[12];
+		itemFor[Misc._COMP]=0;
+		itemFor[Misc._COND]=0;
+		itemFor[Misc._DEHY]=0;
+		itemFor[Misc._EPVA]=0;
+		itemFor[Misc._EVAP]=0;
+		itemFor[Misc._FLFRG]=0;
+		itemFor[Misc._CRCLS]=0;
+		itemFor[Misc._CIRTS]=0;
+		itemFor[Misc._FLCAS]=0;
+		itemFor[Misc._CRCLD]=0;
+		itemFor[Misc._CIRTD]=0;
+		itemFor[Misc._FLCAD]=0;
+		System.out.println("------------------------------------------------------------------");
+		System.out.println("Element which will be simulated --> All First elements" );
+		
+		
 		for (int i=0;i<4;i++) {
-			System.out.println("Run cycle:"+i+" by injecting R22 (T="+pac.getFluidRefri().getT()+";P="+pac.getFluidRefri().getP()+") in Compressor");
-			System.out.println("     Injecting Fluid Source (T="+pac.getFluidCaloS().getT()+";P="+pac.getFluidCaloS().getP()+") in Circulateur");
-			System.out.println("     Injecting Fluid Distribution(T="+pac.getFluidCaloD().getT()+";P="+pac.getFluidCaloD().getP()+") in Circulateur");
+			System.out.println("------------------------------------------------------------------");
+			System.out.println("Run cycle:"+i+" by ");
+			System.out.println("     Injecting R22 (T="+pac.getFluidRefriL().get(0).getT()+";P="+pac.getFluidRefriL().get(0).getP()+") in Compressor");
+			System.out.println("     Injecting Fluid Source (T="+pac.getFluidCaloSrcL().get(0).getT()+";P="+pac.getFluidCaloSrcL().get(0).getP()+") in Circulateur");
+			System.out.println("     Injecting Fluid Distribution(T="+pac.getFluidCaloDistrL().get(0).getT()+";P="+pac.getFluidCaloDistrL().get(0).getP()+") in Circulateur");
 
-			pac.PacCycle(Misc._INPUT_COMPRESSOR);
+			pac.PacCycle(Misc._INPUT_COMPRESSOR,itemFor);
 
-			System.out.println("R22 T=" + pac.getFluidRefri().getT() + "  P="+ pac.getFluidRefri().getP());
-			System.out.println("Fluid S T=" + pac.getFluidCaloS().getT() + "  P="+ pac.getFluidCaloS().getP());
-			System.out.println("Fluid D T=" + pac.getFluidCaloD().getT() + "  P="+ pac.getFluidCaloD().getP());
+			System.out.println("Output result for cycle:"+i+" ");
+			System.out.println("     R22 T=" + pac.getFluidRefriL().get(0).getT() + "  P="+ pac.getFluidRefriL().get(0).getP());
+			System.out.println("     Fluid S T=" + pac.getFluidCaloSrcL().get(0).getT() + "  P="+ pac.getFluidCaloSrcL().get(0).getP());
+			System.out.println("     Fluid D T=" + pac.getFluidCaloDistrL().get(0).getT() + "  P="+ pac.getFluidCaloDistrL().get(0).getP());
+		}
+
+		System.out.println("------------------------------------------------------------------");
+		System.out.println("Add a compressor");
+		System.out.println("------------------------------------------------------------------");
+		pac.getCompressorL().add(1, new Compressor());
+		System.out.println("\n---> Construct JSON data");
+		jsonObj = new JSONObject();
+		jsonObj = pac.getJsonObject();
+		System.out.println(jsonObj);
+
+		System.out.println("Very very simple simulation of the PAC Cycle");
+		System.out.println("We start to configure COMPRESSOR 1 ");
+		System.out.println("Compressor : deltaP=+10000, deltaT=+100");
+		pac.getCompressorL().get(1).setDeltaP(10000);
+		pac.getCompressorL().get(1).setDeltaT(100);
+		System.out.println("Condenser : deltaT=-10");
+		pac.getCondenserL().get(0).setDeltaT(-10);
+		System.out.println("Expansion Valve : deltaT=-7 , deltaP=-33");
+		pac.getExpansionValveL().get(0).setDeltaP(-33);
+		pac.getExpansionValveL().get(0).setDeltaT(-7);
+		System.out.println("Evaporator : deltaT=22");
+		pac.getEvaporatorL().get(0).setDeltaT(+22);
+
+		System.out.println("R22 feature : T=-5, P=5");
+		pac.getFluidRefriL().get(0).setT(-5);
+		pac.getFluidRefriL().get(0).setP(5);
+
+		System.out.println("Fluid Source : T=2, P=0.5");
+		pac.getFluidCaloSrcL().get(0).setT(2);
+		pac.getFluidCaloSrcL().get(0).setP(0.5);
+		System.out.println("Circuit Source : deltaT=5");
+		pac.getCircuitSrcL().get(0).setDeltaT(5);
+
+		System.out.println("Fluid Distribution: T=25, P=0.5");
+		pac.getFluidCaloDistrL().get(0).setT(25);
+		pac.getFluidCaloDistrL().get(0).setP(0.5);
+		System.out.println("Circuit Distribution : deltaT=23");
+		pac.getCircuitDistrL().get(0).setDeltaT(23);
+
+		
+		itemFor[Misc._COMP]=1;
+		itemFor[Misc._COND]=0;
+		itemFor[Misc._DEHY]=0;
+		itemFor[Misc._EPVA]=0;
+		itemFor[Misc._EVAP]=0;
+		itemFor[Misc._FLFRG]=0;
+		itemFor[Misc._CRCLS]=0;
+		itemFor[Misc._CIRTS]=0;
+		itemFor[Misc._FLCAS]=0;
+		itemFor[Misc._CRCLD]=0;
+		itemFor[Misc._CIRTD]=0;
+		itemFor[Misc._FLCAD]=0;
+		
+		System.out.println("------------------------------------------------------------------");
+		System.out.println("Element which will be simulated --> All First elements EXCEPT COMPRESSOR 1" );
+
+		for (int i=0;i<4;i++) {
+			System.out.println("------------------------------------------------------------------");
+			System.out.println("Run cycle:"+i+" by ");
+			System.out.println("     Injecting R22 (T="+pac.getFluidRefriL().get(0).getT()+";P="+pac.getFluidRefriL().get(0).getP()+") in Compressor");
+			System.out.println("     Injecting Fluid Source (T="+pac.getFluidCaloSrcL().get(0).getT()+";P="+pac.getFluidCaloSrcL().get(0).getP()+") in Circulateur");
+			System.out.println("     Injecting Fluid Distribution(T="+pac.getFluidCaloDistrL().get(0).getT()+";P="+pac.getFluidCaloDistrL().get(0).getP()+") in Circulateur");
+
+			pac.PacCycle(Misc._INPUT_COMPRESSOR,itemFor);
+
+			System.out.println("Output result for cycle:"+i+" ");
+			System.out.println("     R22 T=" + pac.getFluidRefriL().get(0).getT() + "  P="+ pac.getFluidRefriL().get(0).getP());
+			System.out.println("     Fluid S T=" + pac.getFluidCaloSrcL().get(0).getT() + "  P="+ pac.getFluidCaloSrcL().get(0).getP());
+			System.out.println("     Fluid D T=" + pac.getFluidCaloDistrL().get(0).getT() + "  P="+ pac.getFluidCaloDistrL().get(0).getP());
 		}
 
 	}
@@ -812,11 +918,11 @@ public class Test {
 		JSONObject jsonObjPrimeConfig = (JSONObject) jsonObj.get("PrimeConfig") ;
 		System.out.println(jsonObjPrimeConfig);
 		primeConfig.setJsonObject(jsonObjPrimeConfig);
-		
+
 		System.out.println("   BTU=" +	primeConfig.getUnitCompBTU());
 		System.out.println("   Pound=" +	primeConfig.getUnitCompPound());
 		System.out.println("   Faren=" +	primeConfig.getUnitCompFaren());
-				
+
 		// Enthalpy (containing also EnthalpyBkgdImg)
 		Enthalpy enthalpy = new Enthalpy();
 		JSONObject jsonObjEnthalpy = (JSONObject) jsonObj.get("Enthalpy");
@@ -842,7 +948,7 @@ public class Test {
 				pacl.get(i).setJsonObject(jsonObjectPac);
 			}
 		}
-		
+
 
 
 	}
@@ -852,20 +958,20 @@ public class Test {
 	// ===================================================================================================================
 	private static void testPrimeConfig() {
 		System.out.println("TEST PAC-Tool CONFIGURATION");
-		
+
 		PrimeConfig primeConfig = new PrimeConfig();
 
 		System.out.println(primeConfig.TranslateText("Capacity","eng"));
 		System.out.println(primeConfig.TranslateText("Power","eng"));
-				
+
 		System.out.println(primeConfig.TranslateText("Capacity","fr"));
 		System.out.println(primeConfig.TranslateText("Power","fr"));
 		System.out.println(primeConfig.TranslateText("Capacitydd","fr"));
 
-		
+
 	}
 
-		
+
 	// ===================================================================================================================
 	// 													TEST REFRIGERANT
 	// ===================================================================================================================

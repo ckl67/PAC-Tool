@@ -33,8 +33,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.awt.event.KeyAdapter;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -104,12 +102,10 @@ public class WinPrime {
 	private JLabel lblSurchauffe;
 	private JLabel lblSousRefroid;
 
-	// Windows Prime configuration
+	private Pac pac;
+	private Enthalpy enthalpy;
 	private PrimeConfig primeConfig;
 
-	// List of PAC (First Pac can never been deleted!!)
-	private List<Pac> pacl = new ArrayList<Pac>();
-	private Enthalpy enthalpy;
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -119,15 +115,13 @@ public class WinPrime {
 	 * 
 	 */
 	public WinPrime(Pac paci, Ccop copi, Enthalpy enthalpyi) {
-		primeConfig = new PrimeConfig();
 
+		pac = paci;
 		enthalpy = enthalpyi;
-		pacl.add(paci);	
+		primeConfig = new PrimeConfig();
 
 		// Create Window
 		initialize(paci,copi);
-		//	fillCompressorTexField(paci);
-
 	}
 
 	// -------------------------------------------------------
@@ -147,9 +141,8 @@ public class WinPrime {
 	 * BY DEFAULT CHECKBOX MUST NOT BEEN SET, OTHERWHISE .doClick() will be called without data in the textfield !!
 	 * @param paci : Will be one of the different Pac in the List
 	 */
-	private void fillCompressorTexField(Pac paci) {
-		Compressor compressor = paci.getCompressor();
-
+	private void fillCompressorTexField(Compressor compressor) {
+		
 		boolean weclickf = false;
 		boolean weclickb = false;
 		boolean weclickp = false;
@@ -210,8 +203,7 @@ public class WinPrime {
 	 * Data will ALWAYS be stored in International System : SI Format
 	 * @param paci
 	 */
-	private void UpdateTextField2Pac( Pac paci) {
-		Compressor compressor = paci.getCompressor();
+	private void UpdateTextField2Compressor( Compressor compressor) {
 
 		boolean weclickf = false;
 		boolean weclickb = false;
@@ -309,13 +301,13 @@ public class WinPrime {
 				int returnVal = chooser.showOpenDialog(frame);
 				if(returnVal == JFileChooser.APPROVE_OPTION) {
 
-					// Remove all item in ComboBox (excpet the first)
-					for(int i=1;i<pacl.size();i++) {
+					// Remove all Compressor items in ComboBox (except the first)
+					for(int i=1;i<pac.getCompressorL().size();i++) {
 						comboBoxCompressor.removeItemAt(i);
 					}
 
 					// Read the configuration from File
-					PacToolConfig.readConfigFile(pacl, enthalpy, primeConfig, chooser.getSelectedFile().getAbsolutePath());
+					PacToolConfig.readConfigFile(pac, enthalpy, primeConfig, chooser.getSelectedFile().getAbsolutePath());
 
 					// Set the Compressor Check Box (Fahrenheit/Pound/BTU) before to affect the data to text field, 
 					// no actions will be performed by this settings 
@@ -323,14 +315,14 @@ public class WinPrime {
 					checkoxBTU.setSelected(primeConfig.getUnitCompBTU()); 		
 					checkoxPound.setSelected(primeConfig.getUnitCompPound()); 		
 
-					// Fill ComboBox
-					for(int i=1;i<pacl.size();i++) {
+					// Fill Compressor ComboBox
+					for(int i=1;i<pac.getCompressorL().size();i++) {
 						if(i>0) {
-							comboBoxCompressor.insertItemAt(pacl.get(i).getCompressor().getName(),i);
+							comboBoxCompressor.insertItemAt(pac.getCompressorL().get(i).getName(),i);
 						}
 					}
 					comboBoxCompressor.setSelectedIndex(0);
-					fillCompressorTexField(pacl.get(0));
+					fillCompressorTexField(pac.getCompressorL().get(0));
 
 				}
 			}
@@ -354,7 +346,7 @@ public class WinPrime {
 				chooser.setCurrentDirectory(workingDirectory);
 				if(chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
 					//System.out.println("You chose to save to file: " + chooser.getSelectedFile().getAbsolutePath());
-					PacToolConfig.saveConfigFile(pacl, enthalpy, primeConfig, chooser.getSelectedFile().getAbsolutePath());
+					PacToolConfig.saveConfigFile(pac, enthalpy, primeConfig, chooser.getSelectedFile().getAbsolutePath());
 				} 
 			}
 		});
@@ -1048,11 +1040,11 @@ public class WinPrime {
 		comboBoxCompressor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int ComboId = comboBoxCompressor.getSelectedIndex();
-				fillCompressorTexField(pacl.get(ComboId));
+				fillCompressorTexField(pac.getCompressorL().get(ComboId));
 			}
 		});
 		comboBoxCompressor.setBounds(243, 10, 131, 20);
-		comboBoxCompressor.addItem(pacl.get(0).getCompressor().getName());
+		comboBoxCompressor.addItem(pac.getCompressorL().get(0).getName());
 		panelSroll.add(comboBoxCompressor);
 
 
@@ -1064,7 +1056,7 @@ public class WinPrime {
 			public void actionPerformed(ActionEvent arg0) {
 				int ComboId = comboBoxCompressor.getSelectedIndex();
 				if ( ComboId >= 0 ) {
-					UpdateTextField2Pac(pacl.get(ComboId));
+					UpdateTextField2Compressor(pac.getCompressorL().get(ComboId));
 					String tmp = textFieldCompressorName.getText();
 					//Impossible to rename an item, so we will create a new one, and delete the old
 					comboBoxCompressor.insertItemAt(tmp, ComboId);
@@ -1084,7 +1076,7 @@ public class WinPrime {
 			public void actionPerformed(ActionEvent arg0) {
 				int ComboId = comboBoxCompressor.getSelectedIndex();
 				if ( ComboId > 0 ) {
-					pacl.remove(ComboId);
+					pac.getCompressorL().remove(ComboId);
 					comboBoxCompressor.removeItemAt(ComboId);
 					comboBoxCompressor.setSelectedIndex(ComboId-1);
 				} else {
@@ -1104,11 +1096,11 @@ public class WinPrime {
 			public void actionPerformed(ActionEvent arg0) {
 				int ComboId = comboBoxCompressor.getSelectedIndex();
 				ComboId++;
-				pacl.add(ComboId, new Pac());
+				pac.getCompressorL().add(ComboId, new Compressor());
 				comboBoxCompressor.insertItemAt("Empty", ComboId);
 				comboBoxCompressor.setSelectedIndex(ComboId);
 				textFieldCompressorName.setText("Empty");
-				pacl.get(ComboId).getCompressor().setName("Empty");
+				pac.getCompressorL().get(ComboId).setName("Empty");
 			}
 		});
 		btnNewCompressor.setFont(new Font("Tahoma", Font.PLAIN, 9));

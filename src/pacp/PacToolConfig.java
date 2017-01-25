@@ -25,11 +25,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Scanner;
-
-
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -53,19 +49,15 @@ public class PacToolConfig {
 	 * @param fileName
 	 */
 	@SuppressWarnings("unchecked")
-	public static void saveConfigFile(List<Pac> pacl, Enthalpy enthalpy, PrimeConfig primeConfig, String fileName) {
+	public static void saveConfigFile(Pac pac, Enthalpy enthalpy, PrimeConfig primeConfig, String fileName) {
 
 		// Overall JSON object
 		JSONObject jsonObjPacTool = new JSONObject();
 
 		// Create PAC Array JSON Object
-		JSONArray jsonObjPacL = new JSONArray();			
-		for(int i=0;i<pacl.size();i++) {
-			JSONObject jsonObj = new JSONObject();
-			jsonObj = pacl.get(i).getJsonObject();
-			jsonObjPacL.add(jsonObj);
-		}
-		jsonObjPacTool.put("PacList", jsonObjPacL);  
+		JSONObject jsonObjPac = new JSONObject();
+		jsonObjPac = pac.getJsonObject();
+		jsonObjPacTool.put("PAC",jsonObjPac);
 
 		// Enthalpy (containing also EnthalpyBkgdImg)
 		JSONObject jsonObjEnthalpy = new JSONObject();
@@ -132,7 +124,7 @@ public class PacToolConfig {
 	 * @param primeConfig
 	 * @param fileName
 	 */
-	public static void readConfigFile(List<Pac> pacl, Enthalpy enthalpy, PrimeConfig primeConfig, String fileName) {
+	public static void readConfigFile(Pac pac, Enthalpy enthalpy, PrimeConfig primeConfig, String fileName) {
 		File file = new File (fileName);
 		Scanner sken = null;
 
@@ -170,21 +162,11 @@ public class PacToolConfig {
 		enthalpy.setJsonObject(jsonObjEnthalpy);
 		//System.out.println(jsonObjEnthalpy);
 
-		// Create PAC List
-		for(int i=1;i<pacl.size();i++) {
-			pacl.remove(i);
-		}
-		JSONArray jsonObjectPacL = (JSONArray) jsonObj.get("PacList");
-		for(int i=0; i< jsonObjectPacL.size();i++) {
-			JSONObject jsonObjectPac = (JSONObject) jsonObjectPacL.get(i);
-			//System.out.println(jsonObjectPac);
-			if(i==0) {
-				pacl.get(i).setJsonObject(jsonObjectPac);				
-			} else {
-				pacl.add(i, new Pac());
-				pacl.get(i).setJsonObject(jsonObjectPac);
-			}
-		}	
+		// PAC
+		JSONObject jsonObjPac = (JSONObject) jsonObj.get("PAC");
+		pac.setJsonObject(jsonObjPac);
+		//System.out.println(jsonObjPac);
+
 	}
 
 
