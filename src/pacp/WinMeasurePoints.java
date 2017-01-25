@@ -34,7 +34,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
 import java.awt.Color;
@@ -44,39 +44,20 @@ import javax.swing.SwingConstants;
 import javax.imageio.ImageIO;
 
 public class WinMeasurePoints {
-
-	private static int _GROUP_BP = 1;
-	private static int _GROUP_HP = 2;
-	private static int _GROUP_HEAT = 3;
-	private static int _GROUP_SOURCE = 4;
+	private JFrame frame;
+	private BufferedImage img;
+	private JTextField textField;
+	private JTextField textFieldUnity;
 
 	/* 	----------------------------------------
 	 * 		INSTANCE VAR
 	 * ----------------------------------------*/
 	private boolean HELP_FIND_LOCATION=false;	// Objective is to display the coordinate for the points to match
-	
-	private String imgPath = "/pacp/images/Cycle.PNG";
-	
-	private List<MeasurePoints> measurePL = Arrays.asList(
-			new MeasurePoints("T1",517,94,"Température des gaz BP\n après surchauffe interne\n et avant compression",0,"°C",_GROUP_BP),
-			new MeasurePoints("T2",547,96,"Température des gaz HP\n en fin de compression\n (Cloche du compresseur)",0,"°C",_GROUP_HP),
-			new MeasurePoints("T3",584,141,"Température du début de condensation\n (Mesure HP Manifod)",0,"Bar",_GROUP_HP),
-			new MeasurePoints("T4",584,207,"Température de fin de condensation\n (Mesure HP Manifod)",0,"Bar",_GROUP_HP),
-			new MeasurePoints("T5",514,252,"Température des gaz HP\n après sous refroidissement",0,"°C",_GROUP_HP),
-			new MeasurePoints("T6",436,251,"Température sortie Détendeur / Capillaire",0,"°C",_GROUP_BP),
-			new MeasurePoints("T7",372,140,"Température évaporation\n (Mesure BP Manifold)",0,"Bar",_GROUP_BP ),
-			new MeasurePoints("T8",480,94, "Température des gaz HP\naprès surchauffe externe",0,"°C",_GROUP_BP),
-			new MeasurePoints("TMi",665,59,"Température Retour Eau Chauffage",0,"°C",_GROUP_HEAT),
-			new MeasurePoints("TMo",663,283,"Température Départ Eau Chauffage",0,"°C",_GROUP_HEAT),
-			new MeasurePoints("TCi",322,285,"Température Retour Eau Captage",0,"°C",_GROUP_SOURCE),
-			new MeasurePoints("TCo",320,62,"Température Départ Eau Captage",0,"°C",_GROUP_SOURCE)
-			);
+	private String imgPath = "/pacp/images/Cycle.png";
 
-	private JFrame frame;
-	private BufferedImage img;
-	JTextField textField;
-	JTextField textFieldUnity;
-	
+	private List<MeasurePoints> measurePL = new ArrayList<MeasurePoints>();
+
+
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
@@ -87,7 +68,22 @@ public class WinMeasurePoints {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					WinMeasurePoints window = new WinMeasurePoints();
+					List<MeasurePoints> measurePL1;
+					measurePL1 = new ArrayList<MeasurePoints>(); 
+					measurePL1.add(new MeasurePoints("T1",515,90,"Température des gaz BP\n après surchauffe interne\n et avant compression",0,"°C",Misc._GROUP_BP));
+					measurePL1.add(new MeasurePoints("T2",546,90,"Température des gaz HP\n en fin de compression\n (Cloche du compresseur)",0,"°C",Misc._GROUP_HP));
+					measurePL1.add(new MeasurePoints("T3",582,135,"Température du début de condensation\n (Mesure HP Manifod)",0,"Bar",Misc._GROUP_HP));
+					measurePL1.add(new MeasurePoints("T4",583,203,"Température de fin de condensation\n (Mesure HP Manifod)",0,"Bar",Misc._GROUP_HP));
+					measurePL1.add(new MeasurePoints("T5",512,247,"Température des gaz HP\n après sous refroidissement",0,"°C",Misc._GROUP_HP));
+					measurePL1.add(new MeasurePoints("T6",433,248,"Température sortie Détendeur / Capillaire",0,"°C",Misc._GROUP_BP));
+					measurePL1.add(new MeasurePoints("T7",371,135,"Température évaporation\n (Mesure BP Manifold)",0,"Bar",Misc._GROUP_BP ));
+					measurePL1.add(new MeasurePoints("T8",479,89, "Température des gaz HP\naprès surchauffe externe",0,"°C",Misc._GROUP_BP));
+					measurePL1.add(new MeasurePoints("TMi",663,57,"Température Retour Eau Chauffage",0,"°C",Misc._GROUP_HEAT));
+					measurePL1.add(new MeasurePoints("TMo",663,282,"Température Départ Eau Chauffage",0,"°C",Misc._GROUP_HEAT));
+					measurePL1.add(new MeasurePoints("TCi",321,281,"Température Retour Eau Captage",0,"°C",Misc._GROUP_SOURCE));
+					measurePL1.add(new MeasurePoints("TCo",321,57,"Température Départ Eau Captage",0,"°C",Misc._GROUP_SOURCE));
+
+					WinMeasurePoints window = new WinMeasurePoints(measurePL1);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -98,8 +94,10 @@ public class WinMeasurePoints {
 
 	/**
 	 * Create the application.
+	 * @param measurePL 
 	 */
-	public WinMeasurePoints() {
+	public WinMeasurePoints(List<MeasurePoints> vmeasurePL) {
+		measurePL = vmeasurePL;
 		initialize();
 	}
 
@@ -134,7 +132,7 @@ public class WinMeasurePoints {
 		}
 		return id;
 	}
-	
+
 	public int getIdForElem(String name) {
 		int id=-1;
 		for(int i=0;i<measurePL.size();i++) {
@@ -143,7 +141,7 @@ public class WinMeasurePoints {
 		}
 		return id;	
 	}
-	
+
 	public int getIdForHP() {
 		int id=-1;
 		for(int i=0;i<measurePL.size();i++) {
@@ -208,20 +206,20 @@ public class WinMeasurePoints {
 				measurePL.get(id).setValue(Double.valueOf(textField.getText()));
 				// Type of Group of selected point, determine pressure and H
 				double pv = 0;
-				if (measurePL.get(id).getGroupHpBp() == _GROUP_HP) {
+				if (measurePL.get(id).getGroupHpBp() == Misc._GROUP_HP) {
 					pv =measurePL.get(getIdForHP()).getValue();
-				} else if (measurePL.get(id).getGroupHpBp() == _GROUP_BP) {
+				} else if (measurePL.get(id).getGroupHpBp() == Misc._GROUP_BP) {
 					pv =measurePL.get(getIdForBP()).getValue();				
 				} else {
 					pv = -1;
 					System.out.println("no HP or BP");
 				}
-					
+
 				double tv = measurePL.get(id).getValue();
-				
+
 				System.out.println("t="+tv + "  p="+ pv);
 				//ElDraw edraw = new ElDraw(ElDraw._PointYLog,getHoXm(xMouse),Math.log10(getPoYm(yMouse)));
-				
+
 				textField.setVisible(false);
 				textFieldUnity.setVisible(false);
 			}
@@ -290,33 +288,33 @@ public class WinMeasurePoints {
 				RadialGradientPaint p =  new RadialGradientPaint(center, radius, dist, colors);
 				g2d.setPaint(p);
 				g2d.fill(new Ellipse2D.Double(x-radius, y-radius, 2*radius, 2*radius));
-				
+
 				// Definition Text 
-			    String defTxt = measurePL.get(pointMatched_id).getDefinition();
+				String defTxt = measurePL.get(pointMatched_id).getDefinition();
 				Font font = new Font(null, Font.PLAIN, 15);
 				g2d.setFont(font);
-		    
+
 				int widthFRRmax = 0;
 				int heightFRRmax = 0;
-			    for (String line : defTxt.split("\n")) {
+				for (String line : defTxt.split("\n")) {
 					Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(line, g2d);
 					if ( (int)bounds.getWidth() > widthFRRmax )
 						widthFRRmax = (int)bounds.getWidth();
 					heightFRRmax = heightFRRmax + (int)bounds.getHeight();
-			    }
+				}
 
-			    // Background Text zone 
-			    g2d.setColor(Color.YELLOW);
-			    g2d.fillRoundRect(x-10, y+20, widthFRRmax+20, heightFRRmax+15,10,10);
+				// Background Text zone 
+				g2d.setColor(Color.YELLOW);
+				g2d.fillRoundRect(x-10, y+20, widthFRRmax+20, heightFRRmax+15,10,10);
 
-			    // Write Text in the zone
-			    g2d.setColor(Color.BLACK);	
-			    int yl = y+20;
-			    for (String line : defTxt.split("\n")) {
-			    	yl = yl + g2d.getFontMetrics().getHeight();
-			        g2d.drawString(line, x, yl);
-			    }
-			    
+				// Write Text in the zone
+				g2d.setColor(Color.BLACK);	
+				int yl = y+20;
+				for (String line : defTxt.split("\n")) {
+					yl = yl + g2d.getFontMetrics().getHeight();
+					g2d.drawString(line, x, yl);
+				}
+
 			}
 		}
 
@@ -343,22 +341,26 @@ public class WinMeasurePoints {
 
 		@Override
 		public void mousePressed(MouseEvent evt) {
-			
+
 			if (HELP_FIND_LOCATION)
+			{
 				System.out.println(evt.getX()+","+ evt.getY());
-			
-			int id = getIdNearest(evt.getX(),evt.getY());
-			if (id >= 0 ) {
-				textField.setBounds(evt.getX(), evt.getY(), 80, 20);
-				textField.setText(String.valueOf(measurePL.get(pointMatched_id).getValue()));
-				textField.setVisible(true);
-				
-				textFieldUnity.setBounds(evt.getX()+80, evt.getY(), 30, 20);
-				textFieldUnity.setText(measurePL.get(pointMatched_id).getUnity());
-				textFieldUnity.setVisible(true);
-			} else {
-				textField.setVisible(false);			
-				textFieldUnity.setVisible(false);			
+			}
+			else {
+
+				int id = getIdNearest(evt.getX(),evt.getY());
+				if (id >= 0 ) {
+					textField.setBounds(evt.getX(), evt.getY(), 80, 20);
+					textField.setText(String.valueOf(measurePL.get(pointMatched_id).getValue()));
+					textField.setVisible(true);
+
+					textFieldUnity.setBounds(evt.getX()+80, evt.getY(), 30, 20);
+					textFieldUnity.setText(measurePL.get(pointMatched_id).getUnity());
+					textFieldUnity.setVisible(true);
+				} else {
+					textField.setVisible(false);			
+					textFieldUnity.setVisible(false);			
+				}
 			}
 		}
 
@@ -384,7 +386,8 @@ public class WinMeasurePoints {
 			} else {
 				pointMatched = false;
 			}
-			this.repaint();
+			if (!HELP_FIND_LOCATION)
+				this.repaint();
 		}               
 	}
 

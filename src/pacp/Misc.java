@@ -35,6 +35,13 @@ public class Misc {
 	// -------------------------------------------------------
 	public static final String PACTool_Version = "Version Alpha 0.3";
 
+	// --------------------------------------------------------------------
+	// Pac class is a list of different elements like: Compressors ,Condensers ..
+	// To simulate a complete Cycle, we have to know which of the element has to be chosen 
+	// Compressor[0] or Compressor[1],..
+	// These Constant will help to choose the right one
+	// itemFor[_COMP] = 0  or itemFor[_COMP] = 1
+	// --------------------------------------------------------------------
 	public static final int _COMP=0;
 	public static final int _COND=1;
 	public static final int _DEHY=2;
@@ -47,20 +54,37 @@ public class Misc {
 	public static final int _CRCLD=9;
 	public static final int _CIRTD=10;
 	public static final int _FLCAD=11;
+
+	// --------------------------------------------------------------------
+	// Simulation
+	// Will define for PAC simulation where to input the GAZ
+	// --------------------------------------------------------------------
+	public static final int _INPUT_COMPRESSOR = 0;
+	public static final int _INPUT__CONDENSER = 1;
+	public static final int _INPUT__EXPANSIONVALVE = 2;
+	public static final int _INPUT__EVAPORATOR = 3;
+
+	// --------------------------------------------------------------------
+	// Measure Point
+	// Used for Measure Points, it helps to define if the collected points 
+	// belongs to HP , BP, ..
+	// --------------------------------------------------------------------
+	public static int _GROUP_BP = 1;
+	public static int _GROUP_HP = 2;
+	public static int _GROUP_HEAT = 3;
+	public static int _GROUP_SOURCE = 4;
+	// --------------------------------------------------------------------
 	
 	public static final int _COMPRESSOR = 0;
 	public static final int _CONDENSER = 1;
 	public static final int _EXPANSIONVALVE = 2;
 	public static final int _EVAPORATOR = 3;
 
-	public static final int _INPUT_COMPRESSOR = 0;
-	public static final int _INPUT__CONDENSER = 1;
-	public static final int _INPUT__EXPANSIONVALVE = 2;
-	public static final int _INPUT__EVAPORATOR = 3;
-
+	// --------------------------------------------------------------------
+	// For Debug
+	// --------------------------------------------------------------------
 	public static final boolean _DEBUG_STATE =  true;
 	public static final int _DEBUG_MODULE_ENTHALPY = 0x01;  //Mask
-	
 	public static final int _DEBUG_MODE = _DEBUG_MODULE_ENTHALPY;
 	
 	// -------------------------------------------------------
