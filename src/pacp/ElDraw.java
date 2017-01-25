@@ -99,6 +99,7 @@ public class ElDraw {
             g2.fill (new Ellipse2D.Double(elDraw.getX1()-rectWidth/zoom/2, elDraw.getY1()-rectHeight/zoom/2, rectWidth/zoom, rectHeight/zoom));
 	}
 		
+
 	// -------------------------------------------------------
 	// 						METHOD OTHERS
 	// -------------------------------------------------------

@@ -64,6 +64,7 @@ public class WinEnthalpy {
 	 * ----------------------------------------*/
 	private Enthalpy enthalpy;				// Enthalpy declaration
 	private List<ElDraw> eDrawL;			// Draw elements List: lines/points/...
+	
 	private static Point pointJPopupMenu; 	// JPopupMenu's Position --> Must be static
 
 	private JFrame frame;
@@ -74,8 +75,8 @@ public class WinEnthalpy {
 	private JLabel lblFollower;
 	private JRadioButton rdbtnSaturation;
 	private JRadioButton rdbtnNothin;
-	private JTextField textPHP;
-	private JTextField textPBP;
+	private static JTextField textPHP;
+	private static JTextField textPBP;
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -86,8 +87,10 @@ public class WinEnthalpy {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
+				List<ElDraw> eDrawL1 = new ArrayList<ElDraw>();
+				
 				try {
-					WinEnthalpy window = new WinEnthalpy(new Enthalpy());
+					WinEnthalpy window = new WinEnthalpy(new Enthalpy(),eDrawL1);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -99,9 +102,10 @@ public class WinEnthalpy {
 	/**
 	 * Create the application.
 	 */
-	public WinEnthalpy(Enthalpy vconfEnthalpy) {
-		eDrawL = new ArrayList<ElDraw>();
-
+	public WinEnthalpy(Enthalpy vconfEnthalpy, List<ElDraw> veDrawL) {
+		// Point to be draw coming from measures 
+		eDrawL = veDrawL;
+		
 		pointJPopupMenu = new Point();
 		enthalpy = vconfEnthalpy;
 		enthalpy.loadPTFile();
@@ -420,6 +424,13 @@ public class WinEnthalpy {
 		panelBottom_Bottom.add(btnClear);
 	}
 
+	public static void setTextFortextPBP(double tmp) {
+		textPBP.setText(String.format("P=%.2f bar",tmp));
+	}
 
+	public static void setTextFortextPHP(double tmp) {
+		textPHP.setText(String.format("P=%.2f bar",tmp));
+	}
 
+	
 }

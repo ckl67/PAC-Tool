@@ -64,17 +64,6 @@ public class Misc {
 	public static final int _INPUT__EXPANSIONVALVE = 2;
 	public static final int _INPUT__EVAPORATOR = 3;
 
-	// --------------------------------------------------------------------
-	// Measure Point
-	// Used for Measure Points, it helps to define if the collected points 
-	// belongs to HP , BP, ..
-	// --------------------------------------------------------------------
-	public static int _GROUP_BP = 1;
-	public static int _GROUP_HP = 2;
-	public static int _GROUP_HEAT = 3;
-	public static int _GROUP_SOURCE = 4;
-	// --------------------------------------------------------------------
-	
 	public static final int _COMPRESSOR = 0;
 	public static final int _CONDENSER = 1;
 	public static final int _EXPANSIONVALVE = 2;

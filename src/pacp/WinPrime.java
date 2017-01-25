@@ -107,7 +107,7 @@ public class WinPrime {
 	private Pac pac;
 	private Enthalpy enthalpy;
 	private PrimeConfig primeConfig;
-	private List<MeasurePoints> measurePL;
+	private List<ElDraw> eDrawL;		
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -121,20 +121,9 @@ public class WinPrime {
 		pac = paci;
 		enthalpy = enthalpyi;
 		primeConfig = new PrimeConfig();
+		eDrawL = new ArrayList<ElDraw>();
+
 		
-		measurePL = new ArrayList<MeasurePoints>(); 
-		measurePL.add(new MeasurePoints("T1",515,90,"Température des gaz BP\n après surchauffe interne\n et avant compression",0,"°C",Misc._GROUP_BP));
-		measurePL.add(new MeasurePoints("T2",546,90,"Température des gaz HP\n en fin de compression\n (Cloche du compresseur)",0,"°C",Misc._GROUP_HP));
-		measurePL.add(new MeasurePoints("T3",582,135,"Température du début de condensation\n (Mesure HP Manifod)",0,"Bar",Misc._GROUP_HP));
-		measurePL.add(new MeasurePoints("T4",583,203,"Température de fin de condensation\n (Mesure HP Manifod)",0,"Bar",Misc._GROUP_HP));
-		measurePL.add(new MeasurePoints("T5",512,247,"Température des gaz HP\n après sous refroidissement",0,"°C",Misc._GROUP_HP));
-		measurePL.add(new MeasurePoints("T6",433,248,"Température sortie Détendeur / Capillaire",0,"°C",Misc._GROUP_BP));
-		measurePL.add(new MeasurePoints("T7",371,135,"Température évaporation\n (Mesure BP Manifold)",0,"Bar",Misc._GROUP_BP ));
-		measurePL.add(new MeasurePoints("T8",479,89, "Température des gaz HP\naprès surchauffe externe",0,"°C",Misc._GROUP_BP));
-		measurePL.add(new MeasurePoints("TMi",663,57,"Température Retour Eau Chauffage",0,"°C",Misc._GROUP_HEAT));
-		measurePL.add(new MeasurePoints("TMo",663,282,"Température Départ Eau Chauffage",0,"°C",Misc._GROUP_HEAT));
-		measurePL.add(new MeasurePoints("TCi",321,281,"Température Retour Eau Captage",0,"°C",Misc._GROUP_SOURCE));
-		measurePL.add(new MeasurePoints("TCo",321,57,"Température Départ Eau Captage",0,"°C",Misc._GROUP_SOURCE));
 
 		// Create Window
 		initialize(paci,copi);
@@ -1342,7 +1331,7 @@ public class WinPrime {
 		lblEnthalpyView.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		lblEnthalpyView.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent arg0) {
-				WinEnthalpy window = new WinEnthalpy(enthalpy);
+				WinEnthalpy window = new WinEnthalpy(enthalpy, eDrawL);
 				window.WinEnthalpieVisible();
 			}
 		});
@@ -1371,7 +1360,7 @@ public class WinPrime {
 		lblMeasurePointView.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				WinMeasurePoints window = new WinMeasurePoints(measurePL);
+				WinMeasurePoints window = new WinMeasurePoints(eDrawL);
 				window.WinMeasurePointsVisible();
 			}
 		});
