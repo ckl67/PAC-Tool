@@ -64,6 +64,7 @@ public class WinEnthalpy {
 	 * ----------------------------------------*/
 	private Enthalpy enthalpy;				// Enthalpy declaration
 	private List<ElDraw> eDrawL;			// Draw elements List: lines/points/...
+	private List<MeasurePoints> measurePL;
 	
 	private static Point pointJPopupMenu; 	// JPopupMenu's Position --> Must be static
 
@@ -75,8 +76,8 @@ public class WinEnthalpy {
 	private JLabel lblFollower;
 	private JRadioButton rdbtnSaturation;
 	private JRadioButton rdbtnNothin;
-	private static JTextField textPHP;
-	private static JTextField textPBP;
+	private JTextField textPHP;
+	private JTextField textPBP;
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -88,9 +89,9 @@ public class WinEnthalpy {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				List<ElDraw> eDrawL1 = new ArrayList<ElDraw>();
-				
+				List<MeasurePoints> measurePL1 = new ArrayList<MeasurePoints>();
 				try {
-					WinEnthalpy window = new WinEnthalpy(new Enthalpy(),eDrawL1);
+					WinEnthalpy window = new WinEnthalpy(new Enthalpy(),eDrawL1,measurePL1);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -102,12 +103,13 @@ public class WinEnthalpy {
 	/**
 	 * Create the application.
 	 */
-	public WinEnthalpy(Enthalpy vconfEnthalpy, List<ElDraw> veDrawL) {
-		// Point to be draw coming from measures 
+	public WinEnthalpy(Enthalpy vconfEnthalpy, List<ElDraw> veDrawL, List<MeasurePoints> vmeasurePL) {
+		enthalpy = vconfEnthalpy;
 		eDrawL = veDrawL;
+		measurePL = vmeasurePL;
 		
 		pointJPopupMenu = new Point();
-		enthalpy = vconfEnthalpy;
+		
 		enthalpy.loadPTFile();
 		enthalpy.loadSatFile();
 
@@ -120,7 +122,7 @@ public class WinEnthalpy {
 	/**
 	 * Get the frame visible
 	 */
-	public void WinEnthalpieVisible() {
+	public void WinEnthalpyVisible() {
 		frame.setVisible(true);
 	}
 
@@ -301,7 +303,7 @@ public class WinEnthalpy {
 		panelHight.add(panelHight_Hight, BorderLayout.NORTH);
 		panelHight_Hight.setLayout(new BoxLayout(panelHight_Hight, BoxLayout.Y_AXIS));
 
-		JLabel lblPHP = new JLabel("P. HP = PK");
+		JLabel lblPHP = new JLabel("HP (PK)");
 		lblPHP.setAlignmentX(Component.CENTER_ALIGNMENT);
 		lblPHP.setHorizontalAlignment(SwingConstants.LEFT);
 		panelHight_Hight.add(lblPHP);
@@ -309,16 +311,8 @@ public class WinEnthalpy {
 		textPHP = new JTextField();
 		textPHP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Remove the PK element
-				for(int i=0;i<eDrawL.size();i++) {
-					if (eDrawL.get(i).getType() == ElDraw._LineHorzInfHP)
-						eDrawL.remove(i);
-				}
-
 				double PK = Double.parseDouble(textPHP.getText());
-				ElDraw edraw = new ElDraw(ElDraw._LineHorzInfHP,Math.log10(PK),panelEnthalpyDrawArea.getXmin(),panelEnthalpyDrawArea.getXmax());
-				eDrawL.add(edraw);
-				panelEnthalpyDrawArea.repaint();
+				actionNewValueHP(PK);
 			}
 		});
 		textPHP.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -326,24 +320,15 @@ public class WinEnthalpy {
 		panelHight_Hight.add(textPHP);
 		textPHP.setColumns(10);
 
-		JLabel lblPBP = new JLabel("P. BP = P0");
+		JLabel lblPBP = new JLabel("BP  (P0)");
 		lblPBP.setAlignmentX(Component.CENTER_ALIGNMENT);
 		panelHight_Hight.add(lblPBP);
 
 		textPBP = new JTextField();
 		textPBP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Remove the P0 element
-				for(int i=0;i<eDrawL.size();i++) {
-					if (eDrawL.get(i).getType() == ElDraw._LineHorzInfBP)
-						eDrawL.remove(i);
-				}
-
 				double P0 = Double.parseDouble(textPBP.getText());
-				ElDraw edraw = new ElDraw(ElDraw._LineHorzInfBP,Math.log10(P0),panelEnthalpyDrawArea.getXmin(),panelEnthalpyDrawArea.getXmax());
-				eDrawL.add(edraw);
-				panelEnthalpyDrawArea.repaint();
-
+				actionNewValueBP(P0);
 			}
 		});
 		textPBP.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -423,14 +408,41 @@ public class WinEnthalpy {
 		});
 		panelBottom_Bottom.add(btnClear);
 	}
-
-	public static void setTextFortextPBP(double tmp) {
-		textPBP.setText(String.format("P=%.2f bar",tmp));
-	}
-
-	public static void setTextFortextPHP(double tmp) {
-		textPHP.setText(String.format("P=%.2f bar",tmp));
-	}
-
 	
+	public void actionNewValueBP(double tmp) {
+		double P0 = tmp;
+
+		textPBP.setText(String.format("%.2f bar",P0));
+		
+		// Remove the P0 element
+		for(int i=0;i<eDrawL.size();i++) {
+			if (eDrawL.get(i).getType() == ElDraw._LineHorzInfBP)
+				eDrawL.remove(i);
+		}
+		
+		measurePL.get(WinMeasurePoints._BP_ID).setValue(P0);
+
+		ElDraw edraw = new ElDraw(ElDraw._LineHorzInfBP,Math.log10(P0),panelEnthalpyDrawArea.getXmin(),panelEnthalpyDrawArea.getXmax());
+		eDrawL.add(edraw);
+		panelEnthalpyDrawArea.repaint();
+
+
+	}
+
+	public void actionNewValueHP(double tmp) {
+		double PK = tmp;
+
+		textPHP.setText(String.format("%.2f bar",PK));
+		
+		// Remove the PK element
+		for(int i=0;i<eDrawL.size();i++) {
+			if (eDrawL.get(i).getType() == ElDraw._LineHorzInfHP)
+				eDrawL.remove(i);
+		}
+		measurePL.get(WinMeasurePoints._HP1_ID).setValue(PK);
+		measurePL.get(WinMeasurePoints._HP2_ID).setValue(PK);
+		ElDraw edraw = new ElDraw(ElDraw._LineHorzInfHP,Math.log10(PK),panelEnthalpyDrawArea.getXmin(),panelEnthalpyDrawArea.getXmax());
+		eDrawL.add(edraw);
+		panelEnthalpyDrawArea.repaint();
+	}
 }

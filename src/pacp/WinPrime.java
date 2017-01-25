@@ -63,6 +63,8 @@ import javax.swing.border.BevelBorder;
 public class WinPrime {
 
 	private JFrame frame;
+	private WinEnthalpy windowEnthalpy;
+	
 	private JTextField textFieldH1;
 	private JTextField textFieldH2;
 	private JTextField textFieldH3;
@@ -108,7 +110,8 @@ public class WinPrime {
 	private Enthalpy enthalpy;
 	private PrimeConfig primeConfig;
 	private List<ElDraw> eDrawL;		
-
+	private List<MeasurePoints> measurePL;
+	
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
@@ -123,7 +126,19 @@ public class WinPrime {
 		primeConfig = new PrimeConfig();
 		eDrawL = new ArrayList<ElDraw>();
 
-		
+		measurePL = new ArrayList<MeasurePoints>(); 
+		measurePL.add(new MeasurePoints("T1",515,90,"Température des gaz BP\n après surchauffe interne\n et avant compression",0,"°C",WinMeasurePoints._GROUP_BP));
+		measurePL.add(new MeasurePoints("T2",546,90,"Température des gaz HP\n en fin de compression\n (Cloche du compresseur)",0,"°C",WinMeasurePoints._GROUP_HP));
+		measurePL.add(new MeasurePoints("P3",582,135,"Température du début de condensation\n (Mesure HP Manifod)",0,"Bar",WinMeasurePoints._GROUP_HP));
+		measurePL.add(new MeasurePoints("P4",583,203,"Température de fin de condensation\n (Mesure HP Manifod)",0,"Bar",WinMeasurePoints._GROUP_HP));
+		measurePL.add(new MeasurePoints("T5",512,247,"Température des gaz HP\n après sous refroidissement",0,"°C",WinMeasurePoints._GROUP_HP));
+		measurePL.add(new MeasurePoints("T6",433,248,"Température sortie Détendeur / Capillaire",0,"°C",WinMeasurePoints._GROUP_BP));
+		measurePL.add(new MeasurePoints("P7",371,135,"Température évaporation\n (Mesure BP Manifold)",0,"Bar",WinMeasurePoints._GROUP_BP ));
+		measurePL.add(new MeasurePoints("T8",479,89, "Température des gaz HP\naprès surchauffe externe",0,"°C",WinMeasurePoints._GROUP_BP));
+		measurePL.add(new MeasurePoints("TMi",663,57,"Température Retour Eau Chauffage",0,"°C",WinMeasurePoints._GROUP_HEAT));
+		measurePL.add(new MeasurePoints("TMo",663,282,"Température Départ Eau Chauffage",0,"°C",WinMeasurePoints._GROUP_HEAT));
+		measurePL.add(new MeasurePoints("TCi",321,281,"Température Retour Eau Captage",0,"°C",WinMeasurePoints._GROUP_SOURCE));
+		measurePL.add(new MeasurePoints("TCo",321,57,"Température Départ Eau Captage",0,"°C",WinMeasurePoints._GROUP_SOURCE));
 
 		// Create Window
 		initialize(paci,copi);
@@ -1331,8 +1346,8 @@ public class WinPrime {
 		lblEnthalpyView.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		lblEnthalpyView.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent arg0) {
-				WinEnthalpy window = new WinEnthalpy(enthalpy, eDrawL);
-				window.WinEnthalpieVisible();
+				windowEnthalpy = new WinEnthalpy(enthalpy, eDrawL,measurePL);
+				windowEnthalpy.WinEnthalpyVisible();
 			}
 		});
 		lblEnthalpyView.setIcon(new ImageIcon(WinPrime.class.getResource("/pacp/images/enthalpie_150.jpg")));
@@ -1360,7 +1375,7 @@ public class WinPrime {
 		lblMeasurePointView.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				WinMeasurePoints window = new WinMeasurePoints(eDrawL);
+				WinMeasurePoints window = new WinMeasurePoints(windowEnthalpy, eDrawL,measurePL);
 				window.WinMeasurePointsVisible();
 			}
 		});
