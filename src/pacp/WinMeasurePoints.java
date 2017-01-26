@@ -235,10 +235,12 @@ public class WinMeasurePoints {
 				// can be added to draw element add to display element to : ElDraw
 
 
+				
 				if ( pv > 0 ) {
 					if ( (id ==_HP1_ID) || (id == _HP2_ID) ) {
-						if (WinEnthalpy.panelEnthalpyDrawArea.isVisible())
-							winEnthalpy.actionNewValueHP(pv);
+						if (WinEnthalpy.panelEnthalpyDrawArea != null)
+							if (WinEnthalpy.panelEnthalpyDrawArea.isVisible())
+								winEnthalpy.actionNewValueHP(pv);
 					} else if ( (id ==_BP_ID) ) {
 						if (WinEnthalpy.panelEnthalpyDrawArea.isVisible())
 							winEnthalpy.actionNewValueBP(pv);

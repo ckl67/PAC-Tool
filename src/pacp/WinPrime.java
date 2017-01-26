@@ -1346,6 +1346,7 @@ public class WinPrime {
 		lblEnthalpyView.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		lblEnthalpyView.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent arg0) {
+				//lblEnthalpyView.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 				windowEnthalpy = new WinEnthalpy(enthalpy, eDrawL,measurePL);
 				windowEnthalpy.WinEnthalpyVisible();
 			}
