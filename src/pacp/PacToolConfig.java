@@ -112,7 +112,8 @@ public class PacToolConfig {
 			fileWriter.flush();  
 			fileWriter.close();  
 
-		} catch (IOException e) {  
+		} catch (IOException e) { 
+			System.out.println("saveConfigFile");
 			e.printStackTrace();  
 		}  
 	}
@@ -148,7 +149,8 @@ public class PacToolConfig {
 		try {
 			jsonObj = (JSONObject) parser.parse(strLineJSON);
 		} catch (ParseException e) {
-			System.err.println("Unable to Parse JSON read the file: fileName");
+			System.out.println("readConfigFile");
+			e.printStackTrace();  
 		}  
 
 		// PrimeConfig
@@ -168,6 +170,5 @@ public class PacToolConfig {
 		//System.out.println(jsonObjPac);
 
 	}
-
 
 }

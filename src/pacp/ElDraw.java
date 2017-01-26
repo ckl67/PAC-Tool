@@ -56,6 +56,7 @@ public class ElDraw {
 	// Line Horizontal Infinite
 	public ElDraw(int type, double y1, double xmin, double xmax) {
 		this.type = type;
+		this.x1=0.0;
 		this.y1=y1;
 		this.x2=xmin;
 		this.y2=xmax;
@@ -67,6 +68,8 @@ public class ElDraw {
 		this.type = type;
 		this.x1=x1;
 		this.y1=y1;
+		this.x2=0.0;
+		this.y2=0.0;
 		this.color = Color.RED;
 	}
 
@@ -97,20 +100,6 @@ public class ElDraw {
         	g2.draw( new Line2D.Double(elDraw.getX2(),elDraw.getY1(),elDraw.getY2(),elDraw.getY1()));			 	
         if (elDraw.type == _PointYLog)
             g2.fill (new Ellipse2D.Double(elDraw.getX1()-rectWidth/zoom/2, elDraw.getY1()-rectHeight/zoom/2, rectWidth/zoom, rectHeight/zoom));
-	}
-		
-
-	// -------------------------------------------------------
-	// 						METHOD OTHERS
-	// -------------------------------------------------------
-	
-	public static void pointYLog(Graphics2D g2, double x,double y, Color color){
-		//Point
-		float rectWidth = 6;
-		float rectHeight = 0.08f;
-		
-        g2.setPaint(color);
-        g2.fill (new Ellipse2D.Double(x-rectWidth/2, y-rectHeight/2, rectWidth, rectHeight));
 	}
 
 	// -------------------------------------------------------

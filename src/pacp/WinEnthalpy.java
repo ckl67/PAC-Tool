@@ -68,6 +68,9 @@ public class WinEnthalpy {
 	
 	private static Point pointJPopupMenu; 	// JPopupMenu's Position --> Must be static
 
+	/* 	----------------------------------------
+	 * 		WIN BUILDER
+	 * ----------------------------------------*/
 	private JFrame frame;
 	private JLabel lblMouseCoordinate;
 	private JLabel lblEnthalpyCoord;
@@ -261,7 +264,7 @@ public class WinEnthalpy {
 		JSlider slider = new JSlider();
 		slider.setBackground(Color.WHITE);
 		slider.setFocusable(false);
-		slider.setValue((int)(panelEnthalpyDrawArea.getImageAlphaBlure()*100));
+		slider.setValue((int)(panelEnthalpyDrawArea.getAlphaBlurBkgdImg()*100));
 
 		slider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {

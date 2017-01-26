@@ -7,3 +7,4 @@ squiggly
 fahrenheit
 pac
 compressors
+kg

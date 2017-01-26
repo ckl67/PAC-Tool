@@ -780,18 +780,18 @@ public class Test {
 		System.out.println();
 		System.out.println();
 		int[] itemFor = new int[12];
-		itemFor[Misc._COMP]=0;
-		itemFor[Misc._COND]=0;
-		itemFor[Misc._DEHY]=0;
-		itemFor[Misc._EPVA]=0;
-		itemFor[Misc._EVAP]=0;
-		itemFor[Misc._FLFRG]=0;
-		itemFor[Misc._CRCLS]=0;
-		itemFor[Misc._CIRTS]=0;
-		itemFor[Misc._FLCAS]=0;
-		itemFor[Misc._CRCLD]=0;
-		itemFor[Misc._CIRTD]=0;
-		itemFor[Misc._FLCAD]=0;
+		itemFor[Pac._COMP]=0;
+		itemFor[Pac._COND]=0;
+		itemFor[Pac._DEHY]=0;
+		itemFor[Pac._EPVA]=0;
+		itemFor[Pac._EVAP]=0;
+		itemFor[Pac._FLFRG]=0;
+		itemFor[Pac._CRCLS]=0;
+		itemFor[Pac._CIRTS]=0;
+		itemFor[Pac._FLCAS]=0;
+		itemFor[Pac._CRCLD]=0;
+		itemFor[Pac._CIRTD]=0;
+		itemFor[Pac._FLCAD]=0;
 		System.out.println("------------------------------------------------------------------");
 		System.out.println("Element which will be simulated --> All First elements" );
 		
@@ -803,7 +803,7 @@ public class Test {
 			System.out.println("     Injecting Fluid Source (T="+pac.getFluidCaloSrcL().get(0).getT()+";P="+pac.getFluidCaloSrcL().get(0).getP()+") in Circulateur");
 			System.out.println("     Injecting Fluid Distribution(T="+pac.getFluidCaloDistrL().get(0).getT()+";P="+pac.getFluidCaloDistrL().get(0).getP()+") in Circulateur");
 
-			pac.PacCycle(Misc._INPUT_COMPRESSOR,itemFor);
+			pac.PacCycle(Pac._INPUT_COMPRESSOR,itemFor);
 
 			System.out.println("Output result for cycle:"+i+" ");
 			System.out.println("     R22 T=" + pac.getFluidRefriL().get(0).getT() + "  P="+ pac.getFluidRefriL().get(0).getP());
@@ -850,18 +850,18 @@ public class Test {
 		pac.getCircuitDistrL().get(0).setDeltaT(23);
 
 		
-		itemFor[Misc._COMP]=1;
-		itemFor[Misc._COND]=0;
-		itemFor[Misc._DEHY]=0;
-		itemFor[Misc._EPVA]=0;
-		itemFor[Misc._EVAP]=0;
-		itemFor[Misc._FLFRG]=0;
-		itemFor[Misc._CRCLS]=0;
-		itemFor[Misc._CIRTS]=0;
-		itemFor[Misc._FLCAS]=0;
-		itemFor[Misc._CRCLD]=0;
-		itemFor[Misc._CIRTD]=0;
-		itemFor[Misc._FLCAD]=0;
+		itemFor[Pac._COMP]=1;
+		itemFor[Pac._COND]=0;
+		itemFor[Pac._DEHY]=0;
+		itemFor[Pac._EPVA]=0;
+		itemFor[Pac._EVAP]=0;
+		itemFor[Pac._FLFRG]=0;
+		itemFor[Pac._CRCLS]=0;
+		itemFor[Pac._CIRTS]=0;
+		itemFor[Pac._FLCAS]=0;
+		itemFor[Pac._CRCLD]=0;
+		itemFor[Pac._CIRTD]=0;
+		itemFor[Pac._FLCAD]=0;
 		
 		System.out.println("------------------------------------------------------------------");
 		System.out.println("Element which will be simulated --> All First elements EXCEPT COMPRESSOR 1" );
@@ -873,7 +873,7 @@ public class Test {
 			System.out.println("     Injecting Fluid Source (T="+pac.getFluidCaloSrcL().get(0).getT()+";P="+pac.getFluidCaloSrcL().get(0).getP()+") in Circulateur");
 			System.out.println("     Injecting Fluid Distribution(T="+pac.getFluidCaloDistrL().get(0).getT()+";P="+pac.getFluidCaloDistrL().get(0).getP()+") in Circulateur");
 
-			pac.PacCycle(Misc._INPUT_COMPRESSOR,itemFor);
+			pac.PacCycle(Pac._INPUT_COMPRESSOR,itemFor);
 
 			System.out.println("Output result for cycle:"+i+" ");
 			System.out.println("     R22 T=" + pac.getFluidRefriL().get(0).getT() + "  P="+ pac.getFluidRefriL().get(0).getP());

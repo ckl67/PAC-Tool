@@ -32,6 +32,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
@@ -53,10 +54,19 @@ public class PanelEnthalpy extends JPanel {
 		      Instance Variables
 	 * ----------------------------*/
 	private Enthalpy enthalpy;				// Class Enthalpy with definition 
-	private EnthalpyBkgdImg enthalpyBkgdImg;// Class EnthalpyBkgdImg with location of Background imagz
+	private EnthalpyBkgdImg enthalpyBkgdImg;// Class EnthalpyBkgdImg with location of Background image
 
-	private BufferedImage enthBkgdImg;		// Enthalpy Image Background
-	private float imageAlphaBlur;			// Blur the Background image  
+	private double xHmin;  					//  Enthalpy Minimum of the range of values displayed.
+	private double xHmax;    				//  Enthalpy Maximum of the range of value displayed.
+
+	private double yPmin;  					// Pressure Minimum of the range of Pressure value
+	private double yPmax;     				// Pressure Maximum of the range of Pressure value. 
+
+	private double log10_yPmin; 			// Pressure Minimum of the range of values displayed. --> Math.log10(0.01) = -1
+	private double log10_yPmax;     		// Pressure Maximum of the range of value displayed. --> Math.log10(100) = 2
+
+	private BufferedImage bufBkgdImg;		// Enthalpy Image Background
+	private float alphaBlurBkgdImg;			// Blur the Background image  
 
 	private Point offset;					// Supplementary Offset
 	private double mvoYf;					// Move Y factor: Move the mouse of 50 pixels, will corresponds to 0.5 
@@ -66,9 +76,6 @@ public class PanelEnthalpy extends JPanel {
 	private double zoomx;
 	private double zoomy;					// Zoom factor relative to the figure to display and the panel width
 
-	private double log10_yPmin; 			// Pressure Minimum of the range of values displayed. --> Math.log10(0.01) = -1
-	private double log10_yPmax;     		// Pressure Maximum of the range of value displayed. --> Math.log10(100) = 2
-
 	private double marginx;					// Supplementary margin on both sides of the display relative to the scale used !!
 	private double marginy;
 	private double log10_marginy;
@@ -76,57 +83,51 @@ public class PanelEnthalpy extends JPanel {
 	private double gridUnitX;				// Grid Enthalpy Step
 	private double gridUnitY;				// Grid Pressure Step, will be modified following the progression 
 
-
 	private double curveFollowerX;			// Curve follower
-
 
 	private double curveFollowerY;	
 
 	private List<ElDraw> eDrawL;			// Draw elements: lines/points/...
 
-	/// Will be recovered by Class Enthalpy
-	private double xHmin;  					//  Enthalpy Minimum of the range of values displayed.
-	private double xHmax;    				//  Enthalpy Maximum of the range of value displayed.
-
-	private double yPmin;  					// Pressure Minimum of the range of Pressure value
-	private double yPmax;     				// Pressure Maximum of the range of Pressure value. 
-
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 	public PanelEnthalpy(Enthalpy vconfEnthalpy, List<ElDraw> veDrawL) {
-		enthalpy = vconfEnthalpy;
-		enthalpyBkgdImg = enthalpy.getEnthalpyBkgImage();
-		xHmin = enthalpy.getxHmin();  				
-		xHmax = enthalpy.getxHmax();    				
-		yPmin = enthalpy.getyPmin();  
-		yPmax = enthalpy.getyPmax();    
-		log10_yPmin = Math.log10(yPmin);
-		log10_yPmax = Math.log10(yPmax);
+		this.enthalpy = vconfEnthalpy;
+		this.enthalpyBkgdImg = enthalpy.getEnthalpyBkgImage();
+		this.xHmin = enthalpy.getxHmin();  				
+		this.xHmax = enthalpy.getxHmax();    				
+		this.yPmin = enthalpy.getyPmin();  
+		this.yPmax = enthalpy.getyPmax();    
+		this.log10_yPmin = Math.log10(yPmin);
+		this.log10_yPmax = Math.log10(yPmax);
 
-		enthBkgdImg = enthalpyBkgdImg.openEnthalpyImageFile();
+		this.bufBkgdImg = enthalpyBkgdImg.openEnthalpyImageFile();
 
-		imageAlphaBlur=0;
+		this.alphaBlurBkgdImg=0;
 
-		offset = new Point(0,0);		
-		mvoYf = 100.0;				 
-		dragStart = new Point(0,0);	
-		zoom = 1;					
-		zoomx=1;
-		zoomy=1;					
+		this.offset = new Point(0,0);		
+		this.mvoYf = 100.0;				 
+		this.dragStart = new Point(0,0);	
+		this.zoom = 1;					
+		this.zoomx=1;
+		this.zoomy=1;					
 
-		marginx = 20;
-		marginy = 3;
-		log10_marginy = Math.log10(marginy);
+		this.marginx = 20;
+		this.marginy = 3;
+		this.log10_marginy = Math.log10(marginy);
 
-		gridUnitX = 20;	
-		gridUnitY = 1;	 
+		this.gridUnitX = 20;	
+		this.gridUnitY = 1;	 
 
-		curveFollowerX=0;
-		curveFollowerY=0;
+		this.curveFollowerX=0;
+		this.curveFollowerY=0;
 
-		eDrawL = veDrawL;
+		this.eDrawL = veDrawL;
 
+		// ----------------------
+		// Inherit from Jpanel
+		// ----------------------
 		setBackground(Color.WHITE);
 
 		//	EVENT LISTNER
@@ -170,8 +171,7 @@ public class PanelEnthalpy extends JPanel {
 				repaint();
 			}
 		} );
-
-
+		
 	}
 
 	// -------------------------------------------------------
@@ -227,7 +227,7 @@ public class PanelEnthalpy extends JPanel {
 	 * @param alpha
 	 */
 	public void setImageAlphaBlure(float alpha) {
-		imageAlphaBlur = alpha;
+		alphaBlurBkgdImg = alpha;
 	}
 
 	/**
@@ -301,17 +301,17 @@ public class PanelEnthalpy extends JPanel {
 		// Background	--> Panel
 		// -----------------------------------		
 
-		g2.drawImage(enthBkgdImg, 
+		g2.drawImage(bufBkgdImg, 
 				enthalpyBkgdImg.getRefCurveH1x(),enthalpyBkgdImg.getRefCurveP2yLog(),enthalpyBkgdImg.getRefCurveH2x(),-enthalpyBkgdImg.getRefCurveP1yLog(),
 				enthalpyBkgdImg.getiBgH1x(),enthalpyBkgdImg.getiBgP2y(),enthalpyBkgdImg.getiBgH2x(),enthalpyBkgdImg.getiBgP1y(),
 				null);
 
-		float[] scales = { 1f, 1f, 1f, imageAlphaBlur };
+		float[] scales = { 1f, 1f, 1f, alphaBlurBkgdImg };
 		float[] offsets = new float[4];
 		RescaleOp rop = new RescaleOp(scales, offsets, null);
 
 		/* Draw the image, applying the filter */
-		g2.drawImage(enthBkgdImg, rop, -1, -10);
+		g2.drawImage(bufBkgdImg, rop, -1, -10);
 
 		// -----------------------------------
 		// Base font + Scaled font 
@@ -417,7 +417,6 @@ public class PanelEnthalpy extends JPanel {
 		}
 		g2.drawString("T(°C)", (float)(10 + xHmin - metrics.getStringBounds("T(°C)",g2).getWidth()/2), (float)(Math.log10(yposmax+gridUnitY)));
 
-
 		// -----------------------------------
 		// Curve
 		// -----------------------------------		
@@ -439,9 +438,13 @@ public class PanelEnthalpy extends JPanel {
 		// Follow the graph based on Eclipse
 		// The Ellipse2D class define an ellipse that is defined by a framing rectangle
 		// -----------------------------------
-		g2.setStroke(new BasicStroke(0.03f));
-		ElDraw.pointYLog(g2,curveFollowerX,Math.log10(curveFollowerY),Color.BLUE);
-
+		if (curveFollowerY>0) {
+			g2.setStroke(new BasicStroke(0.03f));
+			float rectWidth = 6;
+			float rectHeight = 0.08f;
+			g2.setPaint(Color.BLUE);
+			g2.fill (new Ellipse2D.Double(curveFollowerX-rectWidth/2, Math.log10(curveFollowerY)-rectHeight/2, rectWidth, rectHeight));
+		}
 	}
 
 	// -------------------------------------------------------
@@ -456,12 +459,12 @@ public class PanelEnthalpy extends JPanel {
 		return xHmax;
 	}
 
-	public float getImageAlphaBlure() {
-		return imageAlphaBlur;
+	public float getAlphaBlurBkgdImg() {
+		return alphaBlurBkgdImg;
 	}
 
-	public void setImageAlphaBlureBlurring(float imageAlphaBlur) {
-		this.imageAlphaBlur = imageAlphaBlur;
+	public void setAlphaBlurBkgdImg(float imageAlphaBlur) {
+		this.alphaBlurBkgdImg = imageAlphaBlur;
 	}
 
 	public void setCurveFollowerX(double curveFollowerX) {

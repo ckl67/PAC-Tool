@@ -16,6 +16,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+
 package pacp;
 
 public class Ccop  {
@@ -52,7 +53,7 @@ public class Ccop  {
 		}
 		return result;		
 	}
-	
+
 	/**
 	 *  Compute COP Carnot Chaud
 	 * @return : TK/(TK-T0)

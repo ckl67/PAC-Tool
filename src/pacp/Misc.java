@@ -18,63 +18,18 @@
  */
 package pacp;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.Window;
 import java.util.List;
 
 public class Misc {
-
-	// -------------------------------------------------------
-	// 						CONSTRUCTOR
-	// -------------------------------------------------------
-	private Misc() { }  // Prevents instantiation
-
 	// -------------------------------------------------------
 	// 						CONSTANTES (DEFINE)
 	// -------------------------------------------------------
 	public static final String PACTool_Version = "Version Alpha 0.3";
-
-	// --------------------------------------------------------------------
-	// Pac class is a list of different elements like: Compressors ,Condensers ..
-	// To simulate a complete Cycle, we have to know which of the element has to be chosen 
-	// Compressor[0] or Compressor[1],..
-	// These Constant will help to choose the right one
-	// itemFor[_COMP] = 0  or itemFor[_COMP] = 1
-	// --------------------------------------------------------------------
-	public static final int _COMP=0;
-	public static final int _COND=1;
-	public static final int _DEHY=2;
-	public static final int _EPVA=3;
-	public static final int _EVAP=4;
-	public static final int _FLFRG=5;
-	public static final int _CRCLS=6;
-	public static final int _CIRTS=7;
-	public static final int _FLCAS=8;
-	public static final int _CRCLD=9;
-	public static final int _CIRTD=10;
-	public static final int _FLCAD=11;
-
-	// --------------------------------------------------------------------
-	// Simulation
-	// Will define for PAC simulation where to input the GAZ
-	// --------------------------------------------------------------------
-	public static final int _INPUT_COMPRESSOR = 0;
-	public static final int _INPUT__CONDENSER = 1;
-	public static final int _INPUT__EXPANSIONVALVE = 2;
-	public static final int _INPUT__EVAPORATOR = 3;
-
-	public static final int _COMPRESSOR = 0;
-	public static final int _CONDENSER = 1;
-	public static final int _EXPANSIONVALVE = 2;
-	public static final int _EVAPORATOR = 3;
-
-	// --------------------------------------------------------------------
-	// For Debug
-	// --------------------------------------------------------------------
-	public static final boolean _DEBUG_STATE =  true;
-	public static final int _DEBUG_MODULE_ENTHALPY = 0x01;  //Mask
-	public static final int _DEBUG_MODE = _DEBUG_MODULE_ENTHALPY;
+	
+	// -------------------------------------------------------
+	// 						CONSTRUCTOR
+	// -------------------------------------------------------
+	private Misc() { }  // Prevents instantiation
 	
 	// -------------------------------------------------------
 	// 							METHOD
@@ -160,16 +115,6 @@ public class Misc {
 	}
 
 	/**
-	 * Center a Window
-	 * @param frame
-	 */
-	public static void centreWindow(Window frame) {
-		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-		int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
-		int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
-		frame.setLocation(x, y);
-	}
-	/**
 	 * Return The numbers of "Char c" in the sting str:
 	 * @param str
 	 * @param c
@@ -235,15 +180,5 @@ public class Misc {
 		return diff;
 	}
 	
-	/** 
-	 * Depending of the constant _DEBUG_STATE, _DEBUG_MODULE will display the output in the console
-	 * @param s
-	 */
-	public static void debug(int module, String s ) {
-		//if  (_DEBUG_MODE & _DEBUG_MODULE_ENTHALPY) {
-		System.out.println(s);
-		//}
-		
-	}
 
 }

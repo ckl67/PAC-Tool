@@ -24,6 +24,7 @@ import javax.swing.JFrame;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.EventQueue;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import java.awt.GridLayout;
@@ -42,23 +43,46 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class WinPressTemp {
-	/*
-	 *  	STATIC GLOBAL VAR
-	 */
+	/* ----------------------------------------
+	 *  	STATIC GLOBAL VAR PUBLIC
+	 * ---------------------------------------- */
 	public static PDisplay panelTempPressDrawArea;
 
-	/* 	
+	/* 	----------------------------------------
 	 * 		INSTANCE VAR
-	 */
+	 * ----------------------------------------*/
 	private Enthalpy enthalpy;
 
-	private JFrame frmRelationTempraturePression;
+	/* 	----------------------------------------
+	 * 		WIN BUILDER
+	 * ----------------------------------------*/
+
+	private JFrame frame;
 	private JLabel lblTemperature;
 	private JLabel lblPressure;
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
+	/**
+	 * Launch the application for local test
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Enthalpy enthalpy1 = new Enthalpy();
+					enthalpy1.loadPTFile();
+					WinPressTemp window = new WinPressTemp(enthalpy1);
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	
 	/**
 	 * Create the application.
 	 */
@@ -74,7 +98,7 @@ public class WinPressTemp {
 	 * Get the frame visible
 	 */
 	public void WinPressTempVisible() {
-		frmRelationTempraturePression.setVisible(true);
+		frame.setVisible(true);
 	}
 
 	// -------------------------------------------------------
@@ -85,20 +109,20 @@ public class WinPressTemp {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frmRelationTempraturePression = new JFrame();
-		frmRelationTempraturePression.addWindowListener(new WindowAdapter() {
+		frame = new JFrame();
+		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosed(WindowEvent arg0) {
 			}
 		});
-		frmRelationTempraturePression.setIconImage(Toolkit.getDefaultToolkit().getImage(WinPressTemp.class.getResource("/pacp/images/PAC-Tool_32.png")));
-		frmRelationTempraturePression.setTitle("Relation Temp\u00E9rature Pression");
-		frmRelationTempraturePression.setBounds(100, 100, 450, 400);
-		frmRelationTempraturePression.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frmRelationTempraturePression.getContentPane().setLayout(new BorderLayout(0, 0));
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(WinPressTemp.class.getResource("/pacp/images/PAC-Tool_32.png")));
+		frame.setTitle("Relation Temp\u00E9rature Pression");
+		frame.setBounds(100, 100, 450, 400);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
 		JPanel panelValue = new JPanel();
-		frmRelationTempraturePression.getContentPane().add(panelValue, BorderLayout.SOUTH);
+		frame.getContentPane().add(panelValue, BorderLayout.SOUTH);
 		panelValue.setLayout(new GridLayout(0, 2, 0, 0));
 
 		lblPressure = new JLabel("P");
@@ -112,7 +136,7 @@ public class WinPressTemp {
 		panelValue.add(lblTemperature);
 
 		panelTempPressDrawArea = new PDisplay();
-		frmRelationTempraturePression.getContentPane().add(panelTempPressDrawArea, BorderLayout.CENTER);
+		frame.getContentPane().add(panelTempPressDrawArea, BorderLayout.CENTER);
 	}
 
 	// ===================================================================================================================

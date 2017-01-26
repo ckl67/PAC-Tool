@@ -25,6 +25,39 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class Pac{
+	
+	// --------------------------------------------------------------------
+	// Pac class is a list of different elements like: Compressors ,Condensers ..
+	// To simulate a complete Cycle, we have to know which of the element has to be chosen 
+	// Compressor[0] or Compressor[1],..
+	// These Constant will help to choose the right one
+	// itemFor[_COMP] = 0  or itemFor[_COMP] = 1
+	// --------------------------------------------------------------------
+	public static final int _COMP=0;
+	public static final int _COND=1;
+	public static final int _DEHY=2;
+	public static final int _EPVA=3;
+	public static final int _EVAP=4;
+	public static final int _FLFRG=5;
+	public static final int _CRCLS=6;
+	public static final int _CIRTS=7;
+	public static final int _FLCAS=8;
+	public static final int _CRCLD=9;
+	public static final int _CIRTD=10;
+	public static final int _FLCAD=11;
+	
+	// --------------------------------------------------------------------
+	// Will define for PAC simulation where to input the GAZ
+	// --------------------------------------------------------------------
+	public static final int _INPUT_COMPRESSOR = 0;
+	public static final int _INPUT_CONDENSER = 1;
+	public static final int _INPUT_EXPANSIONVALVE = 2;
+	public static final int _INPUT_EVAPORATOR = 3;
+
+	// --------------------------------------------------------------------
+	// Instance variables
+	// --------------------------------------------------------------------
+	
 	private List<Compressor> compressorL = new ArrayList<Compressor>();
 	private List<Condenser> condenserL = new ArrayList<Condenser>();
 	private List<Dehydrator> dehydratorL = new ArrayList<Dehydrator>();
@@ -68,44 +101,44 @@ public class Pac{
 	 * @param GazInjected in :  _COMPRESSOR,_CONDENSER, _EXPANSIONVALVE or _EVAPORATOR
 	 * 				The : HeatTransferFluid will always be injected in the circulator !!
 	 * @itemFor : Correspond to the item element index to simulate:
-	 * 			Example: In case we want to test with the N°2 compressor:  itemFor[Misc._COMP] = 2;
+	 * 			Example: In case we want to test with the N°2 compressor:  itemFor[_COMP] = 2;
 	 */
 	public void PacCycle(int GazInject, int[] itemFor) {
 
 		// Cycle Gaze
-		if (GazInject == Misc._COMPRESSOR) {
-			fluidRefriL.set(itemFor[Misc._FLFRG],compressorL.get(itemFor[Misc._COMP]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
-			fluidRefriL.set(itemFor[Misc._FLFRG],condenserL.get(itemFor[Misc._COND]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
-			fluidRefriL.set(itemFor[Misc._FLFRG],dehydratorL.get(itemFor[Misc._DEHY]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
-			fluidRefriL.set(itemFor[Misc._FLFRG],expansionValveL.get(itemFor[Misc._EPVA]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
-			fluidRefriL.set(itemFor[Misc._FLFRG],evaporatorL.get(itemFor[Misc._EVAP]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
-		} else if (GazInject == Misc._CONDENSER) {
-			fluidRefriL.set(itemFor[Misc._FLFRG],condenserL.get(itemFor[Misc._COND]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
-			fluidRefriL.set(itemFor[Misc._FLFRG],dehydratorL.get(itemFor[Misc._DEHY]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
-			fluidRefriL.set(itemFor[Misc._FLFRG],expansionValveL.get(itemFor[Misc._EPVA]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
-			fluidRefriL.set(itemFor[Misc._FLFRG],evaporatorL.get(itemFor[Misc._EVAP]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
-			fluidRefriL.set(itemFor[Misc._FLFRG],compressorL.get(itemFor[Misc._COMP]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
-		} else if (GazInject == Misc._EXPANSIONVALVE) {
-			fluidRefriL.set(itemFor[Misc._FLFRG],expansionValveL.get(itemFor[Misc._EPVA]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
-			fluidRefriL.set(itemFor[Misc._FLFRG],evaporatorL.get(itemFor[Misc._EVAP]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
-			fluidRefriL.set(itemFor[Misc._FLFRG],compressorL.get(itemFor[Misc._COMP]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
-			fluidRefriL.set(itemFor[Misc._FLFRG],condenserL.get(itemFor[Misc._COND]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
-			fluidRefriL.set(itemFor[Misc._FLFRG],dehydratorL.get(itemFor[Misc._DEHY]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
+		if (GazInject == _INPUT_COMPRESSOR) {
+			fluidRefriL.set(itemFor[_FLFRG],compressorL.get(itemFor[_COMP]).transfer(fluidRefriL.get(itemFor[_FLFRG])));
+			fluidRefriL.set(itemFor[_FLFRG],condenserL.get(itemFor[_COND]).transfer(fluidRefriL.get(itemFor[_FLFRG])));
+			fluidRefriL.set(itemFor[_FLFRG],dehydratorL.get(itemFor[_DEHY]).transfer(fluidRefriL.get(itemFor[_FLFRG])));
+			fluidRefriL.set(itemFor[_FLFRG],expansionValveL.get(itemFor[_EPVA]).transfer(fluidRefriL.get(itemFor[_FLFRG])));
+			fluidRefriL.set(itemFor[_FLFRG],evaporatorL.get(itemFor[_EVAP]).transfer(fluidRefriL.get(itemFor[_FLFRG])));
+		} else if (GazInject == _INPUT_CONDENSER) {
+			fluidRefriL.set(itemFor[_FLFRG],condenserL.get(itemFor[_COND]).transfer(fluidRefriL.get(itemFor[_FLFRG])));
+			fluidRefriL.set(itemFor[_FLFRG],dehydratorL.get(itemFor[_DEHY]).transfer(fluidRefriL.get(itemFor[_FLFRG])));
+			fluidRefriL.set(itemFor[_FLFRG],expansionValveL.get(itemFor[_EPVA]).transfer(fluidRefriL.get(itemFor[_FLFRG])));
+			fluidRefriL.set(itemFor[_FLFRG],evaporatorL.get(itemFor[_EVAP]).transfer(fluidRefriL.get(itemFor[_FLFRG])));
+			fluidRefriL.set(itemFor[_FLFRG],compressorL.get(itemFor[_COMP]).transfer(fluidRefriL.get(itemFor[_FLFRG])));
+		} else if (GazInject == _INPUT_EXPANSIONVALVE) {
+			fluidRefriL.set(itemFor[_FLFRG],expansionValveL.get(itemFor[_EPVA]).transfer(fluidRefriL.get(itemFor[_FLFRG])));
+			fluidRefriL.set(itemFor[_FLFRG],evaporatorL.get(itemFor[_EVAP]).transfer(fluidRefriL.get(itemFor[_FLFRG])));
+			fluidRefriL.set(itemFor[_FLFRG],compressorL.get(itemFor[_COMP]).transfer(fluidRefriL.get(itemFor[_FLFRG])));
+			fluidRefriL.set(itemFor[_FLFRG],condenserL.get(itemFor[_COND]).transfer(fluidRefriL.get(itemFor[_FLFRG])));
+			fluidRefriL.set(itemFor[_FLFRG],dehydratorL.get(itemFor[_DEHY]).transfer(fluidRefriL.get(itemFor[_FLFRG])));
 		} else {
-			fluidRefriL.set(itemFor[Misc._FLFRG],evaporatorL.get(itemFor[Misc._EVAP]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
-			fluidRefriL.set(itemFor[Misc._FLFRG],compressorL.get(itemFor[Misc._COMP]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
-			fluidRefriL.set(itemFor[Misc._FLFRG],condenserL.get(itemFor[Misc._COND]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
-			fluidRefriL.set(itemFor[Misc._FLFRG],dehydratorL.get(itemFor[Misc._DEHY]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));
-			fluidRefriL.set(itemFor[Misc._FLFRG],expansionValveL.get(itemFor[Misc._EPVA]).transfer(fluidRefriL.get(itemFor[Misc._FLFRG])));	
+			fluidRefriL.set(itemFor[_FLFRG],evaporatorL.get(itemFor[_EVAP]).transfer(fluidRefriL.get(itemFor[_FLFRG])));
+			fluidRefriL.set(itemFor[_FLFRG],compressorL.get(itemFor[_COMP]).transfer(fluidRefriL.get(itemFor[_FLFRG])));
+			fluidRefriL.set(itemFor[_FLFRG],condenserL.get(itemFor[_COND]).transfer(fluidRefriL.get(itemFor[_FLFRG])));
+			fluidRefriL.set(itemFor[_FLFRG],dehydratorL.get(itemFor[_DEHY]).transfer(fluidRefriL.get(itemFor[_FLFRG])));
+			fluidRefriL.set(itemFor[_FLFRG],expansionValveL.get(itemFor[_EPVA]).transfer(fluidRefriL.get(itemFor[_FLFRG])));	
 		}	
 
 		// Cycle Heat Source 
-		fluidCaloSrcL.set(itemFor[Misc._FLCAS],circulatorSrcL.get(itemFor[Misc._CRCLS]).transfer(fluidCaloSrcL.get(itemFor[Misc._FLCAS])));
-		fluidCaloSrcL.set(itemFor[Misc._FLCAS],circuitSrcL.get(itemFor[Misc._CIRTS]).transfer(fluidCaloSrcL.get(itemFor[Misc._FLCAS])));
+		fluidCaloSrcL.set(itemFor[_FLCAS],circulatorSrcL.get(itemFor[_CRCLS]).transfer(fluidCaloSrcL.get(itemFor[_FLCAS])));
+		fluidCaloSrcL.set(itemFor[_FLCAS],circuitSrcL.get(itemFor[_CIRTS]).transfer(fluidCaloSrcL.get(itemFor[_FLCAS])));
 
 		// Cycle Heat Distribution
-		fluidCaloDistrL.set(itemFor[Misc._FLCAD],circulatorDistrL.get(itemFor[Misc._CRCLD]).transfer(fluidCaloDistrL.get(itemFor[Misc._FLCAD])));
-		fluidCaloDistrL.set(itemFor[Misc._FLCAD],circuitDistrL.get(itemFor[Misc._CIRTD]).transfer(fluidCaloDistrL.get(itemFor[Misc._FLCAD])));	
+		fluidCaloDistrL.set(itemFor[_FLCAD],circulatorDistrL.get(itemFor[_CRCLD]).transfer(fluidCaloDistrL.get(itemFor[_FLCAD])));
+		fluidCaloDistrL.set(itemFor[_FLCAD],circuitDistrL.get(itemFor[_CIRTD]).transfer(fluidCaloDistrL.get(itemFor[_FLCAD])));	
 
 	}			
 
@@ -335,7 +368,6 @@ public class Pac{
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
-
 
 	public List<Compressor> getCompressorL() {
 		return compressorL;

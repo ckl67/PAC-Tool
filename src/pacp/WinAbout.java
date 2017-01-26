@@ -25,6 +25,8 @@ import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.Desktop;
+import java.awt.Dimension;
+
 import javax.swing.event.HyperlinkEvent;
 import java.awt.Toolkit;
 import java.io.IOException;
@@ -68,7 +70,11 @@ public class WinAbout {
 		frame.setBounds(100, 100, 370, 152);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		Misc.centreWindow(frame);
+		
+		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+		int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
+		int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
+		frame.setLocation(x, y);
 		
 		JTextPane txtpnabout = new JTextPane();
 		txtpnabout.setEditable(false);

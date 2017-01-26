@@ -34,21 +34,21 @@ public class Circulator {
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 	public Circulator () {
-		name = "DAB A 80/180XM";
-		voltage = 220;
+		this.name = "DAB A 80/180XM";
+		this.voltage = 220;
 
 		//setNbListFeatures(3);
-		rotatePerMinutesL.add(1620);
-		powerL.add(190);
-		currentL.add(0.91);
+		this.rotatePerMinutesL.add(1620);
+		this.powerL.add(190);
+		this.currentL.add(0.91);
 
-		rotatePerMinutesL.add(2420);
-		powerL.add(226);
-		currentL.add(0.98);
+		this.rotatePerMinutesL.add(2420);
+		this.powerL.add(226);
+		this.currentL.add(0.98);
 
-		rotatePerMinutesL.add(2710);
-		powerL.add(236);
-		currentL.add(1.0);		
+		this.rotatePerMinutesL.add(2710);
+		this.powerL.add(236);
+		this.currentL.add(1.0);		
 	}
 	
 	// -------------------------------------------------------
@@ -61,7 +61,8 @@ public class Circulator {
 	 * @return: HeatTransferFluid
 	 */
 	public HeatTransferFluid transfer(HeatTransferFluid vinFluid) {
-		
+		vinFluid.setT(vinFluid.getT()+ 0.0);
+		vinFluid.setP(vinFluid.getP()+ 0.0);
 		return vinFluid;
 	}
 
@@ -72,18 +73,18 @@ public class Circulator {
 	 * @param vpower
 	 */
 	public void addFeatures(double vcurrent, int vrotatePerMinutes, int vpower ) {
-		this.rotatePerMinutesL.add(vrotatePerMinutes);
-		this.powerL.add(vpower);
-		this.currentL.add(vcurrent);
+		rotatePerMinutesL.add(vrotatePerMinutes);
+		powerL.add(vpower);
+		currentL.add(vcurrent);
 	}
 
 	/**
 	 * Clear the Feature List
 	 */
 	public void clearFeatures() {
-		this.rotatePerMinutesL.clear();
-		this.powerL.clear();
-		this.currentL.clear();
+		rotatePerMinutesL.clear();
+		powerL.clear();
+		currentL.clear();
 	}
 
 	// -------------------------------------------------------
@@ -127,7 +128,7 @@ public class Circulator {
 		this.voltage = ((Number)jsonObj.get("Voltage")).doubleValue();
 
 		// Clear all Features
-		this.clearFeatures();
+		clearFeatures();
 
 		// Fill all feature with jsonObj
 		JSONArray ObjFeatureL = (JSONArray) jsonObj.get("Features");
@@ -169,6 +170,18 @@ public class Circulator {
 
 	public ArrayList<Integer> getPowerL() {
 		return powerL;
+	}
+
+	public void setCurrentL(ArrayList<Double> currentL) {
+		this.currentL = currentL;
+	}
+
+	public void setRotatePerMinutesL(ArrayList<Integer> rotatePerMinutesL) {
+		this.rotatePerMinutesL = rotatePerMinutesL;
+	}
+
+	public void setPowerL(ArrayList<Integer> powerL) {
+		this.powerL = powerL;
 	}
 
 }

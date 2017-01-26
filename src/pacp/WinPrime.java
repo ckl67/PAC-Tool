@@ -1376,7 +1376,8 @@ public class WinPrime {
 		lblMeasurePointView.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				WinMeasurePoints window = new WinMeasurePoints(windowEnthalpy, eDrawL,measurePL);
+				//WinMeasurePoints window = new WinMeasurePoints(windowEnthalpy, eDrawL,measurePL);
+				WinMeasurePoints window = new WinMeasurePoints(eDrawL,measurePL);
 				window.WinMeasurePointsVisible();
 			}
 		});

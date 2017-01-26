@@ -31,33 +31,33 @@ public class Compressor {
 	private double current;
 	private double massFlow;
 	private double voltage;
-	
+
 	private double deltaP;	
 	private double deltaT;
-		
+
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
 	public Compressor() {
-			setName("ZR40K3-PFG");
-			evap =  Math.round(Misc.farenheit2degre(45)*100.0)/100.0;
-			cond = Math.round(Misc.farenheit2degre(130)*100.0)/100.0;
-			rg = Math.round(Misc.farenheit2degre(65)*100.0)/100.0;
-			liq = Math.round(Misc.farenheit2degre(115)*100.0)/100.0;
-			capacity = Math.round(Misc.btuhr2watt(33300)*100.0)/100.0;
-			power = 3000;
-			current = 14.7;
-			massFlow = Math.round(Misc.pound2kg(488)*1000.0)/1000.0;		
-			voltage = 220;	
-			deltaT = 0;
-			deltaP = 0;
+		this.name = "ZR40K3-PFG";
+		this.evap =  Math.round(Misc.farenheit2degre(45)*100.0)/100.0;
+		this.cond = Math.round(Misc.farenheit2degre(130)*100.0)/100.0;
+		this.rg = Math.round(Misc.farenheit2degre(65)*100.0)/100.0;
+		this.liq = Math.round(Misc.farenheit2degre(115)*100.0)/100.0;
+		this.capacity = Math.round(Misc.btuhr2watt(33300)*100.0)/100.0;
+		this.power = 3000;
+		this.current = 14.7;
+		this.massFlow = Math.round(Misc.pound2kg(488)*1000.0)/1000.0;		
+		this.voltage = 220;	
+		this.deltaT = 0;
+		this.deltaP = 0;
 	}
-	
+
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
-	
+
 	/**
 	 * Compressor will increase the Pressure and Temperature
 	 * @param Refrigerant: inGas
@@ -77,7 +77,7 @@ public class Compressor {
 	//  Square brackets[] represents arrays.			--> add
 	//  {  "Planet": "Earth" , "Countries": [  { "Name": "India", "Capital": "Delhi"}, { "Name": "France", "Major": "Paris" } ]  }  
 	// -------------------------------------------------------
-	
+
 	/**
 	 * Construct the JSON data
 	 * @return : JSONObject
@@ -97,7 +97,7 @@ public class Compressor {
 		jsonObj.put("Voltage", this.voltage);	
 		return jsonObj ;
 	}
-	
+
 	/**
 	 * Set the JSON data, to the Class instance
 	 * @param jsonObj : JSON Object
@@ -114,7 +114,7 @@ public class Compressor {
 		this.massFlow = ((Number) jsonObj.get("MassFlow")).doubleValue();
 		this.voltage = ((Number) jsonObj.get("Voltage")).doubleValue();
 	}
-	
+
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
@@ -126,7 +126,7 @@ public class Compressor {
 	public void setEvap(double v) {
 		this.evap = v;
 	}
-	
+
 	public void setCond(double v) {
 		this.cond = v;
 	}
@@ -146,27 +146,27 @@ public class Compressor {
 	public void setPower(double v) {
 		this.power = v;
 	}
-	
+
 	public void setCurrent(double v) {
 		this.current = v;
 	}
-	
+
 	public void setMassFlow(double v) {
 		this.massFlow = v;
 	}
-	
+
 	public void setVoltage(double v) {
 		this.voltage = v;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public double getEvap() {
 		return evap;		
 	}
-	
+
 	public double getCond() {
 		return cond;		
 	}
@@ -186,11 +186,11 @@ public class Compressor {
 	public double getPower() {
 		return power;		
 	}
-	
+
 	public double getCurrent() {
 		return current;		
 	}
-	
+
 	public double getMassFlow() {
 		return massFlow;		
 	}

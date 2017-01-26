@@ -49,13 +49,13 @@ public class EnthalpyBkgdImg {
 	public EnthalpyBkgdImg() {
 		
 		// Image
-		setEnthalpyImageFile("D:/Users/kluges1/workspace/pac-tool/ressources/R22/R22 couleur A4.png");
+		this.enthalpyImageFile = "D:/Users/kluges1/workspace/pac-tool/ressources/R22/R22 couleur A4.png";
 
 		// Reference points chosen on the Curve
 		this.refCurveH1x = 140; 
 		this.refCurveH2x = 520; 
-		this.refCurveP1y = 1;	//Log(1) 
-		this.refCurveP2y = 100;    //Log(100) 
+		this.refCurveP1y = 1;		//Log(1) = 0 
+		this.refCurveP2y = 100;     //Log(100) = 2
 
 		// Zone to consider from the Background Image related to the points above
 		// Outside of the zone nothing --> be large !! 
@@ -77,7 +77,7 @@ public class EnthalpyBkgdImg {
 			File file = new File(getEnthalpyImageFile());
 			image = ImageIO.read(file);	
 		} catch (IOException e) {
-			System.out.println("Image non trouvée !");
+			System.out.println("openEnthalpyImageFile");
 			e.printStackTrace(); 
 		}
 		return image;

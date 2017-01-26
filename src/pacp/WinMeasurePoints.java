@@ -61,6 +61,20 @@ public class WinMeasurePoints {
 	public static int _BP_ID = 6;
 
 	// --------------------------------------------------------------------
+	// Objective is to display the coordinate for the points to match
+	// --------------------------------------------------------------------
+	private static boolean HELP_FIND_LOCATION = false;	
+
+	/* 	----------------------------------------
+	 * 		INSTANCE VAR
+	 * ----------------------------------------*/
+
+	private String imgPath;
+	private List<MeasurePoints> measurePL;
+	private List<ElDraw> eDrawL;
+	private WinEnthalpy winEnthalpy;
+
+	// --------------------------------------------------------------------
 	// WIN Builder
 	// --------------------------------------------------------------------
 	private JFrame frame;
@@ -68,15 +82,6 @@ public class WinMeasurePoints {
 	private JTextField textField;
 	private JTextField textFieldUnity;
 
-	private WinEnthalpy winEnthalpy;
-	/* 	----------------------------------------
-	 * 		INSTANCE VAR
-	 * ----------------------------------------*/
-	private boolean HELP_FIND_LOCATION=false;	// Objective is to display the coordinate for the points to match
-	private String imgPath = "/pacp/images/Cycle.png";
-	private List<MeasurePoints> measurePL;
-
-	private List<ElDraw> eDrawL;
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -87,7 +92,7 @@ public class WinMeasurePoints {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				Enthalpy enthalpy1 = new Enthalpy();
+				//Enthalpy enthalpy1 = new Enthalpy();
 				List<ElDraw> eDrawL1 = new ArrayList<ElDraw>();
 				List<MeasurePoints> measurePL1;
 				measurePL1 = new ArrayList<MeasurePoints>(); 
@@ -103,9 +108,11 @@ public class WinMeasurePoints {
 				measurePL1.add(new MeasurePoints("TMo",663,282,"Température Départ Eau Chauffage",0,"°C",WinMeasurePoints._GROUP_HEAT));
 				measurePL1.add(new MeasurePoints("TCi",321,281,"Température Retour Eau Captage",0,"°C",WinMeasurePoints._GROUP_SOURCE));
 				measurePL1.add(new MeasurePoints("TCo",321,57,"Température Départ Eau Captage",0,"°C",WinMeasurePoints._GROUP_SOURCE));
-				WinEnthalpy winEnthalpy = new WinEnthalpy(enthalpy1, eDrawL1, measurePL1);
+				
+				//WinEnthalpy winEnthalpy1 = new WinEnthalpy(enthalpy1, eDrawL1, measurePL1);
 				try {
-					WinMeasurePoints window = new WinMeasurePoints(winEnthalpy,eDrawL1,measurePL1);
+					//WinMeasurePoints window = new WinMeasurePoints(winEnthalpy1,eDrawL1,measurePL1);
+					WinMeasurePoints window = new WinMeasurePoints(eDrawL1,measurePL1);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -118,10 +125,13 @@ public class WinMeasurePoints {
 	 * Create the application.
 	 * @param measurePL 
 	 */
-	public WinMeasurePoints(WinEnthalpy windowEnthalpy, List<ElDraw> veDrawL, List<MeasurePoints> vmeasurePL) {
-		winEnthalpy = windowEnthalpy;
-		eDrawL = veDrawL;
-		measurePL = vmeasurePL;
+	//public WinMeasurePoints(WinEnthalpy windowEnthalpy, List<ElDraw> veDrawL, List<MeasurePoints> vmeasurePL) {
+	public WinMeasurePoints(List<ElDraw> veDrawL, List<MeasurePoints> vmeasurePL) {
+		
+		this.imgPath = "/pacp/images/Cycle.png";
+		this.measurePL = vmeasurePL;
+		this.eDrawL = veDrawL;
+		//this.winEnthalpy = windowEnthalpy;
 
 		initialize();
 	}
@@ -235,12 +245,11 @@ public class WinMeasurePoints {
 				// can be added to draw element add to display element to : ElDraw
 
 
-				
+
 				if ( pv > 0 ) {
 					if ( (id ==_HP1_ID) || (id == _HP2_ID) ) {
-						if (WinEnthalpy.panelEnthalpyDrawArea != null)
-							if (WinEnthalpy.panelEnthalpyDrawArea.isVisible())
-								winEnthalpy.actionNewValueHP(pv);
+						if (WinEnthalpy.panelEnthalpyDrawArea.isVisible())
+							winEnthalpy.actionNewValueHP(pv);
 					} else if ( (id ==_BP_ID) ) {
 						if (WinEnthalpy.panelEnthalpyDrawArea.isVisible())
 							winEnthalpy.actionNewValueBP(pv);

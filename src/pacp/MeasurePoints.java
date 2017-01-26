@@ -33,7 +33,6 @@ public class MeasurePoints {
 	private String unity;
 	private int groupHpBp; 
 	
-
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
@@ -44,7 +43,7 @@ public class MeasurePoints {
 		this.definition = definition;
 		this.value = value;
 		this.unity = unity;
-		this.groupHpBp = groupHpBp;	//HP or BP
+		this.groupHpBp = groupHpBp;	//HP or BP or Heat Source or Distribution Source
 	}
 	
 	// -------------------------------------------------------

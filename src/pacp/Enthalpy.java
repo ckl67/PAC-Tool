@@ -24,7 +24,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
 import org.json.simple.JSONObject;
 
 public class Enthalpy {
@@ -38,7 +37,6 @@ public class Enthalpy {
 
 	private double yPmin;  					// Pressure Minimum of the range of Pressure value
 	private double yPmax;     				// Pressure Maximum of the range of Pressure value. 
-
 
 	/* -----------------------------
 	   Diagram Pressure-Temperature
@@ -70,19 +68,19 @@ public class Enthalpy {
 		/* ----------------
 		 * Diagram Enthalpy  
 		 * ----------------*/
-		setNameRefrigerant("R22");
-		xHmin = 140;  				
-		xHmax = 520;    				
+		this.nameRefrigerant = "R22";
+		this.xHmin = 140;  				
+		this.xHmax = 520;    				
 
-		yPmin = 0.5;  
-		yPmax = 60;    
+		this.yPmin = 0.5;  
+		this.yPmax = 60;    
 		
 		/* -----------------------------
 		   Diagram Pressure-Temperature
 		 * ----------------------------*/
-		setFileNameTP("D:/Users/kluges1/workspace/pac-tool/ressources/R22/P2T_R22.txt");
-		setlistTP(new ArrayList<Point2D.Double>());
-		deltaP = 0.0;
+		this.fileNameTP = "D:/Users/kluges1/workspace/pac-tool/ressources/R22/P2T_R22.txt";
+		this.listTP = new ArrayList<Point2D.Double>();
+		this.deltaP = 0.0;
 
 		/* -----------------------------
 		   Diagram Saturation Curve:
@@ -91,17 +89,17 @@ public class Enthalpy {
 				let h0,h1 the nearest H found in the list, 
 				if h0 and h1 are to faraway of h, it means that the p zone was too narrow 
 		 * ----------------------------*/
-		hSatMin=1000;
-		hSatMax=0;
-		hSatErrLoc = 0;
-		setFileNameSAT("D:/Users/kluges1/workspace/pac-tool/ressources/R22/SaturationCurve_R22.txt");
-		setlistSatHlP(new ArrayList<Point2D.Double>());
-		setlistSatHvP(new ArrayList<Point2D.Double>());
+		this.hSatMin=1000;
+		this.hSatMax=0;
+		this.hSatErrLoc = 0;
+		this.fileNameSAT = "D:/Users/kluges1/workspace/pac-tool/ressources/R22/SaturationCurve_R22.txt";
+		this.listSatHlP = new ArrayList<Point2D.Double>();
+		this.listSatHvP = new ArrayList<Point2D.Double>();
 
 		/* -----------------------------
 		   Enthalpy Image
 		 * ----------------------------*/
-		enthalpyBkgdImg = new EnthalpyBkgdImg();
+		this.enthalpyBkgdImg = new EnthalpyBkgdImg();
 
 	}
 
@@ -110,7 +108,7 @@ public class Enthalpy {
 	// -------------------------------------------------------
 	/**
 	 * Read Data file containing: 
-	 * # Temperature [degre C] / Enthalpy (kJ/kg) Liquid / Enthalpy (kJ/kg) Vapor
+	 * # Temperature [degree C] / Enthalpy (kJ/kg) Liquid / Enthalpy (kJ/kg) Vapor
 	 * Will fill the : setlistSatHlP / setlistSatHvP list
 	 */
 	public void loadSatFile() {
@@ -119,7 +117,9 @@ public class Enthalpy {
 		try {
 			sken = new Scanner (file);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			System.out.println("loadSatFile");
+			System.out.println(e.getMessage());
+			System.out.println(e.toString());
 			e.printStackTrace();
 		}
 
@@ -155,9 +155,9 @@ public class Enthalpy {
 		hSatErrLoc = Misc.maxIntervalL(linL);
 		if (hSatErrLoc < Misc.maxIntervalL(linV))
 			hSatErrLoc = Misc.maxIntervalL(linV);
-		// Security margin linked to the fact that at the limit of the list, the chosen element can be at n-1 position (due to end of list)
+		// Security margin linked to the fact that at the limit of the list, 
+		// the chosen element can be at n-1 position (due to end of list)
 		hSatErrLoc = hSatErrLoc*2;
-		//System.out.println(hSatErrLoc);
 	}
 
 
@@ -172,7 +172,9 @@ public class Enthalpy {
 		try {
 			sken = new Scanner (file);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			System.out.println("loadPTFile");
+			System.out.println(e.getMessage());
+			System.out.println(e.toString());
 			e.printStackTrace();
 		}
 
@@ -435,7 +437,7 @@ public class Enthalpy {
 		jsonObj.put("FileNameTP", this.fileNameTP);	
 		jsonObj.put("DeltaP", this.deltaP);	
 		jsonObj.put("FileNameSAT", this.fileNameSAT);	
-		jsonObj.put("EnthalpyBkgdImg", enthalpyBkgdImg.getJsonObject());	
+		jsonObj.put("EnthalpyBkgdImg", this.enthalpyBkgdImg.getJsonObject());	
 		return jsonObj ;
 	}
 	

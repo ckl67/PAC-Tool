@@ -13,9 +13,9 @@ public class Refrigerant extends Enthalpy {
 	// -------------------------------------------------------
 
 	public Refrigerant() {
-		setName("R22");
-		setP(0);
-		setT(0);
+		this.name = "R22";
+		this.P = 0.0;
+		this.T = 0.0;
 	}
 
 	// -------------------------------------------------------
@@ -71,16 +71,16 @@ public class Refrigerant extends Enthalpy {
 		return P;
 	}
 
-	public void setP(double p) {
-		P = p;
+	public void setP(double P) {
+		this.P = P;
 	}
 
 	public double getT() {
 		return T;
 	}
 
-	public void setT(double t) {
-		T = t;
+	public void setT(double T) {
+		this.T = T;
 	}
 
 }

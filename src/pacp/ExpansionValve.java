@@ -31,9 +31,9 @@ public class ExpansionValve {
 	// -------------------------------------------------------
 
 	public ExpansionValve() {
-		setName("Capillaire");
-		deltaT = 0;
-		deltaP = 0;
+		this.name = "Capillaire";
+		this.deltaT = 0;
+		this.deltaP = 0;
 	}
 
 	// -------------------------------------------------------
