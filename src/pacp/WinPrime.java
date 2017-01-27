@@ -1381,7 +1381,7 @@ public class WinPrime {
 				window.WinMeasurePointsVisible();
 			}
 		});
-		lblMeasurePointView.setIcon(new ImageIcon(WinPrime.class.getResource("/pacp/images/Cycle_150.PNG")));
+		lblMeasurePointView.setIcon(new ImageIcon(WinPrime.class.getResource("/pacp/images/Cycle_150.png")));
 		lblMeasurePointView.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		lblMeasurePointView.setBounds(233, 141, 150, 93);
 		panelCompCOP.add(lblMeasurePointView);

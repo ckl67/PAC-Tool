@@ -69,7 +69,7 @@ public class WinMeasurePoints {
 	 * 		INSTANCE VAR
 	 * ----------------------------------------*/
 
-	private String imgPath;
+	private String imgURL;
 	private List<MeasurePoints> measurePL;
 	private List<ElDraw> eDrawL;
 	private WinEnthalpy winEnthalpy;
@@ -81,7 +81,6 @@ public class WinMeasurePoints {
 	private BufferedImage img;
 	private JTextField textField;
 	private JTextField textFieldUnity;
-
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -128,7 +127,7 @@ public class WinMeasurePoints {
 	//public WinMeasurePoints(WinEnthalpy windowEnthalpy, List<ElDraw> veDrawL, List<MeasurePoints> vmeasurePL) {
 	public WinMeasurePoints(List<ElDraw> veDrawL, List<MeasurePoints> vmeasurePL) {
 		
-		this.imgPath = "/pacp/images/Cycle.png";
+		this.imgURL = "/pacp/images/Cycle.png";
 		this.measurePL = vmeasurePL;
 		this.eDrawL = veDrawL;
 		//this.winEnthalpy = windowEnthalpy;
@@ -189,9 +188,12 @@ public class WinMeasurePoints {
 
 		frame = new JFrame();
 
-
+		// One issue faced on image extension .PNG expected .png
+		// ImageIO#read. throws an illegal argument exception for a null parameter; 
+		// if the String representing the path to the image has even the tiniest error in, 
+		// the URL passed to read() will be null. 
 		try {
-			img = ImageIO.read(frame.getContentPane().getClass().getResource(imgPath));
+			img = ImageIO.read(frame.getContentPane().getClass().getResource(imgURL));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
