@@ -32,18 +32,20 @@ public class MeasurePoints {
 	private double value;
 	private String unity;
 	private int groupHpBp; 
+	private boolean chosen;
 	
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public MeasurePoints(String name, int x, int y,String definition,double value, String unity, int groupHpBp) {
+	public MeasurePoints(String name, int x, int y,String definition, String unity, int groupHpBp) {
 		this.name = name;
 		this.x = x;
 		this.y = y;
 		this.definition = definition;
-		this.value = value;
+		this.value = 0;
 		this.unity = unity;
 		this.groupHpBp = groupHpBp;	//HP or BP or Heat Source or Distribution Source
+		this.chosen = false;
 	}
 	
 	// -------------------------------------------------------
@@ -129,6 +131,14 @@ public class MeasurePoints {
 
 	public int getGroupHpBp() {
 		return groupHpBp;
+	}
+
+	public boolean isChosen() {
+		return chosen;
+	}
+
+	public void setChosen(boolean chosen) {
+		this.chosen = chosen;
 	}
 
 }

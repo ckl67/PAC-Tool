@@ -635,7 +635,8 @@ public class Test {
 	private static void testMeasurePoints () { 
 		System.out.println("TEST MEASUREPOINTS");
 
-		MeasurePoints vMeasurePoints = new MeasurePoints("Mesures",23,56,"Point H1",23.567,"bar",1);
+		MeasurePoints vMeasurePoints = new MeasurePoints("Mesures",23,56,"Point H1","bar",1);
+		vMeasurePoints.setValue(23.457);
 		System.out.println(vMeasurePoints.getName());
 
 		System.out.println("\n---> Construct JSON data");

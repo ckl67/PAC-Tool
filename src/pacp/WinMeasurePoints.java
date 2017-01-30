@@ -36,6 +36,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import java.awt.Color;
 import javax.swing.JPanel;
@@ -72,12 +74,12 @@ public class WinMeasurePoints {
 	private String imgURL;
 	private List<MeasurePoints> measurePL;
 	private List<ElDraw> eDrawL;
-	private WinEnthalpy winEnthalpy;
 
 	// --------------------------------------------------------------------
 	// WIN Builder
 	// --------------------------------------------------------------------
 	private JFrame frame;
+	private PPanel panel;
 	private BufferedImage img;
 	private JTextField textField;
 	private JTextField textFieldUnity;
@@ -91,26 +93,23 @@ public class WinMeasurePoints {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				//Enthalpy enthalpy1 = new Enthalpy();
 				List<ElDraw> eDrawL1 = new ArrayList<ElDraw>();
 				List<MeasurePoints> measurePL1;
 				measurePL1 = new ArrayList<MeasurePoints>(); 
-				measurePL1.add(new MeasurePoints("T1",515,90,"Température des gaz BP\n après surchauffe interne\n et avant compression",0,"°C",WinMeasurePoints._GROUP_BP));
-				measurePL1.add(new MeasurePoints("T2",546,90,"Température des gaz HP\n en fin de compression\n (Cloche du compresseur)",0,"°C",WinMeasurePoints._GROUP_HP));
-				measurePL1.add(new MeasurePoints("P3",582,135,"Température du début de condensation\n (Mesure HP Manifod)",0,"Bar",WinMeasurePoints._GROUP_HP));
-				measurePL1.add(new MeasurePoints("P4",583,203,"Température de fin de condensation\n (Mesure HP Manifod)",0,"Bar",WinMeasurePoints._GROUP_HP));
-				measurePL1.add(new MeasurePoints("T5",512,247,"Température des gaz HP\n après sous refroidissement",0,"°C",WinMeasurePoints._GROUP_HP));
-				measurePL1.add(new MeasurePoints("T6",433,248,"Température sortie Détendeur / Capillaire",0,"°C",WinMeasurePoints._GROUP_BP));
-				measurePL1.add(new MeasurePoints("P7",371,135,"Température évaporation\n (Mesure BP Manifold)",0,"Bar",WinMeasurePoints._GROUP_BP ));
-				measurePL1.add(new MeasurePoints("T8",479,89, "Température des gaz HP\naprès surchauffe externe",0,"°C",WinMeasurePoints._GROUP_BP));
-				measurePL1.add(new MeasurePoints("TMi",663,57,"Température Retour Eau Chauffage",0,"°C",WinMeasurePoints._GROUP_HEAT));
-				measurePL1.add(new MeasurePoints("TMo",663,282,"Température Départ Eau Chauffage",0,"°C",WinMeasurePoints._GROUP_HEAT));
-				measurePL1.add(new MeasurePoints("TCi",321,281,"Température Retour Eau Captage",0,"°C",WinMeasurePoints._GROUP_SOURCE));
-				measurePL1.add(new MeasurePoints("TCo",321,57,"Température Départ Eau Captage",0,"°C",WinMeasurePoints._GROUP_SOURCE));
-				
-				//WinEnthalpy winEnthalpy1 = new WinEnthalpy(enthalpy1, eDrawL1, measurePL1);
+				measurePL1.add(new MeasurePoints("T1",515,90,"Température des gaz BP\n après surchauffe interne\n et avant compression","°C",WinMeasurePoints._GROUP_BP));
+				measurePL1.add(new MeasurePoints("T2",546,90,"Température des gaz HP\n en fin de compression\n (Cloche du compresseur)","°C",WinMeasurePoints._GROUP_HP));
+				measurePL1.add(new MeasurePoints("P3",582,135,"Température du début de condensation\n (Mesure HP Manifod)","Bar",WinMeasurePoints._GROUP_HP));
+				measurePL1.add(new MeasurePoints("P4",583,203,"Température de fin de condensation\n (Mesure HP Manifod)","Bar",WinMeasurePoints._GROUP_HP));
+				measurePL1.add(new MeasurePoints("T5",512,247,"Température des gaz HP\n après sous refroidissement","°C",WinMeasurePoints._GROUP_HP));
+				measurePL1.add(new MeasurePoints("T6",433,248,"Température sortie Détendeur / Capillaire","°C",WinMeasurePoints._GROUP_BP));
+				measurePL1.add(new MeasurePoints("P7",371,135,"Température évaporation\n (Mesure BP Manifold)","Bar",WinMeasurePoints._GROUP_BP ));
+				measurePL1.add(new MeasurePoints("T8",479,89, "Température des gaz HP\naprès surchauffe externe","°C",WinMeasurePoints._GROUP_BP));
+				measurePL1.add(new MeasurePoints("TMi",663,57,"Température Retour Eau Chauffage","°C",WinMeasurePoints._GROUP_HEAT));
+				measurePL1.add(new MeasurePoints("TMo",663,282,"Température Départ Eau Chauffage","°C",WinMeasurePoints._GROUP_HEAT));
+				measurePL1.add(new MeasurePoints("TCi",321,281,"Température Retour Eau Captage","°C",WinMeasurePoints._GROUP_SOURCE));
+				measurePL1.add(new MeasurePoints("TCo",321,57,"Température Départ Eau Captage","°C",WinMeasurePoints._GROUP_SOURCE));
+
 				try {
-					//WinMeasurePoints window = new WinMeasurePoints(winEnthalpy1,eDrawL1,measurePL1);
 					WinMeasurePoints window = new WinMeasurePoints(eDrawL1,measurePL1);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
@@ -124,13 +123,11 @@ public class WinMeasurePoints {
 	 * Create the application.
 	 * @param measurePL 
 	 */
-	//public WinMeasurePoints(WinEnthalpy windowEnthalpy, List<ElDraw> veDrawL, List<MeasurePoints> vmeasurePL) {
 	public WinMeasurePoints(List<ElDraw> veDrawL, List<MeasurePoints> vmeasurePL) {
-		
+
 		this.imgURL = "/pacp/images/Cycle.png";
 		this.measurePL = vmeasurePL;
 		this.eDrawL = veDrawL;
-		//this.winEnthalpy = windowEnthalpy;
 
 		initialize();
 	}
@@ -167,6 +164,11 @@ public class WinMeasurePoints {
 		return id;
 	}
 
+	/**
+	 * Will return the element id of measurePL for a name 
+	 * @param name
+	 * @return
+	 */
 	public int getIdForElem(String name) {
 		int id=-1;
 		for(int i=0;i<measurePL.size();i++) {
@@ -208,10 +210,38 @@ public class WinMeasurePoints {
 		frame.setBackground(Color.WHITE);
 		frame.setSize(imgWidth+10, imgHeight+40);
 		frame.getContentPane().setLayout(null);
+		frame.setResizable(false);
 
-		PPanel panel = new PPanel();
+		panel = new PPanel();
 		panel.setBounds(0, 0, imgWidth, imgHeight);
 		panel.setBackground(Color.WHITE);
+
+		JButton btnNewButton = new JButton("Reset");
+		btnNewButton.setFocusable(false);
+
+		//btnNewButton.setBounds(29, 91, 89, 23);
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Reset");
+				System.out.println("Clear measurePL");
+				for (int n = 0; n < measurePL.size(); n++ ) {
+					measurePL.get(n).setChosen(false);
+					measurePL.get(n).setValue(0.0);
+				}
+
+				System.out.println("Clear eDrawL");
+				for(int i=0;i<eDrawL.size();i++) {
+					if (eDrawL.get(i).getType() == ElDraw._LineHorzInfBP)
+						eDrawL.remove(i);
+					if (eDrawL.get(i).getType() == ElDraw._LineHorzInfHP)
+						eDrawL.remove(i);
+					if (eDrawL.get(i).getType() == ElDraw._PointMeasure)
+						eDrawL.remove(i);
+				}			
+			}
+		});
+
+		panel.add(btnNewButton);
 
 		textField = new JTextField();
 		textField.setForeground(Color.BLACK);
@@ -222,46 +252,91 @@ public class WinMeasurePoints {
 
 		textField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+
 				int id = getIdNearest((int)textField.getX(),(int)textField.getY());
+				double inValue = Double.valueOf(textField.getText());
+
+				// HP1 = HP2
 				if (id == _HP1_ID)
-					measurePL.get(_HP2_ID).setValue(Double.valueOf(textField.getText()));
+					measurePL.get(_HP2_ID).setValue(inValue);
 				if (id == _HP2_ID)
-					measurePL.get(_HP2_ID).setValue(Double.valueOf(textField.getText()));
+					measurePL.get(_HP1_ID).setValue(inValue);
 
-				measurePL.get(id).setValue(Double.valueOf(textField.getText()));
-				// Type of Group of selected point, determine pressure and T
+				// Affect Value to measurePL
+				measurePL.get(id).setValue(inValue);
+				measurePL.get(id).setChosen(true);
+				
+				// --------------------------------------------------------------------
+				//Fill elDrawL with Created couple (H,P) = (f(T),P) or PK, P0 lines
+				// --------------------------------------------------------------------
+				System.out.println();
+				System.out.println("----- New ----");
+				for (int n = 0; n < measurePL.size(); n++ ) {
 
+					double sVal = measurePL.get(n).getValue();
 
-				double pv = 0;
-				if (measurePL.get(id).getGroupHpBp() == _GROUP_HP) {
-					pv =measurePL.get(_HP1_ID).getValue();
-				} else if (measurePL.get(id).getGroupHpBp() == _GROUP_BP) {
-					pv =measurePL.get(_BP_ID).getValue();				
-				} else {
-					pv = -1;
-					System.out.println("no HP or BP");
-				}
-				double tv = measurePL.get(id).getValue();
+					if (measurePL.get(n).isChosen()) {
+						
+						// LINE PK = TK (Only one will be retained for draw)
+						if ( (n ==_HP1_ID) || (n == _HP2_ID) ) {
+							if ( n ==_HP1_ID) {
+								if (sVal> 0) {
+									// Remove the PK element
+									for(int i=0;i<eDrawL.size();i++) {
+										if (eDrawL.get(i).getType() == ElDraw._LineHorzInfHP)
+											eDrawL.remove(i);
+									}
+									ElDraw edraw = new ElDraw(ElDraw._LineHorzInfHP,Math.log10(sVal));
+									eDrawL.add(edraw);
+									System.out.println("Line HP = P =" + sVal);
+								}
+							}
+							// LINE P0 = T0
+						} else if ( n ==_BP_ID ) {
+							if (sVal> 0) {
+								// Remove the P0 element
+								for(int i=0;i<eDrawL.size();i++) {
+									if (eDrawL.get(i).getType() == ElDraw._LineHorzInfBP)
+										eDrawL.remove(i);
+								}
+								ElDraw edraw = new ElDraw(ElDraw._LineHorzInfBP,Math.log10(sVal));
+								eDrawL.add(edraw);
+								System.out.println("Line BP = P" + sVal);
+							}
+							//  couple (H,P) 
+						} else  if ( (n !=_HP1_ID) && (n != _HP2_ID) && (n != _BP_ID) ) {
+							//  (H,PK) = (f(T),PK)
+							if (measurePL.get(n).getGroupHpBp() == _GROUP_HP) {
+								double pK =measurePL.get(_HP1_ID).getValue();
+								if (pK > 0) {
+									double tK = sVal;
+									// ------------------------>>
+									//   TO CORRECT H = f(T)
+									double hK = tK;
+									// <<------------------------
+									ElDraw edraw = new ElDraw(ElDraw._PointMeasure,hK,Math.log10(pK));
+									eDrawL.add(edraw);
+									System.out.println("    " + measurePL.get(n).getName() + ":   H=f(T=" + tK + ")  P=" + pK);
+								}
 
-				// The paint (panel Enthalpy) procedure MUST check if the measurePL 
-				// can be added to draw element add to display element to : ElDraw
-
-
-
-				if ( pv > 0 ) {
-					if ( (id ==_HP1_ID) || (id == _HP2_ID) ) {
-						if (WinEnthalpy.panelEnthalpyDrawArea.isVisible())
-							winEnthalpy.actionNewValueHP(pv);
-					} else if ( (id ==_BP_ID) ) {
-						if (WinEnthalpy.panelEnthalpyDrawArea.isVisible())
-							winEnthalpy.actionNewValueBP(pv);
-					} else if ( (id !=_HP1_ID) && (id != _HP2_ID) && (id != _BP_ID) ) {
-						// TO CORRECT
-						double hv = tv;
-						ElDraw edraw = new ElDraw(ElDraw._PointYLog,hv,Math.log10(pv));
-						eDrawL.add(edraw);
-						if (WinEnthalpy.panelEnthalpyDrawArea.isVisible())
-							WinEnthalpy.panelEnthalpyDrawArea.repaint();
+								//  (H,P0) = (f(T),P0)
+							} else if (measurePL.get(n).getGroupHpBp() == _GROUP_BP) { 
+								double p0 =measurePL.get(_BP_ID).getValue();
+								if (p0 > 0) {
+									double t0 = sVal;
+									// ------------------------>>
+									//   TO CORRECT H = f(T)
+									double h0 = t0;
+									// <<------------------------
+									ElDraw edraw = new ElDraw(ElDraw._PointMeasure,h0,Math.log10(p0));
+									eDrawL.add(edraw);
+									System.out.println("    " + measurePL.get(n).getName() + ":   H=f(T=" + t0 + ") P=" + p0);
+								}
+							}
+							//  OTHER ??
+						} else {
+							System.out.println("no HP or BP");
+						}
 					}
 				}
 

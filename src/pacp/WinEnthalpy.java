@@ -93,6 +93,18 @@ public class WinEnthalpy {
 			public void run() {
 				List<ElDraw> eDrawL1 = new ArrayList<ElDraw>();
 				List<MeasurePoints> measurePL1 = new ArrayList<MeasurePoints>();
+				measurePL1.add(new MeasurePoints("T1",515,90,"Température des gaz BP\n après surchauffe interne\n et avant compression","°C",WinMeasurePoints._GROUP_BP));
+				measurePL1.add(new MeasurePoints("T2",546,90,"Température des gaz HP\n en fin de compression\n (Cloche du compresseur)","°C",WinMeasurePoints._GROUP_HP));
+				measurePL1.add(new MeasurePoints("P3",582,135,"Température du début de condensation\n (Mesure HP Manifod)","Bar",WinMeasurePoints._GROUP_HP));
+				measurePL1.add(new MeasurePoints("P4",583,203,"Température de fin de condensation\n (Mesure HP Manifod)","Bar",WinMeasurePoints._GROUP_HP));
+				measurePL1.add(new MeasurePoints("T5",512,247,"Température des gaz HP\n après sous refroidissement","°C",WinMeasurePoints._GROUP_HP));
+				measurePL1.add(new MeasurePoints("T6",433,248,"Température sortie Détendeur / Capillaire","°C",WinMeasurePoints._GROUP_BP));
+				measurePL1.add(new MeasurePoints("P7",371,135,"Température évaporation\n (Mesure BP Manifold)","Bar",WinMeasurePoints._GROUP_BP ));
+				measurePL1.add(new MeasurePoints("T8",479,89, "Température des gaz HP\naprès surchauffe externe","°C",WinMeasurePoints._GROUP_BP));
+				measurePL1.add(new MeasurePoints("TMi",663,57,"Température Retour Eau Chauffage","°C",WinMeasurePoints._GROUP_HEAT));
+				measurePL1.add(new MeasurePoints("TMo",663,282,"Température Départ Eau Chauffage","°C",WinMeasurePoints._GROUP_HEAT));
+				measurePL1.add(new MeasurePoints("TCi",321,281,"Température Retour Eau Captage","°C",WinMeasurePoints._GROUP_SOURCE));
+				measurePL1.add(new MeasurePoints("TCo",321,57,"Température Départ Eau Captage","°C",WinMeasurePoints._GROUP_SOURCE));
 				try {
 					WinEnthalpy window = new WinEnthalpy(new Enthalpy(),eDrawL1,measurePL1);
 					window.frame.setVisible(true);
@@ -117,6 +129,9 @@ public class WinEnthalpy {
 		enthalpy.loadSatFile();
 
 		initialize();
+		
+		@SuppressWarnings("unused")
+		PanelEnthRepaintAction repaintAction = new PanelEnthRepaintAction();
 	}
 
 	// -------------------------------------------------------
@@ -252,10 +267,9 @@ public class WinEnthalpy {
 				} else {
 					lblFollower.setText(String.format("----------"));
 				}
-				panelEnthalpyDrawArea.repaint();
+				//panelEnthalpyDrawArea.repaint();
 			}
 		});
-		// **************************
 
 		// ----------------------------------------
 		// Panel Draw Enthalpy : Slider (Smooth the background image) 
@@ -270,7 +284,7 @@ public class WinEnthalpy {
 			public void stateChanged(ChangeEvent arg0) {
 				int v = slider.getValue();
 				panelEnthalpyDrawArea.setImageAlphaBlure((float) v / slider.getMaximum());
-				panelEnthalpyDrawArea.repaint();
+				//panelEnthalpyDrawArea.repaint();
 			}
 		});
 		panelEnthalpyDrawArea.add(slider, BorderLayout.NORTH);
@@ -288,7 +302,7 @@ public class WinEnthalpy {
 				int id = panelEnthalpyDrawArea.getIdNearest(eDrawL, panelEnthalpyDrawArea.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpyDrawArea.getPoYm((int)pointJPopupMenu.getY()), 1);
 				if (id >= 0) {
 					eDrawL.remove(id);
-					panelEnthalpyDrawArea.repaint();					
+					//panelEnthalpyDrawArea.repaint();					
 				}
 			}
 		});
@@ -315,7 +329,18 @@ public class WinEnthalpy {
 		textPHP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				double PK = Double.parseDouble(textPHP.getText());
-				actionNewValueHP(PK);
+
+				// Remove the PK element
+				for(int i=0;i<eDrawL.size();i++) {
+					if (eDrawL.get(i).getType() == ElDraw._LineHorzInfHP)
+						eDrawL.remove(i);
+				}
+				measurePL.get(WinMeasurePoints._HP1_ID).setValue(PK);
+				measurePL.get(WinMeasurePoints._HP2_ID).setValue(PK);
+				ElDraw edraw = new ElDraw(ElDraw._LineHorzInfHP,Math.log10(PK));
+				eDrawL.add(edraw);
+				//panelEnthalpyDrawArea.repaint();
+
 			}
 		});
 		textPHP.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -331,7 +356,17 @@ public class WinEnthalpy {
 		textPBP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				double P0 = Double.parseDouble(textPBP.getText());
-				actionNewValueBP(P0);
+				// Remove the P0 element
+				for(int i=0;i<eDrawL.size();i++) {
+					if (eDrawL.get(i).getType() == ElDraw._LineHorzInfBP)
+						eDrawL.remove(i);
+				}
+				
+				measurePL.get(WinMeasurePoints._BP_ID).setValue(P0);
+
+				ElDraw edraw = new ElDraw(ElDraw._LineHorzInfBP,Math.log10(P0));
+				eDrawL.add(edraw);
+				//panelEnthalpyDrawArea.repaint();
 			}
 		});
 		textPBP.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -396,7 +431,7 @@ public class WinEnthalpy {
 		btnResetZoom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				panelEnthalpyDrawArea.centerImg();
-				panelEnthalpyDrawArea.repaint();			
+				//panelEnthalpyDrawArea.repaint();			
 			}
 		});
 		panelBottom_Bottom.add(btnResetZoom);
@@ -412,40 +447,8 @@ public class WinEnthalpy {
 		panelBottom_Bottom.add(btnClear);
 	}
 	
-	public void actionNewValueBP(double tmp) {
-		double P0 = tmp;
-
-		textPBP.setText(String.format("%.2f bar",P0));
+	public void updateWinEnthTextField() {
+		textPHP.setText(String.valueOf(measurePL.get(WinMeasurePoints._HP1_ID).getValue()));
 		
-		// Remove the P0 element
-		for(int i=0;i<eDrawL.size();i++) {
-			if (eDrawL.get(i).getType() == ElDraw._LineHorzInfBP)
-				eDrawL.remove(i);
-		}
-		
-		measurePL.get(WinMeasurePoints._BP_ID).setValue(P0);
-
-		ElDraw edraw = new ElDraw(ElDraw._LineHorzInfBP,Math.log10(P0),panelEnthalpyDrawArea.getXmin(),panelEnthalpyDrawArea.getXmax());
-		eDrawL.add(edraw);
-		panelEnthalpyDrawArea.repaint();
-
-
-	}
-
-	public void actionNewValueHP(double tmp) {
-		double PK = tmp;
-
-		textPHP.setText(String.format("%.2f bar",PK));
-		
-		// Remove the PK element
-		for(int i=0;i<eDrawL.size();i++) {
-			if (eDrawL.get(i).getType() == ElDraw._LineHorzInfHP)
-				eDrawL.remove(i);
-		}
-		measurePL.get(WinMeasurePoints._HP1_ID).setValue(PK);
-		measurePL.get(WinMeasurePoints._HP2_ID).setValue(PK);
-		ElDraw edraw = new ElDraw(ElDraw._LineHorzInfHP,Math.log10(PK),panelEnthalpyDrawArea.getXmin(),panelEnthalpyDrawArea.getXmax());
-		eDrawL.add(edraw);
-		panelEnthalpyDrawArea.repaint();
 	}
 }

@@ -19,11 +19,7 @@
 
 package pacp;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
 
 // ===================================================================================================================
 //										DEFINITION OF THE DRAW ELEMENTS
@@ -34,19 +30,19 @@ public class ElDraw {
 	/*
 	 *  	STATIC GLOBAL VAR
 	 */
-	public static final int _Point 			= 0;
-	public static final int _PointYLog 		= 1;
-	public static final int _Line 			= 2;
-	public static final int _LineHorzInf 	= 3;
-	public static final int _LineHorzInfBP 	= 4;
-	public static final int _LineHorzInfHP 	= 5;
+	public static final int _Point 				= 0;
+	public static final int _PointMeasure 		= 2;
+	public static final int _Line 				= 3;
+	public static final int _LineHorzInf 		= 4;
+	public static final int _LineHorzInfBP 		= 5;
+	public static final int _LineHorzInfHP 		= 6;
 
 	/* 	
 	 * 		INSTANCE VAR
 	 */
-	private int type;  		// type of draw : Line, Point,..
-	private double x1,y1;   // Coordinate  
-	private double x2,y2;	// Coordinate
+	private int type;  				// type of draw : Line, Point,..
+	private double x1,y1;   		// Coordinate  
+	private double x2,y2;			// Coordinate
 	private Color color;
 	
 	// -------------------------------------------------------
@@ -54,12 +50,12 @@ public class ElDraw {
 	// -------------------------------------------------------
 
 	// Line Horizontal Infinite
-	public ElDraw(int type, double y1, double xmin, double xmax) {
+	public ElDraw(int type, double y1) {
 		this.type = type;
 		this.x1=0.0;
 		this.y1=y1;
-		this.x2=xmin;
-		this.y2=xmax;
+		this.x2=0.0;
+		this.y2=y1;
 		this.color = Color.BLACK;
 	}
 
@@ -87,20 +83,6 @@ public class ElDraw {
 	// 							METHOD
 	// -------------------------------------------------------
 
-	public static void drawElDrawItem(Graphics2D g2, ElDraw elDraw, double zoom){
-		float rectWidth = 6;
-		float rectHeight = 0.08f;
-
-		g2.setPaint(elDraw.getColor());
-		g2.setStroke(new BasicStroke(0.015f));
-
-        if (elDraw.type == _LineHorzInfHP)
-        	g2.draw( new Line2D.Double(elDraw.getX2(),elDraw.getY1(),elDraw.getY2(),elDraw.getY1()));			 	
-        if (elDraw.type == _LineHorzInfBP)
-        	g2.draw( new Line2D.Double(elDraw.getX2(),elDraw.getY1(),elDraw.getY2(),elDraw.getY1()));			 	
-        if (elDraw.type == _PointYLog)
-            g2.fill (new Ellipse2D.Double(elDraw.getX1()-rectWidth/zoom/2, elDraw.getY1()-rectHeight/zoom/2, rectWidth/zoom, rectHeight/zoom));
-	}
 
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
@@ -129,7 +111,6 @@ public class ElDraw {
 	public Color getColor() {
 		return color;
 	}
-
 
 }
 

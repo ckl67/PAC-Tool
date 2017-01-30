@@ -143,7 +143,7 @@ public class PanelEnthalpy extends JPanel {
 					dragStart.y = yMouse-offset.y;
 				} else {
 					if ((evt.getModifiers() & InputEvent.BUTTON1_MASK) != 0) {			
-						ElDraw edraw = new ElDraw(ElDraw._PointYLog,getHoXm(xMouse),Math.log10(getPoYm(yMouse)));
+						ElDraw edraw = new ElDraw(ElDraw._Point,getHoXm(xMouse),Math.log10(getPoYm(yMouse)));
 						eDrawL.add(edraw);
 						repaint();
 					}
@@ -171,7 +171,7 @@ public class PanelEnthalpy extends JPanel {
 				repaint();
 			}
 		} );
-		
+
 	}
 
 	// -------------------------------------------------------
@@ -211,7 +211,7 @@ public class PanelEnthalpy extends JPanel {
 
 		for(int i=0;i<eDrawL.size();i++) {
 
-			if ( eDrawL.get(i).getType() == ElDraw._PointYLog) {
+			if ( eDrawL.get(i).getType() == ElDraw._Point) {
 				double H = eDrawL.get(i).getX1();
 				double P = Math.exp(  eDrawL.get(i).getY1() * Math.log(10)) ;
 				if ( ( pH < (H+zoneH)/zoom) && ( pH > (H-zoneH)/zoom) && (pP < (P+zoneP)/zoom) && ( pP > (P-zoneP)/zoom) ) {
@@ -430,8 +430,29 @@ public class PanelEnthalpy extends JPanel {
 		// -----------------------------------
 		// Draw All Elements
 		// -----------------------------------
+		float rectWidth = 6;
+		float rectHeight = 0.08f;
+
 		for(int i=0;i<eDrawL.size();i++) {
-			ElDraw.drawElDrawItem(g2, eDrawL.get(i),zoom);
+
+			if (eDrawL.get(i).getType() == ElDraw._LineHorzInfHP) {
+				g2.setStroke(new BasicStroke((float)(0.02/zoom)));
+				g2.setPaint(Color.BLUE);
+				g2.draw( new Line2D.Double(enthalpy.getxHmin(),eDrawL.get(i).getY1(),enthalpy.getxHmax(),eDrawL.get(i).getY1()));
+			}
+			if (eDrawL.get(i).getType() == ElDraw._LineHorzInfBP) {
+				g2.setPaint(Color.BLUE);
+				g2.draw( new Line2D.Double(enthalpy.getxHmin(),eDrawL.get(i).getY1(),enthalpy.getxHmax(),eDrawL.get(i).getY1()));
+			}
+			if (eDrawL.get(i).getType() == ElDraw._PointMeasure) {
+				g2.setColor(Color.RED);
+				g2.fill (new Ellipse2D.Double(eDrawL.get(i).getX1()-rectWidth/zoom/2, eDrawL.get(i).getY1()-rectHeight/zoom/2, rectWidth/zoom, rectHeight/zoom));
+			}
+			if (eDrawL.get(i).getType() == ElDraw._Point) {
+				g2.setColor(Color.RED);
+				g2.fill (new Ellipse2D.Double(eDrawL.get(i).getX1()-rectWidth/zoom/2, eDrawL.get(i).getY1()-rectHeight/zoom/2, rectWidth/zoom, rectHeight/zoom));
+			}
+			//System.out.println(eDrawL.get(i).getType() + "  " + eDrawL.get(i).getY1());
 		}
 
 		// -----------------------------------
@@ -440,8 +461,6 @@ public class PanelEnthalpy extends JPanel {
 		// -----------------------------------
 		if (curveFollowerY>0) {
 			g2.setStroke(new BasicStroke(0.03f));
-			float rectWidth = 6;
-			float rectHeight = 0.08f;
 			g2.setPaint(Color.BLUE);
 			g2.fill (new Ellipse2D.Double(curveFollowerX-rectWidth/2, Math.log10(curveFollowerY)-rectHeight/2, rectWidth, rectHeight));
 		}

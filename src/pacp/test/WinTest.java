@@ -104,6 +104,10 @@ public class WinTest {
 		slider.setBackground(Color.WHITE);
 		
 		JButton btnNewButton = new JButton("New button");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnNewButton.setBounds(29, 91, 89, 23);
 		panel.add(btnNewButton);
 		
