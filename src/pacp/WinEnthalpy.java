@@ -337,14 +337,15 @@ public class WinEnthalpy {
 				}
 				measurePL.get(WinMeasurePoints._HP1_ID).setValue(PK);
 				measurePL.get(WinMeasurePoints._HP2_ID).setValue(PK);
-				ElDraw edraw = new ElDraw(ElDraw._LineHorzInfHP,Math.log10(PK));
+				textPHP.setText(String.format("%.2f",measurePL.get(WinMeasurePoints._HP1_ID).getValue()));
+				ElDraw edraw = new ElDraw(ElDraw._LineHorzInfHP,PK);
 				eDrawL.add(edraw);
 				//panelEnthalpyDrawArea.repaint();
 
 			}
 		});
 		textPHP.setHorizontalAlignment(SwingConstants.RIGHT);
-		textPHP.setText("0");
+		textPHP.setText(String.format("%.2f",measurePL.get(WinMeasurePoints._HP1_ID).getValue()));
 		panelHight_Hight.add(textPHP);
 		textPHP.setColumns(10);
 
@@ -363,14 +364,15 @@ public class WinEnthalpy {
 				}
 				
 				measurePL.get(WinMeasurePoints._BP_ID).setValue(P0);
+				textPBP.setText(String.format("%.2f",measurePL.get(WinMeasurePoints._BP_ID).getValue()));
 
-				ElDraw edraw = new ElDraw(ElDraw._LineHorzInfBP,Math.log10(P0));
+				ElDraw edraw = new ElDraw(ElDraw._LineHorzInfBP,P0);
 				eDrawL.add(edraw);
 				//panelEnthalpyDrawArea.repaint();
 			}
 		});
 		textPBP.setHorizontalAlignment(SwingConstants.RIGHT);
-		textPBP.setText("0");
+		textPBP.setText(String.format("%.2f",measurePL.get(WinMeasurePoints._BP_ID).getValue()));
 		panelHight_Hight.add(textPBP);
 		textPBP.setColumns(10);
 
@@ -447,8 +449,12 @@ public class WinEnthalpy {
 		panelBottom_Bottom.add(btnClear);
 	}
 	
-	public void updateWinEnthTextField() {
-		textPHP.setText(String.valueOf(measurePL.get(WinMeasurePoints._HP1_ID).getValue()));
+	public void updateAllTextField() {
+		System.out.println("Update textfiels");
+		textPHP.setText(String.format("%.2f",measurePL.get(WinMeasurePoints._HP1_ID).getValue()));
+		textPBP.setText(String.format("%.2f",measurePL.get(WinMeasurePoints._BP_ID).getValue()));
 		
 	}
+
+
 }

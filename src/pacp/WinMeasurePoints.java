@@ -74,6 +74,7 @@ public class WinMeasurePoints {
 	private String imgURL;
 	private List<MeasurePoints> measurePL;
 	private List<ElDraw> eDrawL;
+	private WinEnthalpy winEnth;
 
 	// --------------------------------------------------------------------
 	// WIN Builder
@@ -110,7 +111,7 @@ public class WinMeasurePoints {
 				measurePL1.add(new MeasurePoints("TCo",321,57,"Température Départ Eau Captage","°C",WinMeasurePoints._GROUP_SOURCE));
 
 				try {
-					WinMeasurePoints window = new WinMeasurePoints(eDrawL1,measurePL1);
+					WinMeasurePoints window = new WinMeasurePoints(eDrawL1,measurePL1,null);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -123,11 +124,12 @@ public class WinMeasurePoints {
 	 * Create the application.
 	 * @param measurePL 
 	 */
-	public WinMeasurePoints(List<ElDraw> veDrawL, List<MeasurePoints> vmeasurePL) {
+	public WinMeasurePoints(List<ElDraw> veDrawL, List<MeasurePoints> vmeasurePL, WinEnthalpy vwinEnth ) {
 
 		this.imgURL = "/pacp/images/Cycle.png";
 		this.measurePL = vmeasurePL;
 		this.eDrawL = veDrawL;
+		this.winEnth = vwinEnth;
 
 		initialize();
 	}
@@ -229,15 +231,26 @@ public class WinMeasurePoints {
 					measurePL.get(n).setValue(0.0);
 				}
 
-				System.out.println("Clear eDrawL");
+				// Remove must be consider separately
+				System.out.println("Clear eDrawL BP  Nbel="+eDrawL.size());
 				for(int i=0;i<eDrawL.size();i++) {
 					if (eDrawL.get(i).getType() == ElDraw._LineHorzInfBP)
 						eDrawL.remove(i);
+				}
+
+				System.out.println("Clear eDrawL HP  Nbel="+eDrawL.size());
+				for(int i=0;i<eDrawL.size();i++) {
 					if (eDrawL.get(i).getType() == ElDraw._LineHorzInfHP)
 						eDrawL.remove(i);
+				}			
+
+				System.out.println("Clear eDrawL Points  Nbel="+eDrawL.size());
+				for(int i=0;i<eDrawL.size();i++) {
 					if (eDrawL.get(i).getType() == ElDraw._PointMeasure)
 						eDrawL.remove(i);
 				}			
+
+				winEnth.updateAllTextField();
 			}
 		});
 
@@ -265,7 +278,12 @@ public class WinMeasurePoints {
 				// Affect Value to measurePL
 				measurePL.get(id).setValue(inValue);
 				measurePL.get(id).setChosen(true);
-				
+
+
+				if (winEnth != null) 
+					winEnth.updateAllTextField();
+
+
 				// --------------------------------------------------------------------
 				//Fill elDrawL with Created couple (H,P) = (f(T),P) or PK, P0 lines
 				// --------------------------------------------------------------------
@@ -276,7 +294,7 @@ public class WinMeasurePoints {
 					double sVal = measurePL.get(n).getValue();
 
 					if (measurePL.get(n).isChosen()) {
-						
+
 						// LINE PK = TK (Only one will be retained for draw)
 						if ( (n ==_HP1_ID) || (n == _HP2_ID) ) {
 							if ( n ==_HP1_ID) {
@@ -286,9 +304,11 @@ public class WinMeasurePoints {
 										if (eDrawL.get(i).getType() == ElDraw._LineHorzInfHP)
 											eDrawL.remove(i);
 									}
-									ElDraw edraw = new ElDraw(ElDraw._LineHorzInfHP,Math.log10(sVal));
+									ElDraw edraw = new ElDraw(ElDraw._LineHorzInfHP,sVal);
 									eDrawL.add(edraw);
 									System.out.println("Line HP = P =" + sVal);
+
+
 								}
 							}
 							// LINE P0 = T0
@@ -299,7 +319,7 @@ public class WinMeasurePoints {
 									if (eDrawL.get(i).getType() == ElDraw._LineHorzInfBP)
 										eDrawL.remove(i);
 								}
-								ElDraw edraw = new ElDraw(ElDraw._LineHorzInfBP,Math.log10(sVal));
+								ElDraw edraw = new ElDraw(ElDraw._LineHorzInfBP,sVal);
 								eDrawL.add(edraw);
 								System.out.println("Line BP = P" + sVal);
 							}
@@ -312,9 +332,8 @@ public class WinMeasurePoints {
 									double tK = sVal;
 									// ------------------------>>
 									//   TO CORRECT H = f(T)
-									double hK = tK;
 									// <<------------------------
-									ElDraw edraw = new ElDraw(ElDraw._PointMeasure,hK,Math.log10(pK));
+									ElDraw edraw = new ElDraw(ElDraw._LineTemp,tK,pK);
 									eDrawL.add(edraw);
 									System.out.println("    " + measurePL.get(n).getName() + ":   H=f(T=" + tK + ")  P=" + pK);
 								}
@@ -326,9 +345,8 @@ public class WinMeasurePoints {
 									double t0 = sVal;
 									// ------------------------>>
 									//   TO CORRECT H = f(T)
-									double h0 = t0;
 									// <<------------------------
-									ElDraw edraw = new ElDraw(ElDraw._PointMeasure,h0,Math.log10(p0));
+									ElDraw edraw = new ElDraw(ElDraw._LineTemp,t0,p0);
 									eDrawL.add(edraw);
 									System.out.println("    " + measurePL.get(n).getName() + ":   H=f(T=" + t0 + ") P=" + p0);
 								}
@@ -380,6 +398,7 @@ public class WinMeasurePoints {
 
 			addMouseListener(this);
 			addMouseMotionListener(this);
+	
 		}
 
 		// -------------------------------------------------------

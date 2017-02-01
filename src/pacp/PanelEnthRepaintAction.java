@@ -33,7 +33,7 @@ public class PanelEnthRepaintAction {
 	 */
 	private class RepaintAction implements ActionListener {
 		public void actionPerformed(ActionEvent evt) {
-			WinEnthalpy.panelEnthalpyDrawArea.repaint(); // Call the repaint() method in the panel class.
+			WinEnthalpy.panelEnthalpyDrawArea.repaint(); 
 		}
 	}
 

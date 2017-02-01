@@ -7,7 +7,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{A01E523A-B30C-4082-ADE1-C8407CAF44B9}
 AppName=PAC-Tool
-AppVersion=Alpha 0.1
+AppVersion=Alpha 0.3
 ;AppVerName=PAC-Tool Alpha 0.1
 AppPublisher=Christian Klugesherz
 AppPublisherURL=https://github.com/ckl67/PAC-Tool

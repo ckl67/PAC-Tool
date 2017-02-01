@@ -31,11 +31,12 @@ public class ElDraw {
 	 *  	STATIC GLOBAL VAR
 	 */
 	public static final int _Point 				= 0;
-	public static final int _PointMeasure 		= 2;
-	public static final int _Line 				= 3;
-	public static final int _LineHorzInf 		= 4;
-	public static final int _LineHorzInfBP 		= 5;
-	public static final int _LineHorzInfHP 		= 6;
+	public static final int _PointMeasure 		= 1;
+	public static final int _Line 				= 2;
+	public static final int _LineHorzInf 		= 3;
+	public static final int _LineHorzInfBP 		= 4;
+	public static final int _LineHorzInfHP 		= 5;
+	public static final int _LineTemp			= 6;
 
 	/* 	
 	 * 		INSTANCE VAR
