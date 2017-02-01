@@ -24,7 +24,7 @@ import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-public class Pac{
+public class Pac {
 	
 	// --------------------------------------------------------------------
 	// Pac class is a list of different elements like: Compressors ,Condensers ..

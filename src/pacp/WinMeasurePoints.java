@@ -72,7 +72,7 @@ public class WinMeasurePoints {
 	 * ----------------------------------------*/
 
 	private String imgURL;
-	private List<MeasurePoints> measurePL;
+	private List<Measure> measurePL;
 	private List<ElDraw> eDrawL;
 	private WinEnthalpy winEnth;
 
@@ -95,20 +95,10 @@ public class WinMeasurePoints {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				List<ElDraw> eDrawL1 = new ArrayList<ElDraw>();
-				List<MeasurePoints> measurePL1;
-				measurePL1 = new ArrayList<MeasurePoints>(); 
-				measurePL1.add(new MeasurePoints("T1",515,90,"Température des gaz BP\n après surchauffe interne\n et avant compression","°C",WinMeasurePoints._GROUP_BP));
-				measurePL1.add(new MeasurePoints("T2",546,90,"Température des gaz HP\n en fin de compression\n (Cloche du compresseur)","°C",WinMeasurePoints._GROUP_HP));
-				measurePL1.add(new MeasurePoints("P3",582,135,"Température du début de condensation\n (Mesure HP Manifod)","Bar",WinMeasurePoints._GROUP_HP));
-				measurePL1.add(new MeasurePoints("P4",583,203,"Température de fin de condensation\n (Mesure HP Manifod)","Bar",WinMeasurePoints._GROUP_HP));
-				measurePL1.add(new MeasurePoints("T5",512,247,"Température des gaz HP\n après sous refroidissement","°C",WinMeasurePoints._GROUP_HP));
-				measurePL1.add(new MeasurePoints("T6",433,248,"Température sortie Détendeur / Capillaire","°C",WinMeasurePoints._GROUP_BP));
-				measurePL1.add(new MeasurePoints("P7",371,135,"Température évaporation\n (Mesure BP Manifold)","Bar",WinMeasurePoints._GROUP_BP ));
-				measurePL1.add(new MeasurePoints("T8",479,89, "Température des gaz HP\naprès surchauffe externe","°C",WinMeasurePoints._GROUP_BP));
-				measurePL1.add(new MeasurePoints("TMi",663,57,"Température Retour Eau Chauffage","°C",WinMeasurePoints._GROUP_HEAT));
-				measurePL1.add(new MeasurePoints("TMo",663,282,"Température Départ Eau Chauffage","°C",WinMeasurePoints._GROUP_HEAT));
-				measurePL1.add(new MeasurePoints("TCi",321,281,"Température Retour Eau Captage","°C",WinMeasurePoints._GROUP_SOURCE));
-				measurePL1.add(new MeasurePoints("TCo",321,57,"Température Départ Eau Captage","°C",WinMeasurePoints._GROUP_SOURCE));
+				List<Measure> measurePL1;
+				measurePL1 = new ArrayList<Measure>(); 
+		        for (MeasurePoint p : MeasurePoint.values())
+		        	measurePL1.add(new Measure(p));
 
 				try {
 					WinMeasurePoints window = new WinMeasurePoints(eDrawL1,measurePL1,null);
@@ -124,7 +114,7 @@ public class WinMeasurePoints {
 	 * Create the application.
 	 * @param measurePL 
 	 */
-	public WinMeasurePoints(List<ElDraw> veDrawL, List<MeasurePoints> vmeasurePL, WinEnthalpy vwinEnth ) {
+	public WinMeasurePoints(List<ElDraw> veDrawL, List<Measure> vmeasurePL, WinEnthalpy vwinEnth ) {
 
 		this.imgURL = "/pacp/images/Cycle.png";
 		this.measurePL = vmeasurePL;
@@ -157,8 +147,8 @@ public class WinMeasurePoints {
 		int zoneY = 5;
 
 		for(int i=0;i<measurePL.size();i++) {
-			int X = measurePL.get(i).getX();
-			int Y = measurePL.get(i).getY(); 		
+			int X = measurePL.get(i).getMeasurePointE().getXm();
+			int Y = measurePL.get(i).getMeasurePointE().getYm(); 		
 			if ( ( pX < (X+zoneX)) && ( pX > (X-zoneX)) && (pY < (Y+zoneY)) && ( pY > (Y-zoneY)) ) {
 				id = i;
 			}
@@ -174,7 +164,7 @@ public class WinMeasurePoints {
 	public int getIdForElem(String name) {
 		int id=-1;
 		for(int i=0;i<measurePL.size();i++) {
-			if  (measurePL.get(i).getName().equals(name))
+			if  (measurePL.get(i).getMeasurePointE().equals(name))
 				id=i;
 		}
 		return id;	
@@ -326,7 +316,7 @@ public class WinMeasurePoints {
 							//  couple (H,P) 
 						} else  if ( (n !=_HP1_ID) && (n != _HP2_ID) && (n != _BP_ID) ) {
 							//  (H,PK) = (f(T),PK)
-							if (measurePL.get(n).getGroupHpBp() == _GROUP_HP) {
+							if (measurePL.get(n).getMeasurePointE().getGroupHpBp() == MeasureGroup.GROUP_HP) {
 								double pK =measurePL.get(_HP1_ID).getValue();
 								if (pK > 0) {
 									double tK = sVal;
@@ -335,11 +325,11 @@ public class WinMeasurePoints {
 									// <<------------------------
 									ElDraw edraw = new ElDraw(ElDraw._LineTemp,tK,pK);
 									eDrawL.add(edraw);
-									System.out.println("    " + measurePL.get(n).getName() + ":   H=f(T=" + tK + ")  P=" + pK);
+									System.out.println("    " + measurePL.get(n).getMeasurePointE() + ":   H=f(T=" + tK + ")  P=" + pK);
 								}
 
 								//  (H,P0) = (f(T),P0)
-							} else if (measurePL.get(n).getGroupHpBp() == _GROUP_BP) { 
+							} else if (measurePL.get(n).getMeasurePointE().getGroupHpBp() == MeasureGroup.GROUP_BP) { 
 								double p0 =measurePL.get(_BP_ID).getValue();
 								if (p0 > 0) {
 									double t0 = sVal;
@@ -348,7 +338,7 @@ public class WinMeasurePoints {
 									// <<------------------------
 									ElDraw edraw = new ElDraw(ElDraw._LineTemp,t0,p0);
 									eDrawL.add(edraw);
-									System.out.println("    " + measurePL.get(n).getName() + ":   H=f(T=" + t0 + ") P=" + p0);
+									System.out.println("    " + measurePL.get(n).getMeasurePointE() + ":   H=f(T=" + t0 + ") P=" + p0);
 								}
 							}
 							//  OTHER ??
@@ -416,8 +406,8 @@ public class WinMeasurePoints {
 			g2d.drawImage(img,0, 0, this);
 
 			if (pointMatched) {
-				int x = measurePL.get(pointMatched_id).getX();
-				int y = measurePL.get(pointMatched_id).getY();
+				int x = measurePL.get(pointMatched_id).getMeasurePointE().getXm();
+				int y = measurePL.get(pointMatched_id).getMeasurePointE().getYm();
 
 				// Create Cercle
 				Point2D center = new Point2D.Float(x, y);
@@ -429,7 +419,7 @@ public class WinMeasurePoints {
 				g2d.fill(new Ellipse2D.Double(x-radius, y-radius, 2*radius, 2*radius));
 
 				// Definition Text 
-				String defTxt = measurePL.get(pointMatched_id).getDefinition();
+				String defTxt = measurePL.get(pointMatched_id).getMeasurePointE().getDefinition();
 				Font font = new Font(null, Font.PLAIN, 15);
 				g2d.setFont(font);
 
@@ -494,7 +484,7 @@ public class WinMeasurePoints {
 					textField.setVisible(true);
 
 					textFieldUnity.setBounds(evt.getX()+80, evt.getY(), 30, 20);
-					textFieldUnity.setText(measurePL.get(pointMatched_id).getUnity());
+					textFieldUnity.setText(measurePL.get(pointMatched_id).getMeasurePointE().getUnity());
 					textFieldUnity.setVisible(true);
 				} else {
 					textField.setVisible(false);			

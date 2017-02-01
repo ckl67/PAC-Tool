@@ -20,32 +20,26 @@ package pacp;
 
 import org.json.simple.JSONObject;
 
-public class MeasurePoints {
+public class Measure extends Enthalpy {
 	
 	/* ----------------------------------------
 	 *  	STATIC GLOBAL VAR PUBLIC
 	 * ---------------------------------------- */	
-	private String name;
-	private int x;
-	private int y;
-	private String definition;
-	private double value;
-	private String unity;
-	private int groupHpBp; 
-	private boolean chosen;
+	private MeasurePoint measurePoint;			
+	private double value;			// Can be Pressure, Temperature,..
+	private boolean chosen;			// Indicate if the Measure point has to be considered 
+	private double P;				// Pressure
+	private double H;				// Enthalpy
 	
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public MeasurePoints(String name, int x, int y,String definition, String unity, int groupHpBp) {
-		this.name = name;
-		this.x = x;
-		this.y = y;
-		this.definition = definition;
-		this.value = 0;
-		this.unity = unity;
-		this.groupHpBp = groupHpBp;	//HP or BP or Heat Source or Distribution Source
+	public Measure(MeasurePoint vmeasurePointE) {
+		this.measurePoint = vmeasurePointE;
+		this.value = 0.0;
 		this.chosen = false;
+		this.P = 0.0;
+		this.H = 0.0;
 	}
 	
 	// -------------------------------------------------------
@@ -61,6 +55,7 @@ public class MeasurePoints {
 	//  {  "Planet": "Earth" , "Countries": [  { "Name": "India", "Capital": "Delhi"}, { "Name": "France", "Major": "Paris" } ]  }  
 	// -------------------------------------------------------
 	
+
 	/**
 	 * Construct the JSON data
 	 * @return : JSONObject
@@ -68,13 +63,11 @@ public class MeasurePoints {
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
 		JSONObject jsonObj = new JSONObject();  
-		jsonObj.put("Name", this.name);
-		jsonObj.put("X", this.x);	
-		jsonObj.put("Y", this.y);	
-		jsonObj.put("Definition", this.definition);	
+		jsonObj.put("MeasurePoint", this.measurePoint);
 		jsonObj.put("Value", this.value);	
-		jsonObj.put("Unity", this.unity);	
-		jsonObj.put("GroupHpOrBp", this.groupHpBp);	
+		jsonObj.put("Chosen", this.chosen);	
+		jsonObj.put("P", this.P);	
+		jsonObj.put("H", this.H);	
 		return jsonObj ;
 	}
 	
@@ -83,13 +76,11 @@ public class MeasurePoints {
 	 * @param jsonObj : JSON Object
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
-		this.name = (String) jsonObj.get("Name");
-		this.x = ((Number) jsonObj.get("X")).intValue();
-		this.y = ((Number) jsonObj.get("Y")).intValue();
-		this.definition = (String) jsonObj.get("Definition");
+		this.measurePoint = (MeasurePoint) jsonObj.get("MeasurePoint");
 		this.value = ((Number) jsonObj.get("Value")).doubleValue();
-		this.unity = (String) jsonObj.get("Unity");
-		this.groupHpBp = ((Number) jsonObj.get("GroupHpOrBp")).intValue();
+		this.chosen = ((Boolean) jsonObj.get("Chosen")).booleanValue();
+		this.P = ((Number) jsonObj.get("P")).intValue();
+		this.H = ((Number) jsonObj.get("H")).intValue();
 	}
 
 	
@@ -97,20 +88,8 @@ public class MeasurePoints {
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
 	
-	public String getName() {
-		return name;
-	}
-
-	public int getX() {
-		return x;
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public String getDefinition() {
-		return definition;
+	public MeasurePoint getMeasurePointE() {
+		return measurePoint;
 	}
 	
 	public double getValue() {
@@ -121,18 +100,6 @@ public class MeasurePoints {
 		this.value = value;
 	}
 
-	public String getUnity() {
-		return unity;
-	}
-
-	public void setUnity(String unity) {
-		this.unity = unity;
-	}
-
-	public int getGroupHpBp() {
-		return groupHpBp;
-	}
-
 	public boolean isChosen() {
 		return chosen;
 	}
@@ -140,5 +107,14 @@ public class MeasurePoints {
 	public void setChosen(boolean chosen) {
 		this.chosen = chosen;
 	}
+
+	public double getP() {
+		return P;
+	}
+
+	public double getH() {
+		return H;
+	}
+	
 
 }

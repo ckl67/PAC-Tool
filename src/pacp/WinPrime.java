@@ -66,7 +66,7 @@ public class WinPrime {
 	private Enthalpy enthalpy;
 	private PrimeConfig primeConfig;
 	private List<ElDraw> eDrawL;		
-	private List<MeasurePoints> measurePL;
+	private List<Measure> measurePL;
 	
 	// Win Builder
 	private JFrame frame;
@@ -123,20 +123,10 @@ public class WinPrime {
 		primeConfig = new PrimeConfig();
 		eDrawL = new ArrayList<ElDraw>();
 
-		measurePL = new ArrayList<MeasurePoints>(); 
-		measurePL.add(new MeasurePoints("T1",515,90,"Température des gaz BP\n après surchauffe interne\n et avant compression","°C",WinMeasurePoints._GROUP_BP));
-		measurePL.add(new MeasurePoints("T2",546,90,"Température des gaz HP\n en fin de compression\n (Cloche du compresseur)","°C",WinMeasurePoints._GROUP_HP));
-		measurePL.add(new MeasurePoints("P3",582,135,"Température du début de condensation\n (Mesure HP Manifod)","Bar",WinMeasurePoints._GROUP_HP));
-		measurePL.add(new MeasurePoints("P4",583,203,"Température de fin de condensation\n (Mesure HP Manifod)","Bar",WinMeasurePoints._GROUP_HP));
-		measurePL.add(new MeasurePoints("T5",512,247,"Température des gaz HP\n après sous refroidissement","°C",WinMeasurePoints._GROUP_HP));
-		measurePL.add(new MeasurePoints("T6",433,248,"Température sortie Détendeur / Capillaire","°C",WinMeasurePoints._GROUP_BP));
-		measurePL.add(new MeasurePoints("P7",371,135,"Température évaporation\n (Mesure BP Manifold)","Bar",WinMeasurePoints._GROUP_BP ));
-		measurePL.add(new MeasurePoints("T8",479,89, "Température des gaz HP\naprès surchauffe externe","°C",WinMeasurePoints._GROUP_BP));
-		measurePL.add(new MeasurePoints("TMi",663,57,"Température Retour Eau Chauffage","°C",WinMeasurePoints._GROUP_HEAT));
-		measurePL.add(new MeasurePoints("TMo",663,282,"Température Départ Eau Chauffage","°C",WinMeasurePoints._GROUP_HEAT));
-		measurePL.add(new MeasurePoints("TCi",321,281,"Température Retour Eau Captage","°C",WinMeasurePoints._GROUP_SOURCE));
-		measurePL.add(new MeasurePoints("TCo",321,57,"Température Départ Eau Captage","°C",WinMeasurePoints._GROUP_SOURCE));
-
+		measurePL = new ArrayList<Measure>(); 
+        for (MeasurePoint p : MeasurePoint.values())
+        	measurePL.add(new Measure(p));
+		
 		// Create Window
 		initialize(paci,copi);
 	}

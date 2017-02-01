@@ -19,7 +19,7 @@
 
 package pacp;
 
-public class Ccop  {
+public class Ccop {
 
 	private double T0;
 	private double TK;

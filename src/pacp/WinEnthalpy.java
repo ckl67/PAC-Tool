@@ -64,7 +64,7 @@ public class WinEnthalpy {
 	 * ----------------------------------------*/
 	private Enthalpy enthalpy;				// Enthalpy declaration
 	private List<ElDraw> eDrawL;			// Draw elements List: lines/points/...
-	private List<MeasurePoints> measurePL;
+	private List<Measure> measurePL;
 	
 	private static Point pointJPopupMenu; 	// JPopupMenu's Position --> Must be static
 
@@ -92,20 +92,11 @@ public class WinEnthalpy {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				List<ElDraw> eDrawL1 = new ArrayList<ElDraw>();
-				List<MeasurePoints> measurePL1 = new ArrayList<MeasurePoints>();
-				measurePL1.add(new MeasurePoints("T1",515,90,"Température des gaz BP\n après surchauffe interne\n et avant compression","°C",WinMeasurePoints._GROUP_BP));
-				measurePL1.add(new MeasurePoints("T2",546,90,"Température des gaz HP\n en fin de compression\n (Cloche du compresseur)","°C",WinMeasurePoints._GROUP_HP));
-				measurePL1.add(new MeasurePoints("P3",582,135,"Température du début de condensation\n (Mesure HP Manifod)","Bar",WinMeasurePoints._GROUP_HP));
-				measurePL1.add(new MeasurePoints("P4",583,203,"Température de fin de condensation\n (Mesure HP Manifod)","Bar",WinMeasurePoints._GROUP_HP));
-				measurePL1.add(new MeasurePoints("T5",512,247,"Température des gaz HP\n après sous refroidissement","°C",WinMeasurePoints._GROUP_HP));
-				measurePL1.add(new MeasurePoints("T6",433,248,"Température sortie Détendeur / Capillaire","°C",WinMeasurePoints._GROUP_BP));
-				measurePL1.add(new MeasurePoints("P7",371,135,"Température évaporation\n (Mesure BP Manifold)","Bar",WinMeasurePoints._GROUP_BP ));
-				measurePL1.add(new MeasurePoints("T8",479,89, "Température des gaz HP\naprès surchauffe externe","°C",WinMeasurePoints._GROUP_BP));
-				measurePL1.add(new MeasurePoints("TMi",663,57,"Température Retour Eau Chauffage","°C",WinMeasurePoints._GROUP_HEAT));
-				measurePL1.add(new MeasurePoints("TMo",663,282,"Température Départ Eau Chauffage","°C",WinMeasurePoints._GROUP_HEAT));
-				measurePL1.add(new MeasurePoints("TCi",321,281,"Température Retour Eau Captage","°C",WinMeasurePoints._GROUP_SOURCE));
-				measurePL1.add(new MeasurePoints("TCo",321,57,"Température Départ Eau Captage","°C",WinMeasurePoints._GROUP_SOURCE));
-				try {
+				List<Measure> measurePL1 = new ArrayList<Measure>();
+		        for (MeasurePoint p : MeasurePoint.values())
+		        	measurePL1.add(new Measure(p));
+
+		        try {
 					WinEnthalpy window = new WinEnthalpy(new Enthalpy(),eDrawL1,measurePL1);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
@@ -118,7 +109,7 @@ public class WinEnthalpy {
 	/**
 	 * Create the application.
 	 */
-	public WinEnthalpy(Enthalpy vconfEnthalpy, List<ElDraw> veDrawL, List<MeasurePoints> vmeasurePL) {
+	public WinEnthalpy(Enthalpy vconfEnthalpy, List<ElDraw> veDrawL, List<Measure> vmeasurePL) {
 		enthalpy = vconfEnthalpy;
 		eDrawL = veDrawL;
 		measurePL = vmeasurePL;

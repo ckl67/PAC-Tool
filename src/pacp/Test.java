@@ -635,9 +635,9 @@ public class Test {
 	private static void testMeasurePoints () { 
 		System.out.println("TEST MEASUREPOINTS");
 
-		MeasurePoints vMeasurePoints = new MeasurePoints("Mesures",23,56,"Point H1","bar",1);
+		Measure vMeasurePoints = new Measure(MeasurePoint.T1);
 		vMeasurePoints.setValue(23.457);
-		System.out.println(vMeasurePoints.getName());
+		System.out.println(vMeasurePoints.getMeasurePointE());
 
 		System.out.println("\n---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();
@@ -649,7 +649,7 @@ public class Test {
 		System.out.println(jsonObj);
 
 		System.out.println("\n---> Read afterwards ");
-		System.out.println("    Name="+vMeasurePoints.getName());
+		System.out.println("    Name="+vMeasurePoints.getMeasurePointE());
 
 	}
 
