@@ -72,7 +72,6 @@ public class WinPressTemp {
 			public void run() {
 				try {
 					Enthalpy enthalpy1 = new Enthalpy();
-					enthalpy1.loadPTFile();
 					WinPressTemp window = new WinPressTemp(enthalpy1);
 					window.frame.setVisible(true);
 				} catch (Exception e) {

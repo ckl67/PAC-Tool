@@ -13,22 +13,30 @@ public enum MeasurePoint {
 	TMo(663,282,"Température Départ Eau Chauffage","°C",MeasureGroup.GROUP_HEAT),
 	TCi(321,281,"Température Retour Eau Captage","°C",MeasureGroup.GROUP_SOURCE),
 	TCo(321,57,"Température Départ Eau Captage","°C",MeasureGroup.GROUP_SOURCE);
-	
+
+	// --------------------------------------------------------------------
+	// CONSTANTS
+	// --------------------------------------------------------------------
+	public static int _P0 = 6;
+	public static int _PK = 2;
+
+	public static int _BP_ID = 6;
+	public static int _PK1_ID = 2;
+	public static int _PK2_ID = 3;
+
+	// --------------------------------------------------------------------
+	// DEFINITION OF VARIABLES USED IN ENUMERATION
+	// --------------------------------------------------------------------
+
 	private int xm;
 	private int ym;
 	private String definition;
 	private String unity;
 	private MeasureGroup groupHpBp; 
-	
+
 	// -------------------------------------------------------
 	// 					CONSTRUCTOR
 	// -------------------------------------------------------
-	
-    public static void main(String[] args) {
-        for (MeasurePoint p : MeasurePoint.values())
-           System.out.println(p + "  " + p.getDefinition() + "  " + p.getGroupHpBp());
-    }
-    
 	MeasurePoint(int vxm, int vym,String vdefinition, String vunity, MeasureGroup vgroupHpBp){
 		this.xm = vxm;
 		this.ym = vym;

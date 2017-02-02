@@ -58,7 +58,7 @@ public class Test {
 					+ "  (11)-> Head Distribution Circuit \n"
 					+ "  (12)-> Head Source Circuit \n"
 					+ "  (13)-> Heat Transfert Fluid\n"
-					+ "  (14)-> Measure Points\n"
+					+ "  (14)-> Measure\n"
 					+ "  (15)-> Miscellaneous\n"
 					+ "  (16)-> PAC (Including all elements of a PAC)\n"
 					+ "  (17)-> PAC-Tool Configuration information\n"
@@ -131,7 +131,7 @@ public class Test {
 				loop=false;
 				break;        	
 			case "14":
-				testMeasurePoints();
+				testMeasure();
 				loop=false;
 				break;        	
 			case "15":
@@ -369,7 +369,6 @@ public class Test {
 
 		// Read conversion Temp/Press. file
 		System.out.println("Load R22 (T/P) file");
-		enthalpy.loadPTFile();
 
 		System.out.println("Reference Diagram Enthalpy R22 : 2 bar (absolute) <--> -25°C");
 		System.out.println("  T= -25°C" + "--> P=" + enthalpy.convT2P(-25));
@@ -378,7 +377,6 @@ public class Test {
 
 		// Read Temperature [degre C] / Enthalpy (kJ/kg) Liquid / Enthalpy (kJ/kg) Vapor file
 		System.out.println("Load R22 Saturation file and pick id=2");
-		enthalpy.loadSatFile();
 		System.out.println("  Saturation H Min = " + enthalpy.gethSatMin());
 		System.out.println("  Saturation H Max = " + enthalpy.gethSatMax());
 		System.out.println();
@@ -629,27 +627,47 @@ public class Test {
 	}
 
 	// ===================================================================================================================
-	// 													TEST MEASUREPOINTS
+	// 													TEST MEASURE
 	// ===================================================================================================================
 
-	private static void testMeasurePoints () { 
-		System.out.println("TEST MEASUREPOINTS");
+	private static void testMeasure () { 
+		System.out.println("TEST MEASURE");
+		
+		List<Measure> measurePL1;
+		measurePL1 = new ArrayList<Measure>(); 
+        for (MeasurePoint p : MeasurePoint.values())
+        	measurePL1.add(new Measure(p));
 
-		Measure vMeasurePoints = new Measure(MeasurePoint.T1);
-		vMeasurePoints.setValue(23.457);
-		System.out.println(vMeasurePoints.getMeasurePointE());
+        Measure ma = measurePL1.get(0);
+        
+        if (ma.getMeasurePoint().equals(MeasurePoint.T1)) {
+			System.out.println(ma.getMeasurePoint());				// = T1 from MeasurePoint.T1 (First element of array)
+			System.out.println(ma.getMeasurePoint().toString());	// = "T1"
+			System.out.println(ma.getMeasurePoint().getDefinition());
+        }
+        
+        Measure mb = measurePL1.get(MeasurePoint.T2.ordinal());
+        mb.setValue(12);
+        System.out.println(mb.getMeasurePoint());
+		System.out.println(mb.getValue() + " " + mb.getMeasurePoint().getUnity());
+		System.out.println(mb.getMP() + " bars");
+		
+
+		Measure vMeasure = new Measure(MeasurePoint.T1);
+		vMeasure.setValue(23.457);
+		System.out.println(vMeasure.getMeasurePoint());
 
 		System.out.println("\n---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();
-		jsonObj = vMeasurePoints.getJsonObject();
+		jsonObj = vMeasure.getJsonObject();
 		System.out.println(jsonObj);
 
 		System.out.println("\n---> Set the Class Instance with JSON data");
-		vMeasurePoints.setJsonObject(jsonObj);
+		vMeasure.setJsonObject(jsonObj);
 		System.out.println(jsonObj);
 
 		System.out.println("\n---> Read afterwards ");
-		System.out.println("    Name="+vMeasurePoints.getMeasurePointE());
+		System.out.println("    Name="+vMeasure.getMeasurePoint());
 
 	}
 

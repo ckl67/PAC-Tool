@@ -74,12 +74,13 @@ public class Enthalpy {
 
 		this.yPmin = 0.5;  
 		this.yPmax = 60;    
-		
+
 		/* -----------------------------
 		   Diagram Pressure-Temperature
 		 * ----------------------------*/
 		this.fileNameTP = "D:/Users/kluges1/workspace/pac-tool/ressources/R22/P2T_R22.txt";
 		this.listTP = new ArrayList<Point2D.Double>();
+		this.loadPTFile();
 		this.deltaP = 0.0;
 
 		/* -----------------------------
@@ -89,12 +90,13 @@ public class Enthalpy {
 				let h0,h1 the nearest H found in the list, 
 				if h0 and h1 are to faraway of h, it means that the p zone was too narrow 
 		 * ----------------------------*/
-		this.hSatMin=1000;
+		this.hSatMin=1000;		// H Saturation Zone [hSatMin - hSatMax] --> Computed by reading the file !
 		this.hSatMax=0;
-		this.hSatErrLoc = 0;
+		this.hSatErrLoc = 0;	// H saturation Error Location. --> Computed by reading the file !
 		this.fileNameSAT = "D:/Users/kluges1/workspace/pac-tool/ressources/R22/SaturationCurve_R22.txt";
 		this.listSatHlP = new ArrayList<Point2D.Double>();
 		this.listSatHvP = new ArrayList<Point2D.Double>();
+		this.loadHlvPSatFile();
 
 		/* -----------------------------
 		   Enthalpy Image
@@ -111,13 +113,13 @@ public class Enthalpy {
 	 * # Temperature [degree C] / Enthalpy (kJ/kg) Liquid / Enthalpy (kJ/kg) Vapor
 	 * Will fill the : setlistSatHlP / setlistSatHvP list
 	 */
-	public void loadSatFile() {
+	public void loadHlvPSatFile() {
 		File file = new File (fileNameSAT);
 		Scanner sken = null;
 		try {
 			sken = new Scanner (file);
 		} catch (FileNotFoundException e) {
-			System.out.println("loadSatFile");
+			System.out.println("loadHlvPSatFile");
 			System.out.println(e.getMessage());
 			System.out.println(e.toString());
 			e.printStackTrace();
@@ -188,6 +190,44 @@ public class Enthalpy {
 				listTP.add(new Point2D.Double(temp, press));
 			}
 		}
+	}
+
+	/**
+	 * Conversion Pressure to Saturation curve to find H vapor
+	 * Correspond to intersection between P and Saturation H vapor
+	 * @param pressure
+	 * @return
+	 */
+	public double  convSatP2Hv(double press ) {
+		double x,ho=0;
+		double min = Double.MAX_VALUE;
+		int idx=0;
+		double pressi = press - deltaP; 
+		if (listSatHvP.size() != 0) {
+
+			for(int c = 0; c < listSatHvP.size(); c++){
+				double diff = Math.abs(getSatP(c) - pressi);
+
+				if (diff < min) {
+					min = diff;
+					idx = c;
+				}
+			}
+			//System.out.println(pressi + " " + getSatP(idx) + " " + getSatHv(idx));
+			if (idx == listSatHvP.size()-1) {
+				idx = idx-1;
+			} 
+
+			double y0,y1,x0,x1;
+			x  = pressi;
+			x0 = getSatP(idx);
+			x1 = getSatP(idx+1);
+			y0 = getSatHv(idx);
+			y1 = getSatHv(idx+1);
+			ho = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+		}
+		return ho;
+
 	}
 
 	/**
@@ -440,7 +480,7 @@ public class Enthalpy {
 		jsonObj.put("EnthalpyBkgdImg", this.enthalpyBkgdImg.getJsonObject());	
 		return jsonObj ;
 	}
-	
+
 	/**
 	 * Set the JSON data, to the Class instance
 	 * @param jsonObj : JSON Object
@@ -454,13 +494,13 @@ public class Enthalpy {
 		this.fileNameTP = (String) jsonObj.get("FileNameTP");
 		this.deltaP = ((Number) jsonObj.get("DeltaP")).doubleValue();
 		this.fileNameSAT = (String) jsonObj.get("FileNameSAT");
-		
+
 		JSONObject jsonObjEImg = (JSONObject) jsonObj.get("EnthalpyBkgdImg");
 		this.enthalpyBkgdImg.setJsonObject(jsonObjEImg); 
 	}
 
-	
-	
+
+
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
@@ -520,7 +560,7 @@ public class Enthalpy {
 	public double gethSatMax() {
 		return hSatMax;
 	}
-	
+
 	public EnthalpyBkgdImg getEnthalpyBkgImage() {
 		return enthalpyBkgdImg;
 	}
@@ -577,5 +617,5 @@ public class Enthalpy {
 		this.deltaP = deltaP;
 	}
 
-	
+
 }
