@@ -8,3 +8,4 @@ fahrenheit
 pac
 compressors
 kg
+isotherm

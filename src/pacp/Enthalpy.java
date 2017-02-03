@@ -28,6 +28,10 @@ import org.json.simple.JSONObject;
 
 public class Enthalpy {
 
+	// -------------------------------------------------------
+	// 					INSTANCE VARIABLES
+	// -------------------------------------------------------
+
 	/* ----------------
 	 * Diagram Enthalpy  
 	 * ----------------*/
@@ -49,12 +53,11 @@ public class Enthalpy {
 	   Diagram Saturation Curve:
 	   Temperature --> Enthalpy  (Liquid / Vapor)  
 	 * ----------------------------*/
-	private double hSatMin,hSatMax;					// H Saturation Zone [hSatMin - hSatMax] --> Computed by reading the file !
-	private double hSatErrLoc;						// H saturation Error Location. --> Computed by reading the file !
-
 	private String fileNameSAT;
 	private List<Point2D.Double> listSatHlP;			// Coordinate Temperature / H : List
 	private List<Point2D.Double> listSatHvP;			// Coordinate Temperature / H : List
+		
+	private double angleHmatchPSatWithP0PK;				// Angle approximation for H Matching PSat with P0PK
 
 	/* -----------------------------
 	   Enthalpy Image
@@ -62,8 +65,21 @@ public class Enthalpy {
 	private EnthalpyBkgdImg enthalpyBkgdImg;
 
 	// -------------------------------------------------------
+	//	LOCAL VARIABLES
+	// -------------------------------------------------------
+	
+	private double hSatMin = 1000;					// H Saturation Zone [hSatMin - hSatMax] --> Computed by reading the file !
+	private double hSatMax = 0;						// H Saturation Zone [hSatMin - hSatMax] --> Computed by reading the file !
+	private double hSatErrLoc = 0;					// H saturation Error Location. --> Computed by reading the file !
+	
+	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
+	/**
+	 * Constructor will instance by default the R22 Enthalpy object
+	 * All instances variables can be modified afterwards in case 
+	 * another Refrigerant is used.
+	 */
 	public Enthalpy() {
 		/* ----------------
 		 * Diagram Enthalpy  
@@ -80,8 +96,8 @@ public class Enthalpy {
 		 * ----------------------------*/
 		this.fileNameTP = "D:/Users/kluges1/workspace/pac-tool/ressources/R22/P2T_R22.txt";
 		this.listTP = new ArrayList<Point2D.Double>();
-		this.loadPTFile();
 		this.deltaP = 0.0;
+		this.loadPTFile();
 
 		/* -----------------------------
 		   Diagram Saturation Curve:
@@ -90,28 +106,58 @@ public class Enthalpy {
 				let h0,h1 the nearest H found in the list, 
 				if h0 and h1 are to faraway of h, it means that the p zone was too narrow 
 		 * ----------------------------*/
-		this.hSatMin=1000;		// H Saturation Zone [hSatMin - hSatMax] --> Computed by reading the file !
-		this.hSatMax=0;
-		this.hSatErrLoc = 0;	// H saturation Error Location. --> Computed by reading the file !
 		this.fileNameSAT = "D:/Users/kluges1/workspace/pac-tool/ressources/R22/SaturationCurve_R22.txt";
 		this.listSatHlP = new ArrayList<Point2D.Double>();
 		this.listSatHvP = new ArrayList<Point2D.Double>();
 		this.loadHlvPSatFile();
 
+		this.angleHmatchPSatWithP0PK = -45;
+		
 		/* -----------------------------
 		   Enthalpy Image
 		 * ----------------------------*/
 		this.enthalpyBkgdImg = new EnthalpyBkgdImg();
-
+		
 	}
 
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
+
+	/**
+	 * Read Data file containing: Pressure /Temperature relation (P. relative) 
+	 * Will fill the : listTP (T,P) list
+	 */
+	public void loadPTFile() {
+		File file = new File (fileNameTP);
+
+		Scanner sken = null;
+		try {
+			sken = new Scanner (file);
+		} catch (FileNotFoundException e) {
+			System.out.println("loadPTFile");
+			System.out.println(e.getMessage());
+			System.out.println(e.toString());
+			e.printStackTrace();
+		}
+
+		while (sken.hasNext () ){
+			String first = sken.nextLine ();
+			if (!first.startsWith("#") ) {
+				String[] val = first.split ("\t");
+				double temp = Double.parseDouble(val [0].replace(",", "."));
+				double press = Double.parseDouble(val [1].replace(",", "."));
+
+				listTP.add(new Point2D.Double(temp, press));
+			}
+		}
+	}
+
+	// -------------------------------------------------------
 	/**
 	 * Read Data file containing: 
-	 * # Temperature [degree C] / Enthalpy (kJ/kg) Liquid / Enthalpy (kJ/kg) Vapor
-	 * Will fill the : setlistSatHlP / setlistSatHvP list
+	 * Temperature [degree C] / Enthalpy (kJ/kg) Liquid / Enthalpy (kJ/kg) Vapor
+	 * Will fill the : setlistSatHlP (H,P) / setlistSatHvP (H,P) list
 	 */
 	public void loadHlvPSatFile() {
 		File file = new File (fileNameSAT);
@@ -162,72 +208,177 @@ public class Enthalpy {
 		hSatErrLoc = hSatErrLoc*2;
 	}
 
+	// -------------------------------------------------------
 
 	/**
-	 * Read Data file containing: Pressure /Temperature relation (P. relative) 
-	 * Will fill the : listTP list
-	 */
-	public void loadPTFile() {
-		File file = new File (fileNameTP);
-
-		Scanner sken = null;
-		try {
-			sken = new Scanner (file);
-		} catch (FileNotFoundException e) {
-			System.out.println("loadPTFile");
-			System.out.println(e.getMessage());
-			System.out.println(e.toString());
-			e.printStackTrace();
-		}
-
-		while (sken.hasNext () ){
-			String first = sken.nextLine ();
-			if (!first.startsWith("#") ) {
-				String[] val = first.split ("\t");
-				double temp = Double.parseDouble(val [0].replace(",", "."));
-				double press = Double.parseDouble(val [1].replace(",", "."));
-
-				listTP.add(new Point2D.Double(temp, press));
-			}
-		}
-	}
-
-	/**
-	 * Conversion Pressure to Saturation curve to find H vapor
+	 * Match Pressure to H vapor Saturation curve
 	 * Correspond to intersection between P and Saturation H vapor
 	 * @param pressure
 	 * @return
 	 */
-	public double  convSatP2Hv(double press ) {
-		double x,ho=0;
+	public double  matchP2HvSat(double press ) {
+		double ho=0;
 		double min = Double.MAX_VALUE;
-		int idx=0;
-		double pressi = press - deltaP; 
+		int id=0;
 		if (listSatHvP.size() != 0) {
-
-			for(int c = 0; c < listSatHvP.size(); c++){
-				double diff = Math.abs(getSatP(c) - pressi);
-
+			for(int n = 0; n < listSatHvP.size(); n++){
+				double diff = Math.abs(getSatP(n) - press);
 				if (diff < min) {
 					min = diff;
-					idx = c;
+					id = n;
 				}
 			}
-			//System.out.println(pressi + " " + getSatP(idx) + " " + getSatHv(idx));
-			if (idx == listSatHvP.size()-1) {
-				idx = idx-1;
+			//System.out.println(press + " " + getSatP(id) + " " + getSatHv(id));
+			if (id == listSatHvP.size()-1) {
+				id = id-1;
 			} 
 
-			double y0,y1,x0,x1;
-			x  = pressi;
-			x0 = getSatP(idx);
-			x1 = getSatP(idx+1);
-			y0 = getSatHv(idx);
-			y1 = getSatHv(idx+1);
+			double x,y0,y1,x0,x1;
+			x  = press;
+			x0 = getSatP(id);
+			x1 = getSatP(id+1);
+			y0 = getSatHv(id);
+			y1 = getSatHv(id+1);
 			ho = (x-x0)*(y1-y0)/(x1-x0)+ y0;
 		}
 		return ho;
+	}
 
+	/**
+	 * Compute H, Matching PSat (T-Isotherm) with P0PK 
+	 * @param Hsatv
+	 * @param Psat
+	 * @param P0PK = P0 or PK
+	 * @return H
+	 */
+	public double CompHmatchPSatWithP0PK(double Hsatv, double Psat, double P0PK) {
+		double y0,y1,x0,x1;
+		x0 = Hsatv;
+		y0 = Psat;
+		x1 = P0PK;
+		y1 = y0 + (x1-x0) * Math.tan(angleHmatchPSatWithP0PK);
+		return y1;
+	}
+
+	// -------------------------------------------------------
+
+	/**
+	 * Convert Temperature(°C) to Pressure (bar) 
+	 * @param temp: temperature (°C)
+	 * @return : Pressure (bar absolute)
+	 */
+	public double convT2P(double temp){
+		double presso=0;
+		double min = Double.MAX_VALUE;
+		int id=0;
+		if (listTP.size() != 0) {
+			for(int n = 0; n < listTP.size(); n++){
+				double diff = Math.abs(getT(n) - temp);
+				if (diff < min) {
+					min = diff;
+					id = n;
+				}
+			}
+			if (id == listTP.size()-1) {
+				id = id-1;
+			} 
+
+			double x,y0,y1,x0,x1;
+			x  = temp;
+			x0 = getT(id);
+			x1 = getT(id+1);
+			y0 = getP(id);
+			y1 = getP(id+1);
+			presso = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+		}
+		return presso+deltaP;
+	}
+
+	// -------------------------------------------------------
+
+	/**
+	 * Convert Pressure (bar) to Temperature(°C)  
+	 * @param : Pressure (absolute) press
+	 * @return : Temperature (°C)
+	 */
+	public double convP2T(double press){
+		double tempo=0;
+		double min = Double.MAX_VALUE;
+		int id=0;
+		double pressi = press - deltaP; 
+		if (listTP.size() != 0) {
+			for(int n = 0; n < listTP.size(); n++){
+				double diff = Math.abs(getP(n) - pressi);
+				if (diff < min) {
+					min = diff;
+					id = n;
+				}
+			}
+			if (id == listTP.size()-1) {
+				id = id-1;
+			} 
+
+			double x,y0,y1,x0,x1;
+			x  = pressi;
+			x0 = getP(id);
+			x1 = getP(id+1);
+			y0 = getT(id);
+			y1 = getT(id+1);
+			tempo = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+		}
+		return tempo;
+	}
+
+	// -------------------------------------------------------
+	/**
+	 * Return T from List listTP
+	 * @param id
+	 * @return T
+	 */
+	public double getT(int id) {
+		return listTP.get(id).getX();
+	}
+
+	// -------------------------------------------------------
+	/**
+	 * Return P from List listTP
+	 * @param id
+	 * @return P
+	 */
+	public double getP(int id) {
+		return listTP.get(id).getY();
+	}
+
+	// -------------------------------------------------------
+	/**
+	 * Return      P  from List listSatHlP
+	 *  	 	   P  from List listSatHvP
+	 *  It is the same value as for both ! 
+	 * @param id 
+	 * @return P
+	 */
+	public double getSatP(int id) {
+		return listSatHlP.get(id).getY();
+	}
+
+	// -------------------------------------------------------
+	/**
+	 * Return Enthalpy Vapor from List listSatHlP
+	 * @param id
+	 * @return H
+	 */
+	public double getSatHv(int id) {
+		return listSatHvP.get(id).getX();
+	}
+
+	// -------------------------------------------------------
+	/**
+	 * Return Enthalpy Liquid from List listSatHlP
+	 * @param id
+	 * @return H Liquid
+	 */
+	public double getSatHl(int id) {
+		return listSatHlP.get(id).getX();
 	}
 
 	/**
@@ -235,7 +386,9 @@ public class Enthalpy {
 	 *   The table H can decrease/increase , so we have to take into account supplementary parameters 
 	 *     Zone of pressure
 	 *     Zone of H
-	 *   Zone of pressure is computed based on : Current pressure=pNear and pDelta --> Zone of pressure = pNear +- pDelta
+	 *   Zone of pressure is computed based on : 
+	 *   	Current pressure=pNear and pDelta --> 
+	 *   	Zone of pressure = pNear +- pDelta
 	 *   Zone of H is computed based on  hSatErrLoc
 	 * @param pNear
 	 * @param pDelta
@@ -348,110 +501,6 @@ public class Enthalpy {
 		return po;
 	}
 
-	/**
-	 * Convert Temperature(°C) to Pressure (bar) 
-	 * @param temp: temperature (°C)
-	 * @return : Pressure (bar absolute)
-	 */
-	public double convT2P(double temp){
-		double x,presso=0;
-		int idx=0;
-		if (listTP.size() != 0) {
-			for(int c = 0; c < listTP.size(); c++){
-				if(temp >= getT(c) ){
-					idx = c;
-				}
-			}
-			if (idx == listTP.size()-1) {
-				idx = idx-1;
-			} 
-
-			double y0,y1,x0,x1;
-			x  = temp;
-			x0 = getT(idx);
-			x1 = getT(idx+1);
-			y0 = getP(idx);
-			y1 = getP(idx+1);
-			presso = (x-x0)*(y1-y0)/(x1-x0)+ y0;
-		}
-		return presso+deltaP;
-	}
-
-	/**
-	 * Convert Pressure (bar) to Temperature(°C)  
-	 * @param : Pressure (absolute) press
-	 * @return : Temperature (°C)
-	 */
-	public double convP2T(double press){
-		double x,tempo=0;
-		int idx=0;
-		double pressi = press - deltaP; 
-		if (listTP.size() != 0) {
-
-			for(int c = 0; c < listTP.size(); c++){
-				if(pressi >= getP(c) ){
-					idx = c;
-				}
-			}
-			if (idx == listTP.size()-1) {
-				idx = idx-1;
-			} 
-
-			double y0,y1,x0,x1;
-			x  = pressi;
-			x0 = getP(idx);
-			x1 = getP(idx+1);
-			y0 = getT(idx);
-			y1 = getT(idx+1);
-			tempo = (x-x0)*(y1-y0)/(x1-x0)+ y0;
-		}
-		return tempo;
-	}
-
-	/**
-	 * Return T from List listTP
-	 * @param id
-	 * @return
-	 */
-	public double getT(int id) {
-		return listTP.get(id).getX();
-	}
-
-	/**
-	 * Return P from List listTP
-	 * @param id
-	 * @return
-	 */
-	public double getP(int id) {
-		return listTP.get(id).getY();
-	}
-
-	/**
-	 * Return Enthalpy Liquid from List listSatHlP
-	 * @param id
-	 * @return
-	 */
-	public double getSatHl(int id) {
-		return listSatHlP.get(id).getX();
-	}
-	/**
-	 * Return      P  from List listSatHlP
-	 *   same as   P  from List listSatHvP
-	 * @param id
-	 * @return
-	 */
-	public double getSatP(int id) {
-		return listSatHlP.get(id).getY();
-	}
-
-	/**
-	 * Return Enthalpy Vapor from List listSatHlP
-	 * @param id
-	 * @return
-	 */
-	public double getSatHv(int id) {
-		return listSatHvP.get(id).getX();
-	}
 
 	// -------------------------------------------------------
 	// 							JSON
@@ -477,6 +526,7 @@ public class Enthalpy {
 		jsonObj.put("FileNameTP", this.fileNameTP);	
 		jsonObj.put("DeltaP", this.deltaP);	
 		jsonObj.put("FileNameSAT", this.fileNameSAT);	
+		jsonObj.put("AngleHmatchPSatWithP0PK", this.angleHmatchPSatWithP0PK);	
 		jsonObj.put("EnthalpyBkgdImg", this.enthalpyBkgdImg.getJsonObject());	
 		return jsonObj ;
 	}
@@ -494,12 +544,11 @@ public class Enthalpy {
 		this.fileNameTP = (String) jsonObj.get("FileNameTP");
 		this.deltaP = ((Number) jsonObj.get("DeltaP")).doubleValue();
 		this.fileNameSAT = (String) jsonObj.get("FileNameSAT");
+		this.angleHmatchPSatWithP0PK = ((Number) jsonObj.get("AngleHmatchPSatWithP0PK")).doubleValue();
 
 		JSONObject jsonObjEImg = (JSONObject) jsonObj.get("EnthalpyBkgdImg");
 		this.enthalpyBkgdImg.setJsonObject(jsonObjEImg); 
 	}
-
-
 
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
@@ -553,14 +602,6 @@ public class Enthalpy {
 		this.nameRefrigerant = nameRefrigerant;
 	}
 
-	public double gethSatMin() {
-		return hSatMin;
-	}
-
-	public double gethSatMax() {
-		return hSatMax;
-	}
-
 	public EnthalpyBkgdImg getEnthalpyBkgImage() {
 		return enthalpyBkgdImg;
 	}
@@ -573,36 +614,29 @@ public class Enthalpy {
 		return xHmin;
 	}
 
-
 	public void setxHmin(double xHmin) {
 		this.xHmin = xHmin;
 	}
-
 
 	public double getxHmax() {
 		return xHmax;
 	}
 
-
 	public void setxHmax(double xHmax) {
 		this.xHmax = xHmax;
 	}
-
 
 	public double getyPmin() {
 		return yPmin;
 	}
 
-
 	public void setyPmin(double yPmin) {
 		this.yPmin = yPmin;
 	}
 
-
 	public double getyPmax() {
 		return yPmax;
 	}
-
 
 	public void setyPmax(double yPmax) {
 		this.yPmax = yPmax;
@@ -612,10 +646,8 @@ public class Enthalpy {
 		return deltaP;
 	}
 
-
 	public void setDeltaP(double deltaP) {
 		this.deltaP = deltaP;
 	}
-
 
 }

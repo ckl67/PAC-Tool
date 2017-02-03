@@ -377,8 +377,6 @@ public class Test {
 
 		// Read Temperature [degre C] / Enthalpy (kJ/kg) Liquid / Enthalpy (kJ/kg) Vapor file
 		System.out.println("Load R22 Saturation file and pick id=2");
-		System.out.println("  Saturation H Min = " + enthalpy.gethSatMin());
-		System.out.println("  Saturation H Max = " + enthalpy.gethSatMax());
 		System.out.println();
 		System.out.println("  Pression [2] = "+ enthalpy.getSatP(2));
 		System.out.println("  Enthalpy Liquid [2] = "+ enthalpy.getSatHl(2));

@@ -61,9 +61,9 @@ public class WinMeasurePoints {
 	private List<ElDraw> eDrawL;
 	private WinEnthalpy winEnth;
 
-	// --------------------------------------------------------------------
-	// WIN Builder
-	// --------------------------------------------------------------------
+	// -------------------------------------------------------
+	//	LOCAL VARIABLES
+	// -------------------------------------------------------
 	private JFrame frame;
 	private PPanel panel;
 	private BufferedImage img;
@@ -178,23 +178,30 @@ public class WinMeasurePoints {
 				m.setMT( m.getValue() );
 				m.setMP( m.convT2P( m.getValue() ) );
 				m.setMP0PK( measurePL.get(MeasurePoint._P0).getValue()  );
-				m.setMH( m.convSatP2Hv( m.getMP() ));
+				double Hsatv0 = m.matchP2HvSat( m.getMP());
+				double Psat0 = m.getMP();
+				double P0PK0 = m.getMP0PK();
+				double Hmpiso0 = m.CompHmatchPSatWithP0PK(Hsatv0, Psat0, P0PK0); 
+				m.setMH(Hmpiso0);
 				break;
 			case T2 : case T5 :				// Intersection with PK
 				m.setMT( m.getValue() );
 				m.setMP( m.convT2P( m.getValue() ) );
 				m.setMP0PK( measurePL.get(MeasurePoint._PK).getValue()  );
-				m.setMH( m.convSatP2Hv( m.getMP() ));
+				m.setMH( m.matchP2HvSat( m.getMP() ));
+				double Hsatv1 = m.matchP2HvSat( m.getMP());
+				double Psat1 = m.getMP();
+				double P0PK1 = m.getMP0PK();
+				double Hmpiso1 = m.CompHmatchPSatWithP0PK(Hsatv1, Psat1, P0PK1); 
+				m.setMH(Hmpiso1);
 				break;
 			case P3 : case P4 : case P7 :
 				m.setMP( m.getValue() );
 				m.setMT( m.convP2T( m.getValue() ) );
 				m.setMP0PK( m.getValue()  );
-				break;
-				
+				break;			
 			default:
 				break;
-			
 			}
 			System.out.println(p + " value=" + m.getValue() + " T=" + m.getMT() + " --> P=" + m.getMP() + "  :: P0 or PK = " + m.getMP0PK() + "  Hsat =" + m.getMH() );
 
