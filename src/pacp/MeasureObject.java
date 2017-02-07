@@ -1,6 +1,6 @@
 package pacp;
 
-public enum MeasurePoint {
+public enum MeasureObject {
 	T1(515,90,"Température des gaz BP\n après surchauffe interne\n et avant compression","°C",MeasureGroup.GROUP_BP),
 	T2(546,90,"Température des gaz HP\n en fin de compression\n (Cloche du compresseur)","°C",MeasureGroup.GROUP_HP),
 	P3(582,135,"Pression du début de condensation\n (Mesure HP Manifod)","Bar",MeasureGroup.GROUP_HP),
@@ -37,7 +37,7 @@ public enum MeasurePoint {
 	// -------------------------------------------------------
 	// 					CONSTRUCTOR
 	// -------------------------------------------------------
-	MeasurePoint(int vxm, int vym,String vdefinition, String vunity, MeasureGroup vgroupHpBp){
+	MeasureObject(int vxm, int vym,String vdefinition, String vunity, MeasureGroup vgroupHpBp){
 		this.xm = vxm;
 		this.ym = vym;
 		this.definition = vdefinition;

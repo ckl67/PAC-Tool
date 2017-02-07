@@ -37,6 +37,19 @@ Langage de modélisation unifié, Unified Modeling Language (UML) intégré à  Eclip
 	Name: ObjectAid UML Explorer
 	URL: http://www.objectaid.com/update
 	
+	Papyrus 
+	https://www.youtube.com/watch?v=gmf8CswqKcs
+	
+	Additional Instalation
+	http://download.eclipse.org/modeling/mdt/papyrus/updates/releases/mars
+	Java Class Generator
+	Java Reverse
+	Profile for Java Models
+	
+	Market 
+	QVT Operational
+	
+	
 Editeur HTML
 	Par exemple: kompozer-0.7.10-win32
 

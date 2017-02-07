@@ -9,3 +9,6 @@ pac
 compressors
 kg
 isotherm
+associable
+haprox
+hreal

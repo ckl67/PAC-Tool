@@ -27,57 +27,68 @@ import java.awt.Color;
 
 public class ElDraw {
 
-	/*
-	 *  	STATIC GLOBAL VAR
-	 */
-	public static final int _Point 				= 0;
-	public static final int _PointMeasure 		= 1;
-	public static final int _Line 				= 2;
-	public static final int _LineHorzInf 		= 3;
-	public static final int _LineHorzInfBP 		= 4;
-	public static final int _LineHorzInfHP 		= 5;
-	public static final int _LineTemp			= 6;
-
 	/* 	
 	 * 		INSTANCE VAR
 	 */
-	private int type;  				// type of draw : Line, Point,..
-	private double x1,y1;   		// Coordinate  
-	private double x2,y2;			// Coordinate
-	private Color color;
-	
+	private ElDrawObject 	elDrawObj;  	// type of draw : Line, Point,..
+	private Measure 		measure;		// Full measured object to display can be composed of several elDrawObj
+	private Color 			color;			// Color
+	private double 			x1,y1;   		// Coordinate  
+	private double 			x2,y2;			// Coordinate
+
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
-	// Line Horizontal Infinite
-	public ElDraw(int type, double y1) {
-		this.type = type;
+	/**
+	 * Line Horizontal Infinite
+	 *  	ElDraw(P0,Line,Red,y=10)
+	 *  or composed of several draw elements 
+	 *  	ElDraw(T4,Line,Red,y=10)
+	 *  	ElDraw(T4,Line,Red,x1=2,y1=1)
+	 * @param vmeasureObj
+	 * @param velDrawObj
+	 * @param vcolor
+	 * @param vy1
+	 */
+	public ElDraw( ElDrawObject velDrawObj, Measure vmeasure, Color vcolor) {
+		this.elDrawObj = velDrawObj;
+		this.color = vcolor;
+		this.measure = vmeasure;
 		this.x1=0.0;
 		this.y1=y1;
 		this.x2=0.0;
 		this.y2=y1;
-		this.color = Color.BLACK;
 	}
 
-	// Point
-	public ElDraw(int type, double x1, double y1) {
-		this.type = type;
+	/**
+	 * Point
+	 *  ElDraw(T1,Line,Red,y=10)
+	 * @param vmeasureObj
+	 * @param elDrawObj
+	 * @param vcolor
+	 * @param x1
+	 * @param y1
+	 */
+	public ElDraw(ElDrawObject elDrawObj, Color vcolor, Measure vmeasure , double x1, double y1) {
+		this.elDrawObj = elDrawObj;
+		this.color = vcolor;
+		this.measure = vmeasure;
 		this.x1=x1;
 		this.y1=y1;
 		this.x2=0.0;
 		this.y2=0.0;
-		this.color = Color.RED;
 	}
 
 	// Normal line
-	public ElDraw(int type, double x1, double y1, double x2, double y2) {
-		this.type = type;
+	public ElDraw(ElDrawObject elDrawObj, Color vcolor, Measure vmeasure, double x1, double y1, double x2, double y2) {
+		this.elDrawObj = elDrawObj;
+		this.color = vcolor;
+		this.measure = vmeasure;
 		this.x1=x1;
 		this.y1=y1;
 		this.x2=x2;
 		this.y2=y2;
-		this.color = Color.RED;
 	}
 
 	// -------------------------------------------------------
@@ -89,8 +100,12 @@ public class ElDraw {
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
 
-	public int getType() {
-		return type;
+	public Measure getMeasure() {
+		return measure;
+	}
+
+	public ElDrawObject getElDrawObj() {
+		return elDrawObj;
 	}
 
 	public double getX1() {

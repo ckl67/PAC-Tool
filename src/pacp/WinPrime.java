@@ -124,7 +124,7 @@ public class WinPrime {
 		eDrawL = new ArrayList<ElDraw>();
 
 		measurePL = new ArrayList<Measure>(); 
-        for (MeasurePoint p : MeasurePoint.values())
+        for (MeasureObject p : MeasureObject.values())
         	measurePL.add(new Measure(p));
 		
 		// Create Window

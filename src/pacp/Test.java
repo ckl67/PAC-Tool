@@ -633,27 +633,27 @@ public class Test {
 		
 		List<Measure> measurePL1;
 		measurePL1 = new ArrayList<Measure>(); 
-        for (MeasurePoint p : MeasurePoint.values())
+        for (MeasureObject p : MeasureObject.values())
         	measurePL1.add(new Measure(p));
 
         Measure ma = measurePL1.get(0);
         
-        if (ma.getMeasurePoint().equals(MeasurePoint.T1)) {
-			System.out.println(ma.getMeasurePoint());				// = T1 from MeasurePoint.T1 (First element of array)
-			System.out.println(ma.getMeasurePoint().toString());	// = "T1"
-			System.out.println(ma.getMeasurePoint().getDefinition());
+        if (ma.getMeasureObject().equals(MeasureObject.T1)) {
+			System.out.println(ma.getMeasureObject());				// = T1 from MeasureObject.T1 (First element of array)
+			System.out.println(ma.getMeasureObject().toString());	// = "T1"
+			System.out.println(ma.getMeasureObject().getDefinition());
         }
         
-        Measure mb = measurePL1.get(MeasurePoint.T2.ordinal());
+        Measure mb = measurePL1.get(MeasureObject.T2.ordinal());
         mb.setValue(12);
-        System.out.println(mb.getMeasurePoint());
-		System.out.println(mb.getValue() + " " + mb.getMeasurePoint().getUnity());
+        System.out.println(mb.getMeasureObject());
+		System.out.println(mb.getValue() + " " + mb.getMeasureObject().getUnity());
 		System.out.println(mb.getMP() + " bars");
 		
 
-		Measure vMeasure = new Measure(MeasurePoint.T1);
+		Measure vMeasure = new Measure(MeasureObject.T1);
 		vMeasure.setValue(23.457);
-		System.out.println(vMeasure.getMeasurePoint());
+		System.out.println(vMeasure.getMeasureObject());
 
 		System.out.println("\n---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();
@@ -665,7 +665,7 @@ public class Test {
 		System.out.println(jsonObj);
 
 		System.out.println("\n---> Read afterwards ");
-		System.out.println("    Name="+vMeasure.getMeasurePoint());
+		System.out.println("    Name="+vMeasure.getMeasureObject());
 
 	}
 
