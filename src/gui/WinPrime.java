@@ -44,10 +44,8 @@ import javax.swing.JPanel;
 import javax.swing.JCheckBox;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 import computation.COP;
-import computation.Measure;
-import computation.MeasurePoint;
+import computation.MeasureCollection;
 import computation.Misc;
 import enthalpy.Enthalpy;
 import pac.Compressor;
@@ -74,8 +72,7 @@ public class WinPrime {
 	private Enthalpy enthalpy;
 	private PrimeConfig primeConfig;
 	private List<ElDraw> eDrawL;		
-	private List<Measure> measurePL;
-	
+	private MeasureCollection measureCollection;
 	// Win Builder
 	private JFrame frame;
 	private WinEnthalpy windowEnthalpy;
@@ -130,10 +127,7 @@ public class WinPrime {
 		enthalpy = enthalpyi;
 		primeConfig = new PrimeConfig();
 		eDrawL = new ArrayList<ElDraw>();
-
-		measurePL = new ArrayList<Measure>(); 
-        for (MeasurePoint p : MeasurePoint.values())
-        	measurePL.add(new Measure(p));
+		measureCollection = new MeasureCollection();
 		
 		// Create Window
 		initialize(paci,copi);
@@ -1342,7 +1336,7 @@ public class WinPrime {
 		lblEnthalpyView.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent arg0) {
 				//lblEnthalpyView.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-				windowEnthalpy = new WinEnthalpy(enthalpy, eDrawL,measurePL);
+				windowEnthalpy = new WinEnthalpy(enthalpy, eDrawL,measureCollection);
 				windowEnthalpy.WinEnthalpyVisible();
 			}
 		});
@@ -1372,7 +1366,7 @@ public class WinPrime {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				//WinMeasurePoints window = new WinMeasurePoints(windowEnthalpy, eDrawL,measurePL);
-				WinMeasurePoints window = new WinMeasurePoints(eDrawL,measurePL,enthalpy,windowEnthalpy);
+				WinMeasurePoints window = new WinMeasurePoints(eDrawL,measureCollection,enthalpy,windowEnthalpy);
 				window.WinMeasurePointsVisible();
 			}
 		});

@@ -446,10 +446,10 @@ public class PanelEnthalpy extends JPanel {
 				g2.setPaint(Color.BLUE);
 				g2.draw( new Line2D.Double(enthalpy.getxHmin(),Math.log10(eDrawL.get(i).getY1()),enthalpy.getxHmax(),Math.log10(eDrawL.get(i).getY1())));
 			}
-			if (eDrawL.get(i).getElDrawObj() == ElDrawObject.PointMeasure) {
-				g2.setColor(Color.RED);
-				double pv = Math.log10(eDrawL.get(i).getY1());
-				g2.fill (new Ellipse2D.Double(eDrawL.get(i).getX1()-rectWidth/zoom/2, pv-rectHeight/zoom/2, rectWidth/zoom, rectHeight/zoom));
+			if (eDrawL.get(i).getElDrawObj() == ElDrawObject.PointMeasureLogP) {
+				g2.setColor(eDrawL.get(i).getColor());
+				//double pv = Math.log10(eDrawL.get(i).getY1());
+				g2.fill (new Ellipse2D.Double(eDrawL.get(i).getX1()-rectWidth/zoom/2, eDrawL.get(i).getY1()-rectHeight/zoom/2, rectWidth/zoom, rectHeight/zoom));
 			}
 			if (eDrawL.get(i).getElDrawObj() == ElDrawObject.LineTemp) {
 				g2.setColor(Color.GREEN);

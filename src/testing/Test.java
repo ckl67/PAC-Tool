@@ -30,8 +30,8 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import computation.COP;
-import computation.Measure;
 import computation.MeasurePoint;
+import computation.MeasureObject;
 import computation.Misc;
 import enthalpy.Enthalpy;
 import enthalpy.EnthalpyBkgdImg;
@@ -78,7 +78,7 @@ public class Test {
 					+ "  (11)-> Head Distribution Circuit \n"
 					+ "  (12)-> Head Source Circuit \n"
 					+ "  (13)-> Heat Transfert Fluid\n"
-					+ "  (14)-> Measure\n"
+					+ "  (14)-> MeasurePoint\n"
 					+ "  (15)-> Miscellaneous\n"
 					+ "  (16)-> PAC (Including all elements of a PAC)\n"
 					+ "  (17)-> PAC-Tool Configuration information\n"
@@ -651,27 +651,27 @@ public class Test {
 	private static void testMeasure () { 
 		System.out.println("TEST MEASURE");
 		
-		List<Measure> measurePL1;
-		measurePL1 = new ArrayList<Measure>(); 
-        for (MeasurePoint p : MeasurePoint.values())
-        	measurePL1.add(new Measure(p));
+		List<MeasurePoint> measurePL1;
+		measurePL1 = new ArrayList<MeasurePoint>(); 
+        for (MeasureObject p : MeasureObject.values())
+        	measurePL1.add(new MeasurePoint(p));
 
-        Measure ma = measurePL1.get(0);
+        MeasurePoint ma = measurePL1.get(0);
         
-        if (ma.getMeasureObject().equals(MeasurePoint.T1)) {
-			System.out.println(ma.getMeasureObject());				// = T1 from MeasurePoint.T1 (First element of array)
+        if (ma.getMeasureObject().equals(MeasureObject.T1)) {
+			System.out.println(ma.getMeasureObject());				// = T1 from MeasureObject.T1 (First element of array)
 			System.out.println(ma.getMeasureObject().toString());	// = "T1"
 			System.out.println(ma.getMeasureObject().getDefinition());
         }
         
-        Measure mb = measurePL1.get(MeasurePoint.T2.ordinal());
+        MeasurePoint mb = measurePL1.get(MeasureObject.T2.ordinal());
         mb.setValue(12);
         System.out.println(mb.getMeasureObject());
 		System.out.println(mb.getValue() + " " + mb.getMeasureObject().getUnity());
 		System.out.println(mb.getMP() + " bars");
 		
 
-		Measure vMeasure = new Measure(MeasurePoint.T1);
+		MeasurePoint vMeasure = new MeasurePoint(MeasureObject.T1);
 		vMeasure.setValue(23.457);
 		System.out.println(vMeasure.getMeasureObject());
 

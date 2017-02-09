@@ -218,7 +218,7 @@ public class Enthalpy {
 	 * @param pressure
 	 * @return
 	 */
-	public double  matchP2HvSat(double press ) {
+	public double  matchP2HvaporSat(double press ) {
 		double ho=0;
 		double min = Double.MAX_VALUE;
 		int id=0;
@@ -241,6 +241,42 @@ public class Enthalpy {
 			x1 = getSatP(id+1);
 			y0 = getSatHv(id);
 			y1 = getSatHv(id+1);
+			ho = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+		}
+		return ho;
+	}
+
+	// -------------------------------------------------------
+
+	/**
+	 * Match Pressure to H Liquid Saturation curve
+	 * Correspond to intersection between P and Saturation H Liquid
+	 * @param pressure
+	 * @return
+	 */
+	public double  matchP2HliquidSat(double press ) {
+		double ho=0;
+		double min = Double.MAX_VALUE;
+		int id=0;
+		if (listSatHlP.size() != 0) {
+			for(int n = 0; n < listSatHlP.size(); n++){
+				double diff = Math.abs(getSatP(n) - press);
+				if (diff < min) {
+					min = diff;
+					id = n;
+				}
+			}
+			//System.out.println(press + " " + getSatP(id) + " " + getSatHv(id));
+			if (id == listSatHlP.size()-1) {
+				id = id-1;
+			} 
+
+			double x,y0,y1,x0,x1;
+			x  = press;
+			x0 = getSatP(id);
+			x1 = getSatP(id+1);
+			y0 = getSatHl(id);
+			y1 = getSatHl(id+1);
 			ho = (x-x0)*(y1-y0)/(x1-x0)+ y0;
 		}
 		return ho;
