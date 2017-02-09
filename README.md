@@ -32,14 +32,12 @@ WindowBuilder (Eclipse)
 Langage de modélisation unifié, Unified Modeling Language (UML) intégré à  Eclipse
 	ObjectAid
 	Installer uniquement les modules ne nécessitant pas de licences.
-	http://www.objectaid.com/installation
 	Au niveau Eclipse dans Install New Software
 	Name: ObjectAid UML Explorer
 	URL: http://www.objectaid.com/update
 	
 	Papyrus 
 	https://www.youtube.com/watch?v=gmf8CswqKcs
-	
 	Additional Instalation
 	http://download.eclipse.org/modeling/mdt/papyrus/updates/releases/mars
 	Java Class Generator

@@ -1,0 +1,38 @@
+L'intérêt des machines de Carnot
+==================================
+
+L'intérêt, réside dans le théorème de Carnot :
+Aucune machine ditherme ne peut être plus efficace qu'une machine de CARNOT 
+Autrement dit, pour une machine frigorifique ou une pompe à chaleur, 
+Le théorème de CARNOT nous fournit un rendement (ou un coefficient de performance) 
+théorique maximal, et donc impossible à dépasser.
+
+Coefficient de performance thermique d'une machine de Carnot
+==============================================================
+Pour une pompe à chaleur, on s'intéresse au rapport entre la chaleur fournie 
+à la source chaude (Q2) et le travail nécessaire à cette opération. 
+On définit alors le coefficient de performance thermique :
+T2/(T2-T1) = TK / (TK-T0) = COP Carnot Chaud
+
+Coefficient de performance frigorifique d'une machine de Carnot
+==============================================================
+Pour une machine frigorifique, la quantité importante est le rapport entre 
+la chaleur prélevée à la source froide (Q1 ) et le travail nécessaire à cette opération. 
+On définit alors le coefficient de performance frigorifique :
+T1 / (T2-T1) = T0 / (TK-T0) = COP Carnot Froid
+
+COP CHAUD
+==========
+Il ne faut pas confondre COPfroid et COPchaud ! 
+Le COPchaud est le rapport entre l'énergie thermique délivrée au condenseur 
+et l'énergie électrique demandée par le compresseur 
+
+
+COP FROID
+==========
+Alors que le COPfroid part de la chaleur captée à l'évaporateur. 
+
+La confusion étant fréquente,
+Il n'est pas inutile lorsque l'on compare le rendement des machines dans les documentations de constructeurs, 
+de vérifier ce qui se trouve derrière l'appellation COP.
+
