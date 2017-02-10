@@ -232,6 +232,7 @@ public class WinEnthalpy {
 			@Override
 			public void mousePressed(MouseEvent evt) {
 				ElDrawToMoveOnP = false;
+				
 			}
 		});
 		
