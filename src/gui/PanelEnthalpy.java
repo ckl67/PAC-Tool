@@ -153,6 +153,8 @@ public class PanelEnthalpy extends JPanel {
 		this.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent evt) {
+				// Move mouse
+				
 				// Move Curve
 				if ((evt.getModifiers() & InputEvent.BUTTON2_MASK) != 0) {
 					offset.x = (evt.getX() - dragStart.x);
@@ -212,7 +214,7 @@ public class PanelEnthalpy extends JPanel {
 
 		for(int i=0;i<eDrawL.size();i++) {
 
-			if ( eDrawL.get(i).getElDrawObj() == ElDrawObject.Point) {
+			if ( eDrawL.get(i).getElDrawObj() == ElDrawObject.PointMeasureLogP) {
 				double H = eDrawL.get(i).getX1();
 				double P = eDrawL.get(i).getY1();
 				if ( ( pH < (H+zoneH)/zoom) && ( pH > (H-zoneH)/zoom) && (pP < (P+zoneP)/zoom) && ( pP > (P-zoneP)/zoom) ) {

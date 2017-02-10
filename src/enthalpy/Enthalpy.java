@@ -113,7 +113,7 @@ public class Enthalpy {
 		this.listSatHvP = new ArrayList<Point2D.Double>();
 		this.loadHlvPSatFile();
 
-		this.angleHmatchPSatWithP0PK = -45;
+		this.angleHmatchPSatWithP0PK = -30; 	// In degree
 		
 		/* -----------------------------
 		   Enthalpy Image
@@ -284,18 +284,30 @@ public class Enthalpy {
 
 	/**
 	 * Compute H, Matching PSat (T-Isotherm) with P0PK 
+	 * In all the cases the result must be positive !!
+	 * If not: Error to address and result = Hsat !!
 	 * @param Hsatv
 	 * @param Psat
 	 * @param P0PK = P0 or PK
-	 * @return H
+	 * @return H0HK
 	 */
-	public double CompHmatchPSatWithP0PK(double Hsatv, double Psat, double P0PK) {
-		double y0,y1,x0,x1;
-		x0 = Hsatv;
-		y0 = Psat;
-		x1 = P0PK;
-		y1 = y0 + (x1-x0) * Math.tan(angleHmatchPSatWithP0PK);
-		return y1;
+	public double CompHmatchPSatWithP0PK(double Hsat, double Psat, double P0PK) {
+		double H0HK;
+		
+		if (Psat > P0PK) {
+			H0HK = Hsat + (Psat-P0PK) / Math.abs(Math.tan(angleHmatchPSatWithP0PK*Math.PI/180));
+		}
+		else {
+			H0HK = Hsat;
+			System.out.println("Error CompHmatchPSatWithP0PK");
+		}
+
+		System.out.println("Psat= " + Psat);
+		System.out.println("P0PK= " + P0PK);
+		System.out.println("Hsat= " + Hsat);
+		System.out.println("H0HK=" + H0HK);
+
+		return H0HK;
 	}
 
 	// -------------------------------------------------------

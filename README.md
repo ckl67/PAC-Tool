@@ -36,18 +36,6 @@ Langage de modélisation unifié, Unified Modeling Language (UML) intégré à  Eclip
 	Name: ObjectAid UML Explorer
 	URL: http://www.objectaid.com/update
 	
-	Papyrus 
-	https://www.youtube.com/watch?v=gmf8CswqKcs
-	Additional Instalation
-	http://download.eclipse.org/modeling/mdt/papyrus/updates/releases/mars
-	Java Class Generator
-	Java Reverse
-	Profile for Java Models
-	
-	Market 
-	QVT Operational
-	
-	
 Editeur HTML
 	Par exemple: kompozer-0.7.10-win32
 
@@ -75,16 +63,14 @@ ffmpeg
 Gource
 	Outil d'animation du projet
 	http://gource.io/#
-	Generation video: gource -s 1 -f --output-ppm-stream output.ppm
-	Ne fonctionne pas ..
+	Generation video: 
+	gource -920x691 -s 1 
+	gource -920x691 -s 2 
+	ou autre taille selon écraon
 	
-	Convert to file
-	gource -1024x768 --stop-position 1.0 --highlight-all-users --hide-filenames --seconds-per-day 5 --output-framerate 60 --output-ppm-stream output.ppm
-	ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i output.ppm  -vcodec wmv1 -r 60 -qscale 0 out.wmv
-	
-	ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i output.ppm -vcodec libvpx -fpre "C:\\Program Files\\ffmpeg\\presets\\libvpx-360p.ffpreset" gource.avi
-	ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i output.ppm -vcodec libvpx gource.avi
-	
+	Utiliser un logiciel de capture écran.
+	comme:
+	* Free Screen To Video V2.0
 	
 Conversion Jar vers Exe
 	Launch4j est une application qui permet de créer des "lanceurs" (exécutables Windows classiques 

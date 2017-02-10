@@ -87,7 +87,8 @@ public class WinEnthalpy {
 	private JRadioButton rdbtnNothin;
 	private JTextField textPHP;
 	private JTextField textPBP;
-
+	
+	private boolean ElDrawToMoveOnP;
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -122,6 +123,7 @@ public class WinEnthalpy {
 		pointJPopupMenu = new Point();
 		
 		initialize();
+		ElDrawToMoveOnP = false;
 		
 		@SuppressWarnings("unused")
 		PanelEnthRepaintAction repaintAction = new PanelEnthRepaintAction();
@@ -226,6 +228,13 @@ public class WinEnthalpy {
 		// **************************
 		// MOUSE MOTION LISTENER  !!
 		// **************************
+		panelEnthalpyDrawArea.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent evt) {
+				ElDrawToMoveOnP = false;
+			}
+		});
+		
 		panelEnthalpyDrawArea.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseMoved(MouseEvent evt) {
@@ -260,6 +269,10 @@ public class WinEnthalpy {
 				} else {
 					lblFollower.setText(String.format("----------"));
 				}
+				
+				if (ElDrawToMoveOnP){
+					System.out.println("Hello");
+				}
 				//panelEnthalpyDrawArea.repaint();
 			}
 		});
@@ -288,7 +301,7 @@ public class WinEnthalpy {
 		JPopupMenu popupMenu = new JPopupMenu();
 		addPopup(panelEnthalpyDrawArea, popupMenu);
 
-		JMenuItem mntmDelete = new JMenuItem("Effacer");
+		JMenuItem mntmDelete = new JMenuItem("Delete");
 		mntmDelete.setIcon(new ImageIcon(WinEnthalpy.class.getResource("/com/sun/javafx/scene/control/skin/modena/HTMLEditor-Cut-Black.png")));
 		mntmDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -301,7 +314,20 @@ public class WinEnthalpy {
 		});
 		popupMenu.add(mntmDelete);
 
-
+		JMenuItem mntmMove = new JMenuItem("Move");
+		mntmMove.setIcon(new ImageIcon(WinEnthalpy.class.getResource("/com/sun/javafx/scene/control/skin/modena/HTMLEditor-Paste-Black.png")));
+		mntmMove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int id = panelEnthalpyDrawArea.getIdNearest(eDrawL, panelEnthalpyDrawArea.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpyDrawArea.getPoYm((int)pointJPopupMenu.getY()), 1);
+				if (id >= 0) {
+					ElDrawToMoveOnP = true;
+					//eDrawL.move(id);
+					//panelEnthalpyDrawArea.repaint();					
+				}
+			}
+		});
+		popupMenu.add(mntmMove);
+		
 		// ----------------------------------------
 		// Command on the Right side (different level of JPanels 
 		// ----------------------------------------

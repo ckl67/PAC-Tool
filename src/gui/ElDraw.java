@@ -169,7 +169,7 @@ public class ElDraw {
 						" Hsat(Approx) =" + m.getMHaprox() + 
 						" Hsat(Real) =" + m.getMHreal());
 
-				eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointMeasureLogP,Color.GREEN,m.getMHaprox(),Math.log10(m.getMP())));
+				eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointMeasureLogP,Color.BLACK,m.getMHaprox(),Math.log10(m.getMP0PK())));
 			}
 
 		}
