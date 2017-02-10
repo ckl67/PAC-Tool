@@ -137,6 +137,7 @@ public class PanelEnthalpy extends JPanel {
 
 		//	EVENT LISTNER
 		this.addMouseListener(new MouseAdapter() {
+			// -------- Mouse Click pressed ! --------
 			@Override
 			public void mousePressed(MouseEvent evt) {
 				int xMouse = evt.getX();
@@ -146,14 +147,20 @@ public class PanelEnthalpy extends JPanel {
 				if ((evt.getModifiers() & InputEvent.BUTTON2_MASK) != 0) {
 					dragStart.x = xMouse-offset.x;
 					dragStart.y = yMouse-offset.y;
+				} else {
+					if ((evt.getModifiers() & InputEvent.BUTTON1_MASK) != 0) {			
+						ElDraw edraw = new ElDraw("Test", ElDrawObject.Point, Color.RED,getHoXm(xMouse),getPoYm(yMouse));
+						eDrawL.add(edraw);
+						repaint();
+					}
 				}
 			}
 		});
 
 		this.addMouseMotionListener(new MouseMotionAdapter() {
+			// -------- Mouse moved ! --------
 			@Override
 			public void mouseDragged(MouseEvent evt) {
-				// Move mouse
 				
 				// Move Curve
 				if ((evt.getModifiers() & InputEvent.BUTTON2_MASK) != 0) {
@@ -161,11 +168,13 @@ public class PanelEnthalpy extends JPanel {
 					offset.y = (evt.getY() - dragStart.y);
 					//repaint();
 				}
+				
 			}
 		} );
 
 
 		this.addMouseWheelListener(new MouseWheelListener() {
+			// -------- Mouse Wheel -------
 			@Override
 			public void mouseWheelMoved(MouseWheelEvent evt) {
 				// Zoom
@@ -202,19 +211,18 @@ public class PanelEnthalpy extends JPanel {
 	/**
 	 * Will return the nearest element id of elDraw
 	 * @param eDrawL
+	 * @param ElDrawObject
 	 * @param pH 
-	 * @param pP --> Is Pressure (not Log value)
-	 * @param zoom
+	 * @param pP 
 	 * @return
 	 */
-	public int getIdNearest(List<ElDraw> eDrawL, double pH, double pP, double zoom) {
+	public int getIdNearest(List<ElDraw> eDrawL, ElDrawObject elDrawObject, double pH, double pP) {
 		int id=-1;
 		double zoneH = 2;
 		double zoneP = 2;
 
 		for(int i=0;i<eDrawL.size();i++) {
-
-			if ( eDrawL.get(i).getElDrawObj() == ElDrawObject.PointMeasureLogP) {
+			if ( eDrawL.get(i).getElDrawObj() == elDrawObject) {
 				double H = eDrawL.get(i).getX1();
 				double P = eDrawL.get(i).getY1();
 				if ( ( pH < (H+zoneH)/zoom) && ( pH > (H-zoneH)/zoom) && (pP < (P+zoneP)/zoom) && ( pP > (P-zoneP)/zoom) ) {
@@ -438,34 +446,20 @@ public class PanelEnthalpy extends JPanel {
 
 		for(int i=0;i<eDrawL.size();i++) {
 
-			if (eDrawL.get(i).getElDrawObj() == ElDrawObject.LineHorzInfHP) {
+			switch (eDrawL.get(i).getElDrawObj()) {
+			case LineHorzHPLogP: case LineHorzBPLogP:
 				g2.setStroke(new BasicStroke((float)(0.02/zoom)));
 				g2.setPaint(Color.BLUE);
-				g2.draw( new Line2D.Double(enthalpy.getxHmin(),Math.log10(eDrawL.get(i).getY1()),enthalpy.getxHmax(),Math.log10(eDrawL.get(i).getY1())));
-			}
-			if (eDrawL.get(i).getElDrawObj() == ElDrawObject.LineHorzInfBP) {
-				g2.setStroke(new BasicStroke((float)(0.02/zoom)));
-				g2.setPaint(Color.BLUE);
-				g2.draw( new Line2D.Double(enthalpy.getxHmin(),Math.log10(eDrawL.get(i).getY1()),enthalpy.getxHmax(),Math.log10(eDrawL.get(i).getY1())));
-			}
-			if (eDrawL.get(i).getElDrawObj() == ElDrawObject.PointMeasureLogP) {
+				g2.draw( new Line2D.Double(enthalpy.getxHmin(),eDrawL.get(i).getY1(),enthalpy.getxHmax(),eDrawL.get(i).getY1()));
+				break;
+			case PointLogP: case PointHPLogP: case PointBPLogP:  
 				g2.setColor(eDrawL.get(i).getColor());
-				//double pv = Math.log10(eDrawL.get(i).getY1());
 				g2.fill (new Ellipse2D.Double(eDrawL.get(i).getX1()-rectWidth/zoom/2, eDrawL.get(i).getY1()-rectHeight/zoom/2, rectWidth/zoom, rectHeight/zoom));
+				break;
+			default:
+				break;
 			}
-			if (eDrawL.get(i).getElDrawObj() == ElDrawObject.LineTemp) {
-				g2.setColor(Color.GREEN);
-				double xmin=enthalpy.getxHmin();
-				double xmax=enthalpy.getxHmax();
-				double ptv = enthalpy.convT2P(eDrawL.get(i).getX1());
-				g2.draw( new Line2D.Double(xmin,Math.log10(ptv),xmax,Math.log10(ptv)));
-			}
-
-			if (eDrawL.get(i).getElDrawObj() == ElDrawObject.Point) {
-				g2.setColor(Color.RED);
-				double pv = Math.log10(eDrawL.get(i).getY1());
-				g2.fill (new Ellipse2D.Double(eDrawL.get(i).getX1()-rectWidth/zoom/2, pv-rectHeight/zoom/2, rectWidth/zoom, rectHeight/zoom));
-			}
+			
 			//System.out.println(eDrawL.get(i).getType() + "  " + eDrawL.get(i).getY1());
 		}
 

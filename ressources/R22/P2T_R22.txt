@@ -1,6 +1,7 @@
 # R22
 # Temperature [degre C] / Pression relative [bar]
 # Separation must be TAB !!!!
+# 2 same valeurs of temperature will cause and issue and must be removed !!!!
 -100	0,02
 -90	0,048
 -80	0,1035
@@ -11,7 +12,7 @@
 -46	0,789
 -44	0,87
 -42	0,9575
--40	1,0132
+# -40	1,0132
 -40	1,0518
 -38	1,1533
 -36	1,2623

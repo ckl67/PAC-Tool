@@ -2,11 +2,12 @@ package gui;
 
 public enum ElDrawObject {
 	Point, 
-	PointMeasure, 
-	PointMeasureLogP, 
+	PointLogP, 
 	Line, 
 	DottedLine, 
-	LineHorzInfBP,
-	LineHorzInfHP, 
-	LineTemp
+	LineHorzBPLogP,
+	PointBPLogP, 
+	LineHorzHPLogP, 
+	PointHPLogP, 
+	LineTemp;
 }

@@ -38,8 +38,6 @@ public class ElDraw {
 	private Color 			color;			// Color
 	private double 			x1,y1;   		// Coordinate  
 	private double 			x2,y2;			// Coordinate
-	private double 			xmin,ymin;		// Coordinate
-	private double 			xmax,ymax;		// Coordinate
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -61,18 +59,18 @@ public class ElDraw {
 		this.ensembleName = vensembleName;
 		this.elDrawObj = velDrawObj;
 		this.color = vcolor;
-		if (velDrawObj.equals(ElDrawObject.LineHorzInfBP) || velDrawObj.equals(ElDrawObject.LineHorzInfHP) ) {  
+		if (velDrawObj.equals(ElDrawObject.LineHorzBPLogP) || velDrawObj.equals(ElDrawObject.LineHorzHPLogP) ) {  
 			// Line Horizontal
-			this.x1=xmin;
+			this.x1=0;	// Will be define during the drawing
 			this.y1=xy;
-			this.x2=xmax;
+			this.x2=0;	// Will be define during the drawing
 			this.y2=xy;
 		} else {
 			// Line Vertical 
 			this.x1=xy;
-			this.y1=ymin;
+			this.y1=0;	// Will be define during the drawing
 			this.x2=xy;
-			this.y2=ymax;
+			this.y2=0;	// Will be define during the drawing
 		}
 	}
 
@@ -122,15 +120,14 @@ public class ElDraw {
 	// 							METHOD
 	// -------------------------------------------------------
 
-	public static List<ElDraw> createElDrawFrom(MeasureCollection measureCollection, List<ElDraw> veDrawL) {
-		
-		List<ElDraw> eDrawL = veDrawL;
+	public static List<ElDraw> createElDrawFrom(MeasureCollection measureCollection, List<ElDraw> eDrawL) {
+		boolean onshot = true;
 		
 		for (MeasureObject p : MeasureObject.values()) {
 			int n = p.ordinal(); 		// p = T1,T2,... n = 0 , 1, 
 			List<MeasurePoint> measureL = measureCollection.getMeasurePL();
 			MeasurePoint m = measureL.get(n);  
-			
+
 			// ----------------------------------
 			// Will now create the Draw Element: 
 			// 	Draw elements (ElDraw) must be 
@@ -169,14 +166,35 @@ public class ElDraw {
 						" Hsat(Approx) =" + m.getMHaprox() + 
 						" Hsat(Real) =" + m.getMHreal());
 
-				eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointMeasureLogP,Color.BLACK,m.getMHaprox(),Math.log10(m.getMP0PK())));
+
+				switch (m.getMeasureObject()) {
+				case T1 : case T6 : case T8 :	// Points intersection with P0
+					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointLogP,Color.BLACK,m.getMHaprox(),Math.log10(m.getMP0PK())));
+					break;
+				case T2 : case T5 :				// Points intersection with PK
+					break;
+				case P3 : case P4 : 			// Points PK (P3 and P4) 
+					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointHPLogP,Color.BLACK,m.getMHaprox(),Math.log10(m.getMP0PK())));
+					if (onshot) {
+						onshot = false;
+						eDrawL.add(new ElDraw("PK",ElDrawObject.LineHorzHPLogP,Color.BLACK,Math.log10(m.getMP0PK())));											
+					}
+					break;			
+				case P7 :						// Point P0 (P7)
+					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointBPLogP,Color.BLACK,m.getMHaprox(),Math.log10(m.getMP0PK())));					
+					eDrawL.add(new ElDraw("P0",ElDrawObject.LineHorzBPLogP,Color.BLACK,Math.log10(m.getMP0PK())));					
+					break;			
+				default:
+					break;
+
+				}
 			}
 
 		}
 		return eDrawL;
-		
+
 	}
-	
+
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
@@ -210,21 +228,6 @@ public class ElDraw {
 		return color;
 	}
 
-	public void setXmin(double xmin) {
-		this.xmin = xmin;
-	}
-
-	public void setYmin(double ymin) {
-		this.ymin = ymin;
-	}
-
-	public void setXmax(double xmax) {
-		this.xmax = xmax;
-	}
-
-	public void setYmax(double ymax) {
-		this.ymax = ymax;
-	}
 
 }
 

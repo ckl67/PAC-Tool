@@ -181,8 +181,10 @@ public class Enthalpy {
 				double enthL = Double.parseDouble(val [1].replace(",", "."));
 				double enthV = Double.parseDouble(val [2].replace(",", "."));
 
+				// System.out.println("enthL / temp = " + enthL +"/"+ temp + "     enthV / temp = " + enthV +"/"+ temp);
 				listSatHlP.add(new Point2D.Double(enthL,convT2P(temp)));
 				listSatHvP.add(new Point2D.Double(enthV,convT2P(temp)));
+				// System.out.println("enthL / P = " + enthL +"/"+ convT2P(temp) + "     enthV / P = " + enthV +"/"+ convT2P(temp));
 
 				//	if ( Math.abs(enthL-hSatErrLoc>))
 				if (enthL < hSatMin )
@@ -339,6 +341,14 @@ public class Enthalpy {
 			x1 = getT(id+1);
 			y0 = getP(id);
 			y1 = getP(id+1);
+			
+			if (x1==x0) {
+				System.out.println("----------");
+				System.out.println("  ERROR   ");
+				System.out.println("----------");
+				System.out.println("2 same valeurs of temperature will cause and issue and must be removed ");
+				System.out.println("		in P2T_Rxx.txt and SaturationCurve_Rxx2.txt File !!!!");
+			}
 			presso = (x-x0)*(y1-y0)/(x1-x0)+ y0;
 		}
 		return presso+deltaP;
