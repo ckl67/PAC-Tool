@@ -62,7 +62,8 @@ public class MeasureCollection {
 							double P0PK0 = m.getMP0PK();
 							double Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(Hsat0, Psat0, P0PK0); 
 							m.setMHaprox(Hmpiso0);
-							m.setMHreal(Hmpiso0);						
+							if (m.getMHreal() == 0)
+								m.setMHreal(Hmpiso0);  // only the first time or when reset
 							m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
 						}
 					}
@@ -82,7 +83,8 @@ public class MeasureCollection {
 							double P0PK1 = m.getMP0PK();
 							double Hmpiso1 = enthalpy.CompHmatchPSatWithP0PK(Hsat1, Psat1, P0PK1); 
 							m.setMHaprox(Hmpiso1);
-							m.setMHreal(Hmpiso1);
+							if (m.getMHreal() == 0)
+								m.setMHreal(Hmpiso1);  // only the first time or when reset
 							m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
 						}
 						

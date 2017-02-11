@@ -149,9 +149,8 @@ public class PanelEnthalpy extends JPanel {
 					dragStart.y = yMouse-offset.y;
 				} else {
 					if ((evt.getModifiers() & InputEvent.BUTTON1_MASK) != 0) {			
-						ElDraw edraw = new ElDraw("Test", ElDrawObject.Point, Color.RED,getHoXm(xMouse),getPoYm(yMouse));
-						eDrawL.add(edraw);
-						repaint();
+						//ElDraw edraw = new ElDraw("Test", ElDrawObject.PointLogP, Color.RED,getHoXm(xMouse),Math.log10(getPoYm(yMouse)));
+						//eDrawL.add(edraw);
 					}
 				}
 			}
@@ -212,8 +211,8 @@ public class PanelEnthalpy extends JPanel {
 	 * Will return the nearest element id of elDraw
 	 * @param eDrawL
 	 * @param ElDrawObject
-	 * @param pH 
-	 * @param pP 
+	 * @param H 
+	 * @param Log(P) 
 	 * @return
 	 */
 	public int getIdNearest(List<ElDraw> eDrawL, ElDrawObject elDrawObject, double pH, double pP) {
@@ -224,8 +223,13 @@ public class PanelEnthalpy extends JPanel {
 		for(int i=0;i<eDrawL.size();i++) {
 			if ( eDrawL.get(i).getElDrawObj() == elDrawObject) {
 				double H = eDrawL.get(i).getX1();
-				double P = eDrawL.get(i).getY1();
-				if ( ( pH < (H+zoneH)/zoom) && ( pH > (H-zoneH)/zoom) && (pP < (P+zoneP)/zoom) && ( pP > (P-zoneP)/zoom) ) {
+				double Plog = eDrawL.get(i).getY1();
+				double P = Math.exp( Plog  * Math.log(10));
+				//System.out.println("picked pP = " + pP );
+				//System.out.println("Point P  = " + P );
+				//System.out.println("Zoom  = " + zoom );
+				
+				if ( ( pH < H+zoneH/zoom) && ( pH > H-zoneH/zoom) && (pP < P+zoneP/zoom) && ( pP > P-zoneP/zoom) ) {
 					id = i;
 				}
 			}

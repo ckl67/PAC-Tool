@@ -122,7 +122,7 @@ public class ElDraw {
 
 	public static List<ElDraw> createElDrawFrom(MeasureCollection measureCollection, List<ElDraw> eDrawL) {
 		boolean onshot = true;
-		
+
 		for (MeasureObject p : MeasureObject.values()) {
 			int n = p.ordinal(); 		// p = T1,T2,... n = 0 , 1, 
 			List<MeasurePoint> measureL = measureCollection.getMeasurePL();
@@ -157,6 +157,7 @@ public class ElDraw {
 
 			if ( (m.getMeasureChoiceStatus().equals(MeasureChoiceStatus.ChosenHaprox)) || 
 					(m.getMeasureChoiceStatus().equals(MeasureChoiceStatus.ChosenP0PK))) {
+				/*
 				System.out.println(p + 
 						" Choice Status =" + m.getMeasureChoiceStatus() + 
 						" value=" + m.getValue() + 
@@ -165,23 +166,24 @@ public class ElDraw {
 						" ==> P0 or PK =" + m.getMP0PK() +
 						" Hsat(Approx) =" + m.getMHaprox() + 
 						" Hsat(Real) =" + m.getMHreal());
-
+				 */
 
 				switch (m.getMeasureObject()) {
 				case T1 : case T6 : case T8 :	// Points intersection with P0
-					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointLogP,Color.BLACK,m.getMHaprox(),Math.log10(m.getMP0PK())));
+					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointLogP,Color.BLACK,m.getMHreal(),Math.log10(m.getMP0PK())));
 					break;
 				case T2 : case T5 :				// Points intersection with PK
+					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointLogP,Color.BLACK,m.getMHreal(),Math.log10(m.getMP0PK())));
 					break;
 				case P3 : case P4 : 			// Points PK (P3 and P4) 
-					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointHPLogP,Color.BLACK,m.getMHaprox(),Math.log10(m.getMP0PK())));
+					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointHPLogP,Color.BLACK,m.getMHreal(),Math.log10(m.getMP0PK())));
 					if (onshot) {
 						onshot = false;
 						eDrawL.add(new ElDraw("PK",ElDrawObject.LineHorzHPLogP,Color.BLACK,Math.log10(m.getMP0PK())));											
 					}
 					break;			
 				case P7 :						// Point P0 (P7)
-					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointBPLogP,Color.BLACK,m.getMHaprox(),Math.log10(m.getMP0PK())));					
+					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointBPLogP,Color.BLACK,m.getMHreal(),Math.log10(m.getMP0PK())));					
 					eDrawL.add(new ElDraw("P0",ElDrawObject.LineHorzBPLogP,Color.BLACK,Math.log10(m.getMP0PK())));					
 					break;			
 				default:
@@ -198,6 +200,10 @@ public class ElDraw {
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
+
+	public void setX1(double x) {
+		this.x1 = x;
+	}
 
 	public ElDrawObject getElDrawObj() {
 		return elDrawObj;

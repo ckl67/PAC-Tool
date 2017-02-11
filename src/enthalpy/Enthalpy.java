@@ -304,10 +304,10 @@ public class Enthalpy {
 			System.out.println("Error CompHmatchPSatWithP0PK");
 		}
 
-		System.out.println("Psat= " + Psat);
-		System.out.println("P0PK= " + P0PK);
-		System.out.println("Hsat= " + Hsat);
-		System.out.println("H0HK=" + H0HK);
+		//System.out.println("Psat= " + Psat);
+		//System.out.println("P0PK= " + P0PK);
+		//System.out.println("Hsat= " + Hsat);
+		//System.out.println("H0HK=" + H0HK);
 
 		return H0HK;
 	}
