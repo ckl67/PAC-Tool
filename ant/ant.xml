@@ -9,11 +9,13 @@
     <target name="create_run_jar">
         <jar destfile="${dir.jarfile}/PAC-Tool.jar" filesetmanifest="mergewithoutmain">
             <manifest>
-                <attribute name="Main-Class" value="pacp.Run"/>
+                <attribute name="Main-Class" value="gui.Run"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="${dir.workspace}/pac-tool/bin"/>
             <zipfileset excludes="META-INF/*.SF" src="${dir.workspace}/pac-tool/lib/json-simple.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/Users/kluges1/.p2/pool/plugins/org.junit_4.12.0.v201504281640/junit.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="D:/Users/kluges1/.p2/pool/plugins/org.hamcrest.core_1.3.0.v201303031735.jar"/>
         </jar>
     </target>
 </project>
