@@ -372,6 +372,7 @@ public class WinEnthalpy {
 				measurePL.get(MeasureObject._PK_LIQUID_ID).setValue(PK);
 				textPHP.setText(String.format("%.2f",measurePL.get(MeasureObject._PK_VAPOR_ID).getValue()));
 
+				
 				MeasureCollection.updateAllMeasurePoints(measureCollection,enthalpy);
 				eDrawL.clear();
 				eDrawL = ElDraw.createElDrawFrom(measureCollection,eDrawL);

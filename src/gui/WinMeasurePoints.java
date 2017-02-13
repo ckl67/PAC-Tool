@@ -314,7 +314,7 @@ public class WinMeasurePoints {
 				int x = measurePL.get(pointMatched_id).getMeasureObject().getXm();
 				int y = measurePL.get(pointMatched_id).getMeasureObject().getYm();
 
-				// Create Cercle
+				// Create Circle
 				Point2D center = new Point2D.Float(x, y);
 				float[] dist = {0.0f, 1.0f};
 				Color[] colors = {Color.YELLOW, Color.RED};

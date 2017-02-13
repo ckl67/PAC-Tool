@@ -34,7 +34,13 @@ Environnement de développement intégré / (Integrated Development Environment)
 
 WindowBuilder (Eclipse)
 	Installation WindowBuilder à travers Marketplace dans Eclipse
-	
+
+log4j Logger
+	Log4j Plugin pour le logging  
+		Download : https://logging.apache.org/log4j/2.x/download.html 
+	Utilisation:
+	http://logging.apache.org/log4j/2.x/manual/api.html
+		
 Langage de modélisation unifié, Unified Modeling Language (UML) intégré à  Eclipse
 	ObjectAid
 	Installer uniquement les modules ne nécessitant pas de licences.
