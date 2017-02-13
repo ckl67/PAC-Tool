@@ -58,6 +58,8 @@ import enthalpy.Enthalpy;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.ImageIcon;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class WinEnthalpy {
 	/* ----------------------------------------
@@ -173,6 +175,12 @@ public class WinEnthalpy {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent arg0) {
+				PanelEnthRepaintAction.PanelEnthRepaintActionStop();
+			}
+		});
 		frame.setTitle("Diagramme Enthalpique");
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(WinEnthalpy.class.getResource("/gui/images/PAC-Tool_32.png")));
 		frame.setBounds(100, 100, 800, 500);

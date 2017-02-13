@@ -24,6 +24,8 @@ import javax.swing.Timer;
 
 public class PanelEnthRepaintAction {
 
+	private static Timer timer;
+	
 	/**
 	 * A RepaintAction object calls the repaint method of panel each
 	 * time its PanelEnthRepaintAction() method is called. An object of this
@@ -44,8 +46,12 @@ public class PanelEnthRepaintAction {
 	 */
 	public PanelEnthRepaintAction() {
 		RepaintAction action = new RepaintAction();
-		Timer timer = new Timer(200, action);
+		timer = new Timer(200, action);
 		timer.start();
 	}
 
+	public static void PanelEnthRepaintActionStop () {
+		timer.stop();
+
+	}
 }

@@ -153,6 +153,8 @@ public class Enthalpy {
 				listTP.add(new Point2D.Double(temp, press));
 			}
 		}
+		// Close scanner to avoid memory leak
+		sken.close();
 	}
 
 	// -------------------------------------------------------
@@ -210,6 +212,10 @@ public class Enthalpy {
 		// Security margin linked to the fact that at the limit of the list, 
 		// the chosen element can be at n-1 position (due to end of list)
 		hSatErrLoc = hSatErrLoc*2;
+		
+		// Close scanner to avoid memory leak
+		sken.close();
+
 	}
 
 	// -------------------------------------------------------

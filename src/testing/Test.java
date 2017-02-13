@@ -178,6 +178,9 @@ public class Test {
 				System.out.println("Mauvais Choix !");             
 			}
 		}
+		// Close scanner to avoid memory leak
+		sc.close();
+
 	}
 
 	// ===================================================================================================================
@@ -940,6 +943,9 @@ public class Test {
 				strLineJSON = strLineJSON + strLine;
 			}
 		}
+
+		// Close scanner to avoid memory leak
+		sken.close();
 
 		// Parse to JSON Object
 		JSONParser parser = new JSONParser();  

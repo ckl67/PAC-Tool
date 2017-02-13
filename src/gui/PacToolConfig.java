@@ -173,6 +173,9 @@ public class PacToolConfig {
 		pac.setJsonObject(jsonObjPac);
 		//System.out.println(jsonObjPac);
 
+		// Close scanner to avoid memory leak
+		sken.close();
+
 	}
 
 }

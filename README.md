@@ -4,10 +4,9 @@ Outil pour Pompe à Chaleur
 
  Définition 
 -------------
-Outil qui permet de vérifier les données contructeur (COP) et de calculer le COP de votre pompe à  chaleur à  partir de vos mesures. (Programme écrit en Java)
+Outil qui permet de vérifier les données contructeur (COP) et de calculer le COP de votre pompe à  chaleur à  partir de vos mesures. 
+(Programme écrit en Java)
 
- Utilisation
--------------
 Pour le test, préférer la méthode en ligne de commande
 java -jar PAC-Tool.jar
 
@@ -20,6 +19,13 @@ Java
 	Version minimale: jre8u111
 	Je conseille d'utiliser JDK
 
+Fuite mémoire
+	Afin de trouver les fuites mémoires, il est conseillé d'activer les paramètres de vérification code au niveau Eclipse
+	Par la suite, un outil très intéressant est: visualvm
+	https://visualvm.github.io/download.html
+	Introduction:
+	https://developers.redhat.com/blog/2014/08/14/find-fix-memory-leaks-java-application/
+	
 Environnement de développement intégré / (Integrated Development Environment)
 	Eclipse IDE for Java Developers
 	Version minimale: Neon.1a Release (4.6.1)
@@ -94,5 +100,5 @@ Introduction au Java
 OpenClassRooms est une excellente introduction au Java
 * https://openclassrooms.com/courses/apprenez-a-programmer-en-java
 
-L'un des meilleurs livre gratuit que j'ai trouvé pour le Java
-* http://math.hws.edu/javanotes/
+D'autres références sont données au niveau du répertoire: 
+..\pac-tool\dev_help

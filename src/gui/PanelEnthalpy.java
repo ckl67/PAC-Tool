@@ -147,12 +147,15 @@ public class PanelEnthalpy extends JPanel {
 				if ((evt.getModifiers() & InputEvent.BUTTON2_MASK) != 0) {
 					dragStart.x = xMouse-offset.x;
 					dragStart.y = yMouse-offset.y;
-				} else {
+				} 
+				/*
+				else {
 					if ((evt.getModifiers() & InputEvent.BUTTON1_MASK) != 0) {			
 						ElDraw edraw = new ElDraw("Test", ElDrawObject.PointLogP, Color.RED,getHoXm(xMouse),Math.log10(getPoYm(yMouse)));
 						eDrawL.add(edraw);
 					}
 				}
+				*/
 			}
 		});
 
