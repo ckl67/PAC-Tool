@@ -25,11 +25,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import org.json.simple.JSONObject;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import computation.Misc;
 
 public class Enthalpy {
 
+	private static final Logger logger = LogManager.getLogger(Enthalpy.class.getName());
+	
 	// -------------------------------------------------------
 	// 					INSTANCE VARIABLES
 	// -------------------------------------------------------
@@ -137,10 +140,7 @@ public class Enthalpy {
 		try {
 			sken = new Scanner (file);
 		} catch (FileNotFoundException e) {
-			System.out.println("loadPTFile");
-			System.out.println(e.getMessage());
-			System.out.println(e.toString());
-			e.printStackTrace();
+			logger.error("Ops! (loadPTFile)", e);
 		}
 
 		while (sken.hasNext () ){
@@ -169,10 +169,7 @@ public class Enthalpy {
 		try {
 			sken = new Scanner (file);
 		} catch (FileNotFoundException e) {
-			System.out.println("loadHlvPSatFile");
-			System.out.println(e.getMessage());
-			System.out.println(e.toString());
-			e.printStackTrace();
+			logger.error("Ops! (loadHlvPSatFile)", e);
 		}
 
 		while (sken.hasNext () ){
@@ -307,7 +304,7 @@ public class Enthalpy {
 		}
 		else {
 			H0HK = Hsat;
-			System.out.println("Error CompHmatchPSatWithP0PK");
+			logger.error("(CompHmatchPSatWithP0PK) H0HK = Hsat " + H0HK + " " + Hsat);
 		}
 
 		//System.out.println("Psat= " + Psat);
@@ -349,11 +346,9 @@ public class Enthalpy {
 			y1 = getP(id+1);
 			
 			if (x1==x0) {
-				System.out.println("----------");
-				System.out.println("  ERROR   ");
-				System.out.println("----------");
-				System.out.println("2 same valeurs of temperature will cause and issue and must be removed ");
-				System.out.println("		in P2T_Rxx.txt and SaturationCurve_Rxx2.txt File !!!!");
+				logger.error("(convT2P )");
+				logger.error("  2 same valeurs of temperature will cause and issue and must be removed ");
+				logger.error("	in P2T_Rxx.txt and SaturationCurve_Rxx2.txt File !!!!");
 			}
 			presso = (x-x0)*(y1-y0)/(x1-x0)+ y0;
 		}

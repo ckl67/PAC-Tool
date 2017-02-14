@@ -7,7 +7,7 @@ Outil pour Pompe à Chaleur
 Outil qui permet de vérifier les données contructeur (COP) et de calculer le COP de votre pompe à  chaleur à  partir de vos mesures. 
 (Programme écrit en Java)
 
-Pour le test, préférer la méthode en ligne de commande
+Pour le test final, préférer la méthode en ligne de commande
 java -jar PAC-Tool.jar
 
  Chaine de Développement
@@ -75,14 +75,8 @@ ffmpeg
 Gource
 	Outil d'animation du projet
 	http://gource.io/#
-	Generation video: 
-	gource -920x691 -s 1 
-	gource -920x691 -s 2 
-	ou autre taille selon écraon
-	
-	Utiliser un logiciel de capture écran.
-	comme:
-	* Free Screen To Video V2.0
+	Generation video: (durant la génération la fenêtre doit resté ouverte )
+	https://github.com/acaudwell/Gource/wiki/Videos
 	
 Conversion Jar vers Exe
 	Launch4j est une application qui permet de créer des "lanceurs" (exécutables Windows classiques 

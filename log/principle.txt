@@ -9,10 +9,6 @@ The level may be configured with one of TRACE, DEBUG, INFO, WARN, ERROR, FATAL, 
 	The additivity attribute may be assigned a value of true or false. If the attribute is omitted 
 	the default value of false will be used.
 
-The LoggerConfig may also be configured with one or more AppenderRef elements. 
-Each appender referenced will become associated with the specified LoggerConfig. 
-If multiple appenders are configured on the LoggerConfig each of them be called when processing logging events.
-
 Every configuration must have a root logger. 
 
 Configuring Appenders
@@ -22,6 +18,9 @@ attibute containing the appender plugin's name. In addition each appender must h
 a value that is unique within the set of appenders. The name will be used by loggers to reference the appender 
 as described in the previous section.
 
-Most appenders also support a layout to be configured (which again may be specified either using the specific 
-Layout plugin's name as the element or with "layout" as the element name along with a type attribute that contains 
-the layout plugin's name. The various appenders will contain other attributes or elements that are required for them to function properly.
+Configuring Appenders
+=========================
+Avoid
+	e.printStackTrace();
+Replace
+	logger.error("Ops!", e);

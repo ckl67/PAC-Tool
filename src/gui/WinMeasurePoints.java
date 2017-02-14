@@ -42,6 +42,9 @@ import java.awt.Color;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import computation.MeasurePoint;
 import computation.MeasureChoiceStatus;
 import computation.MeasureObject;
@@ -51,6 +54,8 @@ import enthalpy.Enthalpy;
 import javax.imageio.ImageIO;
 
 public class WinMeasurePoints {
+
+	private static final Logger logger = LogManager.getLogger(WinMeasurePoints.class.getName());
 
 	// --------------------------------------------------------------------
 	// Objective is to display the coordinate for the points to match
@@ -95,7 +100,7 @@ public class WinMeasurePoints {
 					WinMeasurePoints window = new WinMeasurePoints(eDrawL1,measureCollection1,enthalpy1,null);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error("Ops!", e);
 				}
 			}
 		});

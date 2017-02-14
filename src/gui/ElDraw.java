@@ -21,17 +21,22 @@ package gui;
 
 import java.awt.Color;
 import java.util.List;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import computation.MeasureChoiceStatus;
 import computation.MeasureCollection;
 import computation.MeasureObject;
 import computation.MeasurePoint;
 
+
 // ===================================================================================================================
 //										DEFINITION OF THE DRAW ELEMENTS
 // ===================================================================================================================
 
 public class ElDraw {
+
+	private static final Logger logger = LogManager.getLogger(ElDraw.class.getName());
 
 	private ElDrawObject 	elDrawObj;  	// type of draw : Line, Point,..
 	private String 			ensembleName;	// Several ElDraw objects can belong to same ensemble 
@@ -157,8 +162,8 @@ public class ElDraw {
 
 			if ( (m.getMeasureChoiceStatus().equals(MeasureChoiceStatus.ChosenHaprox)) || 
 					(m.getMeasureChoiceStatus().equals(MeasureChoiceStatus.ChosenP0PK))) {
-				/*
-				System.out.println(p + 
+			
+				logger.info(p + 
 						" Choice Status =" + m.getMeasureChoiceStatus() + 
 						" value=" + m.getValue() + 
 						" T=" + m.getMT() + 
@@ -166,7 +171,6 @@ public class ElDraw {
 						" ==> P0 or PK =" + m.getMP0PK() +
 						" Hsat(Approx) =" + m.getMHaprox() + 
 						" Hsat(Real) =" + m.getMHreal());
-				 */
 
 				switch (m.getMeasureObject()) {
 				case T1 : case T6 : case T8 :	// Points intersection with P0
