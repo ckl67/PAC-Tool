@@ -84,7 +84,7 @@ public class WinMeasurePoints {
 	private JTextField textFieldUnity;
 
 	// -------------------------------------------------------
-	// 						CONSTRUCTOR
+	// 						LOCAL TEST
 	// -------------------------------------------------------
 	/**
 	 * Launch the application for local test
@@ -106,6 +106,9 @@ public class WinMeasurePoints {
 		});
 	}
 
+	// -------------------------------------------------------
+	// 						CONSTRUCTOR
+	// -------------------------------------------------------
 	/**
 	 * Create the application.
 	 * @param measurePL 
@@ -187,8 +190,7 @@ public class WinMeasurePoints {
 		try {
 			img = ImageIO.read(frame.getContentPane().getClass().getResource(imgURL));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Ops!", e);
 		}
 
 		int imgWidth = img.getWidth();
@@ -211,12 +213,11 @@ public class WinMeasurePoints {
 
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Reset to Zero the measure points");
+				logger.trace("Reset to Zero the measure points List");
 				for (int n = 0; n < measurePL.size(); n++ ) {
 					measurePL.get(n).clearMeasure();
 				}
-
-				System.out.println("Empty eDrawL");
+				logger.trace("Remove all Draw elements (eDrawL) (Clear the display)");
 				eDrawL.clear();
 			}
 		});
@@ -249,9 +250,11 @@ public class WinMeasurePoints {
 				// that the point can be validated 
 				measurePL.get(id).setMeasureChoiceStatus(MeasureChoiceStatus.Chosen);
 
-				System.out.println("New values");
+				logger.trace("New values added {}",String.format("%.2f", inValue));
+				logger.trace("Update the Measure Collection data ");
 				MeasureCollection.updateAllMeasurePoints(measureCollection,enthalpy);
-				System.out.println("Empty eDrawL");
+
+				logger.trace("Reinitialse the complete Draw elements with the Measure Collection");
 				eDrawL.clear();
 				eDrawL = ElDraw.createElDrawFrom(measureCollection,eDrawL);
 
@@ -383,6 +386,7 @@ public class WinMeasurePoints {
 
 			if (HELP_FIND_LOCATION)
 			{
+				// Only print authorized, because used to display the coordinate in the cmd window
 				System.out.println(evt.getX()+","+ evt.getY());
 			}
 			else {

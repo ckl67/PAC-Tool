@@ -2,10 +2,13 @@ package computation;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import enthalpy.Enthalpy;
 
 public class MeasureCollection {
+
+	private static final Logger logger = LogManager.getLogger(MeasureCollection.class.getName());
 
 	private List<MeasurePoint> measurePL;
 
@@ -47,8 +50,7 @@ public class MeasureCollection {
 							double Psat0 = m.getMP();
 							double P0PK0 = m.getMP0PK();
 							double Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(Hsat0, Psat0, P0PK0); 
-							m.setMHaprox(Hmpiso0);
-							m.setMHreal(Hmpiso0);						
+							m.setMH(Hmpiso0);
 							m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
 						}
 
@@ -61,9 +63,7 @@ public class MeasureCollection {
 							double Psat0 = m.getMP();
 							double P0PK0 = m.getMP0PK();
 							double Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(Hsat0, Psat0, P0PK0); 
-							m.setMHaprox(Hmpiso0);
-							if (m.getMHreal() == 0)
-								m.setMHreal(Hmpiso0);  // only the first time or when reset
+							m.setMH(Hmpiso0);
 							m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
 						}
 					}
@@ -82,12 +82,10 @@ public class MeasureCollection {
 							double Psat1 = m.getMP();
 							double P0PK1 = m.getMP0PK();
 							double Hmpiso1 = enthalpy.CompHmatchPSatWithP0PK(Hsat1, Psat1, P0PK1); 
-							m.setMHaprox(Hmpiso1);
-							if (m.getMHreal() == 0)
-								m.setMHreal(Hmpiso1);  // only the first time or when reset
+							m.setMH(Hmpiso1);
 							m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
 						}
-						
+
 						if (m.getMeasureObject().equals(MeasureObject.T5)) {
 							System.out.println("TO BE DEFINED !");
 						}
@@ -104,26 +102,31 @@ public class MeasureCollection {
 					// if P3 == _PK_GAS_ID, we have also to Fill P4
 					if (m.getMeasureObject().equals(MeasureObject.P3)) {
 						double Hsat = enthalpy.matchP2HvaporSat( m.getMP());
-						m.setMHaprox(Hsat);
-						m.setMHreal(Hsat);
+						m.setMH(Hsat);
 					}
 					// P4 == _PK_LIQUID_ID
 					if (m.getMeasureObject().equals(MeasureObject.P4)) {
 						double Hsat = enthalpy.matchP2HliquidSat( m.getMP());
-						m.setMHaprox(Hsat);
-						m.setMHreal(Hsat);						
+						m.setMH(Hsat);
 					}
 					// P7 == _P0_GAS_ID
 					if (m.getMeasureObject().equals(MeasureObject.P7)) {
 						double Hsat = enthalpy.matchP2HvaporSat( m.getMP());
-						m.setMHaprox(Hsat);
-						m.setMHreal(Hsat);						
+						m.setMH(Hsat);
 					}
 					m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenP0PK);
 				}
 				break;			
 			default:
 				break;
+			}
+
+			if ( (m.getMeasureChoiceStatus().equals(MeasureChoiceStatus.ChosenHaprox)) || 
+					(m.getMeasureChoiceStatus().equals(MeasureChoiceStatus.ChosenP0PK))) {
+				logger.info(
+						"Point = {} Choice Status = {} value= {} T={} --> P={} ==> P0 or PK ={} H ={} ",
+						p, m.getMeasureChoiceStatus(),m.getValue(),m.getMT(),m.getMP(),m.getMP0PK(),m.getMH()						
+						);
 			}
 		}
 	}

@@ -1,10 +1,8 @@
 package gui;
 
+// mc == Mouse Coordinate
 public enum ElDrawObject {
-	PointLogP, 
-	DottedLineLogP, 
-	LineHorzBPLogP,
-	PointBPLogP, 
-	LineHorzHPLogP, 
-	PointHPLogP, 
+	Pointmc,
+	PointHPmc, 
+	LinePmc, 
 }

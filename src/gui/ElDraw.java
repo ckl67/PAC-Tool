@@ -64,7 +64,7 @@ public class ElDraw {
 		this.ensembleName = vensembleName;
 		this.elDrawObj = velDrawObj;
 		this.color = vcolor;
-		if (velDrawObj.equals(ElDrawObject.LineHorzBPLogP) || velDrawObj.equals(ElDrawObject.LineHorzHPLogP) ) {  
+		if (velDrawObj.equals(ElDrawObject.LinePmc) ) {  
 			// Line Horizontal
 			this.x1=0;	// Will be define during the drawing
 			this.y1=xy;
@@ -159,36 +159,32 @@ public class ElDraw {
 			//			Only for points ! 
 			//			If point is moved we set : _ChosenHreal
 			// ----------------------------------
-
 			if ( (m.getMeasureChoiceStatus().equals(MeasureChoiceStatus.ChosenHaprox)) || 
 					(m.getMeasureChoiceStatus().equals(MeasureChoiceStatus.ChosenP0PK))) {
 			
-				logger.info(p + 
-						" Choice Status =" + m.getMeasureChoiceStatus() + 
-						" value=" + m.getValue() + 
-						" T=" + m.getMT() + 
-						" --> P=" + m.getMP() + 
-						" ==> P0 or PK =" + m.getMP0PK() +
-						" Hsat(Approx) =" + m.getMHaprox() + 
-						" Hsat(Real) =" + m.getMHreal());
-
 				switch (m.getMeasureObject()) {
 				case T1 : case T6 : case T8 :	// Points intersection with P0
-					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointLogP,Color.BLACK,m.getMHreal(),Math.log10(m.getMP0PK())));
+					logger.info("Point={} H={} P={}", m.getMeasureObject(),m.getMH(),m.getMP0PK());
+					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointHPmc,Color.BLACK,m.getMH(),m.getMP0PK()));
 					break;
 				case T2 : case T5 :				// Points intersection with PK
-					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointLogP,Color.BLACK,m.getMHreal(),Math.log10(m.getMP0PK())));
+					logger.info("Point={} H={} P={}", m.getMeasureObject(),m.getMH(),m.getMP0PK());
+					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointHPmc,Color.BLACK,m.getMH(),m.getMP0PK()));
 					break;
 				case P3 : case P4 : 			// Points PK (P3 and P4) 
-					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointHPLogP,Color.BLACK,m.getMHreal(),Math.log10(m.getMP0PK())));
+					logger.info("Point={} H={} P={}", m.getMeasureObject(),m.getMH(),m.getMP0PK());
+					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointHPmc,Color.BLACK,m.getMH(),m.getMP0PK()));
 					if (onshot) {
 						onshot = false;
-						eDrawL.add(new ElDraw("PK",ElDrawObject.LineHorzHPLogP,Color.BLACK,Math.log10(m.getMP0PK())));											
+						logger.info("Line={} P={}", m.getMeasureObject(),m.getMP0PK());
+						eDrawL.add(new ElDraw("PK",ElDrawObject.LinePmc,Color.BLACK,m.getMP0PK()));											
 					}
 					break;			
 				case P7 :						// Point P0 (P7)
-					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointBPLogP,Color.BLACK,m.getMHreal(),Math.log10(m.getMP0PK())));					
-					eDrawL.add(new ElDraw("P0",ElDrawObject.LineHorzBPLogP,Color.BLACK,Math.log10(m.getMP0PK())));					
+					logger.info("Point={} H={} P={}", m.getMeasureObject(),m.getMH(),m.getMP0PK());
+					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointHPmc,Color.BLACK,m.getMH(),m.getMP0PK()));
+					logger.info("Line={} P={}", m.getMeasureObject(),m.getMP0PK());
+					eDrawL.add(new ElDraw("PK",ElDrawObject.LinePmc,Color.BLACK,m.getMP0PK()));											
 					break;			
 				default:
 					break;

@@ -25,6 +25,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -304,15 +305,26 @@ public class PanelEnthalpy extends JPanel {
 		super.paintComponent(g);
 		setBackground(Color.WHITE);
 
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		
 		// -----------------------------------
 		// Apply a translation so that the drawing
 		// coordinates on the display matches the Panel
 		// -----------------------------------
 		zoomx = getWidth()/(xHmax-xHmin+2*marginx)*zoom;
 		zoomy = getHeight()/(log10_yPmax-log10_yPmin+2*log10_marginy)*zoom;
-		g2.translate(getWidth()/2,getHeight()/2);
-		g2.scale(zoomx, -zoomy);
-		g2.translate(offset.x-(xHmax+xHmin)/2, -offset.y/mvoYf-(log10_yPmax+log10_yPmin)/2);
+		
+		AffineTransform g2AfT = new AffineTransform();
+		AffineTransform sg2AfT = g2.getTransform();
+		
+		g2AfT.translate(getWidth()/2,getHeight()/2);
+		g2AfT.scale(zoomx, -zoomy);
+		g2AfT.translate(offset.x-(xHmax+xHmin)/2, -offset.y/mvoYf-(log10_yPmax+log10_yPmin)/2);
+		g2.transform(g2AfT);
+				
+		//g2.translate(getWidth()/2,getHeight()/2);
+		//g2.scale(zoomx, -zoomy);
+		//g2.translate(offset.x-(xHmax+xHmin)/2, -offset.y/mvoYf-(log10_yPmax+log10_yPmin)/2);
 
 		// -----------------------------------
 		// Image
@@ -446,38 +458,63 @@ public class PanelEnthalpy extends JPanel {
 		}
 
 		// -----------------------------------
+		// Follow the graph based on Eclipse
+		// The Ellipse2D class define an ellipse that is defined by a framing rectangle
+		// -----------------------------------
+		if (curveFollowerY>0) {
+			float Rm = 4;
+
+			g2.setStroke(new BasicStroke(0.03f));
+			g2.setPaint(Color.BLUE);
+			double H0 = curveFollowerX - Rm/zoomx;
+			double widthH = (2*Rm)/zoomx;
+			double P0 = (Math.log10(curveFollowerY)*zoomy+Math.log(10)-Rm)/zoomy;
+			double heightP = (2*Rm)/zoomy;
+			g2.fill (new Ellipse2D.Double(H0, P0, widthH, heightP));
+		}
+		
+		// ===================================
+		// REVERT RESTORE ORIGINAL TRANSFORM
+		// ===================================
+		g2.setTransform(sg2AfT);
+
+		// -----------------------------------
 		// Draw All Elements
 		// -----------------------------------
 		for(int i=0;i<eDrawL.size();i++) {
 
 			switch (eDrawL.get(i).getElDrawObj()) {
-			case LineHorzHPLogP: case LineHorzBPLogP:
-				g2.setStroke(new BasicStroke((float)(0.02/zoom)));
+			case LinePmc: 
+				g2.setStroke(new BasicStroke((float)(2)));
 				g2.setPaint(Color.BLUE);
-				g2.draw( new Line2D.Double(enthalpy.getxHmin(),eDrawL.get(i).getY1(),enthalpy.getxHmax(),eDrawL.get(i).getY1()));
+				//g2.draw( new Line2D.Double(,eDrawL.get(i).getY1(),,eDrawL.get(i).getY1()));
+				int linexmin = getXmoH(enthalpy.getxHmin());
+				int linexmax = getXmoH(enthalpy.getxHmax());
+				int liney = getYmoP(eDrawL.get(i).getY1());
+				g2.draw( new Line2D.Double(linexmin,liney,linexmax,liney));
 				break;
 			default:
 				break;
 			}
 		}
 
-		float Rm = 5;
 
 		for(int i=0;i<eDrawL.size();i++) {
+			int Rm = 4;
 
 			switch (eDrawL.get(i).getElDrawObj()) {
-			case PointLogP: case PointHPLogP: case PointBPLogP:  
-				double H0 = eDrawL.get(i).getX1() - Rm/zoomx;
-				double widthH = (2*Rm)/zoomx;
-				double P0 = (eDrawL.get(i).getY1()*zoomy+Math.log(10)-Rm)/zoomy;
-				double heightP = (2*Rm)/zoomy;
-
-				g2.setStroke(new BasicStroke((float)(0.02/zoom)));
+			case PointHPmc:  
+				g2.setStroke(new BasicStroke((float)(2)));
 				g2.setColor(Color.RED);
-				//g2.setColor(eDrawL.get(i).getColor());
-				g2.draw (new Ellipse2D.Double(H0, P0, widthH, heightP));
-				g2.setColor(Color.BLACK);
-				g2.fill (new Ellipse2D.Double(H0, P0, widthH, heightP));
+
+				int pointxm = getXmoH(eDrawL.get(i).getX1())-Rm;
+				int pointym = getYmoP(eDrawL.get(i).getY1())-Rm;
+
+				int widthH = (2*Rm);
+				int heightP = (2*Rm);
+
+				g2.setColor(Color.RED);
+				g2.draw (new Ellipse2D.Double(pointxm, pointym, widthH, heightP));
 
 				break;
 			default:
@@ -487,19 +524,6 @@ public class PanelEnthalpy extends JPanel {
 			//System.out.println(eDrawL.get(i).getType() + "  " + eDrawL.get(i).getY1());
 		}
 
-		// -----------------------------------
-		// Follow the graph based on Eclipse
-		// The Ellipse2D class define an ellipse that is defined by a framing rectangle
-		// -----------------------------------
-		if (curveFollowerY>0) {
-			g2.setStroke(new BasicStroke(0.03f));
-			g2.setPaint(Color.BLUE);
-			double H0 = curveFollowerX - Rm/zoomx;
-			double widthH = (2*Rm)/zoomx;
-			double P0 = (Math.log10(curveFollowerY)*zoomy+Math.log(10)-Rm)/zoomy;
-			double heightP = (2*Rm)/zoomy;
-			g2.fill (new Ellipse2D.Double(H0, P0, widthH, heightP));
-		}
 	}
 
 	// -------------------------------------------------------

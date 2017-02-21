@@ -21,14 +21,14 @@ package computation;
 import org.json.simple.JSONObject;
 
 public class MeasurePoint {
-	private MeasureObject measureObject;	
-	private double value;					// Pressure or Temperature,..
-	private MeasureChoiceStatus measureChoiceStatus;	// MeasurePoint to be considered (chosen or Hreal or Haprox)
-	private double P;						// Pressure
-	private double T;						// Temperature
-	private double Haprox;					// Value Enthalpy approximation computed by Matching PSat (T-Isotherm) with P0PK
-	private double Hreal;					// Value Enthalpy real : moved manually to the correct point
-	private double P0PK;					// Value P0 or PK Pressure
+	private MeasureObject measureObject;				// T1,T2,..
+	private double value;								// Pressure or Temperature,..
+	private MeasureChoiceStatus measureChoiceStatus;	// MeasurePoint to be considered 
+	private double P;									// Pressure (can be different than P0 or PK)
+	private double T;									// Temperature
+	private double H;									// Value Enthalpy approximation or real=moved manually
+	private double P0PK;								// Value P0 or PK Pressure
+
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -39,8 +39,7 @@ public class MeasurePoint {
 		this.measureChoiceStatus = MeasureChoiceStatus.NotChosen;
 		this.P = 0.0;
 		this.T = 0.0;
-		this.Haprox = 0.0;
-		this.Hreal = 0.0;
+		this.H = 0.0;
 		this.P0PK = 0.0;
 	}
 
@@ -55,8 +54,7 @@ public class MeasurePoint {
 		this.measureChoiceStatus = MeasureChoiceStatus.NotChosen;
 		this.P = 0;
 		this.T = 0;
-		this.Haprox = 0;
-		this.Hreal = 0;
+		this.H = 0;
 		this.P0PK = 0;
 	}
 
@@ -82,8 +80,7 @@ public class MeasurePoint {
 		jsonObj.put("MeasureChoiceStatus", this.measureChoiceStatus);	
 		jsonObj.put("P", this.P);	
 		jsonObj.put("T", this.T);	
-		jsonObj.put("Haprox", this.Haprox);	
-		jsonObj.put("Hreal", this.Hreal);	
+		jsonObj.put("H", this.H);	
 		return jsonObj ;
 	}
 
@@ -97,8 +94,7 @@ public class MeasurePoint {
 		this.measureChoiceStatus = (MeasureChoiceStatus) jsonObj.get("MeasureChoiceStatus");
 		this.P = ((Number) jsonObj.get("P")).intValue();
 		this.T = ((Number) jsonObj.get("T")).intValue();
-		this.Haprox = ((Number) jsonObj.get("Haprox")).intValue();
-		this.Hreal = ((Number) jsonObj.get("Hreal")).intValue();
+		this.H = ((Number) jsonObj.get("H")).intValue();
 	}
 
 
@@ -142,20 +138,12 @@ public class MeasurePoint {
 		T = t;
 	}
 	
-	public double getMHaprox() {
-		return Haprox;
+	public double getMH() {
+		return H;
 	}	
 
-	public void setMHaprox(double h) {
-		Haprox = h;
-	}
-
-	public double getMHreal() {
-		return Hreal;
-	}	
-
-	public void setMHreal(double h) {
-		Hreal = h;
+	public void setMH(double h) {
+		H = h;
 	}
 
 	public double getMP0PK() {
