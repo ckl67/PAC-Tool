@@ -295,11 +295,7 @@ public class WinEnthalpy {
 						if (p.name() == name) {
 							int n = p.ordinal();  
 							//System.out.println(n);
-<<<<<<< HEAD
-							//System.out.println(measureCollection.getMeasurePL().get(n).getMHreal());
-=======
 							//System.out.println(measureCollection.getMeasurePL().get(n).getMH());
->>>>>>> Integer_Points
 							measureCollection.getMeasurePL().get(n).setMH(hResult);
 							//System.out.println(measureCollection.getMeasurePL().get(n).getMHreal());
 						}
@@ -338,16 +334,11 @@ public class WinEnthalpy {
 		mntmDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int id; 
-<<<<<<< HEAD
-				id = panelEnthalpyDrawArea.getIdNearest(eDrawL, ElDrawObject.PointHLogP,panelEnthalpyDrawArea.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpyDrawArea.getPoYm((int)pointJPopupMenu.getY()));
-				System.out.println(id);
-=======
 				id = panelEnthalpyDrawArea.getIdNearest(eDrawL, ElDrawObject.PointPK_HP,panelEnthalpyDrawArea.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpyDrawArea.getPoYm((int)pointJPopupMenu.getY()));
 				if (id < 0)
 					id = panelEnthalpyDrawArea.getIdNearest(eDrawL, ElDrawObject.PointP0_HP, panelEnthalpyDrawArea.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpyDrawArea.getPoYm((int)pointJPopupMenu.getY()));
 				
 				logger.info(" Element to delete {} ", id);
->>>>>>> Integer_Points
 				if (id >= 0) {
 					eDrawL.remove(id);
 				}
@@ -359,14 +350,10 @@ public class WinEnthalpy {
 		mntmMove.setIcon(new ImageIcon(WinEnthalpy.class.getResource("/com/sun/javafx/scene/control/skin/modena/HTMLEditor-Paste-Black.png")));
 		mntmMove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-<<<<<<< HEAD
-				int id = panelEnthalpyDrawArea.getIdNearest(eDrawL, ElDrawObject.PointHLogP, panelEnthalpyDrawArea.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpyDrawArea.getPoYm((int)pointJPopupMenu.getY()));
-=======
 				int id = panelEnthalpyDrawArea.getIdNearest(eDrawL, ElDrawObject.PointPK_HP, panelEnthalpyDrawArea.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpyDrawArea.getPoYm((int)pointJPopupMenu.getY()));
 				if (id < 0)
 					id = panelEnthalpyDrawArea.getIdNearest(eDrawL, ElDrawObject.PointP0_HP, panelEnthalpyDrawArea.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpyDrawArea.getPoYm((int)pointJPopupMenu.getY()));
 				logger.info(" Element to move {} ", id);
->>>>>>> Integer_Points
 				if (id >= 0) {
 					ElDrawIdToMoveOnP = id;
 				}
@@ -512,6 +499,5 @@ public class WinEnthalpy {
 		textPBP.setText(String.format("%.2f",measurePL.get(MeasureObject._BP_ID).getValue()));
 		
 	}
-
 
 }

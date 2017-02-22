@@ -21,15 +21,7 @@ package computation;
 import org.json.simple.JSONObject;
 
 public class MeasurePoint {
-<<<<<<< HEAD
-	private MeasureObject measureObject;	
-	private double value;					// Pressure or Temperature,..
-	private MeasureChoiceStatus measureChoiceStatus;	// MeasurePoint to be considered (chosen or Hreal or H)
-	private double P;						// Pressure
-	private double T;						// Temperature
-	private double H;					// Value Enthalpy approximation computed by Matching PSat (T-Isotherm) with P0PK
-	private double P0PK;					// Value P0 or PK Pressure
-=======
+
 	private MeasureObject measureObject;				// T1,T2,..
 	private double value;								// Pressure or Temperature,..
 	private MeasureChoiceStatus measureChoiceStatus;	// MeasurePoint to be considered 
@@ -37,8 +29,6 @@ public class MeasurePoint {
 	private double T;									// Temperature
 	private double H;									// Value Enthalpy approximation or real=moved manually
 	private double P0PK;								// Value P0 or PK Pressure
-
->>>>>>> Integer_Points
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -155,10 +145,6 @@ public class MeasurePoint {
 	public void setMH(double h) {
 		H = h;
 	}
-<<<<<<< HEAD
-
-=======
->>>>>>> Integer_Points
 
 	public double getMP0PK() {
 		return P0PK;

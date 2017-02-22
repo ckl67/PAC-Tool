@@ -27,11 +27,6 @@ import enthalpy.Enthalpy;
 public class MeasureCollection {
 
 	private static final Logger logger = LogManager.getLogger(MeasureCollection.class.getName());
-<<<<<<< HEAD
-	
-=======
-
->>>>>>> Integer_Points
 	private List<MeasurePoint> measurePL;
 
 	// -------------------------------------------------------
@@ -142,11 +137,7 @@ public class MeasureCollection {
 			default:
 				break;
 			}
-<<<<<<< HEAD
-			
-=======
 
->>>>>>> Integer_Points
 			if ( (m.getMeasureChoiceStatus().equals(MeasureChoiceStatus.ChosenHaprox)) || 
 					(m.getMeasureChoiceStatus().equals(MeasureChoiceStatus.ChosenP0PK))) {
 				logger.info(
