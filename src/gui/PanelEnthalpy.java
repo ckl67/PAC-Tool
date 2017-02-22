@@ -225,10 +225,9 @@ public class PanelEnthalpy extends JPanel {
 		double zoneP = 2;
 
 		for(int i=0;i<eDrawL.size();i++) {
-			if ( eDrawL.get(i).getElDrawObj() == elDrawObject) {
+			if ( (eDrawL.get(i).getElDrawObj() == elDrawObject) && (eDrawL.get(i).isMovable()) ){
 				double H = eDrawL.get(i).getX1();
-				double Plog = eDrawL.get(i).getY1();
-				double P = Math.exp( Plog  * Math.log(10));
+				double P = eDrawL.get(i).getY1();
 				//System.out.println("picked pP = " + pP );
 				//System.out.println("Point P  = " + P );
 				//System.out.println("Zoom  = " + zoom );
@@ -451,7 +450,7 @@ public class PanelEnthalpy extends JPanel {
 		// Curve
 		// -----------------------------------		
 		g2.setStroke(new BasicStroke((float) 0));
-		g2.setColor(Color.red);
+		g2.setColor(Color.RED);
 		for(int i=1;i<enthalpy.getlistSatHlP().size();i++) {
 			g2.draw( new Line2D.Double(enthalpy.getSatHl(i-1),Math.log10(enthalpy.getSatP(i-1)),enthalpy.getSatHl(i),Math.log10(enthalpy.getSatP(i))));			 
 			g2.draw( new Line2D.Double(enthalpy.getSatHv(i-1),Math.log10(enthalpy.getSatP(i-1)),enthalpy.getSatHv(i),Math.log10(enthalpy.getSatP(i))));
@@ -484,10 +483,9 @@ public class PanelEnthalpy extends JPanel {
 		for(int i=0;i<eDrawL.size();i++) {
 
 			switch (eDrawL.get(i).getElDrawObj()) {
-			case LinePmc: 
+			case LineP: 
 				g2.setStroke(new BasicStroke((float)(2)));
 				g2.setPaint(Color.BLUE);
-				//g2.draw( new Line2D.Double(,eDrawL.get(i).getY1(),,eDrawL.get(i).getY1()));
 				int linexmin = getXmoH(enthalpy.getxHmin());
 				int linexmax = getXmoH(enthalpy.getxHmax());
 				int liney = getYmoP(eDrawL.get(i).getY1());
@@ -503,36 +501,48 @@ public class PanelEnthalpy extends JPanel {
 			int Rm = 5;
 
 			switch (eDrawL.get(i).getElDrawObj()) {
-			case PointHPmc:  
-				g2.setStroke(new BasicStroke((float)(2)));
-				g2.setColor(Color.RED);
-
+			case PointPK_HP: case PointP0_HP:  
+				// Circle
 				int pointxm = getXmoH(eDrawL.get(i).getX1())-Rm;
 				int pointym = getYmoP(eDrawL.get(i).getY1())-Rm;
-
 				int widthH = (2*Rm);
 				int heightP = (2*Rm);
 
 				g2.setColor(Color.RED);
+				g2.setStroke(new BasicStroke((float)(2)));
 				g2.draw (new Ellipse2D.Double(pointxm, pointym, widthH, heightP));
 
-				g2.setColor(Color.BLUE);
-				g2.drawRoundRect(pointxm-5, pointym-25, 20, 20, 5, 5);
-				g2.setColor(Color.WHITE);
-				g2.fillRoundRect(pointxm-5, pointym-25, 20, 20, 5, 5);
-
-			    font = new Font("Courier", Font.PLAIN, 10);
-			    g2.setFont(font);
-			    g2.setColor(Color.BLUE);  
-				String s = String.format("%s",eDrawL.get(i).getEnsembleName());
-				g2.drawString(s, pointxm, pointym-15);
+				// Road Sign
+				if (eDrawL.get(i).getElDrawObj() == ElDrawObject.PointPK_HP) {
+					// Road Sign above
+					g2.setColor(Color.BLUE);
+					g2.drawRoundRect(pointxm-5, pointym-20, 20, 15, 5, 5);
+					g2.setColor(Color.WHITE);
+					g2.fillRoundRect(pointxm-5, pointym-20, 20, 15, 5, 5);
+	
+				    font = new Font("Courier", Font.PLAIN, 10);
+				    g2.setFont(font);
+				    g2.setColor(Color.BLUE);  
+					String s = String.format("%s",eDrawL.get(i).getEnsembleName());
+					g2.drawString(s, pointxm, pointym-10);
+				} else {
+					// Road Sign below
+					g2.setColor(Color.BLUE);
+					g2.drawRoundRect(pointxm-5, pointym+20, 20, 15, 5, 5);
+					g2.setColor(Color.WHITE);
+					g2.fillRoundRect(pointxm-5, pointym+20, 20, 15, 5, 5);
+	
+				    font = new Font("Courier", Font.PLAIN, 10);
+				    g2.setFont(font);
+				    g2.setColor(Color.BLUE);  
+					String s = String.format("%s",eDrawL.get(i).getEnsembleName());
+					g2.drawString(s, pointxm, pointym+30);
+				}
 
 				break;
 			default:
 				break;
 			}
-
-			//System.out.println(eDrawL.get(i).getType() + "  " + eDrawL.get(i).getY1());
 		}
 
 	}

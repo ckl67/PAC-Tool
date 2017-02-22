@@ -28,6 +28,7 @@ import java.awt.EventQueue;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import java.awt.GridLayout;
+import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -117,7 +118,7 @@ public class WinPressTemp {
 			public void windowClosed(WindowEvent arg0) {
 			}
 		});
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(WinPressTemp.class.getResource("/computation/images/PAC-Tool_32.png")));
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(WinPressTemp.class.getResource("/gui/images/PAC-Tool_32.png")));
 		frame.setTitle("Relation Temp\u00E9rature Pression");
 		frame.setBounds(100, 100, 450, 400);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -186,6 +187,8 @@ public class WinPressTemp {
 			super.paintComponent(g);
 			setBackground(Color.WHITE);
 		
+			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
 			// -----------------------------------
 			// Apply a translation so that the drawing 
 			// coordinates on the display matches the Panel

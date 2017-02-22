@@ -51,6 +51,9 @@ import javax.swing.border.LineBorder;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeListener;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import computation.MeasurePoint;
 import computation.MeasureCollection;
 import computation.MeasureObject;
@@ -62,6 +65,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class WinEnthalpy {
+	
+	private static final Logger logger = LogManager.getLogger(WinEnthalpy.class.getName());
+
 	/* ----------------------------------------
 	 *  	STATIC GLOBAL VAR PUBLIC
 	 * ---------------------------------------- */
@@ -241,6 +247,7 @@ public class WinEnthalpy {
 			@Override
 			public void mousePressed(MouseEvent evt) {
 				ElDrawIdToMoveOnP = -1;
+				panelEnthalpyDrawArea.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			}
 		});
 		
@@ -280,13 +287,15 @@ public class WinEnthalpy {
 				}
 				
 				if (ElDrawIdToMoveOnP >=0 ){
+					panelEnthalpyDrawArea.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+
 					eDrawL.get(ElDrawIdToMoveOnP).setX1(hResult);
 					String name = eDrawL.get(ElDrawIdToMoveOnP).getEnsembleName(); // T1,T2,..
 					for (MeasureObject p : MeasureObject.values()) {
 						if (p.name() == name) {
 							int n = p.ordinal();  
 							//System.out.println(n);
-							//System.out.println(measureCollection.getMeasurePL().get(n).getMHreal());
+							//System.out.println(measureCollection.getMeasurePL().get(n).getMH());
 							measureCollection.getMeasurePL().get(n).setMH(hResult);
 							//System.out.println(measureCollection.getMeasurePL().get(n).getMHreal());
 						}
@@ -325,8 +334,11 @@ public class WinEnthalpy {
 		mntmDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int id; 
-				id = panelEnthalpyDrawArea.getIdNearest(eDrawL, ElDrawObject.PointHPmc,panelEnthalpyDrawArea.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpyDrawArea.getPoYm((int)pointJPopupMenu.getY()));
-				System.out.println(id);
+				id = panelEnthalpyDrawArea.getIdNearest(eDrawL, ElDrawObject.PointPK_HP,panelEnthalpyDrawArea.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpyDrawArea.getPoYm((int)pointJPopupMenu.getY()));
+				if (id < 0)
+					id = panelEnthalpyDrawArea.getIdNearest(eDrawL, ElDrawObject.PointP0_HP, panelEnthalpyDrawArea.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpyDrawArea.getPoYm((int)pointJPopupMenu.getY()));
+				
+				logger.info(" Element to delete {} ", id);
 				if (id >= 0) {
 					eDrawL.remove(id);
 				}
@@ -338,10 +350,12 @@ public class WinEnthalpy {
 		mntmMove.setIcon(new ImageIcon(WinEnthalpy.class.getResource("/com/sun/javafx/scene/control/skin/modena/HTMLEditor-Paste-Black.png")));
 		mntmMove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int id = panelEnthalpyDrawArea.getIdNearest(eDrawL, ElDrawObject.PointHPmc, panelEnthalpyDrawArea.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpyDrawArea.getPoYm((int)pointJPopupMenu.getY()));
+				int id = panelEnthalpyDrawArea.getIdNearest(eDrawL, ElDrawObject.PointPK_HP, panelEnthalpyDrawArea.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpyDrawArea.getPoYm((int)pointJPopupMenu.getY()));
+				if (id < 0)
+					id = panelEnthalpyDrawArea.getIdNearest(eDrawL, ElDrawObject.PointP0_HP, panelEnthalpyDrawArea.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpyDrawArea.getPoYm((int)pointJPopupMenu.getY()));
+				logger.info(" Element to move {} ", id);
 				if (id >= 0) {
 					ElDrawIdToMoveOnP = id;
-					//eDrawL.move(id);
 				}
 			}
 		});

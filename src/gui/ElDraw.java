@@ -39,7 +39,8 @@ public class ElDraw {
 	private static final Logger logger = LogManager.getLogger(ElDraw.class.getName());
 
 	private ElDrawObject 	elDrawObj;  	// type of draw : Line, Point,..
-	private String 			ensembleName;	// Several ElDraw objects can belong to same ensemble 
+	private String 			ensembleName;	// Several ElDraw objects can belong to same ensemble
+	private boolean 		movable;		// Can the point be moved
 	private Color 			color;			// Color
 	private double 			x1,y1;   		// Coordinate  
 	private double 			x2,y2;			// Coordinate
@@ -60,11 +61,12 @@ public class ElDraw {
 	 * @param vcolor
 	 * @param y
 	 */
-	public ElDraw( String vensembleName, ElDrawObject velDrawObj, Color vcolor , double xy) {
+	public ElDraw( String vensembleName, ElDrawObject velDrawObj, boolean vmovale, Color vcolor , double xy) {
 		this.ensembleName = vensembleName;
 		this.elDrawObj = velDrawObj;
+		this.movable = vmovale;
 		this.color = vcolor;
-		if (velDrawObj.equals(ElDrawObject.LinePmc) ) {  
+		if (velDrawObj.equals(ElDrawObject.LineP) ) {  
 			// Line Horizontal
 			this.x1=0;	// Will be define during the drawing
 			this.y1=xy;
@@ -89,9 +91,10 @@ public class ElDraw {
 	 * @param x1
 	 * @param y1
 	 */
-	public ElDraw( String vensembleName, ElDrawObject velDrawObj, Color vcolor , double x1, double y1) {
+	public ElDraw( String vensembleName, ElDrawObject velDrawObj, boolean vmovale, Color vcolor , double x1, double y1) {
 		this.ensembleName = vensembleName;
 		this.elDrawObj = velDrawObj;
+		this.movable = vmovale;
 		this.color = vcolor;
 		this.x1=x1;
 		this.y1=y1;
@@ -111,9 +114,10 @@ public class ElDraw {
 	 * @param x2
 	 * @param y2
 	 */
-	public ElDraw( String vensembleName, ElDrawObject velDrawObj, Color vcolor , double x1, double y1, double x2, double y2) {
+	public ElDraw( String vensembleName, ElDrawObject velDrawObj,  boolean vmovale, Color vcolor , double x1, double y1, double x2, double y2) {
 		this.ensembleName = vensembleName;
 		this.elDrawObj = velDrawObj;
+		this.movable = vmovale;	
 		this.color = vcolor;
 		this.x1=x1;
 		this.y1=y1;
@@ -165,26 +169,26 @@ public class ElDraw {
 				switch (m.getMeasureObject()) {
 				case T1 : case T6 : case T8 :	// Points intersection with P0
 					logger.info("Point={} H={} P={}", m.getMeasureObject(),m.getMH(),m.getMP0PK());
-					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointHPmc,Color.BLACK,m.getMH(),m.getMP0PK()));
+					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointP0_HP,true,Color.BLACK,m.getMH(),m.getMP0PK()));
 					break;
 				case T2 : case T5 :				// Points intersection with PK
 					logger.info("Point={} H={} P={}", m.getMeasureObject(),m.getMH(),m.getMP0PK());
-					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointHPmc,Color.BLACK,m.getMH(),m.getMP0PK()));
+					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointPK_HP,true,Color.BLACK,m.getMH(),m.getMP0PK()));
 					break;
 				case P3 : case P4 : 			// Points PK (P3 and P4) 
 					logger.info("Point={} H={} P={}", m.getMeasureObject(),m.getMH(),m.getMP0PK());
-					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointHPmc,Color.BLACK,m.getMH(),m.getMP0PK()));
+					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointPK_HP,false,Color.BLACK,m.getMH(),m.getMP0PK()));
 					if (onshot) {
 						onshot = false;
 						logger.info("Line={} P={}", m.getMeasureObject(),m.getMP0PK());
-						eDrawL.add(new ElDraw("PK",ElDrawObject.LinePmc,Color.BLACK,m.getMP0PK()));											
+						eDrawL.add(new ElDraw("PK",ElDrawObject.LineP,false,Color.BLACK,m.getMP0PK()));											
 					}
 					break;			
 				case P7 :						// Point P0 (P7)
 					logger.info("Point={} H={} P={}", m.getMeasureObject(),m.getMH(),m.getMP0PK());
-					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointHPmc,Color.BLACK,m.getMH(),m.getMP0PK()));
+					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointP0_HP,false,Color.BLACK,m.getMH(),m.getMP0PK()));
 					logger.info("Line={} P={}", m.getMeasureObject(),m.getMP0PK());
-					eDrawL.add(new ElDraw("PK",ElDrawObject.LinePmc,Color.BLACK,m.getMP0PK()));											
+					eDrawL.add(new ElDraw("PK",ElDrawObject.LineP,false,Color.BLACK,m.getMP0PK()));											
 					break;			
 				default:
 					break;
@@ -234,6 +238,12 @@ public class ElDraw {
 		return color;
 	}
 
+	public boolean isMovable() {
+		return movable;
+	}
 
+	public void setMovable(boolean movable) {
+		this.movable = movable;
+	}
 }
 

@@ -2,7 +2,7 @@ package gui;
 
 // mc == Mouse Coordinate
 public enum ElDrawObject {
-	Pointmc,
-	PointHPmc, 
-	LinePmc, 
+	PointPK_HP, 
+	PointP0_HP, 
+	LineP, 
 }
