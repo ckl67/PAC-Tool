@@ -500,7 +500,7 @@ public class PanelEnthalpy extends JPanel {
 
 
 		for(int i=0;i<eDrawL.size();i++) {
-			int Rm = 4;
+			int Rm = 5;
 
 			switch (eDrawL.get(i).getElDrawObj()) {
 			case PointHPmc:  
@@ -515,6 +515,17 @@ public class PanelEnthalpy extends JPanel {
 
 				g2.setColor(Color.RED);
 				g2.draw (new Ellipse2D.Double(pointxm, pointym, widthH, heightP));
+
+				g2.setColor(Color.BLUE);
+				g2.drawRoundRect(pointxm-5, pointym-25, 20, 20, 5, 5);
+				g2.setColor(Color.WHITE);
+				g2.fillRoundRect(pointxm-5, pointym-25, 20, 20, 5, 5);
+
+			    font = new Font("Courier", Font.PLAIN, 10);
+			    g2.setFont(font);
+			    g2.setColor(Color.BLUE);  
+				String s = String.format("%s",eDrawL.get(i).getEnsembleName());
+				g2.drawString(s, pointxm, pointym-15);
 
 				break;
 			default:
