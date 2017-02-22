@@ -152,7 +152,7 @@ public class PanelEnthalpy extends JPanel {
 				/*
 				else {
 					if ((evt.getModifiers() & InputEvent.BUTTON1_MASK) != 0) {			
-						ElDraw edraw = new ElDraw("Test", ElDrawObject.PointLogP, Color.RED,getHoXm(xMouse),Math.log10(getPoYm(yMouse)));
+						ElDraw edraw = new ElDraw("Test", ElDrawObject.PointHLogP, Color.RED,getHoXm(xMouse),Math.log10(getPoYm(yMouse)));
 						eDrawL.add(edraw);
 					}
 				}
@@ -454,7 +454,7 @@ public class PanelEnthalpy extends JPanel {
 		for(int i=0;i<eDrawL.size();i++) {
 
 			switch (eDrawL.get(i).getElDrawObj()) {
-			case LineHorzHPLogP: case LineHorzBPLogP:
+			case LineHorzLogP:
 				g2.setStroke(new BasicStroke((float)(0.02/zoom)));
 				g2.setPaint(Color.BLUE);
 				g2.draw( new Line2D.Double(enthalpy.getxHmin(),eDrawL.get(i).getY1(),enthalpy.getxHmax(),eDrawL.get(i).getY1()));
@@ -469,19 +469,25 @@ public class PanelEnthalpy extends JPanel {
 		for(int i=0;i<eDrawL.size();i++) {
 
 			switch (eDrawL.get(i).getElDrawObj()) {
-			case PointLogP: case PointHPLogP: case PointBPLogP:  
+			case PointHLogP:
 				double H0 = eDrawL.get(i).getX1() - Rm/zoomx;
 				double widthH = (2*Rm)/zoomx;
-				double P0 = (eDrawL.get(i).getY1()*zoomy+Math.log(10)-Rm)/zoomy;
+				double LogP0 = (eDrawL.get(i).getY1()*zoomy+Math.log(10)-Rm)/zoomy;
 				double heightP = (2*Rm)/zoomy;
 
 				g2.setStroke(new BasicStroke((float)(0.02/zoom)));
 				g2.setColor(Color.RED);
 				//g2.setColor(eDrawL.get(i).getColor());
-				g2.draw (new Ellipse2D.Double(H0, P0, widthH, heightP));
-				g2.setColor(Color.BLACK);
-				g2.fill (new Ellipse2D.Double(H0, P0, widthH, heightP));
+				g2.draw (new Ellipse2D.Double(H0, LogP0, widthH, heightP));
+				//g2.setColor(Color.BLACK);
+				//g2.fill (new Ellipse2D.Double(H0, LogP0, widthH, heightP));
 
+				//fontReal = fontReal.deriveFont(Font.BOLD, 16.0f);
+				//g2.setFont(fontReal);
+
+				String s = String.format("  %s",eDrawL.get(i).getEnsembleName());
+				g2.drawString(s, (float)(H0), (float)(LogP0));
+				
 				break;
 			default:
 				break;
@@ -499,9 +505,9 @@ public class PanelEnthalpy extends JPanel {
 			g2.setPaint(Color.BLUE);
 			double H0 = curveFollowerX - Rm/zoomx;
 			double widthH = (2*Rm)/zoomx;
-			double P0 = (Math.log10(curveFollowerY)*zoomy+Math.log(10)-Rm)/zoomy;
+			double LogP0 = (Math.log10(curveFollowerY)*zoomy+Math.log(10)-Rm)/zoomy;
 			double heightP = (2*Rm)/zoomy;
-			g2.fill (new Ellipse2D.Double(H0, P0, widthH, heightP));
+			g2.fill (new Ellipse2D.Double(H0, LogP0, widthH, heightP));
 		}
 	}
 

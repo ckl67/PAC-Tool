@@ -40,9 +40,10 @@ public class ElDraw {
 
 	private ElDrawObject 	elDrawObj;  	// type of draw : Line, Point,..
 	private String 			ensembleName;	// Several ElDraw objects can belong to same ensemble 
+	private boolean 		movable;		// Can the point be moved
 	private Color 			color;			// Color
-	private double 			x1,y1;   		// Coordinate  
-	private double 			x2,y2;			// Coordinate
+	private double 			x1,y1;   		// Coordinate  (final Coordinates, to avoid re-computation)
+	private double 			x2,y2;			// Coordinate  (final Coordinates, to avoid re-computation)
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -63,8 +64,9 @@ public class ElDraw {
 	public ElDraw( String vensembleName, ElDrawObject velDrawObj, Color vcolor , double xy) {
 		this.ensembleName = vensembleName;
 		this.elDrawObj = velDrawObj;
+		this.movable = false;
 		this.color = vcolor;
-		if (velDrawObj.equals(ElDrawObject.LineHorzBPLogP) || velDrawObj.equals(ElDrawObject.LineHorzHPLogP) ) {  
+		if (velDrawObj.equals(ElDrawObject.LineHorzLogP) ) {  
 			// Line Horizontal
 			this.x1=0;	// Will be define during the drawing
 			this.y1=xy;
@@ -92,6 +94,7 @@ public class ElDraw {
 	public ElDraw( String vensembleName, ElDrawObject velDrawObj, Color vcolor , double x1, double y1) {
 		this.ensembleName = vensembleName;
 		this.elDrawObj = velDrawObj;
+		this.movable = false;
 		this.color = vcolor;
 		this.x1=x1;
 		this.y1=y1;
@@ -114,6 +117,7 @@ public class ElDraw {
 	public ElDraw( String vensembleName, ElDrawObject velDrawObj, Color vcolor , double x1, double y1, double x2, double y2) {
 		this.ensembleName = vensembleName;
 		this.elDrawObj = velDrawObj;
+		this.movable =false;
 		this.color = vcolor;
 		this.x1=x1;
 		this.y1=y1;
@@ -163,32 +167,32 @@ public class ElDraw {
 			if ( (m.getMeasureChoiceStatus().equals(MeasureChoiceStatus.ChosenHaprox)) || 
 					(m.getMeasureChoiceStatus().equals(MeasureChoiceStatus.ChosenP0PK))) {
 			
-				logger.info(p + 
-						" Choice Status =" + m.getMeasureChoiceStatus() + 
-						" value=" + m.getValue() + 
-						" T=" + m.getMT() + 
-						" --> P=" + m.getMP() + 
-						" ==> P0 or PK =" + m.getMP0PK() +
-						" Hsat(Approx) =" + m.getMHaprox() + 
-						" Hsat(Real) =" + m.getMHreal());
-
 				switch (m.getMeasureObject()) {
 				case T1 : case T6 : case T8 :	// Points intersection with P0
-					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointLogP,Color.BLACK,m.getMHreal(),Math.log10(m.getMP0PK())));
+					logger.info("Point={} H={} P={} PLog={}", m.getMeasureObject(),m.getMH(),m.getMP0PK(),Math.log10(m.getMP0PK()));
+					ElDraw nelDraw = new ElDraw(p.name(),ElDrawObject.PointHLogP,Color.BLACK,m.getMH(),Math.log10(m.getMP0PK()));
+					nelDraw.setMovable(true);
+					eDrawL.add(nelDraw);
+					
 					break;
 				case T2 : case T5 :				// Points intersection with PK
-					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointLogP,Color.BLACK,m.getMHreal(),Math.log10(m.getMP0PK())));
+					logger.info("Point={} H={} P={} PLog={}", m.getMeasureObject(),m.getMH(),m.getMP0PK(),Math.log10(m.getMP0PK()));
+					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointHLogP,Color.BLACK,m.getMH(),Math.log10(m.getMP0PK())));
 					break;
 				case P3 : case P4 : 			// Points PK (P3 and P4) 
-					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointHPLogP,Color.BLACK,m.getMHreal(),Math.log10(m.getMP0PK())));
+					logger.info("Point={} H={} P={} PLog={}", m.getMeasureObject(),m.getMH(),m.getMP0PK(),Math.log10(m.getMP0PK()));
+					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointHLogP,Color.BLACK,m.getMH(),Math.log10(m.getMP0PK())));
 					if (onshot) {
 						onshot = false;
-						eDrawL.add(new ElDraw("PK",ElDrawObject.LineHorzHPLogP,Color.BLACK,Math.log10(m.getMP0PK())));											
+						logger.info("Line={} P={} PLog={}", m.getMeasureObject(),m.getMP0PK(),Math.log10(m.getMP0PK()));
+						eDrawL.add(new ElDraw("PK",ElDrawObject.PointHLogP,Color.BLACK,Math.log10(m.getMP0PK())));											
 					}
 					break;			
 				case P7 :						// Point P0 (P7)
-					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointBPLogP,Color.BLACK,m.getMHreal(),Math.log10(m.getMP0PK())));					
-					eDrawL.add(new ElDraw("P0",ElDrawObject.LineHorzBPLogP,Color.BLACK,Math.log10(m.getMP0PK())));					
+					logger.info("Point={} H={} P={} PLog={}", m.getMeasureObject(),m.getMH(),m.getMP0PK(),Math.log10(m.getMP0PK()));
+					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointHLogP,Color.BLACK,m.getMH(),Math.log10(m.getMP0PK())));					
+					logger.info("Line={} P={} PLog={}", m.getMeasureObject(),m.getMP0PK(),Math.log10(m.getMP0PK()));
+					eDrawL.add(new ElDraw("P0",ElDrawObject.LineHorzLogP,Color.BLACK,Math.log10(m.getMP0PK())));					
 					break;			
 				default:
 					break;
@@ -236,6 +240,14 @@ public class ElDraw {
 
 	public Color getColor() {
 		return color;
+	}
+
+	public boolean isMovable() {
+		return movable;
+	}
+
+	public void setMovable(boolean movable) {
+		this.movable = movable;
 	}
 
 
