@@ -47,8 +47,6 @@ import pac.HeatTransferFluid;
 import pac.Pac;
 import pac.PacGasInjected;
 import pac.Refrigerant;
-import pac.PacItem;
-
 
 // ------------------------------------------------------
 // Could be fine to create auto-test function
@@ -819,21 +817,9 @@ public class Test {
 
 		System.out.println();
 		System.out.println();
-		int[] id = new int[12];
-		id[PacItem.COMP.ordinal()]=0;
-		id[PacItem.COND.ordinal()]=0;
-		id[PacItem.DEHY.ordinal()]=0;
-		id[PacItem.EPVA.ordinal()]=0;
-		id[PacItem.EVAP.ordinal()]=0;
-		id[PacItem.FLFRG.ordinal()]=0;
-		id[PacItem.CRCLS.ordinal()]=0;
-		id[PacItem.CIRTS.ordinal()]=0;
-		id[PacItem.FLCAS.ordinal()]=0;
-		id[PacItem.CRCLD.ordinal()]=0;
-		id[PacItem.CIRTD.ordinal()]=0;
-		id[PacItem.FLCAD.ordinal()]=0;
 		System.out.println("------------------------------------------------------------------");
 		System.out.println("Element which will be simulated --> All First elements" );
+		pac.getPacComponentId();
 		
 		
 		for (int i=0;i<4;i++) {
@@ -843,7 +829,7 @@ public class Test {
 			System.out.println("     Injecting Fluid Source (T="+pac.getFluidCaloSrcL().get(0).getT()+";P="+pac.getFluidCaloSrcL().get(0).getP()+") in Circulateur");
 			System.out.println("     Injecting Fluid Distribution(T="+pac.getFluidCaloDistrL().get(0).getT()+";P="+pac.getFluidCaloDistrL().get(0).getP()+") in Circulateur");
 
-			pac.PacCycle(PacGasInjected.COMPRESSOR,id);
+			pac.PacCycle(PacGasInjected.COMPRESSOR);
 
 			System.out.println("Output result for cycle:"+i+" ");
 			System.out.println("     R22 T=" + pac.getFluidRefriL().get(0).getT() + "  P="+ pac.getFluidRefriL().get(0).getP());
@@ -889,19 +875,8 @@ public class Test {
 		System.out.println("Circuit Distribution : deltaT=23");
 		pac.getCircuitDistrL().get(0).setDeltaT(23);
 
-		
-		id[PacItem.COMP.ordinal()]=1;
-		id[PacItem.COND.ordinal()]=0;
-		id[PacItem.DEHY.ordinal()]=0;
-		id[PacItem.EPVA.ordinal()]=0;
-		id[PacItem.EVAP.ordinal()]=0;
-		id[PacItem.FLFRG.ordinal()]=0;
-		id[PacItem.CRCLS.ordinal()]=0;
-		id[PacItem.CIRTS.ordinal()]=0;
-		id[PacItem.FLCAS.ordinal()]=0;
-		id[PacItem.CRCLD.ordinal()]=0;
-		id[PacItem.CIRTD.ordinal()]=0;
-		id[PacItem.FLCAD.ordinal()]=0;
+		pac.chooseCompressor(1);
+		pac.getPacComponentId();
 		
 		System.out.println("------------------------------------------------------------------");
 		System.out.println("Element which will be simulated --> All First elements EXCEPT COMPRESSOR 1" );
@@ -913,7 +888,7 @@ public class Test {
 			System.out.println("     Injecting Fluid Source (T="+pac.getFluidCaloSrcL().get(0).getT()+";P="+pac.getFluidCaloSrcL().get(0).getP()+") in Circulateur");
 			System.out.println("     Injecting Fluid Distribution(T="+pac.getFluidCaloDistrL().get(0).getT()+";P="+pac.getFluidCaloDistrL().get(0).getP()+") in Circulateur");
 
-			pac.PacCycle(PacGasInjected.COMPRESSOR,id);
+			pac.PacCycle(PacGasInjected.COMPRESSOR);
 
 			System.out.println("Output result for cycle:"+i+" ");
 			System.out.println("     R22 T=" + pac.getFluidRefriL().get(0).getT() + "  P="+ pac.getFluidRefriL().get(0).getP());

@@ -58,6 +58,7 @@ import computation.MeasurePoint;
 import computation.MeasureCollection;
 import computation.MeasureObject;
 import enthalpy.Enthalpy;
+import pac.Pac;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.ImageIcon;
@@ -79,6 +80,7 @@ public class WinEnthalpy {
 	private Enthalpy enthalpy;				// Enthalpy declaration
 	private List<ElDraw> eDrawL;			// Draw elements List: lines/points/...
 	private MeasureCollection measureCollection;
+	private Pac pac;
 
 	/* 	----------------------------------------
 	 * 		WIN BUILDER
@@ -111,7 +113,7 @@ public class WinEnthalpy {
 				MeasureCollection measureCollection1 = new MeasureCollection();
 
 		        try {
-					WinEnthalpy window = new WinEnthalpy(new Enthalpy(),eDrawL1,measureCollection1);
+					WinEnthalpy window = new WinEnthalpy(new Enthalpy(),eDrawL1,measureCollection1,new Pac());
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -123,10 +125,11 @@ public class WinEnthalpy {
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public WinEnthalpy(Enthalpy vconfEnthalpy, List<ElDraw> veDrawL, MeasureCollection vmeasureCollection) {
+	public WinEnthalpy(Enthalpy vconfEnthalpy, List<ElDraw> veDrawL, MeasureCollection vmeasureCollection, Pac pacv) {
 		enthalpy = vconfEnthalpy;
 		eDrawL = veDrawL;
 		measureCollection = vmeasureCollection;
+		pac = pacv;
 		measurePL = vmeasureCollection.getMeasurePL();
 		
 		pointJPopupMenu = new Point();
@@ -387,7 +390,7 @@ public class WinEnthalpy {
 				textPHP.setText(String.format("%.2f",measurePL.get(MeasureObject._PK_VAPOR_ID).getValue()));
 
 				
-				MeasureCollection.updateAllMeasurePoints(measureCollection,enthalpy);
+				MeasureCollection.updateAllMeasurePoints(measureCollection,enthalpy,pac);
 				eDrawL.clear();
 				eDrawL = ElDraw.createElDrawFrom(measureCollection,eDrawL);
 
@@ -410,7 +413,7 @@ public class WinEnthalpy {
 				measurePL.get(MeasureObject._BP_ID).setValue(P0);
 				textPBP.setText(String.format("%.2f",measurePL.get(MeasureObject._BP_ID).getValue()));
 
-				MeasureCollection.updateAllMeasurePoints(measureCollection,enthalpy);
+				MeasureCollection.updateAllMeasurePoints(measureCollection,enthalpy,pac);
 				eDrawL.clear();
 				eDrawL = ElDraw.createElDrawFrom(measureCollection,eDrawL);
 			}

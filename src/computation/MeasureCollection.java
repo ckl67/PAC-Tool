@@ -23,6 +23,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import enthalpy.Enthalpy;
+import pac.Pac;
 
 public class MeasureCollection {
 
@@ -46,8 +47,9 @@ public class MeasureCollection {
 	/**
 	 * Will update and compute H,P,T for ALL MeasurePoint Point
 	 */
-	public static void updateAllMeasurePoints (MeasureCollection measureCollection,Enthalpy enthalpy) {
+	public static void updateAllMeasurePoints (MeasureCollection measureCollection,Enthalpy enthalpy, Pac pac ) {
 
+		logger.info("updateAllMeasurePoints()");
 		for (MeasureObject p : MeasureObject.values()) {
 			int n = p.ordinal(); 		// p = T1,T2,... n = 0 , 1, 
 			List<MeasurePoint> measureL = measureCollection.getMeasurePL();
@@ -72,7 +74,8 @@ public class MeasureCollection {
 						}
 
 						if (m.getMeasureObject().equals(MeasureObject.T6)) {
-							System.out.println("TO BE DEFINED !");
+
+
 						}
 
 						if (m.getMeasureObject().equals(MeasureObject.T8)) {
@@ -82,6 +85,29 @@ public class MeasureCollection {
 							double Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(Hsat0, Psat0, P0PK0); 
 							m.setMH(Hmpiso0);
 							m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+
+
+							// T1 is Over heated of T8 (Will be updated only if T1 = 0) :: T1 = T8 + OH
+							if (measureL.get(MeasureObject.T1.ordinal()).getValue() == 0) {
+								double ohT = measureL.get(MeasureObject.T8.ordinal()).getMT() + 
+										pac.getCurrentCompressor().getOverheated();
+								logger.info("Computation of T1 --> (T8={} + Compressor over head={}) = {}",measureL.get(MeasureObject.T8.ordinal()).getMT(),pac.getCurrentCompressor().getOverheated(),ohT);
+
+								MeasurePoint m1 = measureL.get(MeasureObject.T1.ordinal());
+								m1.setValue(ohT);
+								m1.setMT(ohT);
+								m1.setMP( enthalpy.convT2P( m1.getMT()));
+								m1.setMP0PK( measureL.get(MeasureObject._P0).getValue()  );
+
+								Hsat0 = enthalpy.matchP2HvaporSat( m1.getMP());
+								Psat0 = m1.getMP();
+								P0PK0 = m1.getMP0PK();
+								Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(Hsat0, Psat0, P0PK0); 
+								m1.setMH(Hmpiso0);
+								m1.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+
+							} 
+
 						}
 					}
 				}
@@ -104,7 +130,20 @@ public class MeasureCollection {
 						}
 
 						if (m.getMeasureObject().equals(MeasureObject.T5)) {
-							System.out.println("TO BE DEFINED !");
+							double Hsat = enthalpy.matchP2HliquidSat( m.getMP());
+							m.setMH(Hsat);
+							m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+
+							// T6 will be computed only if T6 = 0
+							if (measureL.get(MeasureObject.T6.ordinal()).getValue() == 0) {
+
+								// Compute T6
+								MeasurePoint m6 = measureL.get(MeasureObject.T6.ordinal());
+								m6.setMP0PK( measureL.get(MeasureObject._P0).getValue());
+								m6.setMH(Hsat);
+								//m6.setMT();
+								m6.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+							}
 						}
 
 					}
@@ -125,6 +164,26 @@ public class MeasureCollection {
 					if (m.getMeasureObject().equals(MeasureObject.P4)) {
 						double Hsat = enthalpy.matchP2HliquidSat( m.getMP());
 						m.setMH(Hsat);
+
+
+						// T5 is under cooling of T4 (Will be updated only if T5 = 0) :: T5 = T4 - UC
+						if (measureL.get(MeasureObject.T5.ordinal()).getValue() == 0) {
+							double ucT = measureL.get(MeasureObject.P4.ordinal()).getMT() - 
+									pac.getCurrentCompressor().getUnderCooling();
+							logger.info("Computation of T5 --> (T4={}  Under Colling ={}) = {}",measureL.get(MeasureObject.P4.ordinal()).getMT(),pac.getCurrentCompressor().getUnderCooling(),ucT);
+
+							MeasurePoint m5 = measureL.get(MeasureObject.T5.ordinal());
+							m5.setMT(ucT);
+							m5.setValue(Math.round(ucT*100)/100.0);
+							m5.setMP( enthalpy.convT2P( m5.getMT()));
+							m5.setMP0PK( measureL.get(MeasureObject._PK).getValue()  );
+
+							double Hsatm5 = enthalpy.matchP2HliquidSat( m5.getMP());
+							m5.setMH(Hsatm5);
+							m5.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+						}
+
+
 					}
 					// P7 == _P0_GAS_ID
 					if (m.getMeasureObject().equals(MeasureObject.P7)) {

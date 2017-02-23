@@ -50,6 +50,7 @@ import computation.MeasureChoiceStatus;
 import computation.MeasureObject;
 import computation.MeasureCollection;
 import enthalpy.Enthalpy;
+import pac.Pac;
 
 import javax.imageio.ImageIO;
 
@@ -69,7 +70,7 @@ public class WinMeasurePoints {
 	private MeasureCollection measureCollection;
 	private List<ElDraw> eDrawL;
 	private Enthalpy enthalpy;
-	private WinEnthalpy winEnth;
+	private Pac pac;
 
 	// -------------------------------------------------------
 	//	LOCAL VARIABLES
@@ -97,7 +98,7 @@ public class WinMeasurePoints {
 				Enthalpy enthalpy1 = new Enthalpy();
 
 				try {
-					WinMeasurePoints window = new WinMeasurePoints(eDrawL1,measureCollection1,enthalpy1,null);
+					WinMeasurePoints window = new WinMeasurePoints(eDrawL1,measureCollection1,enthalpy1,new Pac());
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					logger.error("Ops!", e);
@@ -113,11 +114,11 @@ public class WinMeasurePoints {
 	 * Create the application.
 	 * @param measurePL 
 	 */
-	public WinMeasurePoints(List<ElDraw> veDrawL, MeasureCollection measureCollection, Enthalpy enthalpy, WinEnthalpy vwinEnth ) {
+	public WinMeasurePoints(List<ElDraw> veDrawL, MeasureCollection measureCollection, Enthalpy enthalpy, Pac vpac ) {
 		this.measureCollection = measureCollection;
 		this.eDrawL = veDrawL;
 		this.enthalpy = enthalpy;
-		this.winEnth = vwinEnth;
+		this.pac = vpac;
 
 		this.imgURL = "/gui/images/Cycle.png";
 		this.measurePL = measureCollection.getMeasurePL();
@@ -252,15 +253,11 @@ public class WinMeasurePoints {
 
 				logger.trace("New values added {}",String.format("%.2f", inValue));
 				logger.trace("Update the Measure Collection data ");
-				MeasureCollection.updateAllMeasurePoints(measureCollection,enthalpy);
+				MeasureCollection.updateAllMeasurePoints(measureCollection,enthalpy,pac);
 
 				logger.trace("Reinitialse the complete Draw elements with the Measure Collection");
 				eDrawL.clear();
 				eDrawL = ElDraw.createElDrawFrom(measureCollection,eDrawL);
-
-				if (winEnth != null) 
-					winEnth.updateAllTextField();
-
 
 				textField.setVisible(false);
 				textFieldUnity.setVisible(false);

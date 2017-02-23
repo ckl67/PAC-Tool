@@ -186,8 +186,8 @@ public class WinPrime {
 		textFieldCompressorCapacity.setText(String.valueOf(compressor.getCapacity()));
 		textFieldCompressorPower.setText(String.valueOf(compressor.getPower()));
 		textFieldCompressorCurrent.setText(String.valueOf(compressor.getCurrent()));
-		textFieldCompressorSurchauffe.setText(String.valueOf((double)Math.round(compressor.getRG() - compressor.getEvap())));	
-		textFieldCompressorSousRefroid.setText(String.valueOf((double)Math.round(compressor.getCond() - compressor.getLiq())));
+		textFieldCompressorSurchauffe.setText(String.valueOf((double)Math.round(compressor.getOverheated())));	
+		textFieldCompressorSousRefroid.setText(String.valueOf((double)Math.round(compressor.getUnderCooling())));
 		textFieldCompressorEER.setText(String.valueOf(Math.round(compressor.getCapacity()/compressor.getPower()*10.0)/10.0));
 		textFieldCompressorMassFlow.setText(String.valueOf(compressor.getMassFlow()));
 		textFieldCompressorDeltaH0.setText(String.valueOf(Math.round(compressor.getCapacity()/compressor.getMassFlow()/1000.0)));
@@ -331,7 +331,9 @@ public class WinPrime {
 						}
 					}
 					comboBoxCompressor.setSelectedIndex(0);
-					fillCompressorTexField(pac.getCompressorL().get(0));
+					pac.chooseCompressor(0);
+					fillCompressorTexField(pac.getCurrentCompressor());
+
 
 				}
 			}
@@ -1050,6 +1052,7 @@ public class WinPrime {
 			public void actionPerformed(ActionEvent arg0) {
 				int ComboId = comboBoxCompressor.getSelectedIndex();
 				fillCompressorTexField(pac.getCompressorL().get(ComboId));
+				pac.chooseCompressor(ComboId);
 			}
 		});
 		comboBoxCompressor.setBounds(243, 10, 131, 20);
@@ -1065,7 +1068,8 @@ public class WinPrime {
 			public void actionPerformed(ActionEvent arg0) {
 				int ComboId = comboBoxCompressor.getSelectedIndex();
 				if ( ComboId >= 0 ) {
-					UpdateTextField2Compressor(pac.getCompressorL().get(ComboId));
+					pac.chooseCompressor(ComboId);
+					UpdateTextField2Compressor(pac.getCurrentCompressor());
 					String tmp = textFieldCompressorName.getText();
 					//Impossible to rename an item, so we will create a new one, and delete the old
 					comboBoxCompressor.insertItemAt(tmp, ComboId);
@@ -1336,7 +1340,7 @@ public class WinPrime {
 		lblEnthalpyView.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent arg0) {
 				//lblEnthalpyView.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-				windowEnthalpy = new WinEnthalpy(enthalpy, eDrawL,measureCollection);
+				windowEnthalpy = new WinEnthalpy(enthalpy, eDrawL,measureCollection,pac);
 				windowEnthalpy.WinEnthalpyVisible();
 			}
 		});
@@ -1366,7 +1370,7 @@ public class WinPrime {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				//WinMeasurePoints window = new WinMeasurePoints(windowEnthalpy, eDrawL,measurePL);
-				WinMeasurePoints window = new WinMeasurePoints(eDrawL,measureCollection,enthalpy,windowEnthalpy);
+				WinMeasurePoints window = new WinMeasurePoints(eDrawL,measureCollection,enthalpy,pac);
 				window.WinMeasurePointsVisible();
 			}
 		});

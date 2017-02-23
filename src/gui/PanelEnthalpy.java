@@ -544,6 +544,10 @@ public class PanelEnthalpy extends JPanel {
 				break;
 			}
 		}
+		
+		// TO DOOOOOOOOOOOOOOOOOOOOOOOOO
+		
+		//WinEnthalpy.updateAllTextField();
 
 	}
 

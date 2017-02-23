@@ -217,5 +217,16 @@ public class Compressor {
 		this.deltaT = deltaT;
 	}
 
-
+	public double getOverheated() {
+		double tmp = rg - evap;
+		return tmp;
+	}
+	
+	public double getUnderCooling() {
+		double tmp = cond - liq;
+		return tmp;
+	}
+	
+	
+	
 }
