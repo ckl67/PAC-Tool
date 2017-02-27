@@ -72,7 +72,8 @@ public class WinEnthalpy {
 	/* ----------------------------------------
 	 *  	STATIC GLOBAL VAR PUBLIC
 	 * ---------------------------------------- */
-	public static PanelEnthalpy panelEnthalpyDrawArea;
+	private PanelEnthalpy panelEnthalpyDrawArea;
+
 
 	/* 	----------------------------------------
 	 * 		INSTANCE VAR
@@ -137,8 +138,7 @@ public class WinEnthalpy {
 		initialize();
 		ElDrawIdToMoveOnP = -1;
 		
-		@SuppressWarnings("unused")
-		PanelEnthRepaintAction repaintAction = new PanelEnthRepaintAction();
+		new DataSynchroUpdateTimer(this);
 	}
 
 	// -------------------------------------------------------
@@ -187,7 +187,7 @@ public class WinEnthalpy {
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosed(WindowEvent arg0) {
-				PanelEnthRepaintAction.PanelEnthRepaintActionStop();
+				DataSynchroUpdateTimer.DataSynchroUpdateTimerStop();
 			}
 		});
 		frame.setTitle("Diagramme Enthalpique");
@@ -422,6 +422,17 @@ public class WinEnthalpy {
 		textPBP.setText(String.format("%.2f",measurePL.get(MeasureObject._BP_ID).getValue()));
 		panelHight_Hight.add(textPBP);
 		textPBP.setColumns(10);
+		
+		JButton btnAllData = new JButton("Data");
+		btnAllData.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				WinData windata = new WinData();
+				
+			}
+		});
+		btnAllData.setMaximumSize(new Dimension(85, 23));
+		btnAllData.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panelHight_Hight.add(btnAllData);
 
 		// ----------------------------------------
 		JPanel panelMiddle1 = new JPanel();
@@ -429,7 +440,7 @@ public class WinEnthalpy {
 		panelMiddle1.setLayout(new BorderLayout(0, 0));
 
 		JPanel panelMiddle1_Center = new JPanel();
-		panelMiddle1.add(panelMiddle1_Center, BorderLayout.CENTER);
+		panelMiddle1.add(panelMiddle1_Center, BorderLayout.SOUTH);
 		panelMiddle1_Center.setLayout(new BoxLayout(panelMiddle1_Center, BoxLayout.Y_AXIS));
 
 		JButton btnPressureTemp = new JButton("P/Temp");
@@ -495,9 +506,13 @@ public class WinEnthalpy {
 		});
 		panelBottom_Bottom.add(btnClear);
 	}
+
+	public PanelEnthalpy getPanelEnthalpyDrawArea() {
+		return panelEnthalpyDrawArea;
+	}
+
 	
 	public void updateAllTextField() {
-		System.out.println("Update textfiels");
 		textPHP.setText(String.format("%.2f",measurePL.get(MeasureObject._PK_VAPOR_ID).getValue()));
 		textPBP.setText(String.format("%.2f",measurePL.get(MeasureObject._BP_ID).getValue()));
 		

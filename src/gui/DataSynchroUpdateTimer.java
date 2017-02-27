@@ -22,35 +22,36 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
 
-public class PanelEnthRepaintAction {
+public class DataSynchroUpdateTimer {
 
 	private static Timer timer;
+
+	private WinEnthalpy winEnthalpy;
 	
 	/**
-	 * A RepaintAction object calls the repaint method of panel each
-	 * time its PanelEnthRepaintAction() method is called. An object of this
-	 * type is used as an action listener for a Timer that generates an
-	 * ActionEvent every n seconds. The result is that the panel is
-	 * redrawn every n seconds.
+	 * Update action to perform
 	 */
-	private class RepaintAction implements ActionListener {
+	private class ActionsToBePerformed implements ActionListener {
 		public void actionPerformed(ActionEvent evt) {
-			WinEnthalpy.panelEnthalpyDrawArea.repaint(); 
+			//winEnthalpy.updateAllTextField();
+			winEnthalpy.getPanelEnthalpyDrawArea().repaint();
 		}
 	}
 
 	/**
 	 * The constructor creates a timer with a delay time of four seconds
-	 * (n milliseconds), and with a RepaintAction object as its
+	 * (n milliseconds), and with a ActionsToBePerformed object as its
 	 * ActionListener. It also starts the timer running.
 	 */
-	public PanelEnthRepaintAction() {
-		RepaintAction action = new RepaintAction();
+	public DataSynchroUpdateTimer( WinEnthalpy vwinEnthalpy ) {
+		winEnthalpy = vwinEnthalpy;
+		ActionsToBePerformed action = new ActionsToBePerformed();
+		
 		timer = new Timer(200, action);
 		timer.start();
 	}
 
-	public static void PanelEnthRepaintActionStop () {
+	public static void DataSynchroUpdateTimerStop () {
 		timer.stop();
 
 	}

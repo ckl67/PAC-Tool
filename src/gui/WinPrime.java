@@ -65,6 +65,7 @@ import javax.swing.JFileChooser;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.border.BevelBorder;
+import java.awt.GridBagLayout;
 
 public class WinPrime {
 
@@ -75,7 +76,7 @@ public class WinPrime {
 	private MeasureCollection measureCollection;
 	// Win Builder
 	private JFrame frame;
-	private WinEnthalpy windowEnthalpy;
+	private WinEnthalpy winEnthalpy;
 	
 	private JTextField textFieldH1;
 	private JTextField textFieldH2;
@@ -393,7 +394,7 @@ public class WinPrime {
 			public void actionPerformed(ActionEvent arg0) {
 
 				try {
-					WinConfEnthalpy window = new WinConfEnthalpy(enthalpy);
+					WinConfEnthalpy window = new WinConfEnthalpy(winEnthalpy, enthalpy);
 					window.WinConfEnthalpyVisible();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -1176,17 +1177,17 @@ public class WinPrime {
 		// H1
 		// ---------------------------------------------------------------
 		JLabel lblH = new JLabel("H1 :");
-		lblH.setBounds(25, 76, 30, 14);
+		lblH.setBounds(30, 216, 30, 14);
 		panelCompCOP.add(lblH);
 
 		JLabel lblH1unity = new JLabel("kJ/kg");
-		lblH1unity.setBounds(158, 76, 36, 14);
+		lblH1unity.setBounds(163, 216, 36, 14);
 		panelCompCOP.add(lblH1unity);
 
 		textFieldH1 = new JTextField();
 		textFieldH1.setText("416");
 		textFieldH1.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldH1.setBounds(69, 73, 86, 20);
+		textFieldH1.setBounds(74, 213, 86, 20);
 		textFieldH1.setColumns(10);
 		textFieldH1.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
@@ -1206,17 +1207,17 @@ public class WinPrime {
 		// H2
 		// ---------------------------------------------------------------
 		JLabel lblH2 = new JLabel("H2 :");
-		lblH2.setBounds(25, 107, 30, 14);
+		lblH2.setBounds(30, 247, 30, 14);
 		panelCompCOP.add(lblH2);
 
 		JLabel lblH2unity = new JLabel("kJ/kg");
-		lblH2unity.setBounds(158, 107, 36, 14);
+		lblH2unity.setBounds(163, 247, 36, 14);
 		panelCompCOP.add(lblH2unity);
 
 		textFieldH2 = new JTextField();
 		textFieldH2.setText("448");
 		textFieldH2.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldH2.setBounds(69, 104, 86, 20);
+		textFieldH2.setBounds(74, 244, 86, 20);
 		textFieldH2.setColumns(10);
 		textFieldH2.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
@@ -1238,18 +1239,18 @@ public class WinPrime {
 		// H3 & H4
 		// ---------------------------------------------------------------
 		JLabel lblH3 = new JLabel("H3=H4 :");
-		lblH3.setBounds(25, 138, 46, 14);
+		lblH3.setBounds(30, 278, 46, 14);
 		panelCompCOP.add(lblH3);
 
 		JLabel lblH3unity = new JLabel("kJ/kg");
-		lblH3unity.setBounds(158, 138, 36, 14);
+		lblH3unity.setBounds(163, 278, 36, 14);
 		panelCompCOP.add(lblH3unity);
 
 		textFieldH3 = new JTextField();
 		textFieldH3.setText("250");
 		textFieldH3.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldH3.setColumns(10);
-		textFieldH3.setBounds(69, 135, 86, 20);
+		textFieldH3.setBounds(74, 275, 86, 20);
 		textFieldH3.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				char vChar = e.getKeyChar();
@@ -1270,18 +1271,18 @@ public class WinPrime {
 		// T0
 		// ---------------------------------------------------------------
 		JLabel lblT0 = new JLabel("T0 :");
-		lblT0.setBounds(25, 14, 30, 14);
+		lblT0.setBounds(30, 154, 30, 14);
 		panelCompCOP.add(lblT0);
 
 		JLabel lblT0unity = new JLabel("\u00B0C");
-		lblT0unity.setBounds(158, 14, 36, 14);
+		lblT0unity.setBounds(163, 154, 36, 14);
 		panelCompCOP.add(lblT0unity);
 
 		textFieldT0 = new JTextField();
 		textFieldT0.setText("5");
 		textFieldT0.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldT0.setColumns(10);
-		textFieldT0.setBounds(69, 11, 86, 20);
+		textFieldT0.setBounds(74, 151, 86, 20);
 		textFieldT0.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				char vChar = e.getKeyChar();
@@ -1302,18 +1303,18 @@ public class WinPrime {
 		// TK
 		// ---------------------------------------------------------------
 		JLabel lblTk = new JLabel("TK :");
-		lblTk.setBounds(25, 45, 30, 14);
+		lblTk.setBounds(30, 185, 30, 14);
 		panelCompCOP.add(lblTk);
 
 		JLabel lblTkunity = new JLabel("\u00B0C");
-		lblTkunity.setBounds(158, 42, 36, 14);
+		lblTkunity.setBounds(163, 182, 36, 14);
 		panelCompCOP.add(lblTkunity);
 
 		textFieldTK = new JTextField();
 		textFieldTK.setText("48");
 		textFieldTK.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldTK.setColumns(10);
-		textFieldTK.setBounds(69, 42, 86, 20);
+		textFieldTK.setBounds(74, 182, 86, 20);
 		textFieldTK.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				char vChar = e.getKeyChar();
@@ -1340,12 +1341,12 @@ public class WinPrime {
 		lblEnthalpyView.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent arg0) {
 				//lblEnthalpyView.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-				windowEnthalpy = new WinEnthalpy(enthalpy, eDrawL,measureCollection,pac);
-				windowEnthalpy.WinEnthalpyVisible();
+				winEnthalpy = new WinEnthalpy(enthalpy, eDrawL,measureCollection,pac);
+				winEnthalpy.WinEnthalpyVisible();
 			}
 		});
 		lblEnthalpyView.setIcon(new ImageIcon(WinPrime.class.getResource("/gui/images/enthalpie_150.jpg")));
-		lblEnthalpyView.setBounds(233, 11, 150, 100);
+		lblEnthalpyView.setBounds(49, 363, 159, 100);
 		panelCompCOP.add(lblEnthalpyView);
 
 		// ---------------------------------------------------------------
@@ -1369,15 +1370,25 @@ public class WinPrime {
 		lblMeasurePointView.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				//WinMeasurePoints window = new WinMeasurePoints(windowEnthalpy, eDrawL,measurePL);
+				//WinMeasurePoints window = new WinMeasurePoints(winEnthalpy, eDrawL,measurePL);
 				WinMeasurePoints window = new WinMeasurePoints(eDrawL,measureCollection,enthalpy,pac);
 				window.WinMeasurePointsVisible();
 			}
 		});
 		lblMeasurePointView.setIcon(new ImageIcon(WinPrime.class.getResource("/gui/images/Cycle_150.png")));
 		lblMeasurePointView.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		lblMeasurePointView.setBounds(233, 141, 150, 93);
+		lblMeasurePointView.setBounds(233, 367, 150, 93);
 		panelCompCOP.add(lblMeasurePointView);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(49, 23, 334, 75);
+		panelCompCOP.add(panel);
+		GridBagLayout gbl_panel = new GridBagLayout();
+		gbl_panel.columnWidths = new int[] {5};
+		gbl_panel.rowHeights = new int[] {3};
+		gbl_panel.columnWeights = new double[]{Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{Double.MIN_VALUE};
+		panel.setLayout(gbl_panel);
 
 		// ===============================================================================================================
 		//									        PANEL DEFINITION 

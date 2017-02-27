@@ -44,7 +44,7 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 
 public class WinConfEnthalpy {
-
+	
 	private JFrame frmPactoolConfigurationDiagramme;
 	private Enthalpy enthalpy;
 	private JTextField textFieldEnthalpyFilePath;
@@ -60,13 +60,17 @@ public class WinConfEnthalpy {
 	private JTextField textFieldStepH2X;
 	private JTextField textFieldStepP1Y;
 	private JTextField textFieldStepP2Y;
+	
+	private PanelEnthalpy panelEnthalpyDrawArea;
+
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 	/**
 	 * Create the application.
 	 */
-	public WinConfEnthalpy(Enthalpy vconfEnthalpy) {
+	public WinConfEnthalpy(WinEnthalpy vwinEnthalpy, Enthalpy vconfEnthalpy) {
+		panelEnthalpyDrawArea = vwinEnthalpy.getPanelEnthalpyDrawArea();
 		enthalpy = vconfEnthalpy;
 		enthalpyBkgdImg = enthalpy.getEnthalpyBkgImage();
 		initialize();
@@ -116,8 +120,8 @@ public class WinConfEnthalpy {
 					textFieldEnthalpyFilePath.setText(imagepath);
 					enthalpyBkgdImg.setEnthalpyImageFile(textFieldEnthalpyFilePath.getText());	
 					try {
-						if (WinEnthalpy.panelEnthalpyDrawArea.isVisible() ) {
-							WinEnthalpy.panelEnthalpyDrawArea.clean();
+						if (panelEnthalpyDrawArea.isVisible() ) {
+							panelEnthalpyDrawArea.clean();
 						}
 					} catch (NullPointerException e) {
 
@@ -196,8 +200,8 @@ public class WinConfEnthalpy {
 			public void actionPerformed(ActionEvent arg0) {
 				enthalpyBkgdImg.setiBgH1x(enthalpyBkgdImg.getiBgH1x()- Integer.valueOf(textFieldStepH1X.getText()));
 				try {
-					if (WinEnthalpy.panelEnthalpyDrawArea.isVisible()) {
-						WinEnthalpy.panelEnthalpyDrawArea.repaint();
+					if (panelEnthalpyDrawArea.isVisible()) {
+						panelEnthalpyDrawArea.repaint();
 						System.out.println("repaint");
 					}
 				} catch (NullPointerException e) {
@@ -214,8 +218,8 @@ public class WinConfEnthalpy {
 				enthalpyBkgdImg.setiBgH1x(enthalpyBkgdImg.getiBgH1x()+Integer.valueOf(textFieldStepH1X.getText()));
 
 				try {
-					if (WinEnthalpy.panelEnthalpyDrawArea.isVisible()) {
-						WinEnthalpy.panelEnthalpyDrawArea.repaint();
+					if (panelEnthalpyDrawArea.isVisible()) {
+						panelEnthalpyDrawArea.repaint();
 					}
 				} catch (NullPointerException e) {
 					// Not present ==> Do nothing !
@@ -230,8 +234,8 @@ public class WinConfEnthalpy {
 			public void actionPerformed(ActionEvent arg0) {
 				enthalpyBkgdImg.setiBgH2x(enthalpyBkgdImg.getiBgH2x()- Integer.valueOf(textFieldStepH2X.getText()));
 				try {
-					if (WinEnthalpy.panelEnthalpyDrawArea.isVisible()) {
-						WinEnthalpy.panelEnthalpyDrawArea.repaint();
+					if (panelEnthalpyDrawArea.isVisible()) {
+						panelEnthalpyDrawArea.repaint();
 						System.out.println("repaint");
 					}
 				} catch (NullPointerException e) {
@@ -249,8 +253,8 @@ public class WinConfEnthalpy {
 				enthalpyBkgdImg.setiBgH2x(enthalpyBkgdImg.getiBgH2x()+Integer.valueOf(textFieldStepH2X.getText()));
 
 				try {
-					if (WinEnthalpy.panelEnthalpyDrawArea.isVisible()) {
-						WinEnthalpy.panelEnthalpyDrawArea.repaint();
+					if (panelEnthalpyDrawArea.isVisible()) {
+						panelEnthalpyDrawArea.repaint();
 					}
 				} catch (NullPointerException e) {
 					// Not present ==> Do nothing !
@@ -331,8 +335,8 @@ public class WinConfEnthalpy {
 			public void actionPerformed(ActionEvent arg0) {
 				enthalpyBkgdImg.setiBgP1y(enthalpyBkgdImg.getiBgP1y()+ Integer.valueOf(textFieldStepP1Y.getText()));
 				try {
-					if (WinEnthalpy.panelEnthalpyDrawArea.isVisible()) {
-						WinEnthalpy.panelEnthalpyDrawArea.repaint();
+					if (panelEnthalpyDrawArea.isVisible()) {
+						panelEnthalpyDrawArea.repaint();
 						System.out.println("repaint");
 					}
 				} catch (NullPointerException e) {
@@ -349,8 +353,8 @@ public class WinConfEnthalpy {
 			public void actionPerformed(ActionEvent arg0) {			
 				enthalpyBkgdImg.setiBgP1y(enthalpyBkgdImg.getiBgP1y()- Integer.valueOf(textFieldStepP1Y.getText()));
 				try {
-					if (WinEnthalpy.panelEnthalpyDrawArea.isVisible()) {
-						WinEnthalpy.panelEnthalpyDrawArea.repaint();
+					if (panelEnthalpyDrawArea.isVisible()) {
+						panelEnthalpyDrawArea.repaint();
 						System.out.println("repaint");
 					}
 				} catch (NullPointerException e) {
@@ -366,8 +370,8 @@ public class WinConfEnthalpy {
 			public void actionPerformed(ActionEvent arg0) {
 				enthalpyBkgdImg.setiBgP2y(enthalpyBkgdImg.getiBgP2y()+ Integer.valueOf(textFieldStepP2Y.getText()));
 				try {
-					if (WinEnthalpy.panelEnthalpyDrawArea.isVisible()) {
-						WinEnthalpy.panelEnthalpyDrawArea.repaint();
+					if (panelEnthalpyDrawArea.isVisible()) {
+						panelEnthalpyDrawArea.repaint();
 						System.out.println("repaint");
 					}
 				} catch (NullPointerException e) {
@@ -383,8 +387,8 @@ public class WinConfEnthalpy {
 			public void actionPerformed(ActionEvent arg0) {
 				enthalpyBkgdImg.setiBgP2y(enthalpyBkgdImg.getiBgP2y()- Integer.valueOf(textFieldStepP2Y.getText()));
 				try {
-					if (WinEnthalpy.panelEnthalpyDrawArea.isVisible()) {
-						WinEnthalpy.panelEnthalpyDrawArea.repaint();
+					if (panelEnthalpyDrawArea.isVisible()) {
+						panelEnthalpyDrawArea.repaint();
 						System.out.println("repaint");
 					}
 				} catch (NullPointerException e) {
