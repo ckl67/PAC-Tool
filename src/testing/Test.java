@@ -35,7 +35,7 @@ import computation.MeasureObject;
 import computation.Misc;
 import enthalpy.Enthalpy;
 import enthalpy.EnthalpyBkgdImg;
-import gui.PrimeConfig;
+import gui.WinPacToolConfig;
 import pac.Circulator;
 import pac.Compressor;
 import pac.Condenser;
@@ -83,7 +83,7 @@ public class Test {
 					+ "  (X)-> Panel Enthalpy\n"
 					+ "  (18)-> Prime Windows configuration (Main window) \n"
 					+ "  (19)-> Refrigerant Fluid\n"
-					+ "  (X)-> Run (Main)\n"
+					+ "  (X)-> PacTool (Main)\n"
 					+ "  (X)-> Test\n"
 					+ "  (X)-> Windows (....)\n"
 					+ "  (0)->Exit");
@@ -824,7 +824,7 @@ public class Test {
 		
 		for (int i=0;i<4;i++) {
 			System.out.println("------------------------------------------------------------------");
-			System.out.println("Run cycle:"+i+" by ");
+			System.out.println("PacTool cycle:"+i+" by ");
 			System.out.println("     Injecting R22 (T="+pac.getFluidRefriL().get(0).getT()+";P="+pac.getFluidRefriL().get(0).getP()+") in Compressor");
 			System.out.println("     Injecting Fluid Source (T="+pac.getFluidCaloSrcL().get(0).getT()+";P="+pac.getFluidCaloSrcL().get(0).getP()+") in Circulateur");
 			System.out.println("     Injecting Fluid Distribution(T="+pac.getFluidCaloDistrL().get(0).getT()+";P="+pac.getFluidCaloDistrL().get(0).getP()+") in Circulateur");
@@ -883,7 +883,7 @@ public class Test {
 
 		for (int i=0;i<4;i++) {
 			System.out.println("------------------------------------------------------------------");
-			System.out.println("Run cycle:"+i+" by ");
+			System.out.println("PacTool cycle:"+i+" by ");
 			System.out.println("     Injecting R22 (T="+pac.getFluidRefriL().get(0).getT()+";P="+pac.getFluidRefriL().get(0).getP()+") in Compressor");
 			System.out.println("     Injecting Fluid Source (T="+pac.getFluidCaloSrcL().get(0).getT()+";P="+pac.getFluidCaloSrcL().get(0).getP()+") in Circulateur");
 			System.out.println("     Injecting Fluid Distribution(T="+pac.getFluidCaloDistrL().get(0).getT()+";P="+pac.getFluidCaloDistrL().get(0).getP()+") in Circulateur");
@@ -931,15 +931,15 @@ public class Test {
 			System.err.println("Unable to Parse JSON read the file: fileName");
 		}  
 
-		// PrimeConfig: Set the Class Instance with JSON data
-		PrimeConfig primeConfig = new PrimeConfig();
-		JSONObject jsonObjPrimeConfig = (JSONObject) jsonObj.get("PrimeConfig") ;
+		// WinPacToolConfig: Set the Class Instance with JSON data
+		WinPacToolConfig winPacToolConfig = new WinPacToolConfig();
+		JSONObject jsonObjPrimeConfig = (JSONObject) jsonObj.get("WinPacToolConfig") ;
 		System.out.println(jsonObjPrimeConfig);
-		primeConfig.setJsonObject(jsonObjPrimeConfig);
+		winPacToolConfig.setJsonObject(jsonObjPrimeConfig);
 
-		System.out.println("   BTU=" +	primeConfig.getUnitCompBTU());
-		System.out.println("   Pound=" +	primeConfig.getUnitCompPound());
-		System.out.println("   Faren=" +	primeConfig.getUnitCompFaren());
+		System.out.println("   BTU=" +	winPacToolConfig.getUnitCompBTU());
+		System.out.println("   Pound=" +	winPacToolConfig.getUnitCompPound());
+		System.out.println("   Faren=" +	winPacToolConfig.getUnitCompFaren());
 
 		// Enthalpy (containing also EnthalpyBkgdImg)
 		Enthalpy enthalpy = new Enthalpy();
@@ -977,14 +977,14 @@ public class Test {
 	private static void testPrimeConfig() {
 		System.out.println("TEST PAC-Tool CONFIGURATION");
 
-		PrimeConfig primeConfig = new PrimeConfig();
+		WinPacToolConfig thesaurus = new WinPacToolConfig();
 
-		System.out.println(primeConfig.TranslateText("Capacity","eng"));
-		System.out.println(primeConfig.TranslateText("Power","eng"));
+		System.out.println(thesaurus.TranslateText("Capacity","eng"));
+		System.out.println(thesaurus.TranslateText("Power","eng"));
 
-		System.out.println(primeConfig.TranslateText("Capacity","fr"));
-		System.out.println(primeConfig.TranslateText("Power","fr"));
-		System.out.println(primeConfig.TranslateText("Capacitydd","fr"));
+		System.out.println(thesaurus.TranslateText("Capacity","fr"));
+		System.out.println(thesaurus.TranslateText("Power","fr"));
+		System.out.println(thesaurus.TranslateText("Capacitydd","fr"));
 
 
 	}

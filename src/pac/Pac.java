@@ -383,6 +383,30 @@ public class Pac {
 		id[PacItem.COMP.ordinal()] = i;
 		logger.info("Choice Compressor N°{}",i);
 	}
+
+	// id[0] = 2 <==> id[PacItem.COMP.pos()] = 2;
+	public Compressor getCurrentCompressor() {
+		logger.info("Get Current Compressor N°{}",id[PacItem.COMP.ordinal()]);
+		return compressorL.get(id[PacItem.COMP.ordinal()]);
+	}
+
+	//id[0] = 2 <==> id[PacItem.COMP.pos()] = 2;
+	public Compressor getCompressorNb(int nb) {
+		logger.info("Get Compressor N°{}",nb);
+		return compressorL.get(id[nb]);
+	}
+
+	public int getNbOfCompressorNb() {
+		return compressorL.size();
+	}
+	
+	public void addNewCompressor(int position) {
+		compressorL.add(position, new Compressor());	
+	}
+	
+	public void removeCompressor(int position) {
+		compressorL.remove(position);	
+	}
 	
 	public void choosCondenser(int i) {
 		id[PacItem.COND.ordinal()] = i;
@@ -447,59 +471,8 @@ public class Pac {
 		return id;
 	}
 	
-	public List<Refrigerant> getFluidRefriL() {
-		return fluidRefriL;
-	}
 
-	public List<Circulator> getCirculatorSrcL() {
-		return circulatorSrcL;
-	}
-
-	public List<HeatSrcDistrCircuit> getCircuitSrcL() {
-		return circuitSrcL;
-	}
-
-	public List<HeatTransferFluid> getFluidCaloSrcL() {
-		return fluidCaloSrcL;
-	}
-
-	public List<Circulator> getCirculatorDistrL() {
-		return circulatorDistrL;
-	}
-
-	public List<HeatSrcDistrCircuit> getCircuitDistrL() {
-		return circuitDistrL;
-	}
-
-	public List<HeatTransferFluid> getFluidCaloDistrL() {
-		return fluidCaloDistrL;
-	}
-
-	public List<Compressor> getCompressorL() {
-		return compressorL;
-	}
-
-	public List<Condenser> getCondenserL() {
-		return condenserL;
-	}
-
-
-	public List<Dehydrator> getDehydratorL() {
-		return dehydratorL;
-	}
-
-	public List<ExpansionValve> getExpansionValveL() {
-		return expansionValveL;
-	}
-
-	public List<Evaporator> getEvaporatorL() {
-		return evaporatorL;
-	}
-
-	public Compressor getCurrentCompressor() {
-		return compressorL.get(id[PacItem.COMP.ordinal()]);
-	}
-
+	
 	public Condenser getCurrentCondenser() {
 		return condenserL.get(id[PacItem.COND.ordinal()]);
 	}

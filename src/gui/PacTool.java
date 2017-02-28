@@ -25,18 +25,19 @@ import pac.Pac;
 /**
  * MAIN RUN
  */
-public class Run {
+public class PacTool {
 
 	// -------------------------------------------------------
 	// 							MAIN
 	// -------------------------------------------------------
 	public static void main(String[] args){
 		
-		Pac pac = new Pac();					// Pac
-		COP cop = new COP();					// Compute COP measure
-		Enthalpy enthalpy = new Enthalpy();		// Enthalpy Feature
+		Pac pac = new Pac();										// Contains Pac Features
+		Enthalpy enthalpy = new Enthalpy();							// Enthalpy Features
+		WinPacToolConfig winPacToolConfig = new WinPacToolConfig();	// GUI Configuration
+		COP cop = new COP();										// COP Compute
 		
-		WinPrime window = new WinPrime(pac, cop, enthalpy);
-		window.WinPrimeVisible();
+		WinPacTool winPacTool = new WinPacTool(pac, enthalpy, winPacToolConfig); 
+		winPacTool.setVisible(true);
 	}
 }

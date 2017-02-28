@@ -18,75 +18,45 @@
  */
 package gui;
 
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import java.awt.event.KeyEvent;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.awt.event.KeyAdapter;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Toolkit;
-import javax.swing.JTabbedPane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import java.awt.EventQueue;
+import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
-import javax.swing.JCheckBox;
 import javax.swing.border.TitledBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import computation.COP;
-import computation.MeasureCollection;
-import computation.Misc;
-import enthalpy.Enthalpy;
-import pac.Compressor;
-import pac.Pac;
-import translation.Thesaurus;
-
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.JTextField;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import javax.swing.JCheckBox;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import javax.swing.JEditorPane;
-import javax.swing.JScrollPane;
 import java.awt.Font;
-import javax.swing.JSeparator;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.JComboBox;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JFileChooser;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.border.BevelBorder;
-import java.awt.GridBagLayout;
+import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import computation.Misc;
+import pac.Compressor;
+import pac.Pac;
+import javax.swing.ImageIcon;
 
-public class WinPrime {
+public class WinCompressor extends JInternalFrame {
+	private static final long serialVersionUID = 1L;
+	private static final Logger logger = LogManager.getLogger(WinCompressor.class.getName());
 
+	// -------------------------------------------------------
+	// 					INSTANCE VARIABLES
+	// -------------------------------------------------------
 	private Pac pac;
-	private Enthalpy enthalpy;
 	private WinPacToolConfig winPacToolConfig;
-	private List<ElDraw> eDrawL;		
-	private MeasureCollection measureCollection;
-	private Thesaurus thesaurus;
 	
 	// Win Builder
-	private JFrame frame;
-	private WinEnthalpy winEnthalpy;
-	
-	private JTextField textFieldH1;
-	private JTextField textFieldH2;
-	private JTextField textFieldH3;
-	private JTextField textFieldTK;
-	private JTextField textFieldT0;
-	private JTextField textFieldCarnotFroid;
 	private JTextField textFieldCompressorEvap;
 	private JTextField textFieldCompressorRG;
 	private JTextField textFieldCompressorCond;
@@ -102,13 +72,10 @@ public class WinPrime {
 	private JTextField textFieldCompressorVoltage;
 	private JTextField textFieldCompressorCosPhi;
 	private JTextField textFieldCompressorName;
-	private JTextField textFieldCirculatorVoltage;
-
 	private JCheckBox checkoxFaren;
 	private JCheckBox checkoxBTU;
 	private JCheckBox checkoxPound;
 	private JComboBox<String> comboBoxCompressor;
-
 	private JLabel lblCapacity;
 	private JLabel lblPower;
 	private JLabel lblCurrent;
@@ -123,39 +90,90 @@ public class WinPrime {
 	private JLabel lblSousRefroid;
 
 	// -------------------------------------------------------
+	// 				TEST THE APPLICATION STANDALONE 
+	// -------------------------------------------------------
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Pac tpac = new Pac();
+					WinPacToolConfig twinPacToolConfig = new WinPacToolConfig();
+					
+					WinCompressor frame = new WinCompressor(tpac,twinPacToolConfig);
+					frame.setVisible(true);
+					
+					// <<<<----- FOR TEST CREATE A FRAME WITH JDesktopPane
+					JFrame frameM = new JFrame();
+					JDesktopPane desktopPaneMain = new JDesktopPane();
+					frameM.getContentPane().add(desktopPaneMain, BorderLayout.CENTER);
+					frameM.setBounds(100, 10, 700, 700);
+					frameM.setVisible(true);
+					desktopPaneMain.add(frame); 
+					// ----------------->>>>
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public WinPrime(Pac paci, COP copi, Enthalpy enthalpyi) {
-
-		pac = paci;
-		enthalpy = enthalpyi;
-		winPacToolConfig = new WinPacToolConfig();
-		eDrawL = new ArrayList<ElDraw>();
-		measureCollection = new MeasureCollection();
-		
-		// Create Window
-		initialize(paci,copi);
+	public WinCompressor(Pac vpac, WinPacToolConfig vwinPacToolConfig) {
+		setFrameIcon(new ImageIcon(WinCompressor.class.getResource("/gui/images/PAC-Tool_16.png")));
+		setTitle("Compressor");
+		pac = vpac;
+		winPacToolConfig =vwinPacToolConfig;
+	
+		initialize();
 	}
 
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
+	
 	/**
-	 * Get the frame visible
+	 * 
+	 * @param winPacToolConfig
 	 */
-	public void WinPrimeVisible() {
-		frame.setVisible(true);
-	}
+	public void applyConfig(WinPacToolConfig winPacToolConfig) {
+		
+		// Remove all Compressor items in ComboBox (except the first)
+		for(int i=1;i<pac.getNbOfCompressorNb();i++) {
+			comboBoxCompressor.removeItemAt(i);
+		}
 
+		// Set the Compressor Check Box (Fahrenheit/Pound/BTU) before to affect the data to text field, 
+		// no actions will be performed by this settings 
+		checkoxFaren.setSelected(winPacToolConfig.getUnitCompFaren());
+		checkoxBTU.setSelected(winPacToolConfig.getUnitCompBTU()); 		
+		checkoxPound.setSelected(winPacToolConfig.getUnitCompPound()); 		
+
+		// Fill Compressor ComboBox
+		for(int i=1;i<pac.getNbOfCompressorNb();i++) {
+			if(i>0) {
+				comboBoxCompressor.insertItemAt(pac.getCompressorNb(i).getName(),i);
+			}
+		}
+		comboBoxCompressor.setSelectedIndex(0);
+		pac.chooseCompressor(0);
+		fillCompressorTexField(pac.getCurrentCompressor());
+		
+	}
+	
+	
 	/**
-	 * Fill all the Compressor features to Text field in the panel 
-	 * The data are read from the variable, where the information is stored
+	 * Fill Compressor Text field 
+	 * The data are read from the compressor variable, where the information is stored
 	 * The data are always stored in SI format !
-	 * BY DEFAULT CHECKBOX MUST NOT BEEN SET, OTHERWHISE .doClick() will be called without data in the textfield !!
-	 * @param paci : Will be one of the different Pac in the List
+	 * BY DEFAULT CHECKBOX MUST NOT BEEN SET, OTHERWHISE .doClick() will be called 
+	 * without data in the textfield !!
+	 * 
 	 */
 	private void fillCompressorTexField(Compressor compressor) {
-		
+
 		boolean weclickf = false;
 		boolean weclickb = false;
 		boolean weclickp = false;
@@ -264,235 +282,26 @@ public class WinPrime {
 			checkoxPound.doClick();
 		}
 	}
+	
 
 	// -------------------------------------------------------
 	// 				 GENERATED BY WIN BUILDER
 	// -------------------------------------------------------
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize(Pac paci, COP copi) {
 
-		frame = new JFrame();
-		frame.setResizable(false);
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(WinPrime.class.getResource("/gui/images/PAC-Tool_32.png")));
-		frame.setTitle("PAC Tool (" + Misc.PACTool_Version+ ")");
-		frame.setBounds(100, 100, 443, 574);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//PacCommon.centreWindow(frame);
-
-		try {
-			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-				| UnsupportedLookAndFeelException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		// ===============================================================================================================
-		// 													MENU
-		// ===============================================================================================================
-		JMenuBar menubar = new JMenuBar();
-		frame.setJMenuBar(menubar);
-
-		JMenu mfile = new JMenu("Fichier");
-		menubar.add(mfile);
-
-		// ---------------------------------------------------------------
-		// Load Config
-		// ---------------------------------------------------------------
-		JMenuItem mloadcfg = new JMenuItem(" Ouvrir Config.");
-		mloadcfg.setIcon(new ImageIcon(WinPrime.class.getResource("/com/sun/javafx/scene/web/skin/Redo_16x16_JFX.png")));
-		mloadcfg.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-
-				JFileChooser chooser = new JFileChooser();
-				FileNameExtensionFilter filter = new FileNameExtensionFilter( "Configuratin file (.cfg)", "cfg");
-				chooser.setFileFilter(filter);
-				File workingDirectory = new File(System.getProperty("user.dir"));
-				chooser.setCurrentDirectory(workingDirectory);
-				int returnVal = chooser.showOpenDialog(frame);
-				if(returnVal == JFileChooser.APPROVE_OPTION) {
-
-					// Remove all Compressor items in ComboBox (except the first)
-					for(int i=1;i<pac.getNbOfCompressorNb();i++) {
-						comboBoxCompressor.removeItemAt(i);
-					}
-
-					// Read the configuration from File
-					PacToolConfig.readConfigFile(pac, enthalpy, winPacToolConfig, chooser.getSelectedFile().getAbsolutePath());
-
-					// Set the Compressor Check Box (Fahrenheit/Pound/BTU) before to affect the data to text field, 
-					// no actions will be performed by this settings 
-					checkoxFaren.setSelected(winPacToolConfig.getUnitCompFaren());
-					checkoxBTU.setSelected(winPacToolConfig.getUnitCompBTU()); 		
-					checkoxPound.setSelected(winPacToolConfig.getUnitCompPound()); 		
-
-					// Fill Compressor ComboBox
-					for(int i=1;i<pac.getNbOfCompressorNb();i++) {
-						if(i>0) {
-							comboBoxCompressor.insertItemAt(pac.getCompressorNb(i).getName(),i);
-						}
-					}
-					comboBoxCompressor.setSelectedIndex(0);
-					pac.chooseCompressor(0);
-					fillCompressorTexField(pac.getCurrentCompressor());
-
-
-				}
-			}
-
-		});
-		mfile.add(mloadcfg);
-
-		// ---------------------------------------------------------------
-		// Save Config
-		// ---------------------------------------------------------------
-		JMenuItem msavecfg = new JMenuItem("Sauver Config.");
-		msavecfg.setIcon(new ImageIcon(WinPrime.class.getResource("/com/sun/javafx/scene/web/skin/Undo_16x16_JFX.png")));
-		msavecfg.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-
-				JFileChooser chooser = new JFileChooser();
-				FileNameExtensionFilter filter = new FileNameExtensionFilter( "Configuratin file (.cfg)", "cfg");
-				chooser.setApproveButtonText("Sauvegarder");
-				chooser.setFileFilter(filter);
-				File workingDirectory = new File(System.getProperty("user.dir"));
-				chooser.setCurrentDirectory(workingDirectory);
-				if(chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
-					//System.out.println("You chose to save to file: " + chooser.getSelectedFile().getAbsolutePath());
-					PacToolConfig.saveConfigFile(pac, enthalpy, winPacToolConfig, chooser.getSelectedFile().getAbsolutePath());
-				} 
-			}
-		});
-		mfile.add(msavecfg);
-
-		// ---------------------------------------------------------------
-		// Separator
-		// ---------------------------------------------------------------
-		JSeparator mseparator = new JSeparator();
-		mfile.add(mseparator);
-
-		// ---------------------------------------------------------------
-		// Exit
-		// ---------------------------------------------------------------
-		JMenuItem mexit = new JMenuItem("Quitter");
-		mexit.setIcon(new ImageIcon(WinPrime.class.getResource("/gui/images/sortir-session16.png")));
-		mexit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.exit(0);
-			}
-		});
-		mfile.add(mexit);
-
-		// ---------------------------------------------------------------
-		// Menu Config
-		// ---------------------------------------------------------------
-		JMenu mpreference = new JMenu("Pr\u00E9f\u00E9rences");
-		menubar.add(mpreference);
-
-		JMenuItem mImgEnthalpyCfg = new JMenuItem("Enthalpie Conf.");
-		mImgEnthalpyCfg.setIcon(new ImageIcon(WinPrime.class.getResource("/gui/images/configuration16.png")));
-		mImgEnthalpyCfg.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-
-				try {
-					WinConfEnthalpy window = new WinConfEnthalpy(winEnthalpy, enthalpy);
-					window.WinConfEnthalpyVisible();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-			}
-		});
-		mpreference.add(mImgEnthalpyCfg);
-
-		ButtonGroup buttonGroup = new ButtonGroup();
-
-		JMenu mlangue = new JMenu("Langues");
-		mlangue.setIcon(new ImageIcon(WinPrime.class.getResource("/gui/images/flag-frgb16x16.png")));
-		mpreference.add(mlangue);
-
-		JRadioButtonMenuItem mRationItemFrench = new JRadioButtonMenuItem("Francais");
-		mRationItemFrench.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				String vlang = "fr";
-				lblCapacity.setText(thesaurus.TranslateText("Capacity",vlang));
-				lblPower.setText(thesaurus.TranslateText("Power",vlang));
-				lblCurrent.setText(thesaurus.TranslateText("Current",vlang));
-				lblEer.setText(thesaurus.TranslateText("EER",vlang));
-				lblVoltage.setText(thesaurus.TranslateText("Voltage",vlang));
-				lblMassflow.setText(thesaurus.TranslateText("Mass flow",vlang));
-				lblEvap.setText(thesaurus.TranslateText("Evap",vlang));
-				lblRG.setText(thesaurus.TranslateText("RG",vlang));
-				lblCond.setText(thesaurus.TranslateText("Cond",vlang));
-				lblLiq.setText(thesaurus.TranslateText("Liq",vlang));
-				lblSurchauffe.setText(thesaurus.TranslateText("Overheated",vlang));
-				lblSousRefroid.setText(thesaurus.TranslateText("Under cooling",vlang));
-			}
-		});
-		buttonGroup.add(mRationItemFrench);
-
-		mlangue.add(mRationItemFrench);
-
-		JRadioButtonMenuItem mRationItemEnglisch = new JRadioButtonMenuItem("Anglais");
-		mRationItemEnglisch.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String vlang = "eng";
-				lblCapacity.setText(thesaurus.TranslateText("Capacity",vlang));
-				lblPower.setText(thesaurus.TranslateText("Power",vlang));
-				lblCurrent.setText(thesaurus.TranslateText("Current",vlang));
-				lblEer.setText(thesaurus.TranslateText("EER",vlang));
-				lblVoltage.setText(thesaurus.TranslateText("Voltage",vlang));
-				lblMassflow.setText(thesaurus.TranslateText("Mass flow",vlang));
-				lblEvap.setText(thesaurus.TranslateText("Evap",vlang));
-				lblRG.setText(thesaurus.TranslateText("RG",vlang));
-				lblCond.setText(thesaurus.TranslateText("Cond",vlang));
-				lblLiq.setText(thesaurus.TranslateText("Liq",vlang));
-				lblSurchauffe.setText(thesaurus.TranslateText("Overheated",vlang));
-				lblSousRefroid.setText(thesaurus.TranslateText("Under cooling",vlang));
-			}
-		});
-		mRationItemEnglisch.setSelected(true);
-		buttonGroup.add(mRationItemEnglisch);
-
-		mlangue.add(mRationItemEnglisch);
-
-		// ---------------------------------------------------------------
-		// Help
-		// ---------------------------------------------------------------
-
-		JMenu help = new JMenu("Aide");
-		menubar.add(help);
-		JMenuItem about = new JMenuItem("A propos de ?");
-		about.setIcon(new ImageIcon(WinPrime.class.getResource("/gui/images/About16.png")));
-		about.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				try {
-					WinAbout window = new WinAbout();
-				//	window.WinAboutVisible();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		help.add(about);;
-		frame.getContentPane().setLayout(null);
-
-		// ===============================================================================================================
-		//													TABBED PANE
-		// ===============================================================================================================
-
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(0, 0, 437, 525);
-		frame.getContentPane().add(tabbedPane);
+	
+	public void initialize() {
+		setIconifiable(true);
+		setClosable(true);
+		setBounds(100, 100, 450, 533);
+		getContentPane().setLayout(null);
 
 		// ===============================================================================================================
 		//									                 PANEL PAC
 		// ===============================================================================================================
 		JPanel panelSroll = new JPanel();
+		panelSroll.setBounds(0, 0, 432, 497);
+		getContentPane().add(panelSroll);
 		panelSroll.setForeground(Color.BLUE);
-		tabbedPane.addTab("Compresseur", null, panelSroll, null);
 		panelSroll.setLayout(null);
 
 		// ================================================================
@@ -1041,7 +850,7 @@ public class WinPrime {
 		textFieldCompressorName.setToolTipText("Name can be modified");
 		textFieldCompressorName.setForeground(new Color(0, 0, 128));
 		textFieldCompressorName.setBorder(null);
-		textFieldCompressorName.setBackground(UIManager.getColor("Button.background"));
+		textFieldCompressorName.setBackground(UIManager.getColor("DesktopPane.background"));
 		textFieldCompressorName.setHorizontalAlignment(SwingConstants.CENTER);
 		textFieldCompressorName.setFont(new Font("Tahoma", Font.BOLD, 16));
 		textFieldCompressorName.setBounds(10, 10, 167, 52);
@@ -1059,7 +868,7 @@ public class WinPrime {
 				pac.chooseCompressor(ComboId);
 			}
 		});
-		comboBoxCompressor.setBounds(243, 10, 131, 20);	
+		comboBoxCompressor.setBounds(243, 10, 131, 20);
 		comboBoxCompressor.addItem(pac.getCompressorNb(0).getName());
 		panelSroll.add(comboBoxCompressor);
 
@@ -1072,6 +881,7 @@ public class WinPrime {
 			public void actionPerformed(ActionEvent arg0) {
 				int ComboId = comboBoxCompressor.getSelectedIndex();
 				if ( ComboId >= 0 ) {
+					logger.info("Save Compressor {}", ComboId );
 					pac.chooseCompressor(ComboId);
 					UpdateTextField2Compressor(pac.getCurrentCompressor());
 					String tmp = textFieldCompressorName.getText();
@@ -1097,7 +907,7 @@ public class WinPrime {
 					comboBoxCompressor.removeItemAt(ComboId);
 					comboBoxCompressor.setSelectedIndex(ComboId-1);
 				} else {
-					JOptionPane.showMessageDialog(frame, "This entry cannot be deleted");
+					JOptionPane.showMessageDialog(panelSroll, "This entry cannot be deleted");
 				}
 			}
 		});
@@ -1124,293 +934,6 @@ public class WinPrime {
 		btnNewCompressor.setBounds(199, 39, 68, 23);
 		panelSroll.add(btnNewCompressor);
 
-		JPanel panelCirculator = new JPanel();
-		tabbedPane.addTab("Circulateur", null, panelCirculator, null);
-		panelCirculator.setLayout(null);
-
-		JLabel lblCirculVolt = new JLabel("Tension");
-		lblCirculVolt.setBounds(40, 52, 46, 14);
-		panelCirculator.add(lblCirculVolt);
-
-		textFieldCirculatorVoltage = new JTextField();
-		textFieldCirculatorVoltage.setBounds(122, 49, 86, 20);
-		panelCirculator.add(textFieldCirculatorVoltage);
-		textFieldCirculatorVoltage.setColumns(10);
-
-
-		// ===============================================================================================================
-		//									        PANEL MEASURE 
-		// ===============================================================================================================
-
-		JPanel panelCompCOP = new JPanel();
-		panelCompCOP.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		tabbedPane.addTab("Mesure COP", null, panelCompCOP, null);
-		panelCompCOP.setLayout(null);
-
-		// ---------------------------------------------------------------
-		// Button Compute
-		// ---------------------------------------------------------------
-		JButton btnComp = new JButton("Calcul");
-		btnComp.setBounds(294, 327, 89, 23);
-		btnComp.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				copi.setH1(Double.parseDouble(textFieldH1.getText()));
-				copi.setH2(Double.parseDouble(textFieldH2.getText()));
-				copi.setH3(Double.parseDouble(textFieldH3.getText()));
-				copi.setT0(Double.parseDouble(textFieldT0.getText()));
-				copi.setTK(Double.parseDouble(textFieldTK.getText()));
-
-				textFieldCarnotFroid.setText(String.valueOf(
-						Math.round(copi.cop_carnot_froid()*100.0) /100.0
-						));
-
-				/*
-						System.out.format("TO = %.2f°C\n",copi.getT0());
-						System.out.format("TK = %.2f°C\n",copi.getTK());
-						System.out.format("H1 = %.2fkJ/kg\n",copi.getH1());
-						System.out.format("H2 = %.2fkJ/kg\n",copi.getH2());
-						System.out.format("H3=H4 = %.2fkJ/kg\n",copi.getH3());
-				 */
-			}
-		});
-		panelCompCOP.add(btnComp);
-
-
-		// ---------------------------------------------------------------
-		// H1
-		// ---------------------------------------------------------------
-		JLabel lblH = new JLabel("H1 :");
-		lblH.setBounds(30, 216, 30, 14);
-		panelCompCOP.add(lblH);
-
-		JLabel lblH1unity = new JLabel("kJ/kg");
-		lblH1unity.setBounds(163, 216, 36, 14);
-		panelCompCOP.add(lblH1unity);
-
-		textFieldH1 = new JTextField();
-		textFieldH1.setText("416");
-		textFieldH1.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldH1.setBounds(74, 213, 86, 20);
-		textFieldH1.setColumns(10);
-		textFieldH1.addKeyListener(new KeyAdapter() {
-			public void keyTyped(KeyEvent e) {
-				char vChar = e.getKeyChar();
-				if ( ( (Character.isDigit(vChar)) || (vChar == KeyEvent.VK_BACK_SPACE) || (vChar == '.') || (vChar == KeyEvent.VK_DELETE)) ) {
-					if ( (vChar == '.') && Misc.nbCharInString(textFieldH1.getText(),'.') >= 1) {
-						e.consume();
-					}
-				} else {
-					e.consume();					
-				}
-			}
-		});
-		panelCompCOP.add(textFieldH1);
-
-		// ---------------------------------------------------------------
-		// H2
-		// ---------------------------------------------------------------
-		JLabel lblH2 = new JLabel("H2 :");
-		lblH2.setBounds(30, 247, 30, 14);
-		panelCompCOP.add(lblH2);
-
-		JLabel lblH2unity = new JLabel("kJ/kg");
-		lblH2unity.setBounds(163, 247, 36, 14);
-		panelCompCOP.add(lblH2unity);
-
-		textFieldH2 = new JTextField();
-		textFieldH2.setText("448");
-		textFieldH2.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldH2.setBounds(74, 244, 86, 20);
-		textFieldH2.setColumns(10);
-		textFieldH2.addKeyListener(new KeyAdapter() {
-			public void keyTyped(KeyEvent e) {
-				char vChar = e.getKeyChar();
-				if ( ( (Character.isDigit(vChar)) || (vChar == KeyEvent.VK_BACK_SPACE) || (vChar == '.') || (vChar == KeyEvent.VK_DELETE)) ) {
-					// OK
-					if ( (vChar == '.') && Misc.nbCharInString(textFieldH2.getText(),'.') >= 1) {
-						e.consume();
-					}
-				} else {
-					//NOK
-					e.consume();					
-				}
-			}
-		});
-		panelCompCOP.add(textFieldH2);
-
-		// ---------------------------------------------------------------
-		// H3 & H4
-		// ---------------------------------------------------------------
-		JLabel lblH3 = new JLabel("H3=H4 :");
-		lblH3.setBounds(30, 278, 46, 14);
-		panelCompCOP.add(lblH3);
-
-		JLabel lblH3unity = new JLabel("kJ/kg");
-		lblH3unity.setBounds(163, 278, 36, 14);
-		panelCompCOP.add(lblH3unity);
-
-		textFieldH3 = new JTextField();
-		textFieldH3.setText("250");
-		textFieldH3.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldH3.setColumns(10);
-		textFieldH3.setBounds(74, 275, 86, 20);
-		textFieldH3.addKeyListener(new KeyAdapter() {
-			public void keyTyped(KeyEvent e) {
-				char vChar = e.getKeyChar();
-				if ( ( (Character.isDigit(vChar)) || (vChar == KeyEvent.VK_BACK_SPACE) || (vChar == '.') || (vChar == KeyEvent.VK_DELETE)) ) {
-					// OK
-					if ( (vChar == '.') && Misc.nbCharInString(textFieldH3.getText(),'.') >= 1) {
-						e.consume();
-					}
-				} else {
-					//NOK
-					e.consume();					
-				}
-			}
-		});
-		panelCompCOP.add(textFieldH3);
-
-		// ---------------------------------------------------------------
-		// T0
-		// ---------------------------------------------------------------
-		JLabel lblT0 = new JLabel("T0 :");
-		lblT0.setBounds(30, 154, 30, 14);
-		panelCompCOP.add(lblT0);
-
-		JLabel lblT0unity = new JLabel("\u00B0C");
-		lblT0unity.setBounds(163, 154, 36, 14);
-		panelCompCOP.add(lblT0unity);
-
-		textFieldT0 = new JTextField();
-		textFieldT0.setText("5");
-		textFieldT0.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldT0.setColumns(10);
-		textFieldT0.setBounds(74, 151, 86, 20);
-		textFieldT0.addKeyListener(new KeyAdapter() {
-			public void keyTyped(KeyEvent e) {
-				char vChar = e.getKeyChar();
-				if ( ( (Character.isDigit(vChar)) || (vChar == KeyEvent.VK_BACK_SPACE) || (vChar == '.') || (vChar == KeyEvent.VK_DELETE)) ) {
-					// OK
-					if ( (vChar == '.') && Misc.nbCharInString(textFieldT0.getText(),'.') >= 1) {
-						e.consume();
-					}
-				} else {
-					//NOK
-					e.consume();					
-				}
-			}
-		});
-		panelCompCOP.add(textFieldT0);
-
-		// ---------------------------------------------------------------
-		// TK
-		// ---------------------------------------------------------------
-		JLabel lblTk = new JLabel("TK :");
-		lblTk.setBounds(30, 185, 30, 14);
-		panelCompCOP.add(lblTk);
-
-		JLabel lblTkunity = new JLabel("\u00B0C");
-		lblTkunity.setBounds(163, 182, 36, 14);
-		panelCompCOP.add(lblTkunity);
-
-		textFieldTK = new JTextField();
-		textFieldTK.setText("48");
-		textFieldTK.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldTK.setColumns(10);
-		textFieldTK.setBounds(74, 182, 86, 20);
-		textFieldTK.addKeyListener(new KeyAdapter() {
-			public void keyTyped(KeyEvent e) {
-				char vChar = e.getKeyChar();
-				if ( ( (Character.isDigit(vChar)) || (vChar == KeyEvent.VK_BACK_SPACE) || (vChar == '.') || (vChar == KeyEvent.VK_DELETE)) ) {
-					// OK
-					if ( (vChar == '.') && Misc.nbCharInString(textFieldTK.getText(),'.') >= 1) {
-						e.consume();
-					}
-				} else {
-					//NOK
-					e.consume();					
-				}
-			}
-		});
-		panelCompCOP.add(textFieldTK);
-
-		// ---------------------------------------------------------------
-		// Image
-		// ---------------------------------------------------------------
-
-		JLabel lblEnthalpyView = new JLabel("New label");
-		lblEnthalpyView.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		lblEnthalpyView.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		lblEnthalpyView.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent arg0) {
-				//lblEnthalpyView.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-				winEnthalpy = new WinEnthalpy(enthalpy, eDrawL,measureCollection,pac);
-				winEnthalpy.WinEnthalpyVisible();
-			}
-		});
-		lblEnthalpyView.setIcon(new ImageIcon(WinPrime.class.getResource("/gui/images/enthalpie_150.jpg")));
-		lblEnthalpyView.setBounds(49, 363, 159, 100);
-		panelCompCOP.add(lblEnthalpyView);
-
-		// ---------------------------------------------------------------
-		// Carnot Froid
-		// ---------------------------------------------------------------
-		JLabel labelCarnotFroid = new JLabel("Carnot Froid :");
-		labelCarnotFroid.setBounds(219, 299, 75, 14);
-		panelCompCOP.add(labelCarnotFroid);
-
-		textFieldCarnotFroid = new JTextField();
-		textFieldCarnotFroid.setBackground(Color.PINK);
-		textFieldCarnotFroid.setEditable(false);
-		textFieldCarnotFroid.setText("0");
-		textFieldCarnotFroid.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldCarnotFroid.setColumns(10);
-		textFieldCarnotFroid.setBounds(304, 296, 86, 20);
-		panelCompCOP.add(textFieldCarnotFroid);
-
-		JLabel lblMeasurePointView = new JLabel("New label");
-		lblMeasurePointView.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		lblMeasurePointView.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				//WinMeasurePoints window = new WinMeasurePoints(winEnthalpy, eDrawL,measurePL);
-				WinMeasurePoints window = new WinMeasurePoints(eDrawL,measureCollection,enthalpy,pac);
-				window.WinMeasurePointsVisible();
-			}
-		});
-		lblMeasurePointView.setIcon(new ImageIcon(WinPrime.class.getResource("/gui/images/Cycle_150.png")));
-		lblMeasurePointView.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		lblMeasurePointView.setBounds(233, 367, 150, 93);
-		panelCompCOP.add(lblMeasurePointView);
-		
-		JPanel panel = new JPanel();
-		panel.setBounds(49, 23, 334, 75);
-		panelCompCOP.add(panel);
-		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[] {5};
-		gbl_panel.rowHeights = new int[] {3};
-		gbl_panel.columnWeights = new double[]{Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{Double.MIN_VALUE};
-		panel.setLayout(gbl_panel);
-
-		// ===============================================================================================================
-		//									        PANEL DEFINITION 
-		// ===============================================================================================================
-
-		JPanel panelDef = new JPanel();
-		tabbedPane.addTab("D\u00E9finitions", null, panelDef, null);
-		panelDef.setLayout(null);
-
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 0, 432, 467);
-		panelDef.add(scrollPane);
-
-		JEditorPane txtdef = new JEditorPane();
-		txtdef.setEditable(false);
-		txtdef.setContentType("text/html");
-		txtdef.setText("<b>Capacity : </b>Puissance Frigorifique<b><br>\r\n&nbsp;&nbsp;&nbsp; </b>(H1-H3) x D\u00E9bit Massique<br>\r\n<b>COP:</b> COefficient de Performance <br>\r\n&nbsp;&nbsp;&nbsp; COP = Puissance <u>Restitu\u00E9e</u>\r\n(Chaleur) / Puissance consomm\u00E9e <br>\r\n&nbsp;&nbsp;&nbsp; Attention sur les catalogues le COP\r\n(constructeur) <br>\r\n&nbsp;&nbsp;&nbsp; est calcul\u00E9 \u00E0 partir d'une temp\u00E9rature\r\nd'eau de nappe <br>\r\n&nbsp;&nbsp;&nbsp; phr\u00E9atique de 10\u00B0C <br>\r\n<b>COP constructeur :</b> <br>\r\n&nbsp;&nbsp;&nbsp; Performance d'une PAC d\u00E9termin\u00E9e en\r\nlaboratoire ,<br>\r\n&nbsp;&nbsp;&nbsp; donc assez loin des r\u00E9alit\u00E9s.<br>\r\n<b>COP global de la PAC :</b> <br>\r\n&nbsp;&nbsp;&nbsp; Performance qui tient compte des\r\nauxiliaires, <br>\r\n&nbsp;&nbsp;&nbsp; ventilateurs, pompes,etc..<br>\r\n<b>COP annuel (COPPA) : </b><br>\r\n&nbsp;&nbsp;&nbsp; Performance r\u00E9elle calcul\u00E9e pendant une\r\np\u00E9riode compl\u00E8te <br>\r\n&nbsp;&nbsp;&nbsp; de chauffage qui tient compte des\r\nsp\u00E9cificit\u00E9s de l'installation.<br>\r\n<b>EER (Energy Efficiency Ratio) : </b><br>\r\n&nbsp;&nbsp;&nbsp;&nbsp;Coefficient d'Efficacit\u00E9\r\nFrigorifique (ou) COP froid <br>\r\n&nbsp;&nbsp;&nbsp; EER = Puissance&nbsp;<u>Absorb\u00E9e</u>\r\n(Froid) / Puissance consomm\u00E9e<br>\r\n<b>Mass Flow :</b><br>\r\n&nbsp;&nbsp;&nbsp; D\u00E9bit Massique (Kg/s)<br>\r\n<span style=\"font-weight: bold;\">BTU/h :</span>\r\nBritish Thermal Unit per hour<span style=\"font-weight: bold;\"></span><br\r\n style=\"font-weight: bold;\">\r\n&nbsp;&nbsp;&nbsp; Unit\u00E9 anglo-saxonne de puissance: <br>\r\n&nbsp;&nbsp;&nbsp; 1 000 BTU/h valent approximativement\r\n293,071 W &nbsp;<br>\r\n");
-		scrollPane.setViewportView(txtdef);
-
 	}
-}
 
+}

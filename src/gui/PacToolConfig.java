@@ -49,11 +49,11 @@ public class PacToolConfig {
 	 * Save PAC-Tool overall configuration file
 	 * @param pacl
 	 * @param enthalpy
-	 * @param primeConfig
+	 * @param winPacToolConfig
 	 * @param fileName
 	 */
 	@SuppressWarnings("unchecked")
-	public static void saveConfigFile(Pac pac, Enthalpy enthalpy, PrimeConfig primeConfig, String fileName) {
+	public static void saveConfigFile(Pac pac, Enthalpy enthalpy, WinPacToolConfig winPacToolConfig, String fileName) {
 
 		// Overall JSON object
 		JSONObject jsonObjPacTool = new JSONObject();
@@ -68,10 +68,10 @@ public class PacToolConfig {
 		jsonObjEnthalpy = enthalpy.getJsonObject();
 		jsonObjPacTool.put("Enthalpy",jsonObjEnthalpy);
 
-		// PrimeConfig
+		// WinPacToolConfig
 		JSONObject jsonObjPrimeConfig = new JSONObject();
-		jsonObjPrimeConfig = primeConfig.getJsonObject();
-		jsonObjPacTool.put("PrimeConfig",jsonObjPrimeConfig);
+		jsonObjPrimeConfig = winPacToolConfig.getJsonObject();
+		jsonObjPacTool.put("WinPacToolConfig",jsonObjPrimeConfig);
 
 		// Writing to a file  
 		try {  
@@ -126,10 +126,10 @@ public class PacToolConfig {
 	 * Read PAC-Tool overall configuration file
 	 * @param pacl
 	 * @param enthalpy
-	 * @param primeConfig
+	 * @param winPacToolConfig
 	 * @param fileName
 	 */
-	public static void readConfigFile(Pac pac, Enthalpy enthalpy, PrimeConfig primeConfig, String fileName) {
+	public static void readConfigFile(Pac pac, Enthalpy enthalpy, WinPacToolConfig winPacToolConfig, String fileName) {
 		File file = new File (fileName);
 		Scanner sken = null;
 
@@ -157,9 +157,9 @@ public class PacToolConfig {
 			e.printStackTrace();  
 		}  
 
-		// PrimeConfig
-		JSONObject jsonObjPrimeConfig = (JSONObject) jsonObj.get("PrimeConfig") ;
-		primeConfig.setJsonObject(jsonObjPrimeConfig);
+		// WinPacToolConfig
+		JSONObject jsonObjPrimeConfig = (JSONObject) jsonObj.get("WinPacToolConfig") ;
+		winPacToolConfig.setJsonObject(jsonObjPrimeConfig);
 		//System.out.println(jsonObjPrimeConfig);
 				
 
