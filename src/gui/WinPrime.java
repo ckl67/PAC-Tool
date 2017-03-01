@@ -335,7 +335,7 @@ public class WinPrime {
 						}
 					}
 					comboBoxCompressor.setSelectedIndex(0);
-					pac.chooseCompressor(0);
+					pac.SelectCompressor(0);
 					fillCompressorTexField(pac.getCurrentCompressor());
 
 
@@ -1056,7 +1056,7 @@ public class WinPrime {
 			public void actionPerformed(ActionEvent arg0) {
 				int ComboId = comboBoxCompressor.getSelectedIndex();
 				fillCompressorTexField(pac.getCompressorNb(ComboId));
-				pac.chooseCompressor(ComboId);
+				pac.SelectCompressor(ComboId);
 			}
 		});
 		comboBoxCompressor.setBounds(243, 10, 131, 20);	
@@ -1072,7 +1072,7 @@ public class WinPrime {
 			public void actionPerformed(ActionEvent arg0) {
 				int ComboId = comboBoxCompressor.getSelectedIndex();
 				if ( ComboId >= 0 ) {
-					pac.chooseCompressor(ComboId);
+					pac.SelectCompressor(ComboId);
 					UpdateTextField2Compressor(pac.getCurrentCompressor());
 					String tmp = textFieldCompressorName.getText();
 					//Impossible to rename an item, so we will create a new one, and delete the old

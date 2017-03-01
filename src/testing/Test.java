@@ -875,7 +875,7 @@ public class Test {
 		System.out.println("Circuit Distribution : deltaT=23");
 		pac.getCircuitDistrL().get(0).setDeltaT(23);
 
-		pac.chooseCompressor(1);
+		pac.SelectCompressor(1);
 		pac.getPacComponentId();
 		
 		System.out.println("------------------------------------------------------------------");

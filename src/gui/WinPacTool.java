@@ -24,27 +24,30 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javax.swing.JMenuBar;
 import javax.swing.JDesktopPane;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
 import java.awt.Toolkit;
 import javax.swing.JSeparator;
-
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import java.awt.SystemColor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import computation.Misc;
 import enthalpy.Enthalpy;
 import pac.Pac;
-import javax.swing.ImageIcon;
+
 
 public class WinPacTool extends JFrame {
 
@@ -82,7 +85,7 @@ public class WinPacTool extends JFrame {
 		}
 
 		setTitle("PAC-Tool (" + Misc.PACTool_Version + ")");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(WinPacTool.class.getResource("/gui/images/PAC-Tool_16.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(WinPacTool.class.getResource("/gui/images/PAC-Tool_32.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH); 
 		setUndecorated(false);
@@ -169,6 +172,7 @@ public class WinPacTool extends JFrame {
 		menuBar.add(mnPac);
 
 		JMenuItem mntmCompressor = new JMenuItem("Compressor");
+		mntmCompressor.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/compresseur-16.png")));
 		mntmCompressor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				WinCompressor winCompressor = new WinCompressor(pac,winPacToolConfig);
@@ -229,6 +233,7 @@ public class WinPacTool extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				WinAbout winAbout = new WinAbout();
 				winAbout.setVisible(true);
+				desktopPaneMain.add(winAbout);
 			}
 		});
 		mnHelp.add(mntmAbout);
@@ -242,8 +247,26 @@ public class WinPacTool extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 
-		desktopPaneMain = new JDesktopPane();
-		desktopPaneMain.setBackground(new Color(106, 90, 205));
+		desktopPaneMain = new JDesktopPane() {
+			private static final long serialVersionUID = 1L;
+			private Image image;
+			    {
+			        try {
+			        	
+			            URL url = this.getClass().getResource("/gui/images/background-image.jpg");
+			            image = ImageIO.read(url);
+			        } catch (IOException e) {
+			            logger.error(e);
+			        }
+			    }
+
+			    @Override
+			    protected void paintComponent(Graphics g) {
+			        super.paintComponent(g);
+			        g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+			    }
+		};
+		desktopPaneMain.setBackground(SystemColor.inactiveCaption);
 		contentPane.add(desktopPaneMain, BorderLayout.CENTER);
 	}
 }

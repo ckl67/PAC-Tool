@@ -121,12 +121,15 @@ public class WinCompressor extends JInternalFrame {
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
+	/**
+	 * 
+	 * @param pac --> PAC
+	 * @param vwinPacToolConfig --> Whole configuration of PAC TOOL GUI
+	 */
 	public WinCompressor(Pac vpac, WinPacToolConfig vwinPacToolConfig) {
-		setFrameIcon(new ImageIcon(WinCompressor.class.getResource("/gui/images/PAC-Tool_16.png")));
-		setTitle("Compressor");
 		pac = vpac;
 		winPacToolConfig =vwinPacToolConfig;
-	
+
 		initialize();
 	}
 
@@ -135,11 +138,12 @@ public class WinCompressor extends JInternalFrame {
 	// -------------------------------------------------------
 	
 	/**
-	 * 
+	 * Apply the WinPac GUI configuration to GUI Compressor.
 	 * @param winPacToolConfig
 	 */
-	public void applyConfig(WinPacToolConfig winPacToolConfig) {
+	public void applyConfig(WinPacToolConfig vwinPacToolConfig) {
 		
+		logger.info("applyConfig : NB Compressor={}", pac.getNbOfCompressorNb());
 		// Remove all Compressor items in ComboBox (except the first)
 		for(int i=1;i<pac.getNbOfCompressorNb();i++) {
 			comboBoxCompressor.removeItemAt(i);
@@ -147,9 +151,9 @@ public class WinCompressor extends JInternalFrame {
 
 		// Set the Compressor Check Box (Fahrenheit/Pound/BTU) before to affect the data to text field, 
 		// no actions will be performed by this settings 
-		checkoxFaren.setSelected(winPacToolConfig.getUnitCompFaren());
-		checkoxBTU.setSelected(winPacToolConfig.getUnitCompBTU()); 		
-		checkoxPound.setSelected(winPacToolConfig.getUnitCompPound()); 		
+		checkoxFaren.setSelected(vwinPacToolConfig.getUnitCompFaren());
+		checkoxBTU.setSelected(vwinPacToolConfig.getUnitCompBTU()); 		
+		checkoxPound.setSelected(vwinPacToolConfig.getUnitCompPound()); 		
 
 		// Fill Compressor ComboBox
 		for(int i=1;i<pac.getNbOfCompressorNb();i++) {
@@ -158,7 +162,7 @@ public class WinCompressor extends JInternalFrame {
 			}
 		}
 		comboBoxCompressor.setSelectedIndex(0);
-		pac.chooseCompressor(0);
+		pac.selectCurrentCompressor(0);
 		fillCompressorTexField(pac.getCurrentCompressor());
 		
 	}
@@ -174,6 +178,7 @@ public class WinCompressor extends JInternalFrame {
 	 */
 	private void fillCompressorTexField(Compressor compressor) {
 
+		logger.info("(fillCompressorTexField) Compressor Name {}",compressor.getName());
 		boolean weclickf = false;
 		boolean weclickb = false;
 		boolean weclickp = false;
@@ -236,6 +241,7 @@ public class WinCompressor extends JInternalFrame {
 	 */
 	private void UpdateTextField2Compressor( Compressor compressor) {
 
+		logger.info("(UpdateTextField2Compressor) Compressor Name {}",compressor.getName());
 		boolean weclickf = false;
 		boolean weclickb = false;
 		boolean weclickp = false;
@@ -290,16 +296,20 @@ public class WinCompressor extends JInternalFrame {
 
 	
 	public void initialize() {
+		setTitle("Compressor");
+		setFrameIcon(new ImageIcon(WinCompressor.class.getResource("/gui/images/PAC-Tool_16.png")));
 		setIconifiable(true);
 		setClosable(true);
-		setBounds(100, 100, 450, 533);
+		setBounds(100, 100, 450, 526);
+		setResizable(false);
+
 		getContentPane().setLayout(null);
 
 		// ===============================================================================================================
 		//									                 PANEL PAC
 		// ===============================================================================================================
 		JPanel panelSroll = new JPanel();
-		panelSroll.setBounds(0, 0, 432, 497);
+		panelSroll.setBounds(0, 0, 432, 486);
 		getContentPane().add(panelSroll);
 		panelSroll.setForeground(Color.BLUE);
 		panelSroll.setLayout(null);
@@ -530,7 +540,7 @@ public class WinCompressor extends JInternalFrame {
 		// 					   	Performance 2 Panel
 		// ================================================================
 		JPanel panel_pc2 = new JPanel();
-		panel_pc2.setBounds(5, 245, 420, 241);
+		panel_pc2.setBounds(5, 245, 420, 234);
 		panel_pc2.setBorder(new TitledBorder(null, "Donn\u00E9es Performance Constructeur (Autres)", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_pc2.setLayout(null);
 		panelSroll.add(panel_pc2);
@@ -865,7 +875,7 @@ public class WinCompressor extends JInternalFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				int ComboId = comboBoxCompressor.getSelectedIndex();
 				fillCompressorTexField(pac.getCompressorNb(ComboId));
-				pac.chooseCompressor(ComboId);
+				pac.selectCurrentCompressor(ComboId);
 			}
 		});
 		comboBoxCompressor.setBounds(243, 10, 131, 20);
@@ -882,7 +892,7 @@ public class WinCompressor extends JInternalFrame {
 				int ComboId = comboBoxCompressor.getSelectedIndex();
 				if ( ComboId >= 0 ) {
 					logger.info("Save Compressor {}", ComboId );
-					pac.chooseCompressor(ComboId);
+					pac.selectCurrentCompressor(ComboId);
 					UpdateTextField2Compressor(pac.getCurrentCompressor());
 					String tmp = textFieldCompressorName.getText();
 					//Impossible to rename an item, so we will create a new one, and delete the old

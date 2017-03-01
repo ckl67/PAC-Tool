@@ -379,21 +379,33 @@ public class Pac {
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
 
-	public void chooseCompressor(int i) {
+	/**
+	 * 
+	 * @param i
+	 */
+	public void selectCurrentCompressor(int i) {
 		id[PacItem.COMP.ordinal()] = i;
-		logger.info("Choice Compressor N°{}",i);
+		logger.info("Select Current Compressor N°{}",id[PacItem.COMP.ordinal()]);
 	}
 
+	/**
+	 * 
+	 * @return Compressor
+	 */
 	// id[0] = 2 <==> id[PacItem.COMP.pos()] = 2;
 	public Compressor getCurrentCompressor() {
 		logger.info("Get Current Compressor N°{}",id[PacItem.COMP.ordinal()]);
 		return compressorL.get(id[PacItem.COMP.ordinal()]);
 	}
 
+	/**
+	 * 
+	 * @return Compressor
+	 */
 	//id[0] = 2 <==> id[PacItem.COMP.pos()] = 2;
 	public Compressor getCompressorNb(int nb) {
 		logger.info("Get Compressor N°{}",nb);
-		return compressorL.get(id[nb]);
+		return compressorL.get(nb);
 	}
 
 	public int getNbOfCompressorNb() {
@@ -407,6 +419,8 @@ public class Pac {
 	public void removeCompressor(int position) {
 		compressorL.remove(position);	
 	}
+	
+	// -------------------------------------------------------
 	
 	public void choosCondenser(int i) {
 		id[PacItem.COND.ordinal()] = i;
@@ -463,6 +477,7 @@ public class Pac {
 		logger.info("Choice Fluid Caloporter Distribution N°{}",i);
 	}
 
+	// -------------------------------------------------------
 
 	public int[] getPacComponentId() {
 		for (PacItem p : PacItem.values()) {
