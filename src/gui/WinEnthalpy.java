@@ -22,7 +22,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.List;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -59,9 +58,11 @@ import enthalpy.Enthalpy;
 import pac.Pac;
 import javax.swing.event.ChangeEvent;
 import javax.swing.ImageIcon;
+import java.awt.Toolkit;
+import javax.swing.UIManager;
 
 
-public class WinEnthalpy extends JInternalFrame {
+public class WinEnthalpy extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LogManager.getLogger(WinEnthalpy.class.getName());
@@ -97,6 +98,11 @@ public class WinEnthalpy extends JInternalFrame {
 	// 				TEST THE APPLICATION STANDALONE 
 	// -------------------------------------------------------
 	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -130,7 +136,6 @@ public class WinEnthalpy extends JInternalFrame {
 		measureCollection = pacToolVar.getMeasureCollection();
 		pac = pacToolVar.getPac();
 		measurePL = pacToolVar.getMeasureCollection().getMeasurePL();
-		
 		pointJPopupMenu = new Point();
 		
 		initialize();
@@ -177,13 +182,10 @@ public class WinEnthalpy extends JInternalFrame {
 	private void initialize() {
 
 		setTitle("Diagramme Enthalpique");
-		setFrameIcon(new ImageIcon(WinCompressor.class.getResource("/gui/images/PAC-Tool_16.png")));
-		setIconifiable(true);
-		setClosable(true);	
 		setBounds(100, 100, 800, 500);
 		setResizable(true);
-		setMaximizable(true);
-
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setIconImage(Toolkit.getDefaultToolkit().getImage(WinEnthalpy.class.getResource("/gui/images/PAC-Tool_16.png")));
 		getContentPane().setLayout(new BorderLayout(0, 0));
 
 		// ----------------------------------------
@@ -429,7 +431,7 @@ public class WinEnthalpy extends JInternalFrame {
 		btnPressureTemp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				WinPressTemp window = new WinPressTemp(enthalpy);
-				window.WinPressTempVisible();
+				window.setVisible(true);
 			}
 		});
 		panelMiddle1_Center.add(btnPressureTemp);

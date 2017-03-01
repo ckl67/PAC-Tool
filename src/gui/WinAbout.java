@@ -19,22 +19,20 @@
 package gui;
 
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JTextPane;
 import javax.swing.event.HyperlinkListener;
 import computation.Misc;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
-import javax.swing.JDesktopPane;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.EventQueue;
 import javax.swing.event.HyperlinkEvent;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.awt.Toolkit;
 
-public class WinAbout extends JInternalFrame {
+public class WinAbout extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
@@ -52,15 +50,6 @@ public class WinAbout extends JInternalFrame {
 
 					WinAbout frame = new WinAbout();
 					frame.setVisible(true);
-
-					// <<<<----- FOR TEST CREATE A FRAME WITH JDesktopPane
-					JFrame frameM = new JFrame();
-					JDesktopPane desktopPaneMain = new JDesktopPane();
-					frameM.getContentPane().add(desktopPaneMain, BorderLayout.CENTER);
-					frameM.setBounds(100, 10, 700, 700);
-					frameM.setVisible(true);
-					desktopPaneMain.add(frame); 
-					// ----------------->>>>
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -92,12 +81,10 @@ public class WinAbout extends JInternalFrame {
 	 */
 	private void initialize() {
 		setTitle("About");
-		setFrameIcon(new ImageIcon(WinCompressor.class.getResource("/gui/images/PAC-Tool_16.png")));
-		setIconifiable(true);
-		setClosable(true);
 		setBounds(100, 1, 370, 152);
 		setResizable(false);
-
+		setIconImage(Toolkit.getDefaultToolkit().getImage(WinAbout.class.getResource("/gui/images/PAC-Tool_16.png")));
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setBackground(Color.WHITE);
 		getContentPane().setLayout(null);
 

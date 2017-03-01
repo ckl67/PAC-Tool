@@ -21,7 +21,6 @@ package gui;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.awt.EventQueue;
-import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import javax.swing.JLabel;
@@ -29,7 +28,6 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.JTextField;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.JCheckBox;
 import java.awt.event.ActionEvent;
@@ -37,16 +35,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.Font;
+import java.awt.Toolkit;
 import javax.swing.JComboBox;
-import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import computation.Misc;
 import pac.Compressor;
 import pac.Pac;
-import javax.swing.ImageIcon;
 
-public class WinCompressor extends JInternalFrame {
+public class WinCompressor extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LogManager.getLogger(WinCompressor.class.getName());
 
@@ -99,15 +96,6 @@ public class WinCompressor extends JInternalFrame {
 				try {				
 					WinCompressor frame = new WinCompressor(new PacToolVar());
 					frame.setVisible(true);
-					
-					// <<<<----- FOR TEST CREATE A FRAME WITH JDesktopPane
-					JFrame frameM = new JFrame();
-					JDesktopPane desktopPaneMain = new JDesktopPane();
-					frameM.getContentPane().add(desktopPaneMain, BorderLayout.CENTER);
-					frameM.setBounds(100, 10, 700, 700);
-					frameM.setVisible(true);
-					desktopPaneMain.add(frame); 
-					// ----------------->>>>
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -296,12 +284,10 @@ public class WinCompressor extends JInternalFrame {
 	
 	public void initialize() {
 		setTitle("Compressor");
-		setFrameIcon(new ImageIcon(WinCompressor.class.getResource("/gui/images/PAC-Tool_16.png")));
-		setIconifiable(true);
-		setClosable(true);
+		setIconImage(Toolkit.getDefaultToolkit().getImage(WinAbout.class.getResource("/gui/images/PAC-Tool_16.png")));
 		setBounds(100, 100, 450, 526);
 		setResizable(false);
-
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
 
 		// ===============================================================================================================

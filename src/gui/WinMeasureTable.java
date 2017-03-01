@@ -1,28 +1,42 @@
+/*
+ * - PAC-Tool - 
+ * Tool for understanding basics and computation of PAC (Pompe à Chaleur)
+ * Copyright (C) 2016 christian.klugesherz@gmail.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License (version 2)
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package gui;
  
 import java.awt.BorderLayout;
-import javax.swing.JInternalFrame;
+import java.awt.Toolkit;
 import javax.swing.table.DefaultTableModel;
-
 import computation.MeasureObject;
-
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.ImageIcon;
+import javax.swing.JFrame;
  
  
-public class WinJInterMeasureTable extends JInternalFrame {
+public class WinMeasureTable extends JFrame {
  
     private static final long serialVersionUID = 1L;
     private JTable table;
  
     
-    public WinJInterMeasureTable() {
+    public WinMeasureTable() {
     	setTitle("Measure Table");
-    	setFrameIcon(new ImageIcon(WinJInterMeasureTable.class.getResource("/gui/images/PAC-Tool_32.png")));
-    	setIconifiable(true);
-        setMaximizable(true);
-        setClosable(true);
+		setIconImage(Toolkit.getDefaultToolkit().getImage(WinAbout.class.getResource("/gui/images/PAC-Tool_16.png")));
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(true);
         setBounds(100, 100, 593, 169);
          
