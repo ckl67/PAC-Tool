@@ -57,6 +57,7 @@ public class WinPacTool extends JFrame {
 	// -------------------------------------------------------
 	// 					INSTANCE VARIABLES
 	// -------------------------------------------------------
+	private PacToolVar pacToolVar;
 	private Pac pac;
 	private Enthalpy enthalpy;
 	private WinPacToolConfig winPacToolConfig;
@@ -64,6 +65,7 @@ public class WinPacTool extends JFrame {
 	// -------------------------------------------------------
 	private JDesktopPane desktopPaneMain;
 	private WinCompressor winCompressor;
+	private WinEnthalpy winEnthalpy;
 	
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -71,11 +73,11 @@ public class WinPacTool extends JFrame {
 	/**
 	 * Create the frame. Class WinPacTool inheriting of JFrame
 	 */
-	public WinPacTool(Pac vpac, Enthalpy venthalpy, WinPacToolConfig vwinPacToolConfig) {
-
-		pac = vpac;
-		enthalpy = venthalpy;
-		winPacToolConfig = vwinPacToolConfig;
+	public WinPacTool(PacToolVar vpacToolVar) {
+		pacToolVar = vpacToolVar;
+		pac = pacToolVar.getPac();
+		enthalpy = pacToolVar.getEnthalpy();
+		winPacToolConfig = pacToolVar.getWinPacToolConfig();
 
 		// Theme Window
 		try {
@@ -175,7 +177,7 @@ public class WinPacTool extends JFrame {
 		mntmCompressor.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/compresseur-16.png")));
 		mntmCompressor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				WinCompressor winCompressor = new WinCompressor(pac,winPacToolConfig);
+				winCompressor = new WinCompressor(pacToolVar);
 				winCompressor.setVisible(true);
 				desktopPaneMain.add(winCompressor);
 			}
@@ -186,8 +188,12 @@ public class WinPacTool extends JFrame {
 		menuBar.add(mnEnthalpy);
 		
 		JMenuItem mntmDiagram = new JMenuItem("Diagram");
+		mntmDiagram.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/enthalpie-16.jpg")));
 		mntmDiagram.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				winEnthalpy = new WinEnthalpy(pacToolVar);
+				winEnthalpy.setVisible(true);
+				desktopPaneMain.add(winEnthalpy);
 			}
 		});
 		mnEnthalpy.add(mntmDiagram);

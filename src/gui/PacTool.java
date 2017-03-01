@@ -18,26 +18,16 @@
  */
 package gui;
 
-import computation.COP;
-import enthalpy.Enthalpy;
-import pac.Pac;
-
-/**
- * MAIN RUN
- */
 public class PacTool {
-
+	
 	// -------------------------------------------------------
 	// 							MAIN
 	// -------------------------------------------------------
 	public static void main(String[] args){
 		
-		Pac pac = new Pac();										// Contains Pac Features
-		Enthalpy enthalpy = new Enthalpy();							// Enthalpy Features
-		WinPacToolConfig winPacToolConfig = new WinPacToolConfig();	// GUI Configuration
-		COP cop = new COP();										// COP Compute
+		PacToolVar pacToolVar = new PacToolVar();
 		
-		WinPacTool winPacTool = new WinPacTool(pac, enthalpy, winPacToolConfig); 
+		WinPacTool winPacTool = new WinPacTool(pacToolVar); 
 		winPacTool.setVisible(true);
 	}
 }

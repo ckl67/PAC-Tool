@@ -53,6 +53,7 @@ public class WinCompressor extends JInternalFrame {
 	// -------------------------------------------------------
 	// 					INSTANCE VARIABLES
 	// -------------------------------------------------------
+	private PacToolVar pacToolVar;
 	private Pac pac;
 	private WinPacToolConfig winPacToolConfig;
 	
@@ -95,11 +96,8 @@ public class WinCompressor extends JInternalFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {
-					Pac tpac = new Pac();
-					WinPacToolConfig twinPacToolConfig = new WinPacToolConfig();
-					
-					WinCompressor frame = new WinCompressor(tpac,twinPacToolConfig);
+				try {				
+					WinCompressor frame = new WinCompressor(new PacToolVar());
 					frame.setVisible(true);
 					
 					// <<<<----- FOR TEST CREATE A FRAME WITH JDesktopPane
@@ -126,9 +124,10 @@ public class WinCompressor extends JInternalFrame {
 	 * @param pac --> PAC
 	 * @param vwinPacToolConfig --> Whole configuration of PAC TOOL GUI
 	 */
-	public WinCompressor(Pac vpac, WinPacToolConfig vwinPacToolConfig) {
-		pac = vpac;
-		winPacToolConfig =vwinPacToolConfig;
+	public WinCompressor(PacToolVar vpacToolVar) {
+		pacToolVar = vpacToolVar;
+		pac = pacToolVar.getPac();
+		winPacToolConfig =pacToolVar.getWinPacToolConfig();
 
 		initialize();
 	}

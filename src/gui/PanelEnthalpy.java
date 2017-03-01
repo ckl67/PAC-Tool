@@ -169,7 +169,7 @@ public class PanelEnthalpy extends JPanel {
 				if ((evt.getModifiers() & InputEvent.BUTTON2_MASK) != 0) {
 					offset.x = (evt.getX() - dragStart.x);
 					offset.y = (evt.getY() - dragStart.y);
-					//repaint();
+					repaint();
 				}
 
 			}
@@ -183,7 +183,7 @@ public class PanelEnthalpy extends JPanel {
 				// Zoom
 				zoom -= evt.getPreciseWheelRotation() * .03;
 				if (zoom < 0) zoom = 0;
-				//repaint();
+				repaint();
 			}
 		} );
 
@@ -304,7 +304,8 @@ public class PanelEnthalpy extends JPanel {
 		super.paintComponent(g);
 		setBackground(Color.WHITE);
 
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		//g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		//g2.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
 		
 		// -----------------------------------
 		// Apply a translation so that the drawing

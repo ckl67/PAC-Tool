@@ -20,13 +20,14 @@ package gui;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JButton;
+import javax.swing.JDesktopPane;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import java.awt.Cursor;
@@ -39,7 +40,6 @@ import javax.swing.ButtonGroup;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.ActionEvent;
-import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -50,43 +50,35 @@ import javax.swing.JSlider;
 import javax.swing.border.LineBorder;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeListener;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import computation.MeasurePoint;
 import computation.MeasureCollection;
 import computation.MeasureObject;
 import enthalpy.Enthalpy;
 import pac.Pac;
-
 import javax.swing.event.ChangeEvent;
 import javax.swing.ImageIcon;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
-public class WinEnthalpy {
+
+public class WinEnthalpy extends JInternalFrame {
 	
+	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LogManager.getLogger(WinEnthalpy.class.getName());
-
-	/* ----------------------------------------
-	 *  	STATIC GLOBAL VAR PUBLIC
-	 * ---------------------------------------- */
-	private PanelEnthalpy panelEnthalpyDrawArea;
-
 
 	/* 	----------------------------------------
 	 * 		INSTANCE VAR
 	 * ----------------------------------------*/
-	private Enthalpy enthalpy;				// Enthalpy declaration
-	private List<ElDraw> eDrawL;			// Draw elements List: lines/points/...
+	private PacToolVar pacToolVar;
+	private Enthalpy enthalpy;		
+	private List<ElDraw> eDrawL;	
 	private MeasureCollection measureCollection;
 	private Pac pac;
 
 	/* 	----------------------------------------
 	 * 		WIN BUILDER
 	 * ----------------------------------------*/
-	private JFrame frame;
+	private PanelEnthalpy panelEnthalpyDrawArea;
 	private JLabel lblMouseCoordinate;
 	private JLabel lblEnthalpyCoord;
 	private JLabel lblPressureCoord;
@@ -100,22 +92,27 @@ public class WinEnthalpy {
 	
 	private int ElDrawIdToMoveOnP;
 	private List<MeasurePoint> measurePL;
-
+	
 	// -------------------------------------------------------
-	// 						TEST
+	// 				TEST THE APPLICATION STANDALONE 
 	// -------------------------------------------------------
-	/**
-	 * Launch the application for local test
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				List<ElDraw> eDrawL1 = new ArrayList<ElDraw>();
-				MeasureCollection measureCollection1 = new MeasureCollection();
+				try {
 
-		        try {
-					WinEnthalpy window = new WinEnthalpy(new Enthalpy(),eDrawL1,measureCollection1,new Pac());
-					window.frame.setVisible(true);
+					WinEnthalpy frame = new WinEnthalpy(new PacToolVar());
+					frame.setVisible(true);
+
+					// <<<<----- FOR TEST CREATE A FRAME WITH JDesktopPane
+					JFrame frameM = new JFrame();
+					JDesktopPane desktopPaneMain = new JDesktopPane();
+					frameM.getContentPane().add(desktopPaneMain, BorderLayout.CENTER);
+					frameM.setBounds(100, 10, 700, 700);
+					frameM.setVisible(true);
+					desktopPaneMain.add(frame); 
+					// ----------------->>>>
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -126,30 +123,25 @@ public class WinEnthalpy {
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public WinEnthalpy(Enthalpy vconfEnthalpy, List<ElDraw> veDrawL, MeasureCollection vmeasureCollection, Pac pacv) {
-		enthalpy = vconfEnthalpy;
-		eDrawL = veDrawL;
-		measureCollection = vmeasureCollection;
-		pac = pacv;
-		measurePL = vmeasureCollection.getMeasurePL();
+	public WinEnthalpy(PacToolVar vpacToolVar) {
+		pacToolVar = vpacToolVar;
+		enthalpy = pacToolVar.getEnthalpy();
+		eDrawL = pacToolVar.geteDrawL();
+		measureCollection = pacToolVar.getMeasureCollection();
+		pac = pacToolVar.getPac();
+		measurePL = pacToolVar.getMeasureCollection().getMeasurePL();
 		
 		pointJPopupMenu = new Point();
 		
 		initialize();
 		ElDrawIdToMoveOnP = -1;
 		
-		new DataSynchroUpdateTimer(this);
+		//new DataSynchroUpdateTimer(this);
 	}
 
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
-	/**
-	 * Get the frame visible
-	 */
-	public void WinEnthalpyVisible() {
-		frame.setVisible(true);
-	}
 
 
 	// -------------------------------------------------------
@@ -183,25 +175,23 @@ public class WinEnthalpy {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosed(WindowEvent arg0) {
-				DataSynchroUpdateTimer.DataSynchroUpdateTimerStop();
-			}
-		});
-		frame.setTitle("Diagramme Enthalpique");
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(WinEnthalpy.class.getResource("/gui/images/PAC-Tool_32.png")));
-		frame.setBounds(100, 100, 800, 500);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+
+		setTitle("Diagramme Enthalpique");
+		setFrameIcon(new ImageIcon(WinCompressor.class.getResource("/gui/images/PAC-Tool_16.png")));
+		setIconifiable(true);
+		setClosable(true);	
+		setBounds(100, 100, 800, 500);
+		setResizable(true);
+		setMaximizable(true);
+
+		getContentPane().setLayout(new BorderLayout(0, 0));
 
 		// ----------------------------------------
 		// Panel Bottom with info 
 		// ----------------------------------------
 
 		JPanel panelEnthalpyBottom = new JPanel();
-		frame.getContentPane().add(panelEnthalpyBottom, BorderLayout.SOUTH);
+		getContentPane().add(panelEnthalpyBottom, BorderLayout.SOUTH);
 
 		lblMouseCoordinate = new JLabel("Mouse Coordinate");
 		lblMouseCoordinate.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -231,7 +221,7 @@ public class WinEnthalpy {
 		panelEnthalpyBottom.add(lblMouseCoordinate);
 		JPanel panelEnthalpyRight = new JPanel();
 		panelEnthalpyRight.setBorder(new LineBorder(new Color(0, 0, 0)));
-		frame.getContentPane().add(panelEnthalpyRight, BorderLayout.EAST);
+		getContentPane().add(panelEnthalpyRight, BorderLayout.EAST);
 		panelEnthalpyRight.setLayout(new GridLayout(0, 1, 0, 0));
 
 		// ----------------------------------------
@@ -241,7 +231,7 @@ public class WinEnthalpy {
 		panelEnthalpyDrawArea = new PanelEnthalpy(enthalpy,eDrawL);	
 		panelEnthalpyDrawArea.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		panelEnthalpyDrawArea.setBackground(Color.WHITE);
-		frame.getContentPane().add(panelEnthalpyDrawArea, BorderLayout.CENTER);
+		getContentPane().add(panelEnthalpyDrawArea, BorderLayout.CENTER);
 
 		// **************************
 		// MOUSE MOTION LISTENER  !!
@@ -305,6 +295,7 @@ public class WinEnthalpy {
 							
 					}
 				}
+				repaint();
 			}
 		});
 
@@ -321,7 +312,7 @@ public class WinEnthalpy {
 			public void stateChanged(ChangeEvent arg0) {
 				int v = slider.getValue();
 				panelEnthalpyDrawArea.setImageAlphaBlure((float) v / slider.getMaximum());
-				//panelEnthalpyDrawArea.repaint();
+				panelEnthalpyDrawArea.repaint();
 			}
 		});
 		panelEnthalpyDrawArea.add(slider, BorderLayout.NORTH);
@@ -422,17 +413,6 @@ public class WinEnthalpy {
 		textPBP.setText(String.format("%.2f",measurePL.get(MeasureObject._BP_ID).getValue()));
 		panelHight_Hight.add(textPBP);
 		textPBP.setColumns(10);
-		
-		JButton btnAllData = new JButton("Data");
-		btnAllData.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				WinData windata = new WinData();
-				
-			}
-		});
-		btnAllData.setMaximumSize(new Dimension(85, 23));
-		btnAllData.setAlignmentX(Component.CENTER_ALIGNMENT);
-		panelHight_Hight.add(btnAllData);
 
 		// ----------------------------------------
 		JPanel panelMiddle1 = new JPanel();
@@ -491,7 +471,7 @@ public class WinEnthalpy {
 		btnResetZoom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				panelEnthalpyDrawArea.centerImg();
-				//panelEnthalpyDrawArea.repaint();			
+				panelEnthalpyDrawArea.repaint();			
 			}
 		});
 		panelBottom_Bottom.add(btnResetZoom);
