@@ -1,11 +1,10 @@
 package testing;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import computation.COP;
 
-public class JunitTesting {
+public class JUnitCOP {
 
 	@Test
 	public void test() {
@@ -22,5 +21,4 @@ public class JunitTesting {
 		double out = vCOP.cop_carnot_chaud();
 		assertEquals(12.92,out,0.001);
 	}
-
 }
