@@ -54,7 +54,9 @@ import pac.Pac;
 
 import javax.imageio.ImageIO;
 
-public class WinMeasurePoints {
+public class WinMeasurePoints extends JPanel implements MouseListener,  MouseMotionListener {
+
+	private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = LogManager.getLogger(WinMeasurePoints.class.getName());
 
@@ -78,12 +80,12 @@ public class WinMeasurePoints {
 	private String imgURL;
 	private List<MeasurePoint> measurePL;
 
-	private JFrame frame;
-	private PPanel panel;
 	private BufferedImage img;
 	private JTextField textField;
 	private JTextField textFieldUnity;
 
+	private boolean pointMatched;
+	private int pointMatched_id;
 	// -------------------------------------------------------
 	// 						LOCAL TEST
 	// -------------------------------------------------------
@@ -99,7 +101,7 @@ public class WinMeasurePoints {
 
 				try {
 					WinMeasurePoints window = new WinMeasurePoints(eDrawL1,measureCollection1,enthalpy1,new Pac());
-					window.frame.setVisible(true);
+					window.setVisible(true);
 				} catch (Exception e) {
 					logger.error("Ops!", e);
 				}
@@ -123,19 +125,17 @@ public class WinMeasurePoints {
 		this.imgURL = "/gui/images/Cycle.png";
 		this.measurePL = measureCollection.getMeasurePL();
 
+		pointMatched = false;
+		pointMatched_id = -1;
+
+		addMouseListener(this);
+		addMouseMotionListener(this);
 		initialize();
 	}
 
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
-
-	/**
-	 * Get the frame visible
-	 */
-	public void WinMeasurePointsVisible() {
-		frame.setVisible(true);
-	}
 
 	/**
 	 * Will return the nearest element id of measurePL 
@@ -182,14 +182,13 @@ public class WinMeasurePoints {
 	 */
 	private void initialize() {
 
-		frame = new JFrame();
 
 		// One issue faced on image extension .PNG expected .png
 		// ImageIO#read. throws an illegal argument exception for a null parameter; 
 		// if the String representing the path to the image has even the tiniest error in, 
 		// the URL passed to read() will be null. 
 		try {
-			img = ImageIO.read(frame.getContentPane().getClass().getResource(imgURL));
+			img = ImageIO.read(this.getClass().getResource(imgURL));
 		} catch (IOException e) {
 			logger.error("Ops!", e);
 		}
@@ -197,17 +196,6 @@ public class WinMeasurePoints {
 		int imgWidth = img.getWidth();
 		int imgHeight = img.getHeight();
 
-		frame.setTitle("Points de Mesure");
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(WinMeasurePoints.class.getResource("/gui/images/PAC-Tool_32.png")));
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.setBackground(Color.WHITE);
-		frame.setSize(imgWidth+10, imgHeight+40);
-		frame.getContentPane().setLayout(null);
-		frame.setResizable(false);
-
-		panel = new PPanel();
-		panel.setBounds(0, 0, imgWidth, imgHeight);
-		panel.setBackground(Color.WHITE);
 
 		JButton btnNewButton = new JButton("Reset");
 		btnNewButton.setFocusable(false);
@@ -223,7 +211,7 @@ public class WinMeasurePoints {
 			}
 		});
 
-		panel.add(btnNewButton);
+		add(btnNewButton);
 
 		textField = new JTextField();
 		textField.setForeground(Color.BLACK);
@@ -271,164 +259,139 @@ public class WinMeasurePoints {
 		textFieldUnity.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldUnity.setVisible(false);
 
-		panel.add(textField);
-		panel.add(textFieldUnity);
-		frame.getContentPane().add(panel);
+		add(textField);
+		add(textFieldUnity);
+
+
+
+
 
 	}
 
-	// ===================================================================================================================
-	// ===================================================================================================================
-	//												JPANEL Display
-	// ===================================================================================================================
-	// ===================================================================================================================
-
-	public class PPanel extends JPanel implements MouseListener,  MouseMotionListener  { 
-
-		private static final long serialVersionUID = 1L;
-		private boolean pointMatched;
-		private int pointMatched_id;
-
-		// -------------------------------------------------------
-		// 						CONSTRUCTOR
-		// -------------------------------------------------------
-		public PPanel(){
-			pointMatched = false;
-			pointMatched_id = -1;
-
-			addMouseListener(this);
-			addMouseMotionListener(this);
-
-		}
-
-		// -------------------------------------------------------
-		// 							METHOD
-		// -------------------------------------------------------
 
 
-		// -------------------------------------------------------
-		// 						PAINT 
-		// -------------------------------------------------------
-		public void paintComponent(Graphics g){
-			Graphics2D g2d = (Graphics2D)g;         
+	// -------------------------------------------------------
+	// 						PAINT 
+	// -------------------------------------------------------
+	public void paintComponent(Graphics g){
+		Graphics2D g2d = (Graphics2D)g;         
 
-			// Background image
-			g2d.drawImage(img,0, 0, this);
+		// Background image
+		g2d.drawImage(img,0, 0, this);
 
-			if (pointMatched) {
-				int x = measurePL.get(pointMatched_id).getMeasureObject().getXm();
-				int y = measurePL.get(pointMatched_id).getMeasureObject().getYm();
+		if (pointMatched) {
+			int x = measurePL.get(pointMatched_id).getMeasureObject().getXm();
+			int y = measurePL.get(pointMatched_id).getMeasureObject().getYm();
 
-				// Create Circle
-				Point2D center = new Point2D.Float(x, y);
-				float[] dist = {0.0f, 1.0f};
-				Color[] colors = {Color.YELLOW, Color.RED};
-				int radius = 10;
-				RadialGradientPaint p =  new RadialGradientPaint(center, radius, dist, colors);
-				g2d.setPaint(p);
-				g2d.fill(new Ellipse2D.Double(x-radius, y-radius, 2*radius, 2*radius));
+			// Create Circle
+			Point2D center = new Point2D.Float(x, y);
+			float[] dist = {0.0f, 1.0f};
+			Color[] colors = {Color.YELLOW, Color.RED};
+			int radius = 10;
+			RadialGradientPaint p =  new RadialGradientPaint(center, radius, dist, colors);
+			g2d.setPaint(p);
+			g2d.fill(new Ellipse2D.Double(x-radius, y-radius, 2*radius, 2*radius));
 
-				// Definition Text 
-				String defTxt = measurePL.get(pointMatched_id).getMeasureObject().getDefinition();
-				Font font = new Font(null, Font.PLAIN, 15);
-				g2d.setFont(font);
+			// Definition Text 
+			String defTxt = measurePL.get(pointMatched_id).getMeasureObject().getDefinition();
+			Font font = new Font(null, Font.PLAIN, 15);
+			g2d.setFont(font);
 
-				int widthFRRmax = 0;
-				int heightFRRmax = 0;
-				for (String line : defTxt.split("\n")) {
-					Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(line, g2d);
-					if ( (int)bounds.getWidth() > widthFRRmax )
-						widthFRRmax = (int)bounds.getWidth();
-					heightFRRmax = heightFRRmax + (int)bounds.getHeight();
-				}
-
-				// Background Text zone 
-				g2d.setColor(Color.YELLOW);
-				g2d.fillRoundRect(x-10, y+20, widthFRRmax+20, heightFRRmax+15,10,10);
-
-				// Write Text in the zone
-				g2d.setColor(Color.BLACK);	
-				int yl = y+20;
-				for (String line : defTxt.split("\n")) {
-					yl = yl + g2d.getFontMetrics().getHeight();
-					g2d.drawString(line, x, yl);
-				}
-
+			int widthFRRmax = 0;
+			int heightFRRmax = 0;
+			for (String line : defTxt.split("\n")) {
+				Rectangle2D bounds = g2d.getFontMetrics().getStringBounds(line, g2d);
+				if ( (int)bounds.getWidth() > widthFRRmax )
+					widthFRRmax = (int)bounds.getWidth();
+				heightFRRmax = heightFRRmax + (int)bounds.getHeight();
 			}
-		}
 
-		// -------------------------------------------------------
-		// 						EVENT LISTNER
-		// -------------------------------------------------------
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+			// Background Text zone 
+			g2d.setColor(Color.YELLOW);
+			g2d.fillRoundRect(x-10, y+20, widthFRRmax+20, heightFRRmax+15,10,10);
 
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseExited(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mousePressed(MouseEvent evt) {
-
-			if (HELP_FIND_LOCATION)
-			{
-				// Only print authorized, because used to display the coordinate in the cmd window
-				System.out.println(evt.getX()+","+ evt.getY());
+			// Write Text in the zone
+			g2d.setColor(Color.BLACK);	
+			int yl = y+20;
+			for (String line : defTxt.split("\n")) {
+				yl = yl + g2d.getFontMetrics().getHeight();
+				g2d.drawString(line, x, yl);
 			}
-			else {
-
-				int id = getIdNearest(evt.getX(),evt.getY());
-				if (id >= 0 ) {
-					textField.setBounds(evt.getX(), evt.getY(), 80, 20);
-					textField.setText(String.valueOf(measurePL.get(pointMatched_id).getValue()));
-					textField.setVisible(true);
-
-					textFieldUnity.setBounds(evt.getX()+80, evt.getY(), 30, 20);
-					textFieldUnity.setText(measurePL.get(pointMatched_id).getMeasureObject().getUnity());
-					textFieldUnity.setVisible(true);
-				} else {
-					textField.setVisible(false);			
-					textFieldUnity.setVisible(false);			
-				}
-			}
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
 
 		}
+	}
 
-		@Override
-		public void mouseDragged(MouseEvent arg0) {
-			// TODO Auto-generated method stub
+	// -------------------------------------------------------
+	// 						EVENT LISTNER
+	// -------------------------------------------------------
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mousePressed(MouseEvent evt) {
+
+		if (HELP_FIND_LOCATION)
+		{
+			// Only print authorized, because used to display the coordinate in the cmd window
+			System.out.println(evt.getX()+","+ evt.getY());
 		}
+		else {
 
-		@Override
-		public void mouseMoved(MouseEvent evt) {
 			int id = getIdNearest(evt.getX(),evt.getY());
 			if (id >= 0 ) {
-				// Point found and to draw
-				pointMatched = true;
-				pointMatched_id = id;
+				textField.setBounds(evt.getX(), evt.getY(), 80, 20);
+				textField.setText(String.valueOf(measurePL.get(pointMatched_id).getValue()));
+				textField.setVisible(true);
+
+				textFieldUnity.setBounds(evt.getX()+80, evt.getY(), 30, 20);
+				textFieldUnity.setText(measurePL.get(pointMatched_id).getMeasureObject().getUnity());
+				textFieldUnity.setVisible(true);
 			} else {
-				pointMatched = false;
+				textField.setVisible(false);			
+				textFieldUnity.setVisible(false);			
 			}
-			if (!HELP_FIND_LOCATION)
-				this.repaint();
-		}               
+		}
 	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent evt) {
+		int id = getIdNearest(evt.getX(),evt.getY());
+		if (id >= 0 ) {
+			// Point found and to draw
+			pointMatched = true;
+			pointMatched_id = id;
+		} else {
+			pointMatched = false;
+		}
+		if (!HELP_FIND_LOCATION)
+			this.repaint();
+	}               
 
 }

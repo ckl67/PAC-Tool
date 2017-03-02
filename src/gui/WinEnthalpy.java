@@ -26,7 +26,6 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JButton;
-import javax.swing.JDesktopPane;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import java.awt.Cursor;
@@ -109,15 +108,6 @@ public class WinEnthalpy extends JFrame {
 
 					WinEnthalpy frame = new WinEnthalpy(new PacToolVar());
 					frame.setVisible(true);
-
-					// <<<<----- FOR TEST CREATE A FRAME WITH JDesktopPane
-					JFrame frameM = new JFrame();
-					JDesktopPane desktopPaneMain = new JDesktopPane();
-					frameM.getContentPane().add(desktopPaneMain, BorderLayout.CENTER);
-					frameM.setBounds(100, 10, 700, 700);
-					frameM.setVisible(true);
-					desktopPaneMain.add(frame); 
-					// ----------------->>>>
 
 				} catch (Exception e) {
 					e.printStackTrace();

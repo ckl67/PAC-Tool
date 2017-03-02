@@ -22,6 +22,7 @@ package gui;
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JMenuBar;
@@ -34,6 +35,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
 import java.awt.Toolkit;
 import javax.swing.JSeparator;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -66,7 +68,6 @@ public class WinPacTool extends JFrame {
 	 * Create the frame. Class WinPacTool inheriting of JFrame
 	 */
 	public WinPacTool(PacToolVar vpacToolVar) {
-		setResizable(false);
 		pacToolVar = vpacToolVar;
 		pac = pacToolVar.getPac();
 		enthalpy = pacToolVar.getEnthalpy();
@@ -80,7 +81,7 @@ public class WinPacTool extends JFrame {
 		setTitle("PAC-Tool (" + Misc.PACTool_Version + ")");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(WinPacTool.class.getResource("/gui/images/PAC-Tool_32.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 1, 450, 48);
+		setBounds(100, 1, 450, 281);
 
 		// Create Window
 		initialize();
@@ -212,8 +213,59 @@ public class WinPacTool extends JFrame {
 		});
 		mnMeasures.add(mntmTable);
 
-		JMenu mnDisplay = new JMenu("Preferences");
-		menuBar.add(mnDisplay);
+		JMenu mpreference = new JMenu("Preferences");
+		menuBar.add(mpreference);
+		
+		JMenuItem mImgEnthalpyCfg = new JMenuItem("Enthalpie Conf.");
+		mImgEnthalpyCfg.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/configuration16.png")));
+		mImgEnthalpyCfg.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				try {
+					WinConfEnthalpy window = new WinConfEnthalpy(winEnthalpy, enthalpy);
+					window.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+			}
+		});
+		mpreference.add(mImgEnthalpyCfg);
+
+		ButtonGroup buttonGroup = new ButtonGroup();
+
+		JMenu mlangue = new JMenu("Langues");
+		mlangue.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/flag-frgb16x16.png")));
+		mpreference.add(mlangue);
+
+		JRadioButtonMenuItem mRationItemFrench = new JRadioButtonMenuItem("Francais");
+		mRationItemFrench.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//String vlang = "fr";
+
+			}
+		});
+		buttonGroup.add(mRationItemFrench);
+
+		mlangue.add(mRationItemFrench);
+
+		JRadioButtonMenuItem mRationItemEnglisch = new JRadioButtonMenuItem("Anglais");
+		mRationItemEnglisch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//String vlang = "eng";
+			}
+		});
+		mRationItemEnglisch.setSelected(true);
+		buttonGroup.add(mRationItemEnglisch);
+
+		mlangue.add(mRationItemEnglisch);;
+		
+		
+		JMenu mnGeneral = new JMenu("General");
+		menuBar.add(mnGeneral);
+		
+		JMenuItem mntmDefinitio = new JMenuItem("Definition");
+		mnGeneral.add(mntmDefinitio);
 		
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
@@ -237,8 +289,10 @@ public class WinPacTool extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
-		JPanel panel = new JPanel();
-		panel.setBackground(SystemColor.menu);
+		WinMeasurePoints panel = new WinMeasurePoints(pacToolVar.geteDrawL(),pacToolVar.getMeasureCollection(),enthalpy,pac);
+		//Test panel = new Test();
+		//panel.setBackground(SystemColor.menu);
 		contentPane.add(panel, BorderLayout.CENTER);
+		//panel.setLayout(new BorderLayout(0, 0));
 	}
 }
