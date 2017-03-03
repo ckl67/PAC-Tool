@@ -23,7 +23,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RadialGradientPaint;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -37,14 +36,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import java.awt.Color;
+
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import computation.MeasurePoint;
 import computation.MeasureChoiceStatus;
 import computation.MeasureObject;
@@ -54,11 +52,11 @@ import pac.Pac;
 
 import javax.imageio.ImageIO;
 
-public class WinMeasurePoints extends JPanel implements MouseListener,  MouseMotionListener {
+public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseMotionListener {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger logger = LogManager.getLogger(WinMeasurePoints.class.getName());
+	private static final Logger logger = LogManager.getLogger(PanelMeasurePoints.class.getName());
 
 	// --------------------------------------------------------------------
 	// Objective is to display the coordinate for the points to match
@@ -73,6 +71,9 @@ public class WinMeasurePoints extends JPanel implements MouseListener,  MouseMot
 	private List<ElDraw> eDrawL;
 	private Enthalpy enthalpy;
 	private Pac pac;
+
+	private int bgImgWidth;
+	private  int bgImgHeight;
 
 	// -------------------------------------------------------
 	//	LOCAL VARIABLES
@@ -100,7 +101,7 @@ public class WinMeasurePoints extends JPanel implements MouseListener,  MouseMot
 				Enthalpy enthalpy1 = new Enthalpy();
 
 				try {
-					WinMeasurePoints window = new WinMeasurePoints(eDrawL1,measureCollection1,enthalpy1,new Pac());
+					PanelMeasurePoints window = new PanelMeasurePoints(eDrawL1,measureCollection1,enthalpy1,new Pac());
 					window.setVisible(true);
 				} catch (Exception e) {
 					logger.error("Ops!", e);
@@ -116,14 +117,14 @@ public class WinMeasurePoints extends JPanel implements MouseListener,  MouseMot
 	 * Create the application.
 	 * @param measurePL 
 	 */
-	public WinMeasurePoints(List<ElDraw> veDrawL, MeasureCollection measureCollection, Enthalpy enthalpy, Pac vpac ) {
-		this.measureCollection = measureCollection;
-		this.eDrawL = veDrawL;
-		this.enthalpy = enthalpy;
-		this.pac = vpac;
+	public PanelMeasurePoints(List<ElDraw> veDrawL, MeasureCollection vmeasureCollection, Enthalpy venthalpy, Pac vpac ) {
+		measureCollection = vmeasureCollection;
+		eDrawL = veDrawL;
+		enthalpy = venthalpy;
+		pac = vpac;
 
-		this.imgURL = "/gui/images/Cycle.png";
-		this.measurePL = measureCollection.getMeasurePL();
+		imgURL = "/gui/images/Cycle.png";
+		measurePL = measureCollection.getMeasurePL();
 
 		pointMatched = false;
 		pointMatched_id = -1;
@@ -193,9 +194,8 @@ public class WinMeasurePoints extends JPanel implements MouseListener,  MouseMot
 			logger.error("Ops!", e);
 		}
 
-		int imgWidth = img.getWidth();
-		int imgHeight = img.getHeight();
-
+		bgImgWidth = img.getWidth();
+		bgImgHeight = img.getHeight();
 
 		JButton btnNewButton = new JButton("Reset");
 		btnNewButton.setFocusable(false);
@@ -393,5 +393,17 @@ public class WinMeasurePoints extends JPanel implements MouseListener,  MouseMot
 		if (!HELP_FIND_LOCATION)
 			this.repaint();
 	}               
+
+	// -------------------------------------------------------
+	// 					GETTER AND SETTER
+	// -------------------------------------------------------
+
+	public int getBgImgWidth() {
+		return bgImgWidth;
+	}
+
+	public int getBgImgHeight() {
+		return bgImgHeight;
+	}
 
 }

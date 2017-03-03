@@ -27,10 +27,15 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.basic.BasicArrowButton;
+
+import computation.MeasureCollection;
 import enthalpy.Enthalpy;
 import enthalpy.EnthalpyBkgdImg;
+import pac.Pac;
+
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
 import javax.swing.ImageIcon;
@@ -43,12 +48,12 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 
 public class WinConfEnthalpy extends JFrame {
-	
 
 	private static final long serialVersionUID = 1L;
-	
-	private JPanel panel;
 	private Enthalpy enthalpy;
+
+
+	private JPanel panel;
 	private JTextField textFieldEnthalpyFilePath;
 	private JTextField textFieldH1X;
 	private JTextField textFieldH2X;
@@ -62,7 +67,7 @@ public class WinConfEnthalpy extends JFrame {
 	private JTextField textFieldStepH2X;
 	private JTextField textFieldStepP1Y;
 	private JTextField textFieldStepP2Y;
-	
+
 	private PanelEnthalpy panelEnthalpyDrawArea;
 
 	// -------------------------------------------------------
@@ -71,10 +76,12 @@ public class WinConfEnthalpy extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {				
-					WinConfEnthalpy frame = new WinConfEnthalpy(new WinEnthalpy(new PacToolVar()), new Enthalpy());
+				try {		
+					Enthalpy enthalpy1= new Enthalpy();
+					WinEnthalpy vwinEnthalpy1 = new WinEnthalpy(new Pac(), enthalpy1, new MeasureCollection(), new ArrayList<ElDraw>(), new WinPressTemp(enthalpy1));
+					WinConfEnthalpy frame = new WinConfEnthalpy(vwinEnthalpy1);
 					frame.setVisible(true);
-					
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -82,16 +89,16 @@ public class WinConfEnthalpy extends JFrame {
 		});
 	}
 
-	
+
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 	/**
 	 * Create the application.
 	 */
-	public WinConfEnthalpy(WinEnthalpy vwinEnthalpy, Enthalpy vconfEnthalpy) {
+	public WinConfEnthalpy(WinEnthalpy vwinEnthalpy) {
 		panelEnthalpyDrawArea = vwinEnthalpy.getPanelEnthalpyDrawArea();
-		enthalpy = vconfEnthalpy;
+		enthalpy = vwinEnthalpy.getEnthalpy();
 		enthalpyBkgdImg = enthalpy.getEnthalpyBkgImage();
 		initialize();
 	}
@@ -208,7 +215,7 @@ public class WinConfEnthalpy extends JFrame {
 		JLabel lblKjkg01 = new JLabel("kJ/kg");
 		lblKjkg01.setBounds(469, 26, 35, 14);
 		panel_1.add(lblKjkg01);
-		
+
 		BasicArrowButton btnArrH1X_Right = new BasicArrowButton(BasicArrowButton.EAST);
 		btnArrH1X_Right.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -225,7 +232,7 @@ public class WinConfEnthalpy extends JFrame {
 		});
 		btnArrH1X_Right.setBounds(172, 52, 30, 20);
 		panel_1.add(btnArrH1X_Right);
-		
+
 		BasicArrowButton btnArrH1X_left = new BasicArrowButton(BasicArrowButton.WEST);
 		btnArrH1X_left.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -242,7 +249,7 @@ public class WinConfEnthalpy extends JFrame {
 		});
 		btnArrH1X_left.setBounds(112, 52, 30, 20);
 		panel_1.add(btnArrH1X_left);
-		
+
 		BasicArrowButton btnArrH2X_Right = new BasicArrowButton(BasicArrowButton.EAST);
 		btnArrH2X_Right.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -260,7 +267,7 @@ public class WinConfEnthalpy extends JFrame {
 		});
 		btnArrH2X_Right.setBounds(420, 50, 30, 20);
 		panel_1.add(btnArrH2X_Right);
-		
+
 		BasicArrowButton btnArrH2X_left = new BasicArrowButton(BasicArrowButton.WEST);
 		btnArrH2X_left.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -278,25 +285,25 @@ public class WinConfEnthalpy extends JFrame {
 		});
 		btnArrH2X_left.setBounds(360, 50, 30, 20);
 		panel_1.add(btnArrH2X_left);
-		
+
 		textFieldStepH1X = new JTextField();
 		textFieldStepH1X.setHorizontalAlignment(SwingConstants.CENTER);
 		textFieldStepH1X.setText("1");
 		textFieldStepH1X.setBounds(142, 52, 30, 20);
 		panel_1.add(textFieldStepH1X);
 		textFieldStepH1X.setColumns(10);
-		
+
 		textFieldStepH2X = new JTextField();
 		textFieldStepH2X.setText("1");
 		textFieldStepH2X.setHorizontalAlignment(SwingConstants.CENTER);
 		textFieldStepH2X.setColumns(10);
 		textFieldStepH2X.setBounds(390, 50, 30, 20);
 		panel_1.add(textFieldStepH2X);
-		
+
 		JLabel lblMinH = new JLabel("Min H:");
 		lblMinH.setBounds(116, 28, 46, 14);
 		panel_1.add(lblMinH);
-		
+
 		JLabel lblMaxH = new JLabel("Max H:");
 		lblMaxH.setBounds(363, 26, 46, 14);
 		panel_1.add(lblMaxH);
@@ -343,7 +350,7 @@ public class WinConfEnthalpy extends JFrame {
 		JLabel lblBar01 = new JLabel("bar");
 		lblBar01.setBounds(466, 24, 26, 14);
 		panel_2.add(lblBar01);
-		
+
 		BasicArrowButton btnArrP1Y_Right = new BasicArrowButton(BasicArrowButton.NORTH);
 		btnArrP1Y_Right.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -361,7 +368,7 @@ public class WinConfEnthalpy extends JFrame {
 		});
 		btnArrP1Y_Right.setBounds(171, 51, 30, 20);
 		panel_2.add(btnArrP1Y_Right);
-		
+
 		BasicArrowButton btnArrP1Y_left = new BasicArrowButton(BasicArrowButton.SOUTH);
 		btnArrP1Y_left.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {			
@@ -378,7 +385,7 @@ public class WinConfEnthalpy extends JFrame {
 		});
 		btnArrP1Y_left.setBounds(111, 51, 30, 20);
 		panel_2.add(btnArrP1Y_left);
-		
+
 		BasicArrowButton btnArrP2Y_Right = new BasicArrowButton(BasicArrowButton.NORTH);
 		btnArrP2Y_Right.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -395,7 +402,7 @@ public class WinConfEnthalpy extends JFrame {
 		});
 		btnArrP2Y_Right.setBounds(420, 50, 30, 20);
 		panel_2.add(btnArrP2Y_Right);
-		
+
 		BasicArrowButton btnArrP2Y_left = new BasicArrowButton(BasicArrowButton.SOUTH);
 		btnArrP2Y_left.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -412,34 +419,34 @@ public class WinConfEnthalpy extends JFrame {
 		});
 		btnArrP2Y_left.setBounds(360, 50, 30, 20);
 		panel_2.add(btnArrP2Y_left);
-		
+
 		textFieldStepP1Y = new JTextField();
 		textFieldStepP1Y.setText("1");
 		textFieldStepP1Y.setHorizontalAlignment(SwingConstants.CENTER);
 		textFieldStepP1Y.setColumns(10);
 		textFieldStepP1Y.setBounds(141, 51, 30, 20);
 		panel_2.add(textFieldStepP1Y);
-		
+
 		textFieldStepP2Y = new JTextField();
 		textFieldStepP2Y.setText("1");
 		textFieldStepP2Y.setHorizontalAlignment(SwingConstants.CENTER);
 		textFieldStepP2Y.setColumns(10);
 		textFieldStepP2Y.setBounds(390, 50, 30, 20);
 		panel_2.add(textFieldStepP2Y);
-		
+
 		JLabel lblMaxP = new JLabel("Max P:");
 		lblMaxP.setBounds(360, 22, 46, 14);
 		panel_2.add(lblMaxP);
-		
+
 		JLabel lblMinP = new JLabel("Min P:");
 		lblMinP.setBounds(113, 25, 37, 14);
 		panel_2.add(lblMinP);
-		
+
 		JLabel lbllog = new JLabel("/(Log10)");
 		lbllog.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		lbllog.setBounds(211, 40, 46, 14);
 		panel_2.add(lbllog);
-		
+
 		JLabel label = new JLabel("/(Log10)");
 		label.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		label.setBounds(466, 40, 46, 14);

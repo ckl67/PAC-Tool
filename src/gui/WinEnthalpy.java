@@ -20,6 +20,7 @@ package gui;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
@@ -69,11 +70,11 @@ public class WinEnthalpy extends JFrame {
 	/* 	----------------------------------------
 	 * 		INSTANCE VAR
 	 * ----------------------------------------*/
-	private PacToolVar pacToolVar;
 	private Enthalpy enthalpy;		
 	private List<ElDraw> eDrawL;	
 	private MeasureCollection measureCollection;
 	private Pac pac;
+	private WinPressTemp winPressTemp;
 
 	/* 	----------------------------------------
 	 * 		WIN BUILDER
@@ -105,9 +106,9 @@ public class WinEnthalpy extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-
-					WinEnthalpy frame = new WinEnthalpy(new PacToolVar());
-					frame.setVisible(true);
+					Enthalpy enthalpy1= new Enthalpy();
+					WinEnthalpy frame1 = new WinEnthalpy(new Pac(), enthalpy1, new MeasureCollection(), new ArrayList<ElDraw>(), new WinPressTemp(enthalpy1));
+					frame1.setVisible(true);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -119,24 +120,30 @@ public class WinEnthalpy extends JFrame {
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public WinEnthalpy(PacToolVar vpacToolVar) {
-		pacToolVar = vpacToolVar;
-		enthalpy = pacToolVar.getEnthalpy();
-		eDrawL = pacToolVar.geteDrawL();
-		measureCollection = pacToolVar.getMeasureCollection();
-		pac = pacToolVar.getPac();
-		measurePL = pacToolVar.getMeasureCollection().getMeasurePL();
+	public WinEnthalpy(Pac vpac, Enthalpy venthalpy, MeasureCollection vmeasureCollection, List<ElDraw> veDrawL, WinPressTemp vwinPressTemp) {
+		pac = vpac;
+		enthalpy = venthalpy;
+		measureCollection = vmeasureCollection;
+		eDrawL = veDrawL;
+		winPressTemp = vwinPressTemp;
+		
+		measurePL = measureCollection.getMeasurePL();
 		pointJPopupMenu = new Point();
 		
-		initialize();
 		ElDrawIdToMoveOnP = -1;
+		initialize();
 		
-		//new DataSynchroUpdateTimer(this);
 	}
 
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
+
+	public void updateAllTextField() {
+		textPHP.setText(String.format("%.2f",measurePL.get(MeasureObject._PK_VAPOR_ID).getValue()));
+		textPBP.setText(String.format("%.2f",measurePL.get(MeasureObject._BP_ID).getValue()));
+		
+	}
 
 
 	// -------------------------------------------------------
@@ -420,8 +427,7 @@ public class WinEnthalpy extends JFrame {
 		btnPressureTemp.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btnPressureTemp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				WinPressTemp window = new WinPressTemp(enthalpy);
-				window.setVisible(true);
+				winPressTemp.setVisible(true);
 			}
 		});
 		panelMiddle1_Center.add(btnPressureTemp);
@@ -479,15 +485,17 @@ public class WinEnthalpy extends JFrame {
 		panelBottom_Bottom.add(btnClear);
 	}
 
+	
+	// -------------------------------------------------------
+	// 					GETTER AND SETTER
+	// -------------------------------------------------------
+
+	public Enthalpy getEnthalpy() {
+		return enthalpy;
+	}
+	
 	public PanelEnthalpy getPanelEnthalpyDrawArea() {
 		return panelEnthalpyDrawArea;
-	}
-
-	
-	public void updateAllTextField() {
-		textPHP.setText(String.format("%.2f",measurePL.get(MeasureObject._PK_VAPOR_ID).getValue()));
-		textPBP.setText(String.format("%.2f",measurePL.get(MeasureObject._BP_ID).getValue()));
-		
 	}
 
 }

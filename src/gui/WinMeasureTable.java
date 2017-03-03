@@ -21,6 +21,8 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
 import javax.swing.table.DefaultTableModel;
+
+import computation.MeasureCollection;
 import computation.MeasureObject;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -32,8 +34,12 @@ public class WinMeasureTable extends JFrame {
     private static final long serialVersionUID = 1L;
     private JTable table;
  
+	// -------------------------------------------------------
+	// 						CONSTRUCTOR
+	// -------------------------------------------------------
     
-    public WinMeasureTable() {
+    public WinMeasureTable(MeasureCollection measureCollection) {
+    	
     	setTitle("Measure Table");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(WinAbout.class.getResource("/gui/images/PAC-Tool_16.png")));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -51,6 +57,10 @@ public class WinMeasureTable extends JFrame {
          
         FillData();
     }
+    
+	// -------------------------------------------------------
+	// 						METHOD
+	// -------------------------------------------------------
     
     private void FillData() {
     	 

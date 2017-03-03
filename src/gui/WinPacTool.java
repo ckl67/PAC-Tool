@@ -21,7 +21,6 @@ package gui;
 
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -31,6 +30,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
 import java.awt.Toolkit;
@@ -39,10 +39,11 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import computation.MeasureCollection;
 import computation.Misc;
 import enthalpy.Enthalpy;
 import pac.Pac;
-import java.awt.SystemColor;
+
 
 
 public class WinPacTool extends JFrame {
@@ -53,13 +54,24 @@ public class WinPacTool extends JFrame {
 	// -------------------------------------------------------
 	// 					INSTANCE VARIABLES
 	// -------------------------------------------------------
-	private PacToolVar pacToolVar;
+	
 	private Pac pac;
 	private Enthalpy enthalpy;
 	private WinPacToolConfig winPacToolConfig;
 	private WinCompressor winCompressor;
 	private WinEnthalpy winEnthalpy;
-	private JPanel contentPane;
+	private WinConfEnthalpy winConfEnthalpy;
+	private WinPressTemp winPressTemp;
+
+	private WinMeasureTable winMeasureTable;
+
+	private MeasureCollection measureCollection;
+	private List<ElDraw> eDrawL;
+	
+	private WinAbout winAbout;
+	private WinDefinition winDefinition;
+	
+	private PanelMeasurePoints contentPane;
 	
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -67,22 +79,21 @@ public class WinPacTool extends JFrame {
 	/**
 	 * Create the frame. Class WinPacTool inheriting of JFrame
 	 */
-	public WinPacTool(PacToolVar vpacToolVar) {
-		pacToolVar = vpacToolVar;
+	public WinPacTool(PacToolVar pacToolVar) {
+		setResizable(false);
 		pac = pacToolVar.getPac();
 		enthalpy = pacToolVar.getEnthalpy();
+		measureCollection = pacToolVar.getMeasureCollection();
+		eDrawL = pacToolVar.geteDrawL();
 		winPacToolConfig = pacToolVar.getWinPacToolConfig();
-
-		try {
-			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		setTitle("PAC-Tool (" + Misc.PACTool_Version + ")");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(WinPacTool.class.getResource("/gui/images/PAC-Tool_32.png")));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 1, 450, 281);
-
+		winCompressor = pacToolVar.getWinCompressor();
+		winEnthalpy = pacToolVar.getWinEnthalpy();
+		winConfEnthalpy  = pacToolVar.getWinConfEnthalpy();
+		winMeasureTable = pacToolVar.getWinMeasureTable();
+		winAbout = pacToolVar.getWinAbout();
+		winDefinition = pacToolVar.getWinDefinition();
+		winPressTemp = pacToolVar.getWinPressTemp();
+		
 		// Create Window
 		initialize();
 	}
@@ -97,6 +108,27 @@ public class WinPacTool extends JFrame {
 	// -------------------------------------------------------
 	private void  initialize() {
 
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		setTitle("PAC-Tool (" + Misc.PACTool_Version + ")");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(WinPacTool.class.getResource("/gui/images/PAC-Tool_32.png")));
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		// ===============================================================================================================
+		// 													PANEL
+		// ===============================================================================================================
+
+		contentPane = new PanelMeasurePoints(eDrawL,measureCollection,enthalpy,pac);
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setLayout(new BorderLayout(0, 0));
+		
+		setBounds(100, 10, contentPane.getBgImgWidth()+8, contentPane.getBgImgHeight()+50);
+		setContentPane(contentPane);
+		
+		
 		// ===============================================================================================================
 		// 													MENU
 		// ===============================================================================================================
@@ -169,7 +201,6 @@ public class WinPacTool extends JFrame {
 		mntmCompressor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				logger.info("Open winCompressor");
-				winCompressor = new WinCompressor(pacToolVar);
 				winCompressor.setVisible(true);
 			}
 		});
@@ -183,7 +214,6 @@ public class WinPacTool extends JFrame {
 		mntmDiagram.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				logger.info("Open winEnthalpy");
-				winEnthalpy = new WinEnthalpy(pacToolVar);
 				winEnthalpy.setVisible(true);
 			}
 		});
@@ -193,8 +223,7 @@ public class WinPacTool extends JFrame {
 		mntmPressTemp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				logger.info("Open WinPressTemp");
-				WinPressTemp window = new WinPressTemp(enthalpy);
-				window.setVisible(true);
+				winPressTemp.setVisible(true);
 			}
 		});
 		mntmPressTemp.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/PressionTemperature-16.png")));
@@ -206,8 +235,7 @@ public class WinPacTool extends JFrame {
 		JMenuItem mntmTable = new JMenuItem("Table");
 		mntmTable.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				logger.info("Open WinPressTemp");
-				WinMeasureTable winMeasureTable = new WinMeasureTable();
+				logger.info("Open WinMeasureTable");
 				winMeasureTable.setVisible(true);
 			}
 		});
@@ -222,8 +250,7 @@ public class WinPacTool extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 
 				try {
-					WinConfEnthalpy window = new WinConfEnthalpy(winEnthalpy, enthalpy);
-					window.setVisible(true);
+					winConfEnthalpy.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -265,6 +292,13 @@ public class WinPacTool extends JFrame {
 		menuBar.add(mnGeneral);
 		
 		JMenuItem mntmDefinitio = new JMenuItem("Definition");
+		mntmDefinitio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				logger.info("Open WinDefinition");
+				winDefinition.setVisible(true);
+				
+			}
+		});
 		mnGeneral.add(mntmDefinitio);
 		
 		JMenu mnHelp = new JMenu("Help");
@@ -274,25 +308,11 @@ public class WinPacTool extends JFrame {
 		mntmAbout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				logger.info("Open WinAbout");
-				WinAbout winAbout = new WinAbout();
 				winAbout.setVisible(true);
 			}
 		});
 		mnHelp.add(mntmAbout);
 
-		// ===============================================================================================================
-		// 													PANEL
-		// ===============================================================================================================
 
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(1, 1, 1, 1));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
-		
-		WinMeasurePoints panel = new WinMeasurePoints(pacToolVar.geteDrawL(),pacToolVar.getMeasureCollection(),enthalpy,pac);
-		//Test panel = new Test();
-		//panel.setBackground(SystemColor.menu);
-		contentPane.add(panel, BorderLayout.CENTER);
-		//panel.setLayout(new BorderLayout(0, 0));
 	}
 }

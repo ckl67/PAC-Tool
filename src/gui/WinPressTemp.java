@@ -68,7 +68,7 @@ public class WinPressTemp extends JFrame {
 	private JLabel lblPressure;
 
 	// -------------------------------------------------------
-	// 						CONSTRUCTOR
+	// 				TEST THE APPLICATION STANDALONE 
 	// -------------------------------------------------------
 	/**
 	 * Launch the application for local test
@@ -87,6 +87,9 @@ public class WinPressTemp extends JFrame {
 	}
 
 	
+	// -------------------------------------------------------
+	// 						CONSTRUCTOR
+	// -------------------------------------------------------
 	/**
 	 * Create the application.
 	 */

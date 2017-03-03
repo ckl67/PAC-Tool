@@ -28,13 +28,35 @@ import pac.Pac;
 
 public class PacToolVar {
 
+	// By creating all the instances here, assure that 
+	//   only 1 instance will be created
+	//   all data are loaded once
+	//   no problem of missing variables 
+	
 	private Pac pac;
 	private Enthalpy enthalpy;
-	private WinPacToolConfig winPacToolConfig;
-	private List<ElDraw> eDrawL;
-	private MeasureCollection measureCollection;
 	private COP cop;
+
+	private MeasureCollection measureCollection;
+	private List<ElDraw> eDrawL;
+
+	private WinPacToolConfig winPacToolConfig;
+	private WinCompressor winCompressor;
 	
+	private WinEnthalpy winEnthalpy;
+	private WinConfEnthalpy winConfEnthalpy;
+	
+	private WinPressTemp winPressTemp;
+
+	private WinMeasureTable winMeasureTable;
+	
+	private WinAbout winAbout;
+	private WinDefinition winDefinition;
+
+	// -------------------------------------------------------
+	// 						CONSTRUCTOR
+	// -------------------------------------------------------
+
 	PacToolVar() {
 		pac = new Pac();								// Contains Pac Features
 		enthalpy = new Enthalpy();						// Enthalpy Features
@@ -42,7 +64,23 @@ public class PacToolVar {
 		cop = new COP();								// COP Compute
 		eDrawL = new ArrayList<ElDraw>();				// Draw Elements
 		measureCollection = new MeasureCollection();	// Measure Collection
+
+		winPressTemp = new WinPressTemp(enthalpy);
+
+		winCompressor = new WinCompressor(pac, winPacToolConfig);
+		winEnthalpy = new WinEnthalpy(pac, enthalpy, measureCollection, eDrawL,winPressTemp);
+		winConfEnthalpy = new WinConfEnthalpy(winEnthalpy);
+
+
+		winMeasureTable = new WinMeasureTable(measureCollection);
+		
+		winAbout = new WinAbout();
+		winDefinition = new WinDefinition();
 	}
+
+	// -------------------------------------------------------
+	// 					GETTER AND SETTER
+	// -------------------------------------------------------
 
 	public Pac getPac() {
 		return pac;
@@ -68,4 +106,31 @@ public class PacToolVar {
 		return cop;
 	}
 	
+	public WinCompressor getWinCompressor() {
+		return winCompressor;
+	}
+	
+	public WinEnthalpy getWinEnthalpy() {
+		return winEnthalpy;
+	}
+
+	public WinConfEnthalpy getWinConfEnthalpy() {
+		return winConfEnthalpy;
+	}
+
+	public WinAbout getWinAbout() {
+		return winAbout;
+	}
+
+	public WinDefinition getWinDefinition() {
+		return winDefinition;
+	}
+
+	public WinMeasureTable getWinMeasureTable() {
+		return winMeasureTable;
+	}
+	public WinPressTemp getWinPressTemp() {
+		return winPressTemp;
+	}
+
 }

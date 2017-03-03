@@ -50,7 +50,6 @@ public class WinCompressor extends JFrame {
 	// -------------------------------------------------------
 	// 					INSTANCE VARIABLES
 	// -------------------------------------------------------
-	private PacToolVar pacToolVar;
 	private Pac pac;
 	private WinPacToolConfig winPacToolConfig;
 	
@@ -94,7 +93,7 @@ public class WinCompressor extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {				
-					WinCompressor frame = new WinCompressor(new PacToolVar());
+					WinCompressor frame = new WinCompressor(new Pac(), new WinPacToolConfig() );
 					frame.setVisible(true);
 					
 				} catch (Exception e) {
@@ -112,10 +111,9 @@ public class WinCompressor extends JFrame {
 	 * @param pac --> PAC
 	 * @param vwinPacToolConfig --> Whole configuration of PAC TOOL GUI
 	 */
-	public WinCompressor(PacToolVar vpacToolVar) {
-		pacToolVar = vpacToolVar;
-		pac = pacToolVar.getPac();
-		winPacToolConfig =pacToolVar.getWinPacToolConfig();
+	public WinCompressor(Pac vpac, WinPacToolConfig vwinPacToolConfig) {
+		pac = vpac;
+		winPacToolConfig =vwinPacToolConfig;
 
 		initialize();
 	}
