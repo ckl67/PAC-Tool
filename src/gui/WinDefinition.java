@@ -99,6 +99,13 @@ public class WinDefinition extends JFrame  {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (Throwable e) {
+			logger.info(e);
+		}
+
 		setBounds(100, 100, 450, 300);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 

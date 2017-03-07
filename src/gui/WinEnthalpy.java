@@ -52,6 +52,7 @@ import javax.swing.event.ChangeListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import computation.MeasurePoint;
+import computation.MeasureTable;
 import computation.MeasureCollection;
 import computation.MeasureObject;
 import enthalpy.Enthalpy;
@@ -72,6 +73,7 @@ public class WinEnthalpy extends JFrame {
 	 * ----------------------------------------*/
 	private Enthalpy enthalpy;		
 	private List<ElDraw> eDrawL;	
+	private MeasureTable measureTable;
 	private MeasureCollection measureCollection;
 	private Pac pac;
 	private WinPressTemp winPressTemp;
@@ -107,7 +109,8 @@ public class WinEnthalpy extends JFrame {
 			public void run() {
 				try {
 					Enthalpy enthalpy1= new Enthalpy();
-					WinEnthalpy frame1 = new WinEnthalpy(new Pac(), enthalpy1, new MeasureCollection(), new ArrayList<ElDraw>(), new WinPressTemp(enthalpy1));
+					MeasureCollection measureCollection1 = new MeasureCollection();
+					WinEnthalpy frame1 = new WinEnthalpy(new Pac(), enthalpy1, new MeasureTable(measureCollection1), new ArrayList<ElDraw>(), new WinPressTemp(enthalpy1));
 					frame1.setVisible(true);
 
 				} catch (Exception e) {
@@ -120,10 +123,11 @@ public class WinEnthalpy extends JFrame {
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public WinEnthalpy(Pac vpac, Enthalpy venthalpy, MeasureCollection vmeasureCollection, List<ElDraw> veDrawL, WinPressTemp vwinPressTemp) {
+	public WinEnthalpy(Pac vpac, Enthalpy venthalpy, MeasureTable vmeasureTable, List<ElDraw> veDrawL, WinPressTemp vwinPressTemp) {
 		pac = vpac;
 		enthalpy = venthalpy;
-		measureCollection = vmeasureCollection;
+		measureTable = vmeasureTable;
+		measureCollection = vmeasureTable.getMeasureCollection();
 		eDrawL = veDrawL;
 		winPressTemp = vwinPressTemp;
 		
@@ -178,6 +182,13 @@ public class WinEnthalpy extends JFrame {
 	 */
 	private void initialize() {
 
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (Throwable e) {
+			logger.info(e);
+		}
+
+		logger.info("Load WinEnthalpy");
 		setTitle("Diagramme Enthalpique");
 		setBounds(100, 100, 800, 500);
 		setResizable(true);
@@ -289,6 +300,7 @@ public class WinEnthalpy extends JFrame {
 							//System.out.println(n);
 							//System.out.println(measureCollection.getMeasurePL().get(n).getMH());
 							measureCollection.getMeasurePL().get(n).setMH(hResult);
+							measureTable.setAllTableValues();
 							//System.out.println(measureCollection.getMeasurePL().get(n).getMHreal());
 						}
 							

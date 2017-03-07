@@ -40,7 +40,7 @@ import javax.swing.UIManager;
 public class WinAbout extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = LogManager.getLogger(WinDefinition.class.getName());
+	private static final Logger logger = LogManager.getLogger(WinAbout.class.getName());
 
 	// -------------------------------------------------------
 	// 					INSTANCE VARIABLES
@@ -108,6 +108,12 @@ public class WinAbout extends JFrame {
 	 * Initialize the contents of the 
 	 */
 	private void initialize() {
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (Throwable e) {
+			logger.info(e);
+		}
+
 		setTitle("About");
 		setBounds(100, 1, 370, 166);
 		setResizable(false);

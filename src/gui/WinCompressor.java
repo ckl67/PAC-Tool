@@ -281,6 +281,13 @@ public class WinCompressor extends JFrame {
 
 	
 	public void initialize() {
+		
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (Throwable e) {
+			logger.info(e);
+		}
+
 		setTitle("Compressor");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(WinAbout.class.getResource("/gui/images/PAC-Tool_16.png")));
 		setBounds(100, 100, 450, 526);

@@ -36,6 +36,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+
+import java.awt.BorderLayout;
 import java.awt.Color;
 
 import javax.swing.JPanel;
@@ -44,6 +47,7 @@ import javax.swing.SwingConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import computation.MeasurePoint;
+import computation.MeasureTable;
 import computation.MeasureChoiceStatus;
 import computation.MeasureObject;
 import computation.MeasureCollection;
@@ -71,7 +75,8 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 	private List<ElDraw> eDrawL;
 	private Enthalpy enthalpy;
 	private Pac pac;
-
+	private MeasureTable measureTable;
+	
 	private int bgImgWidth;
 	private  int bgImgHeight;
 
@@ -100,12 +105,18 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 				MeasureCollection measureCollection1 = new MeasureCollection();
 				Enthalpy enthalpy1 = new Enthalpy();
 
-				try {
-					PanelMeasurePoints window = new PanelMeasurePoints(eDrawL1,measureCollection1,enthalpy1,new Pac());
-					window.setVisible(true);
-				} catch (Exception e) {
-					logger.error("Ops!", e);
-				}
+				JFrame frame = new JFrame();
+				frame.setBounds(100, 100, 446, 187);
+				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				frame.getContentPane().setLayout(new BorderLayout(0, 0));
+				
+				PanelMeasurePoints panel1 = new PanelMeasurePoints(eDrawL1,measureCollection1,enthalpy1,new Pac(), new MeasureTable(measureCollection1) );
+				frame.getContentPane().add(panel1, BorderLayout.CENTER);
+				frame.setVisible(true);
+
+				frame.setBounds(100, 10, panel1.getBgImgWidth()+8, panel1.getBgImgHeight()+50);
+				frame.setContentPane(panel1);
+
 			}
 		});
 	}
@@ -117,11 +128,12 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 	 * Create the application.
 	 * @param measurePL 
 	 */
-	public PanelMeasurePoints(List<ElDraw> veDrawL, MeasureCollection vmeasureCollection, Enthalpy venthalpy, Pac vpac ) {
+	public PanelMeasurePoints(List<ElDraw> veDrawL, MeasureCollection vmeasureCollection, Enthalpy venthalpy, Pac vpac, MeasureTable vmeasureTable) {
 		measureCollection = vmeasureCollection;
 		eDrawL = veDrawL;
 		enthalpy = venthalpy;
 		pac = vpac;
+		measureTable = vmeasureTable;
 
 		imgURL = "/gui/images/Cycle.png";
 		measurePL = measureCollection.getMeasurePL();
@@ -240,9 +252,12 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 				measurePL.get(id).setMeasureChoiceStatus(MeasureChoiceStatus.Chosen);
 
 				logger.trace("New values added {}",String.format("%.2f", inValue));
-				logger.trace("Update the Measure Collection data ");
+				logger.info("Update the Measure Collection data ");
 				MeasureCollection.updateAllMeasurePoints(measureCollection,enthalpy,pac);
-
+				
+				logger.info("Update MeasureTable");
+				measureTable.setAllTableValues();
+				
 				logger.trace("Reinitialse the complete Draw elements with the Measure Collection");
 				eDrawL.clear();
 				eDrawL = ElDraw.createElDrawFrom(measureCollection,eDrawL);
@@ -261,10 +276,6 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 
 		add(textField);
 		add(textFieldUnity);
-
-
-
-
 
 	}
 

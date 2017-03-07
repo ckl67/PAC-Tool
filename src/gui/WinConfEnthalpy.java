@@ -28,7 +28,11 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.basic.BasicArrowButton;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import computation.MeasureCollection;
+import computation.MeasureTable;
 import enthalpy.Enthalpy;
 import enthalpy.EnthalpyBkgdImg;
 import pac.Pac;
@@ -49,6 +53,7 @@ import java.awt.Font;
 
 public class WinConfEnthalpy extends JFrame {
 
+	private static final Logger logger = LogManager.getLogger(WinConfEnthalpy.class.getName());
 	private static final long serialVersionUID = 1L;
 	private Enthalpy enthalpy;
 
@@ -78,7 +83,8 @@ public class WinConfEnthalpy extends JFrame {
 			public void run() {
 				try {		
 					Enthalpy enthalpy1= new Enthalpy();
-					WinEnthalpy vwinEnthalpy1 = new WinEnthalpy(new Pac(), enthalpy1, new MeasureCollection(), new ArrayList<ElDraw>(), new WinPressTemp(enthalpy1));
+					MeasureCollection measureCollection1 = new MeasureCollection();
+					WinEnthalpy vwinEnthalpy1 = new WinEnthalpy(new Pac(), enthalpy1, new MeasureTable(measureCollection1), new ArrayList<ElDraw>(), new WinPressTemp(enthalpy1));
 					WinConfEnthalpy frame = new WinConfEnthalpy(vwinEnthalpy1);
 					frame.setVisible(true);
 
@@ -115,6 +121,13 @@ public class WinConfEnthalpy extends JFrame {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (Throwable e) {
+			logger.info(e);
+		}
+
 		setTitle("Pac-Tool Configuration Diargramme Enthalpique");
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(WinConfEnthalpy.class.getResource("/gui/images/PAC-Tool_32.png")));

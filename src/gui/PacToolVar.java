@@ -34,9 +34,12 @@ import javax.swing.JProgressBar;
 
 import computation.COP;
 import computation.MeasureCollection;
+import computation.MeasureTable;
+import computation.Misc;
 import enthalpy.Enthalpy;
 import pac.Pac;
 import javax.swing.ImageIcon;
+import javax.swing.SwingConstants;
 
 public class PacToolVar {
 
@@ -60,6 +63,7 @@ public class PacToolVar {
 
 	private WinPressTemp winPressTemp;
 
+	private MeasureTable measureTable;
 	private WinMeasureTable winMeasureTable;
 
 	private WinAbout winAbout;
@@ -81,24 +85,30 @@ public class PacToolVar {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JPanel panel = new JPanel();
-		panel.setBackground(new Color(0, 0, 205));
+		panel.setBackground(new Color(123, 104, 238));
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
 
 		JLabel lblLoading = new JLabel("Loading......");
 		lblLoading.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblLoading.setForeground(Color.WHITE);
-		lblLoading.setBounds(26, 11, 81, 22);
+		lblLoading.setBounds(26, 11, 292, 22);
 		panel.add(lblLoading);
 
 		JProgressBar progressBar = new JProgressBar();
-		progressBar.setBounds(146, 40, 172, 22);
+		progressBar.setBounds(124, 44, 194, 22);
 		panel.add(progressBar);
 
 		JLabel lblImage = new JLabel("New label");
 		lblImage.setIcon(new ImageIcon(PacToolVar.class.getResource("/gui/images/PAC-Tool_64.png")));
 		lblImage.setBounds(26, 44, 63, 63);
 		panel.add(lblImage);
+
+		JLabel lblPacVersion = new JLabel("PAC-Tool (" + Misc.PACTool_Version + ")");
+		lblPacVersion.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblPacVersion.setForeground(Color.WHITE);
+		lblPacVersion.setBounds(146, 93, 194, 14);
+		panel.add(lblPacVersion);
 
 	    int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
 	    int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
@@ -111,56 +121,71 @@ public class PacToolVar {
 		int percent = 0;
 		
 		pac = new Pac();								// Contains Pac Features
+		lblLoading.setText("Loading...... Pac Features");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
 		enthalpy = new Enthalpy();						// Enthalpy Features
+		lblLoading.setText("Loading...... Enthalpy Features");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
 		winPacToolConfig = new WinPacToolConfig();		// GUI Configuration
+		lblLoading.setText("Loading...... GUI Configuration");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
 		cop = new COP();								// COP Compute
+		lblLoading.setText("Loading...... COP");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
 		eDrawL = new ArrayList<ElDraw>();				// Draw Elements
+		lblLoading.setText("Loading...... Draw Elements");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
 		measureCollection = new MeasureCollection();	// Measure Collection
+		measureTable = new MeasureTable(measureCollection);
+		lblLoading.setText("Loading...... Measure Collections");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
 		winPressTemp = new WinPressTemp(enthalpy);
+		lblLoading.setText("Loading...... Win. Temperature/Pressure");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
 		winCompressor = new WinCompressor(pac, winPacToolConfig);
+		lblLoading.setText("Loading...... Win. Compressor");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
-		winEnthalpy = new WinEnthalpy(pac, enthalpy, measureCollection, eDrawL,winPressTemp);
+		winEnthalpy = new WinEnthalpy(pac, enthalpy, measureTable, eDrawL,winPressTemp);
+		lblLoading.setText("Loading...... Win. Enthalpy");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
 		winConfEnthalpy = new WinConfEnthalpy(winEnthalpy);
+		lblLoading.setText("Loading...... Win. Configuration Enthalpy");		
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
-		winMeasureTable = new WinMeasureTable(measureCollection);
+		winMeasureTable = new WinMeasureTable(measureTable);
+		lblLoading.setText("Loading...... Win. Measure Table");		
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
 		winAbout = new WinAbout();
+		lblLoading.setText("Loading...... Win. About");		
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
 		winDefinition = new WinDefinition();
+		lblLoading.setText("Loading...... Win. Definition");		
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
+		
 
 		frame.setVisible(false);
 
@@ -219,6 +244,10 @@ public class PacToolVar {
 	}
 	public WinPressTemp getWinPressTemp() {
 		return winPressTemp;
+	}
+	
+	public MeasureTable getMeasureTable() {
+		return measureTable;
 	}
 
 }

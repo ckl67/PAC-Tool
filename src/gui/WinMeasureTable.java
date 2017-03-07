@@ -19,61 +19,92 @@
 package gui;
  
 import java.awt.BorderLayout;
+import java.awt.EventQueue;
 import java.awt.Toolkit;
-import javax.swing.table.DefaultTableModel;
-
+import javax.swing.table.TableColumn;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import computation.MeasureCollection;
-import computation.MeasureObject;
+import computation.MeasureTable;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.UIManager;
 import javax.swing.JFrame;
  
  
 public class WinMeasureTable extends JFrame {
  
     private static final long serialVersionUID = 1L;
-    private JTable table;
+	private static final Logger logger = LogManager.getLogger(WinMeasureTable.class.getName());
+	
+	private MeasureTable table;
  
+	// -------------------------------------------------------
+	// 				TEST THE APPLICATION STANDALONE 
+	// -------------------------------------------------------
+	/**
+	 * Launch the application for local test
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					WinMeasureTable window = new WinMeasureTable(new MeasureTable(new MeasureCollection()));
+					window.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
     
-    public WinMeasureTable(MeasureCollection measureCollection) {
+    public WinMeasureTable( MeasureTable vtable ) {
+    	table = vtable;
     	
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (Throwable e) {
+			logger.info(e);
+		}
+
     	setTitle("Measure Table");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(WinAbout.class.getResource("/gui/images/PAC-Tool_16.png")));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(true);
-        setBounds(100, 100, 593, 169);
-         
+        setBounds(100, 100, 700, 169);
+
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.createVerticalScrollBar();
         getContentPane().setLayout(new BorderLayout(0, 0));
         getContentPane().add(scrollPane);
          
-        table = new JTable();
         scrollPane.setColumnHeaderView(table);
         scrollPane.setViewportView(table);
          
-        FillData();
+      
+        setJTableColumnsWidth( 700, 5, 65, 10, 10, 10);
+
     }
     
 	// -------------------------------------------------------
 	// 						METHOD
 	// -------------------------------------------------------
-    
-    private void FillData() {
-    	 
-        DefaultTableModel defaultTableModel = new DefaultTableModel();
-        defaultTableModel.addColumn("Point");
-        defaultTableModel.addColumn("Définition");
-        defaultTableModel.addColumn("Valeur");
- 
-        for (MeasureObject p : MeasureObject.values()) {
-			defaultTableModel.addRow( new Object[] {p,p.getDefinition(),p.getXm()});
-		}
- 
-        table.setModel(defaultTableModel);
- 
+     
+    private void setJTableColumnsWidth(int tablePreferredWidth, double... percentages) {
+        double total = 0;
+        for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
+            total += percentages[i];
+        }
+     
+        for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
+            TableColumn column = table.getColumnModel().getColumn(i);
+            column.setPreferredWidth((int)
+                    (tablePreferredWidth * (percentages[i] / total)));
+        }
     }
+    
+ 
 }

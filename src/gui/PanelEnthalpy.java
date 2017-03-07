@@ -25,6 +25,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -38,6 +39,10 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.util.List;
 import javax.swing.JPanel;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import enthalpy.Enthalpy;
 import enthalpy.EnthalpyBkgdImg;
 
@@ -50,7 +55,7 @@ import enthalpy.EnthalpyBkgdImg;
 public class PanelEnthalpy extends JPanel {
 
 	private static final long serialVersionUID = 1L;	
-
+	private static final Logger logger = LogManager.getLogger(PanelEnthalpy.class.getName());
 	/* -----------------------------
 		      Instance Variables
 	 * ----------------------------*/
@@ -95,6 +100,8 @@ public class PanelEnthalpy extends JPanel {
 	// -------------------------------------------------------
 	public PanelEnthalpy(Enthalpy vconfEnthalpy, List<ElDraw> veDrawL) {
 		super();
+
+		logger.info("PanelEnthalpy");
 
 		this.enthalpy = vconfEnthalpy;
 		this.enthalpyBkgdImg = enthalpy.getEnthalpyBkgImage();
@@ -301,7 +308,7 @@ public class PanelEnthalpy extends JPanel {
 		super.paintComponent(g);
 		setBackground(Color.WHITE);
 
-		//g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		//g2.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
 		
 		// -----------------------------------
