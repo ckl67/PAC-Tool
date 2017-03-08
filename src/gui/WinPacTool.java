@@ -214,7 +214,7 @@ public class WinPacTool extends JFrame {
 		menuBar.add(mnEnthalpy);
 		
 		JMenuItem mntmDiagram = new JMenuItem("Diagram");
-		mntmDiagram.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/enthalpie-16.jpg")));
+		mntmDiagram.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/Enthalpy-16.png")));
 		mntmDiagram.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				logger.info("Open winEnthalpy");
@@ -230,7 +230,7 @@ public class WinPacTool extends JFrame {
 				winPressTemp.setVisible(true);
 			}
 		});
-		mntmPressTemp.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/PressionTemperature-16.png")));
+		mntmPressTemp.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/PressureTemperature-16.png")));
 		mnEnthalpy.add(mntmPressTemp);
 		
 		JMenu mnMeasures = new JMenu("Measures");
@@ -250,7 +250,7 @@ public class WinPacTool extends JFrame {
 		menuBar.add(mpreference);
 		
 		JMenuItem mImgEnthalpyCfg = new JMenuItem("Enthalpie Conf.");
-		mImgEnthalpyCfg.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/configuration16.png")));
+		mImgEnthalpyCfg.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/configuration-16.png")));
 		mImgEnthalpyCfg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
@@ -267,7 +267,7 @@ public class WinPacTool extends JFrame {
 		ButtonGroup buttonGroup = new ButtonGroup();
 
 		JMenu mlangue = new JMenu("Langues");
-		mlangue.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/flag-frgb16x16.png")));
+		mlangue.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/langue-16.png")));
 		mpreference.add(mlangue);
 
 		JRadioButtonMenuItem mRationItemFrench = new JRadioButtonMenuItem("Francais");

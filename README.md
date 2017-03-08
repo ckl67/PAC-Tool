@@ -102,3 +102,7 @@ OpenClassRooms est une excellente introduction au Java
 
 D'autres références sont données au niveau du répertoire: 
 ..\pac-tool\dev_help
+
+ Autre
+-------
+La chaine de diffusion Youtube est sous le compte: christian.klugesherz@geosolterm.fr

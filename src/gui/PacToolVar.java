@@ -40,6 +40,7 @@ import enthalpy.Enthalpy;
 import pac.Pac;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
+import java.awt.SystemColor;
 
 public class PacToolVar {
 
@@ -85,7 +86,7 @@ public class PacToolVar {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JPanel panel = new JPanel();
-		panel.setBackground(new Color(123, 104, 238));
+		panel.setBackground(SystemColor.activeCaption);
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
 
@@ -96,6 +97,7 @@ public class PacToolVar {
 		panel.add(lblLoading);
 
 		JProgressBar progressBar = new JProgressBar();
+		progressBar.setForeground(new Color(152, 251, 152));
 		progressBar.setBounds(124, 44, 194, 22);
 		panel.add(progressBar);
 
