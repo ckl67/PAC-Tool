@@ -30,12 +30,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-
-
 import computation.COP;
 import computation.MeasureCollection;
 import computation.MeasureTable;
-import computation.Misc;
 import enthalpy.Enthalpy;
 import pac.Pac;
 import javax.swing.ImageIcon;
@@ -44,7 +41,12 @@ import java.awt.SystemColor;
 
 public class PacToolVar {
 
-	// By creating all the instances here, assure that 
+	// -------------------------------------------------------
+	// 						CONSTANTES (DEFINE)
+	// -------------------------------------------------------
+	public static final String PACTool_Version = "Version Alpha 0.3.2";
+	
+	// By creating all the instances here, it assure that 
 	//   only 1 instance will be created
 	//   all data are loaded once
 	//   no problem of missing variables 
@@ -106,7 +108,7 @@ public class PacToolVar {
 		lblImage.setBounds(26, 44, 63, 63);
 		panel.add(lblImage);
 
-		JLabel lblPacVersion = new JLabel("PAC-Tool (" + Misc.PACTool_Version + ")");
+		JLabel lblPacVersion = new JLabel("PAC-Tool (" + PACTool_Version + ")");
 		lblPacVersion.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblPacVersion.setForeground(Color.WHITE);
 		lblPacVersion.setBounds(146, 93, 194, 14);

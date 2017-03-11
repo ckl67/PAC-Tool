@@ -236,7 +236,6 @@ public class WinConfEnthalpy extends JFrame {
 				try {
 					if (panelEnthalpyDrawArea.isVisible()) {
 						panelEnthalpyDrawArea.repaint();
-						System.out.println("repaint");
 					}
 				} catch (NullPointerException e) {
 					// Not present ==> Do nothing !
@@ -270,7 +269,6 @@ public class WinConfEnthalpy extends JFrame {
 				try {
 					if (panelEnthalpyDrawArea.isVisible()) {
 						panelEnthalpyDrawArea.repaint();
-						System.out.println("repaint");
 					}
 				} catch (NullPointerException e) {
 					// Not present ==> Do nothing !
@@ -371,7 +369,6 @@ public class WinConfEnthalpy extends JFrame {
 				try {
 					if (panelEnthalpyDrawArea.isVisible()) {
 						panelEnthalpyDrawArea.repaint();
-						System.out.println("repaint");
 					}
 				} catch (NullPointerException e) {
 					// Not present ==> Do nothing !
@@ -389,7 +386,6 @@ public class WinConfEnthalpy extends JFrame {
 				try {
 					if (panelEnthalpyDrawArea.isVisible()) {
 						panelEnthalpyDrawArea.repaint();
-						System.out.println("repaint");
 					}
 				} catch (NullPointerException e) {
 					// Not present ==> Do nothing !
@@ -406,7 +402,6 @@ public class WinConfEnthalpy extends JFrame {
 				try {
 					if (panelEnthalpyDrawArea.isVisible()) {
 						panelEnthalpyDrawArea.repaint();
-						System.out.println("repaint");
 					}
 				} catch (NullPointerException e) {
 					// Not present ==> Do nothing !
@@ -423,7 +418,6 @@ public class WinConfEnthalpy extends JFrame {
 				try {
 					if (panelEnthalpyDrawArea.isVisible()) {
 						panelEnthalpyDrawArea.repaint();
-						System.out.println("repaint");
 					}
 				} catch (NullPointerException e) {
 					// Not present ==> Do nothing !

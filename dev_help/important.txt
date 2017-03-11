@@ -1,0 +1,12 @@
+getResource
+============
+getResource looks on the classpath to find files 
+The classpath for a program executed in a jar file is inside the jar file: 
+D:\Users\kluges1\workspace\pac-tool\jar\WinDefinition.jar!\gui\html\Abreviation.html 
+<<<  Note the ! 
+The path up to the ! represents the jar file. 
+The path to the resource is added to the end of the classpath. 
+
+Conclusion:
+    A resource in a jar file is not a File, so you can't treat it as one.
+	--> Use getResourceAsStream and use InputStreamReader instead of FileReader.

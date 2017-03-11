@@ -37,6 +37,7 @@ WindowBuilder (Eclipse)
 
 log4j Logger
 	Log4j Plugin pour le logging  
+	Doit être téléchargé sur le site officiel
 		Download : https://logging.apache.org/log4j/2.x/download.html 
 	Utilisation:
 	http://logging.apache.org/log4j/2.x/manual/api.html

@@ -85,7 +85,7 @@ public class PacToolConfig {
 			Date date = new Date();
 
 			String tmpi= jsonObjPacTool.toJSONString();
-			String tmpo = "# ---------------------------------------------------\n" + "# PAC-Tool: " + Misc.PACTool_Version + "\n# Configuration File generated: " + dateFormat.format(date) + "\n# ---------------------------------------------------\n";
+			String tmpo = "# ---------------------------------------------------\n" + "# PAC-Tool: " + PacToolVar.PACTool_Version + "\n# Configuration File generated: " + dateFormat.format(date) + "\n# ---------------------------------------------------\n";
 			String tab = "";
 			int ntab= 0;
 			for(int i=0; i< tmpi.length(); i++) {
@@ -171,7 +171,6 @@ public class PacToolConfig {
 		// PAC
 		JSONObject jsonObjPac = (JSONObject) jsonObj.get("PAC");
 		pac.setJsonObject(jsonObjPac);
-		//System.out.println(jsonObjPac);
 
 		// Close scanner to avoid memory leak
 		sken.close();

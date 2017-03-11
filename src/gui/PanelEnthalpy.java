@@ -160,7 +160,7 @@ public class PanelEnthalpy extends JPanel {
 						eDrawL.add(edraw);
 					}
 				}
-				*/
+				 */
 			}
 		});
 
@@ -310,22 +310,22 @@ public class PanelEnthalpy extends JPanel {
 
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		//g2.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
-		
+
 		// -----------------------------------
 		// Apply a translation so that the drawing
 		// coordinates on the display matches the Panel
 		// -----------------------------------
 		zoomx = getWidth()/(xHmax-xHmin+2*marginx)*zoom;
 		zoomy = getHeight()/(log10_yPmax-log10_yPmin+2*log10_marginy)*zoom;
-		
+
 		AffineTransform g2AfT = new AffineTransform();
 		AffineTransform sg2AfT = g2.getTransform();
-		
+
 		g2AfT.translate(getWidth()/2,getHeight()/2);
 		g2AfT.scale(zoomx, -zoomy);
 		g2AfT.translate(offset.x-(xHmax+xHmin)/2, -offset.y/mvoYf-(log10_yPmax+log10_yPmin)/2);
 		g2.transform(g2AfT);
-				
+
 		//g2.translate(getWidth()/2,getHeight()/2);
 		//g2.scale(zoomx, -zoomy);
 		//g2.translate(offset.x-(xHmax+xHmin)/2, -offset.y/mvoYf-(log10_yPmax+log10_yPmin)/2);
@@ -476,7 +476,7 @@ public class PanelEnthalpy extends JPanel {
 			double heightP = (2*Rm)/zoomy;
 			g2.fill (new Ellipse2D.Double(H0, P0, widthH, heightP));
 		}
-		
+
 		// ===================================
 		// REVERT RESTORE ORIGINAL TRANSFORM
 		// ===================================
@@ -513,7 +513,11 @@ public class PanelEnthalpy extends JPanel {
 				int widthH = (2*Rm);
 				int heightP = (2*Rm);
 
-				g2.setColor(Color.RED);
+				if (eDrawL.get(i).isMovable())
+					g2.setColor(Color.GREEN);
+				else
+					g2.setColor(Color.RED);
+
 				g2.setStroke(new BasicStroke((float)(2)));
 				g2.draw (new Ellipse2D.Double(pointxm, pointym, widthH, heightP));
 
@@ -524,10 +528,10 @@ public class PanelEnthalpy extends JPanel {
 					g2.drawRoundRect(pointxm-5, pointym-20, 20, 15, 5, 5);
 					g2.setColor(Color.WHITE);
 					g2.fillRoundRect(pointxm-5, pointym-20, 20, 15, 5, 5);
-	
-				    font = new Font("Courier", Font.PLAIN, 10);
-				    g2.setFont(font);
-				    g2.setColor(Color.BLUE);  
+
+					font = new Font("Courier", Font.PLAIN, 10);
+					g2.setFont(font);
+					g2.setColor(Color.BLUE);  
 					String s = String.format("%s",eDrawL.get(i).getEnsembleName());
 					g2.drawString(s, pointxm, pointym-10);
 				} else {
@@ -536,10 +540,10 @@ public class PanelEnthalpy extends JPanel {
 					g2.drawRoundRect(pointxm-5, pointym+20, 20, 15, 5, 5);
 					g2.setColor(Color.WHITE);
 					g2.fillRoundRect(pointxm-5, pointym+20, 20, 15, 5, 5);
-	
-				    font = new Font("Courier", Font.PLAIN, 10);
-				    g2.setFont(font);
-				    g2.setColor(Color.BLUE);  
+
+					font = new Font("Courier", Font.PLAIN, 10);
+					g2.setFont(font);
+					g2.setColor(Color.BLUE);  
 					String s = String.format("%s",eDrawL.get(i).getEnsembleName());
 					g2.drawString(s, pointxm, pointym+30);
 				}
@@ -549,9 +553,9 @@ public class PanelEnthalpy extends JPanel {
 				break;
 			}
 		}
-		
+
 		// TO DOOOOOOOOOOOOOOOOOOOOOOOOO
-		
+
 		//WinEnthalpy.updateAllTextField();
 
 	}

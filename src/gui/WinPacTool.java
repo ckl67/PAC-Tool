@@ -20,6 +20,9 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
 import javax.swing.JFrame;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.border.EmptyBorder;
@@ -29,6 +32,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.awt.event.ActionListener;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.util.List;
 import java.awt.event.ActionEvent;
@@ -41,7 +48,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import computation.MeasureCollection;
 import computation.MeasureTable;
-import computation.Misc;
 import enthalpy.Enthalpy;
 import pac.Pac;
 
@@ -55,7 +61,7 @@ public class WinPacTool extends JFrame {
 	// -------------------------------------------------------
 	// 					INSTANCE VARIABLES
 	// -------------------------------------------------------
-	
+
 	private Pac pac;
 	private Enthalpy enthalpy;
 	private WinPacToolConfig winPacToolConfig;
@@ -69,12 +75,12 @@ public class WinPacTool extends JFrame {
 
 	private MeasureCollection measureCollection;
 	private List<ElDraw> eDrawL;
-	
+
 	private WinAbout winAbout;
 	private WinDefinition winDefinition;
-	
+
 	private PanelMeasurePoints contentPane;
-	
+
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
@@ -96,7 +102,7 @@ public class WinPacTool extends JFrame {
 		winAbout = pacToolVar.getWinAbout();
 		winDefinition = pacToolVar.getWinDefinition();
 		winPressTemp = pacToolVar.getWinPressTemp();
-		
+
 		// Create Window
 		initialize();
 	}
@@ -116,7 +122,7 @@ public class WinPacTool extends JFrame {
 		} catch (Throwable e) {
 			logger.info(e);
 		}
-		setTitle("PAC-Tool (" + Misc.PACTool_Version + ")");
+		setTitle("PAC-Tool (" + PacToolVar.PACTool_Version + ")");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(WinPacTool.class.getResource("/gui/images/PAC-Tool_32.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -124,15 +130,15 @@ public class WinPacTool extends JFrame {
 		// 													PANEL
 		// ===============================================================================================================
 
-		contentPane = new PanelMeasurePoints(eDrawL,measureCollection,enthalpy,pac,measureTable);
+		contentPane = new PanelMeasurePoints(eDrawL,measureCollection,enthalpy,pac,measureTable,winCompressor);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
-		
+
 		//setBounds(100, 10, contentPane.getBgImgWidth()+8, contentPane.getBgImgHeight()+50);
 		setBounds(100, 10, contentPane.getBgImgWidth()+8, contentPane.getBgImgHeight()+50);
 		setContentPane(contentPane);
-		
-		
+
+
 		// ===============================================================================================================
 		// 													MENU
 		// ===============================================================================================================
@@ -158,7 +164,7 @@ public class WinPacTool extends JFrame {
 
 					// Read the configuration from File
 					PacToolConfig.readConfigFile(pac, enthalpy, winPacToolConfig, chooser.getSelectedFile().getAbsolutePath());
-					
+
 					winCompressor.applyConfig(winPacToolConfig);
 
 				}
@@ -169,7 +175,7 @@ public class WinPacTool extends JFrame {
 		JMenuItem mntmSave = new JMenuItem("Save");
 		mntmSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				JFileChooser chooser = new JFileChooser();
 				FileNameExtensionFilter filter = new FileNameExtensionFilter( "Configuratin file (.cfg)", "cfg");
 				chooser.setApproveButtonText("Sauvegarder");
@@ -179,11 +185,50 @@ public class WinPacTool extends JFrame {
 				if(chooser.showOpenDialog(contentPane) == JFileChooser.APPROVE_OPTION) {
 					PacToolConfig.saveConfigFile(pac, enthalpy, winPacToolConfig, chooser.getSelectedFile().getAbsolutePath());
 				} 
-				
+
 			}
 		});
 		mntmSave.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/save-icone-16.png")));
 		mnFile.add(mntmSave);
+
+		JSeparator separator_1 = new JSeparator();
+		mnFile.add(separator_1);
+
+		JMenuItem mntmPrint = new JMenuItem("Print");
+		mntmPrint.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				PrinterJob job = PrinterJob.getPrinterJob();
+				job.setJobName("Print Java Component");
+
+				job.setPrintable (new Printable() {    
+					@Override
+					public int print(Graphics g, PageFormat pageFormat, int pageIndex) {
+						if (pageIndex > 0) {
+							return(NO_SUCH_PAGE);
+						} else {
+							Graphics2D g2d = (Graphics2D)g;
+							g2d.translate(pageFormat.getImageableX(),pageFormat.getImageableY());
+
+							contentPane.paint(g2d);
+							return(PAGE_EXISTS); 
+						}
+					}
+
+				});
+
+				if (job.printDialog()) {
+					try {
+						job.print();
+					} catch (PrinterException e) {
+						System.err.println(e.getMessage()); 
+					}
+				}
+
+			}
+		});
+		mntmPrint.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/imprimante-16.png")));
+		mnFile.add(mntmPrint);
 
 		JSeparator separator = new JSeparator();
 		mnFile.add(separator);
@@ -209,11 +254,11 @@ public class WinPacTool extends JFrame {
 			}
 		});
 		mnPac.add(mntmCompressor);
-		
+
 		JMenu mnEnthalpy = new JMenu("Enthalpy");
 		menuBar.add(mnEnthalpy);
-		
-		JMenuItem mntmDiagram = new JMenuItem("Diagram");
+
+		JMenuItem mntmDiagram = new JMenuItem("Diagram Enthalpy");
 		mntmDiagram.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/Enthalpy-16.png")));
 		mntmDiagram.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -222,7 +267,7 @@ public class WinPacTool extends JFrame {
 			}
 		});
 		mnEnthalpy.add(mntmDiagram);
-		
+
 		JMenuItem mntmPressTemp = new JMenuItem("Pressure Temperature");
 		mntmPressTemp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -232,10 +277,10 @@ public class WinPacTool extends JFrame {
 		});
 		mntmPressTemp.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/PressureTemperature-16.png")));
 		mnEnthalpy.add(mntmPressTemp);
-		
+
 		JMenu mnMeasures = new JMenu("Measures");
 		menuBar.add(mnMeasures);
-		
+
 		JMenuItem mntmTable = new JMenuItem("Table");
 		mntmTable.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/table-16.png")));
 		mntmTable.addActionListener(new ActionListener() {
@@ -248,8 +293,8 @@ public class WinPacTool extends JFrame {
 
 		JMenu mpreference = new JMenu("Preferences");
 		menuBar.add(mpreference);
-		
-		JMenuItem mImgEnthalpyCfg = new JMenuItem("Enthalpie Conf.");
+
+		JMenuItem mImgEnthalpyCfg = new JMenuItem("Enthalpy Configuration");
 		mImgEnthalpyCfg.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/configuration-16.png")));
 		mImgEnthalpyCfg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -266,7 +311,7 @@ public class WinPacTool extends JFrame {
 
 		ButtonGroup buttonGroup = new ButtonGroup();
 
-		JMenu mlangue = new JMenu("Langues");
+		JMenu mlangue = new JMenu("Language");
 		mlangue.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/langue-16.png")));
 		mpreference.add(mlangue);
 
@@ -281,7 +326,7 @@ public class WinPacTool extends JFrame {
 
 		mlangue.add(mRationItemFrench);
 
-		JRadioButtonMenuItem mRationItemEnglisch = new JRadioButtonMenuItem("Anglais");
+		JRadioButtonMenuItem mRationItemEnglisch = new JRadioButtonMenuItem("English");
 		mRationItemEnglisch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//String vlang = "eng";
@@ -291,25 +336,25 @@ public class WinPacTool extends JFrame {
 		buttonGroup.add(mRationItemEnglisch);
 
 		mlangue.add(mRationItemEnglisch);;
-		
-		
-		JMenu mnGeneral = new JMenu("General");
+
+
+		JMenu mnGeneral = new JMenu("Geothermy");
 		menuBar.add(mnGeneral);
-		
-		JMenuItem mntmDefinitio = new JMenuItem("Definition");
+
+		JMenuItem mntmDefinitio = new JMenuItem("Definitions");
 		mntmDefinitio.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/aide-index-16.png")));
 		mntmDefinitio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				logger.info("Open WinDefinition");
 				winDefinition.setVisible(true);
-				
+
 			}
 		});
 		mnGeneral.add(mntmDefinitio);
-		
+
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
-		
+
 		JMenuItem mntmAbout = new JMenuItem("About");
 		mntmAbout.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/About16.png")));
 		mntmAbout.addActionListener(new ActionListener() {

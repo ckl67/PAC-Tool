@@ -28,9 +28,9 @@ import java.awt.Desktop;
 import java.awt.EventQueue;
 import javax.swing.event.HyperlinkEvent;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.awt.Toolkit;
 import org.apache.logging.log4j.LogManager;
@@ -81,8 +81,12 @@ public class WinAbout extends JFrame {
 		StringBuilder contentBuilder = new StringBuilder();
 
 		try {
-			File file = new File(WinDefinition.class.getResource("/gui/html/About.html").getFile());
-			BufferedReader in = new BufferedReader(new FileReader(file));
+			// Reading resource
+			// A resource in a jar file is not a File, so you can't treat it as one.
+			// Use getResourceAsStream and use InputStreamReader instead of FileReader. 
+
+			InputStream i = WinDefinition.class.getResourceAsStream("/gui/html/About.html");
+			BufferedReader in = new BufferedReader(new InputStreamReader(i));
 		    String str;
 		    while ((str = in.readLine()) != null) {
 		        contentBuilder.append(str);

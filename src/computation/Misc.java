@@ -21,10 +21,6 @@ package computation;
 import java.util.List;
 
 public class Misc {
-	// -------------------------------------------------------
-	// 						CONSTANTES (DEFINE)
-	// -------------------------------------------------------
-	public static final String PACTool_Version = "Version Alpha 0.3";
 	
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR

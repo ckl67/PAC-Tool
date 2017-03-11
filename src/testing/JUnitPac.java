@@ -1,7 +1,9 @@
 package testing;
 
+import org.json.simple.JSONObject;
 import org.junit.Test;
 
+import pac.Pac;
 import testing.pac.JUnitCirculator;
 import testing.pac.JUnitCompressor;
 import testing.pac.JUnitCondenser;
@@ -17,6 +19,7 @@ public class JUnitPac {
 	public void test() {
 
 		System.out.println("TEST COMPUTE PAC");
+
 
 		JUnitCompressor jtCompressor = new JUnitCompressor();
 		JUnitCirculator jtCirculator = new JUnitCirculator();
@@ -35,8 +38,24 @@ public class JUnitPac {
 		jtHeatSrcDistrCircuit.test();
 		jtHeatTransferFluid.test();
 		jtRefrigerant.test();
+
 		
+		Pac pac = new Pac();
 		
+		pac.addNewCompressor(1);
+		pac.selectCurrentCompressor(1);
+
+		System.out.println("\n---> Construct JSON data");
+		JSONObject jsonObj = new JSONObject();
+		jsonObj = pac.getJsonObject();
+		System.out.println(jsonObj);
+		
+		pac.removeCompressor(1);
+		System.out.println(pac.getNbOfCompressorNb());
+		
+		pac.setJsonObject(jsonObj);
+		System.out.println(jsonObj);
+		System.out.println(pac.getNbOfCompressorNb());
 		
 		/*
 				System.out.println("\n---> Read PAC");

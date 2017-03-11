@@ -27,7 +27,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class Pac {
-	
+
 	private static final Logger logger = LogManager.getLogger(Pac.class.getName());
 
 	// --------------------------------------------------------------------
@@ -45,7 +45,7 @@ public class Pac {
 	private List<Circulator> circulatorDistrL = new ArrayList<Circulator>();
 	private List<HeatSrcDistrCircuit> circuitDistrL = new ArrayList<HeatSrcDistrCircuit>();
 	private List<HeatTransferFluid> fluidCaloDistrL = new ArrayList<HeatTransferFluid>();
-	
+
 	private int[] id = new int[12];
 
 
@@ -67,7 +67,7 @@ public class Pac {
 		circulatorDistrL.add(new Circulator());
 		circuitDistrL.add(new HeatSrcDistrCircuit());
 		fluidCaloDistrL.add(new HeatTransferFluid());
-		
+
 		id[PacItem.COMP.ordinal()]=0;
 		id[PacItem.COND.ordinal()]=0;
 		id[PacItem.DEHY.ordinal()]=0;
@@ -102,7 +102,7 @@ public class Pac {
 		// compressorL.get(5)
 		// id[COMP] = 5
 		// compressorL.get(id[COMP])
-		
+
 		switch (GasInjected) {
 		case COMPRESSOR : 
 			fluidRefriL.set(id[PacItem.FLFRG.Pos()],    compressorL.get(id[PacItem.COMP.nb()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.Pos()])));
@@ -271,6 +271,7 @@ public class Pac {
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
 
+		logger.info("jsonObj {}",jsonObj);
 		JSONArray ObjL;
 		ObjL = (JSONArray) jsonObj.get("CompressorL");
 		compressorL.clear();
@@ -369,9 +370,11 @@ public class Pac {
 		}
 
 		JSONObject Obj = (JSONObject) jsonObj.get("ItemID");
+
 		for (PacItem p : PacItem.values()) {
-			id[p.ordinal()] = (int) ((Number) Obj.get(p)).doubleValue();
+			id[p.ordinal()] = (int) ((Number) Obj.get(p.toString())).doubleValue();
 		}
+
 
 	}
 
@@ -411,68 +414,68 @@ public class Pac {
 	public int getNbOfCompressorNb() {
 		return compressorL.size();
 	}
-	
+
 	public void addNewCompressor(int position) {
 		compressorL.add(position, new Compressor());	
 	}
-	
+
 	public void removeCompressor(int position) {
 		compressorL.remove(position);	
 	}
-	
+
 	// -------------------------------------------------------
-	
-	public void choosCondenser(int i) {
+
+	public void selectCurrentCondenser(int i) {
 		id[PacItem.COND.ordinal()] = i;
 		logger.info("Choice Condenser N°{}",i);
 	}
-	
-	public void chooseDehydrator(int i) {
+
+	public void selectCurrenteDehydrator(int i) {
 		id[PacItem.DEHY.ordinal()] = i;
 		logger.info("Choice Dehydrator N°{}",i);
 	}
 
-	public void chooseExpansionValve(int i) {
+	public void selectCurrenteExpansionValve(int i) {
 		id[PacItem.EPVA.ordinal()] = i;
 		logger.info("Choice Expansion Valve N°{}",i);
 	}
 
-	public void chooseEvaporator(int i) {
+	public void selectCurrenteEvaporator(int i) {
 		id[PacItem.EVAP.ordinal()] = i;
 		logger.info("Choice Evaporator N°{}",i);
 	}
 
-	public void chooseFluidRefri(int i) {
+	public void selectCurrenteFluidRefri(int i) {
 		id[PacItem.FLFRG.ordinal()] = i;
 		logger.info("Choice Fluid Refrigerant N°{}",i);
 	}
 
-	public void chooseCirculatorSrc(int i) {
+	public void selectCurrenteCirculatorSrc(int i) {
 		id[PacItem.CRCLS.ordinal()] = i;
 		logger.info("Choice Circulator Source N°{}",i);
 	}
 
-	public void chooseCircuitSrc(int i) {
+	public void selectCurrenteCircuitSrc(int i) {
 		id[PacItem.CIRTS.ordinal()] = i;
 		logger.info("Choice Circuit Source N°{}",i);
 	}
 
-	public void chooseFluidCaloSrc(int i) {
+	public void selectCurrenteFluidCaloSrc(int i) {
 		id[PacItem.FLCAS.ordinal()] = i;
 		logger.info("Choice Fluid Caloporter Source N°{}",i);
 	}
 
-	public void chooseCirculatorDistr(int i) {
+	public void selectCurrenteCirculatorDistr(int i) {
 		id[PacItem.CRCLD.ordinal()] = i;
 		logger.info("Choice Circulator Distribution N°{}",i);
 	}
 
-	public void chooseCircuitDistr(int i) {
+	public void selectCurrenteCircuitDistr(int i) {
 		id[PacItem.CIRTD.ordinal()] = i;
 		logger.info("Choice Circuit Distribution N°{}",i);
 	}
 
-	public void chooseFluidCaloDistr(int i) {
+	public void selectCurrenteFluidCaloDistr(int i) {
 		id[PacItem.FLCAD.ordinal()] = i;
 		logger.info("Choice Fluid Caloporter Distribution N°{}",i);
 	}
@@ -485,9 +488,9 @@ public class Pac {
 		}
 		return id;
 	}
-	
 
-	
+
+
 	public Condenser getCurrentCondenser() {
 		return condenserL.get(id[PacItem.COND.ordinal()]);
 	}

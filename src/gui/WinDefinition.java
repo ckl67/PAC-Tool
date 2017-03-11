@@ -27,10 +27,9 @@ import org.apache.logging.log4j.Logger;
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import javax.swing.JScrollPane;
 
@@ -77,8 +76,13 @@ public class WinDefinition extends JFrame  {
 		StringBuilder contentBuilder = new StringBuilder();
 
 		try {
-			File file = new File(WinDefinition.class.getResource("/gui/html/Abreviation.html").getFile());
-			BufferedReader in = new BufferedReader(new FileReader(file));
+			
+			// Reading resource
+			// A resource in a jar file is not a File, so you can't treat it as one.
+			// Use getResourceAsStream and use InputStreamReader instead of FileReader. 
+
+			InputStream i = WinDefinition.class.getResourceAsStream("/gui/html/Abreviation.html");
+			BufferedReader in = new BufferedReader(new InputStreamReader(i));
 		    String str;
 		    while ((str = in.readLine()) != null) {
 		        contentBuilder.append(str);
