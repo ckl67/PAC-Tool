@@ -22,9 +22,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
 public class EnthalpyBkgdImg {
+	
+	private static final Logger logger = LogManager.getLogger(Enthalpy.class.getName());
 	
 	// Enthalpy image file (.png)
 	private String enthalpyImageFile;		
@@ -49,7 +54,7 @@ public class EnthalpyBkgdImg {
 	public EnthalpyBkgdImg() {
 		
 		// Image
-		this.enthalpyImageFile = "D:/Users/kluges1/workspace/pac-tool/ressources/R22/R22 couleur A4.png";
+		this.enthalpyImageFile = "./ressources/R22/R22 couleur A4.png";
 
 		// Reference points chosen on the Curve
 		this.refCurveH1x = 140; 
@@ -74,10 +79,12 @@ public class EnthalpyBkgdImg {
 	public BufferedImage openEnthalpyImageFile() {
 		BufferedImage image=null;
 		try {
-			File file = new File(getEnthalpyImageFile());
+			File file = new File(enthalpyImageFile);
+			logger.info("Read File: {}", enthalpyImageFile);
+
 			image = ImageIO.read(file);	
 		} catch (IOException e) {
-			System.out.println("openEnthalpyImageFile");
+			logger.error(e);
 			e.printStackTrace(); 
 		}
 		return image;
@@ -202,10 +209,6 @@ public class EnthalpyBkgdImg {
 
 	public void setiBgP2y(int iBgP2y) {
 		this.iBgP2y = iBgP2y;
-	}
-
-	public String getEnthalpyImageFile() {
-		return enthalpyImageFile;
 	}
 
 	public void setEnthalpyImageFile(String enthalpyImageFile) {

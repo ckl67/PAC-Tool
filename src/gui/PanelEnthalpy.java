@@ -338,7 +338,7 @@ public class PanelEnthalpy extends JPanel {
 		g2.drawImage(bufBkgdImg, 
 				enthalpyBkgdImg.getRefCurveH1x(),enthalpyBkgdImg.getRefCurveP2yLog(),enthalpyBkgdImg.getRefCurveH2x(),-enthalpyBkgdImg.getRefCurveP1yLog(),
 				enthalpyBkgdImg.getiBgH1x(),enthalpyBkgdImg.getiBgP2y(),enthalpyBkgdImg.getiBgH2x(),enthalpyBkgdImg.getiBgP1y(),
-				null);
+				this);
 
 		float[] scales = { 1f, 1f, 1f, alphaBlurBkgdImg };
 		float[] offsets = new float[4];

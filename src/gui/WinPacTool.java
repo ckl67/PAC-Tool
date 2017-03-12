@@ -197,7 +197,7 @@ public class WinPacTool extends JFrame {
 		JMenuItem mntmPrint = new JMenuItem("Print");
 		mntmPrint.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+
 				PrinterJob job = PrinterJob.getPrinterJob();
 				job.setJobName("Print Java Component");
 
@@ -249,7 +249,7 @@ public class WinPacTool extends JFrame {
 		mntmCompressor.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/compresseur-16.png")));
 		mntmCompressor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				logger.info("Open winCompressor");
+				logger.info("JMenuItem: Open winCompressor");
 				winCompressor.setVisible(true);
 			}
 		});
@@ -262,7 +262,7 @@ public class WinPacTool extends JFrame {
 		mntmDiagram.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/Enthalpy-16.png")));
 		mntmDiagram.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				logger.info("Open winEnthalpy");
+				logger.info("JMenuItem: Open winEnthalpy");
 				winEnthalpy.setVisible(true);
 			}
 		});
@@ -271,7 +271,7 @@ public class WinPacTool extends JFrame {
 		JMenuItem mntmPressTemp = new JMenuItem("Pressure Temperature");
 		mntmPressTemp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				logger.info("Open WinPressTemp");
+				logger.info("JMenuItem: Open WinPressTemp");
 				winPressTemp.setVisible(true);
 			}
 		});
@@ -285,7 +285,7 @@ public class WinPacTool extends JFrame {
 		mntmTable.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/table-16.png")));
 		mntmTable.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				logger.info("Open WinMeasureTable");
+				logger.info("JMenuItem: Open WinMeasureTable");
 				winMeasureTable.setVisible(true);
 			}
 		});
@@ -298,13 +298,8 @@ public class WinPacTool extends JFrame {
 		mImgEnthalpyCfg.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/configuration-16.png")));
 		mImgEnthalpyCfg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
-				try {
-					winConfEnthalpy.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
+				logger.info("JMenuItem: Open winConfEnthalpy");
+				winConfEnthalpy.setVisible(true);
 			}
 		});
 		mpreference.add(mImgEnthalpyCfg);
@@ -345,7 +340,7 @@ public class WinPacTool extends JFrame {
 		mntmDefinitio.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/aide-index-16.png")));
 		mntmDefinitio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				logger.info("Open WinDefinition");
+				logger.info("JMenuItem: Open WinDefinition");
 				winDefinition.setVisible(true);
 
 			}
@@ -359,7 +354,7 @@ public class WinPacTool extends JFrame {
 		mntmAbout.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/About16.png")));
 		mntmAbout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				logger.info("Open WinAbout");
+				logger.info("JMenuItem: Open WinAbout");
 				winAbout.setVisible(true);
 			}
 		});

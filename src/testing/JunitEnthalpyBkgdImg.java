@@ -13,6 +13,8 @@ public class JunitEnthalpyBkgdImg {
 
 		EnthalpyBkgdImg vEnthalpyBkgdImg = new EnthalpyBkgdImg();
 
+		vEnthalpyBkgdImg.openEnthalpyImageFile();
+		
 		System.out.println("\n---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();
 		jsonObj = vEnthalpyBkgdImg.getJsonObject();

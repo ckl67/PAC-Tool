@@ -99,7 +99,7 @@ public class Enthalpy {
 		/* -----------------------------
 		   Diagram Pressure-Temperature
 		 * ----------------------------*/
-		this.fileNameTP = "D:/Users/kluges1/workspace/pac-tool/ressources/R22/P2T_R22.txt";
+		this.fileNameTP = "./ressources/R22/P2T_R22.txt";
 		this.listTP = new ArrayList<Point2D.Double>();
 		this.deltaP = 0.0;
 		this.loadPTFile();
@@ -111,7 +111,7 @@ public class Enthalpy {
 				let h0,h1 the nearest H found in the list, 
 				if h0 and h1 are to faraway of h, it means that the p zone was too narrow 
 		 * ----------------------------*/
-		this.fileNameSAT = "D:/Users/kluges1/workspace/pac-tool/ressources/R22/SaturationCurve_R22.txt";
+		this.fileNameSAT = "./ressources/R22/SaturationCurve_R22.txt";
 		this.listSatHlP = new ArrayList<Point2D.Double>();
 		this.listSatHvP = new ArrayList<Point2D.Double>();
 		this.loadHlvPSatFile();
@@ -135,6 +135,7 @@ public class Enthalpy {
 	 */
 	public void loadPTFile() {
 		File file = new File (fileNameTP);
+		logger.info("Read File: {}", fileNameTP);
 
 		Scanner sken = null;
 		try {
@@ -165,6 +166,8 @@ public class Enthalpy {
 	 */
 	public void loadHlvPSatFile() {
 		File file = new File (fileNameSAT);
+		logger.info("Read File: {}", fileNameSAT);
+
 		Scanner sken = null;
 		try {
 			sken = new Scanner (file);

@@ -51,6 +51,7 @@ Langage de modélisation unifié, Unified Modeling Language (UML) intégré à  Eclip
 	
 Editeur HTML
 	Par exemple: kompozer-0.7.10-win32
+	Intégré à Eclipse
 
 Gestion de versions Git
 	Git est intégré à Eclipse, mais je préfère utiliser SourceTree.

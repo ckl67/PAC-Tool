@@ -11,7 +11,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{A01E523A-B30C-4082-ADE1-C8407CAF44B9}
 AppName=PAC-Tool
-AppVersion=Alpha 0.3
+AppVersion=Alpha 0.3.2
 ;AppVerName=PAC-Tool Alpha 0.1
 AppPublisher=Christian Klugesherz
 AppPublisherURL=https://github.com/ckl67/PAC-Tool
@@ -35,7 +35,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "D:\Users\kluges1\workspace\pac-tool\inno\PAC-Toolx64.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\Users\kluges1\workspace\pac-tool\inno\jrex64\*"; DestDir: "{app}\jrex64"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "D:\Users\kluges1\workspace\pac-tool\inno\R22\*"; DestDir: "{app}\R22"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\Users\kluges1\workspace\pac-tool\ressources\*"; DestDir: "{app}\ressources"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\Users\kluges1\workspace\pac-tool\inno\log\*"; DestDir: "{app}\log"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
