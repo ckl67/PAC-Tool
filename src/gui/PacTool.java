@@ -18,14 +18,28 @@
  */
 package gui;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import log4j.Log4jDynConfig;
+
 public class PacTool {
+	
+	// Forbidden here !!
+	// 	--> private static final Logger logger = LogManager.getLogger(test.class.getName());
+	// Linked to: log4jDynConfig
 	
 	// -------------------------------------------------------
 	// 							MAIN
 	// -------------------------------------------------------
 	public static void main(String[] args){
 		
-		PacToolVar pacToolVar = new PacToolVar();
+		Log4jDynConfig log4jDynConfig = new Log4jDynConfig();
+		
+		Logger logger = LogManager.getLogger(PacTool.class.getName());
+		logger.info("File appender will be stored in " + log4jDynConfig.getAppenderFile());
+		
+		PacToolVar pacToolVar = new PacToolVar(log4jDynConfig);
 		
 		WinPacTool winPacTool = new WinPacTool(pacToolVar); 
 		winPacTool.setVisible(true);

@@ -1,0 +1,13 @@
+*.class
+*.exe
+*.*~
+*.log
+.settings/
+bin/
+exe/
+gource/audio.mp3
+gource/gource.x264.avi
+gource/gource.ppm
+inno/jrex64/
+inno/jrex86/ 
+jar/*.jar

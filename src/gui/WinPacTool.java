@@ -78,6 +78,7 @@ public class WinPacTool extends JFrame {
 
 	private WinAbout winAbout;
 	private WinDefinition winDefinition;
+	private WinLogger winLogger;
 
 	private PanelMeasurePoints contentPane;
 
@@ -102,6 +103,7 @@ public class WinPacTool extends JFrame {
 		winAbout = pacToolVar.getWinAbout();
 		winDefinition = pacToolVar.getWinDefinition();
 		winPressTemp = pacToolVar.getWinPressTemp();
+		winLogger = pacToolVar.getWinLogger();
 
 		// Create Window
 		initialize();
@@ -359,6 +361,19 @@ public class WinPacTool extends JFrame {
 			}
 		});
 		mnHelp.add(mntmAbout);
+		
+		JSeparator separator_2 = new JSeparator();
+		mnHelp.add(separator_2);
+		
+		JMenuItem mntmLog = new JMenuItem("Log");
+		mntmLog.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				logger.info("JMenuItem: Open winLogger");
+				winLogger.setVisible(true);
+			}
+		});
+		mntmLog.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/logger-16.png")));
+		mnHelp.add(mntmLog);
 
 
 	}

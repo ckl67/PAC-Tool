@@ -34,6 +34,7 @@ import computation.COP;
 import computation.MeasureCollection;
 import computation.MeasureTable;
 import enthalpy.Enthalpy;
+import log4j.Log4jDynConfig;
 import pac.Pac;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
@@ -50,7 +51,7 @@ public class PacToolVar {
 	//   only 1 instance will be created
 	//   all data are loaded once
 	//   no problem of missing variables 
-
+			
 	private Pac pac;
 	private Enthalpy enthalpy;
 	private COP cop;
@@ -71,12 +72,13 @@ public class PacToolVar {
 
 	private WinAbout winAbout;
 	private WinDefinition winDefinition;
+	private WinLogger winLogger;
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
-	PacToolVar() {
+	PacToolVar(Log4jDynConfig log4jDynConfig) {
 
 		// ------ Frame ------------
 	    Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();	
@@ -190,7 +192,11 @@ public class PacToolVar {
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 		
-
+		winLogger = new WinLogger(log4jDynConfig);
+		lblLoading.setText("Loading...... Win. Logger");		
+		percent = 100*i++/iterations;
+		progressBar.setValue(percent);
+		
 		frame.setVisible(false);
 
 	}
@@ -237,6 +243,10 @@ public class PacToolVar {
 
 	public WinAbout getWinAbout() {
 		return winAbout;
+	}
+
+	public WinLogger getWinLogger() {
+		return winLogger;
 	}
 
 	public WinDefinition getWinDefinition() {

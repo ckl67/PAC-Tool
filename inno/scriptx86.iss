@@ -36,7 +36,6 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: "D:\Users\kluges1\workspace\pac-tool\inno\PAC-Toolx86.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\Users\kluges1\workspace\pac-tool\inno\jrex86\*"; DestDir: "{app}\jrex86"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "D:\Users\kluges1\workspace\pac-tool\ressources\*"; DestDir: "{app}\ressources"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "D:\Users\kluges1\workspace\pac-tool\inno\log\*"; DestDir: "{app}\log"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
