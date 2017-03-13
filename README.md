@@ -41,6 +41,7 @@ log4j Logger
 		Download : https://logging.apache.org/log4j/2.x/download.html 
 	Utilisation:
 	http://logging.apache.org/log4j/2.x/manual/api.html
+	https://www.jmdoudoux.fr/java/dej/chap-logging.htm
 		
 Langage de modélisation unifié, Unified Modeling Language (UML) intégré à  Eclipse
 	ObjectAid

@@ -1,5 +1,5 @@
 getResource
-============
+=============
 getResource looks on the classpath to find files 
 The classpath for a program executed in a jar file is inside the jar file: 
 D:\Users\kluges1\workspace\pac-tool\jar\WinDefinition.jar!\gui\html\Abreviation.html 
