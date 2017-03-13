@@ -33,6 +33,7 @@ public class Enthalpy {
 
 	private static final Logger logger = LogManager.getLogger(Enthalpy.class.getName());
 	
+
 	// -------------------------------------------------------
 	// 					INSTANCE VARIABLES
 	// -------------------------------------------------------
