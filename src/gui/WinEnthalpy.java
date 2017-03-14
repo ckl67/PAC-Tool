@@ -56,6 +56,7 @@ import computation.MeasureTable;
 import computation.MeasureCollection;
 import computation.MeasureObject;
 import enthalpy.Enthalpy;
+import log4j.Log4jDynConfig;
 import pac.Pac;
 import javax.swing.event.ChangeEvent;
 import javax.swing.ImageIcon;
@@ -100,6 +101,7 @@ public class WinEnthalpy extends JFrame {
 	// 				TEST THE APPLICATION STANDALONE 
 	// -------------------------------------------------------
 	public static void main(String[] args) {
+		new Log4jDynConfig();
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Throwable e) {

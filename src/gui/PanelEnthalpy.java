@@ -18,6 +18,7 @@
  */
 package gui;
 
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -36,7 +37,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.RescaleOp;
 import java.util.List;
 import javax.swing.JPanel;
 
@@ -114,7 +114,7 @@ public class PanelEnthalpy extends JPanel {
 
 		this.bufBkgdImg = enthalpyBkgdImg.openEnthalpyImageFile();
 
-		this.alphaBlurBkgdImg=0;
+		this.alphaBlurBkgdImg=0.5f;
 
 		this.offset = new Point(0,0);		
 		this.mvoYf = 100.0;				 
@@ -335,17 +335,12 @@ public class PanelEnthalpy extends JPanel {
 		// Background	--> Panel
 		// -----------------------------------		
 
+		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alphaBlurBkgdImg));
 		g2.drawImage(bufBkgdImg, 
 				enthalpyBkgdImg.getRefCurveH1x(),enthalpyBkgdImg.getRefCurveP2yLog(),enthalpyBkgdImg.getRefCurveH2x(),-enthalpyBkgdImg.getRefCurveP1yLog(),
 				enthalpyBkgdImg.getiBgH1x(),enthalpyBkgdImg.getiBgP2y(),enthalpyBkgdImg.getiBgH2x(),enthalpyBkgdImg.getiBgP1y(),
 				this);
-
-		float[] scales = { 1f, 1f, 1f, alphaBlurBkgdImg };
-		float[] offsets = new float[4];
-		RescaleOp rop = new RescaleOp(scales, offsets, null);
-
-		/* Draw the image, applying the filter */
-		g2.drawImage(bufBkgdImg, rop, -1, -10);
+		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1));
 
 		// -----------------------------------
 		// Base font + Scaled font 

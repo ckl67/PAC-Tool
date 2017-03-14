@@ -123,7 +123,7 @@ public class PacToolVar {
 		
 		// -------------------------
 		int i = 1;
-		int iterations = 13;
+		int iterations = 14;
 		int percent = 0;
 		
 		pac = new Pac();								// Contains Pac Features

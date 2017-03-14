@@ -25,6 +25,9 @@ Avoid
 Replace
 	logger.error("Ops!", e);
 
-Ddynamic variable
+Ddynamic Logger
 ==================
+We only use dynamic Logger !!
 Read Log4jInit.java
+
+http://stackoverflow.com/questions/34904304/how-to-properly-create-a-rollingfileappender-with-appendercomponentbuilder-in-lo
