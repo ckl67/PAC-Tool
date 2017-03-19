@@ -34,7 +34,7 @@ import computation.COP;
 import computation.MeasureCollection;
 import computation.MeasureTable;
 import enthalpy.Enthalpy;
-import log4j.Log4jDynConfig;
+import log4j.Log4j2Config;
 import pac.Pac;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
@@ -78,7 +78,7 @@ public class PacToolVar {
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
-	PacToolVar(Log4jDynConfig log4jDynConfig) {
+	PacToolVar(Log4j2Config log4j2Config) {
 
 		// ------ Frame ------------
 	    Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();	
@@ -192,7 +192,7 @@ public class PacToolVar {
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 		
-		winLogger = new WinLogger(log4jDynConfig);
+		winLogger = new WinLogger(log4j2Config);
 		lblLoading.setText("Loading...... Win. Logger");		
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);

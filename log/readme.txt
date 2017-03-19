@@ -1,1 +1,1 @@
- File appender will be stored in D:\Users\kluges1\AppData\Roaming\Pac-Tool\Pac-Tool.log
+ Log file will be stored in ...\AppData\Roaming\Pac-Tool\Pac-Tool.log
