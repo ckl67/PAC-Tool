@@ -41,14 +41,6 @@ public class Log4j2Config {
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	/**
-	 * Initialize Log4j2
-	 * Configure log path which will be used in "log4j2.xml"
-	 *  	Common error is caused by the static logger
-	 *  	If you logs before the System.setProperty, this will cause the variable UNDEFINED error.
-	 *  	private static final Logger logger = LogManager.getLogger(test.class.getName());
-	 *  	is forbidden here !!
-	 */
 	public Log4j2Config() {
 		logPath = Paths.get(getUserAppDirectory()+"/Pac-Tool").toString();
 		//System.setProperty("logpath.name",logPath);
