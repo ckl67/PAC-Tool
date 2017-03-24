@@ -48,6 +48,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import computation.MeasurePoint;
 import computation.MeasureTable;
+import computation.ResultTable;
 import computation.MeasureChoiceStatus;
 import computation.MeasureObject;
 import computation.MeasureCollection;
@@ -76,6 +77,7 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 	private Enthalpy enthalpy;
 	private Pac pac;
 	private MeasureTable measureTable;
+	private ResultTable resultTable;
 	private WinCompressor winCompressor;
 
 	private int bgImgWidth;
@@ -113,7 +115,7 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
-				PanelMeasurePoints panel1 = new PanelMeasurePoints(eDrawL1,measureCollection1,enthalpy1,new Pac(), new MeasureTable(measureCollection1), new WinCompressor(pac1, winPacToolConfig1) );
+				PanelMeasurePoints panel1 = new PanelMeasurePoints(eDrawL1,measureCollection1,enthalpy1,new Pac(), new MeasureTable(measureCollection1), new ResultTable(measureCollection1), new WinCompressor(pac1, winPacToolConfig1) );
 				frame.getContentPane().add(panel1, BorderLayout.CENTER);
 				frame.setVisible(true);
 
@@ -131,12 +133,13 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 	 * Create the application.
 	 * @param measurePL 
 	 */
-	public PanelMeasurePoints(List<ElDraw> veDrawL, MeasureCollection vmeasureCollection, Enthalpy venthalpy, Pac vpac, MeasureTable vmeasureTable, WinCompressor vwinCompressor) {
+	public PanelMeasurePoints(List<ElDraw> veDrawL, MeasureCollection vmeasureCollection, Enthalpy venthalpy, Pac vpac, MeasureTable vmeasureTable, ResultTable vresultTable, WinCompressor vwinCompressor) {
 		measureCollection = vmeasureCollection;
 		eDrawL = veDrawL;
 		enthalpy = venthalpy;
 		pac = vpac;
 		measureTable = vmeasureTable;
+		resultTable = vresultTable;
 		winCompressor = vwinCompressor;
 
 		imgURL = "/gui/images/Cycle.png";
@@ -279,6 +282,9 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 
 				logger.info("Update MeasureTable");
 				measureTable.setAllTableValues();
+
+				logger.info("Update ResultTable");
+				resultTable.setAllTableValues();
 
 				logger.trace("Reinitialse the complete Draw elements with the Measure Collection");
 				eDrawL.clear();

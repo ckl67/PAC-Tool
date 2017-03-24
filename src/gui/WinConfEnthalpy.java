@@ -33,6 +33,7 @@ import org.apache.logging.log4j.Logger;
 
 import computation.MeasureCollection;
 import computation.MeasureTable;
+import computation.ResultTable;
 import enthalpy.Enthalpy;
 import enthalpy.EnthalpyBkgdImg;
 import pac.Pac;
@@ -84,7 +85,7 @@ public class WinConfEnthalpy extends JFrame {
 				try {		
 					Enthalpy enthalpy1= new Enthalpy();
 					MeasureCollection measureCollection1 = new MeasureCollection();
-					WinEnthalpy vwinEnthalpy1 = new WinEnthalpy(new Pac(), enthalpy1, new MeasureTable(measureCollection1), new ArrayList<ElDraw>(), new WinPressTemp(enthalpy1));
+					WinEnthalpy vwinEnthalpy1 = new WinEnthalpy(new Pac(), enthalpy1, new MeasureTable(measureCollection1), new ResultTable(measureCollection1), new ArrayList<ElDraw>(), new WinPressTemp(enthalpy1));
 					WinConfEnthalpy frame = new WinConfEnthalpy(vwinEnthalpy1);
 					frame.setVisible(true);
 

@@ -90,8 +90,8 @@ public class MeasureCollection {
 							// T1 is Over heated of T8 (Will be updated only if T1 = 0) :: T1 = T8 + OH
 							if (measureL.get(MeasureObject.T1.ordinal()).getValue() == 0) {
 								double ohT = measureL.get(MeasureObject.T8.ordinal()).getMT() + 
-										pac.getCurrentCompressor().getOverheated();
-								logger.info("Computation of T1 --> (T8={} + Compressor over head={}) = {}",measureL.get(MeasureObject.T8.ordinal()).getMT(),pac.getCurrentCompressor().getOverheated(),ohT);
+										Math.round(pac.getCurrentCompressor().getOverheated());
+								logger.info("Computation of T1 --> (T8={} + Compressor over head={}) = {}",measureL.get(MeasureObject.T8.ordinal()).getMT(),Math.round(pac.getCurrentCompressor().getOverheated()),ohT);
 
 								MeasurePoint m1 = measureL.get(MeasureObject.T1.ordinal());
 								m1.setValue(ohT);
@@ -169,8 +169,8 @@ public class MeasureCollection {
 						// T5 is under cooling of T4 (Will be updated only if T5 = 0) :: T5 = T4 - UC
 						if (measureL.get(MeasureObject.T5.ordinal()).getValue() == 0) {
 							double ucT = measureL.get(MeasureObject.P4.ordinal()).getMT() - 
-									pac.getCurrentCompressor().getUnderCooling();
-							logger.info("Computation of T5 --> (T4={}  Under Colling ={}) = {}",measureL.get(MeasureObject.P4.ordinal()).getMT(),pac.getCurrentCompressor().getUnderCooling(),ucT);
+									Math.round(pac.getCurrentCompressor().getUnderCooling());
+							logger.info("Computation of T5 --> (T4={}  Under Colling ={}) = {}",measureL.get(MeasureObject.P4.ordinal()).getMT(),Math.round(pac.getCurrentCompressor().getUnderCooling()),ucT);
 
 							MeasurePoint m5 = measureL.get(MeasureObject.T5.ordinal());
 							m5.setMT(ucT);

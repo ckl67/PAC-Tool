@@ -33,7 +33,14 @@ public class PacTool {
 	public static void main(String[] args){
 		
 		Log4j2Config log4j2Config = new Log4j2Config();
-		logger.info(log4j2Config.getAllDeclaredAppenders());
+		logger.info("Read the Appenders Declared");
+		logger.info("  All declared Appenders = {} ",log4j2Config.getAllDeclaredAppenders());
+		
+		logger.info("Read the Appenders Activated in the Logger");
+		logger.info("  Is Logger Console active --> {}", log4j2Config.isLoggerConsole());
+		logger.info("  Is Logger File active --> {}", log4j2Config.isLoggerLogFile());
+
+		
 		PacToolVar pacToolVar = new PacToolVar(log4j2Config);
 		
 		WinPacTool winPacTool = new WinPacTool(pacToolVar); 

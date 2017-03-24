@@ -48,6 +48,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import computation.MeasureCollection;
 import computation.MeasureTable;
+import computation.ResultTable;
 import enthalpy.Enthalpy;
 import pac.Pac;
 
@@ -72,6 +73,8 @@ public class WinPacTool extends JFrame {
 
 	private MeasureTable measureTable;
 	private WinMeasureTable winMeasureTable;
+	private ResultTable resultTable;
+	private WinResultTable winResultTable;
 
 	private MeasureCollection measureCollection;
 	private List<ElDraw> eDrawL;
@@ -99,7 +102,9 @@ public class WinPacTool extends JFrame {
 		winEnthalpy = pacToolVar.getWinEnthalpy();
 		winConfEnthalpy  = pacToolVar.getWinConfEnthalpy();
 		measureTable = pacToolVar.getMeasureTable();
+		resultTable = pacToolVar.getResultTable();
 		winMeasureTable = pacToolVar.getWinMeasureTable();
+		winResultTable = pacToolVar.getWinResultTable();
 		winAbout = pacToolVar.getWinAbout();
 		winDefinition = pacToolVar.getWinDefinition();
 		winPressTemp = pacToolVar.getWinPressTemp();
@@ -132,7 +137,7 @@ public class WinPacTool extends JFrame {
 		// 													PANEL
 		// ===============================================================================================================
 
-		contentPane = new PanelMeasurePoints(eDrawL,measureCollection,enthalpy,pac,measureTable,winCompressor);
+		contentPane = new PanelMeasurePoints(eDrawL,measureCollection,enthalpy,pac,measureTable,resultTable,winCompressor);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 
@@ -280,18 +285,28 @@ public class WinPacTool extends JFrame {
 		mntmPressTemp.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/PressureTemperature-16.png")));
 		mnEnthalpy.add(mntmPressTemp);
 
-		JMenu mnMeasures = new JMenu("Measures");
-		menuBar.add(mnMeasures);
+		JMenu mnAllData = new JMenu("Data");
+		menuBar.add(mnAllData);
 
-		JMenuItem mntmTable = new JMenuItem("Table");
-		mntmTable.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/table-16.png")));
-		mntmTable.addActionListener(new ActionListener() {
+		JMenuItem mntmTableMeasures = new JMenuItem("Measures");
+		mntmTableMeasures.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/table-16.png")));
+		mntmTableMeasures.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				logger.info("JMenuItem: Open WinMeasureTable");
 				winMeasureTable.setVisible(true);
 			}
 		});
-		mnMeasures.add(mntmTable);
+		mnAllData.add(mntmTableMeasures);
+		
+		JMenuItem mntmResults = new JMenuItem("Results");
+		mntmResults.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				logger.info("JMenuItem: Open WinResultTable");
+				winResultTable.setVisible(true);			
+			}
+		});
+		mntmResults.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/table-16.png")));
+		mnAllData.add(mntmResults);
 
 		JMenu mpreference = new JMenu("Preferences");
 		menuBar.add(mpreference);

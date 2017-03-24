@@ -53,6 +53,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import computation.MeasurePoint;
 import computation.MeasureTable;
+import computation.ResultTable;
 import computation.MeasureCollection;
 import computation.MeasureObject;
 import enthalpy.Enthalpy;
@@ -75,6 +76,7 @@ public class WinEnthalpy extends JFrame {
 	private Enthalpy enthalpy;		
 	private List<ElDraw> eDrawL;	
 	private MeasureTable measureTable;
+	private ResultTable resultTable;
 	private MeasureCollection measureCollection;
 	private Pac pac;
 	private WinPressTemp winPressTemp;
@@ -112,7 +114,7 @@ public class WinEnthalpy extends JFrame {
 				try {
 					Enthalpy enthalpy1= new Enthalpy();
 					MeasureCollection measureCollection1 = new MeasureCollection();
-					WinEnthalpy frame1 = new WinEnthalpy(new Pac(), enthalpy1, new MeasureTable(measureCollection1), new ArrayList<ElDraw>(), new WinPressTemp(enthalpy1));
+					WinEnthalpy frame1 = new WinEnthalpy(new Pac(), enthalpy1, new MeasureTable(measureCollection1), new ResultTable(measureCollection1), new ArrayList<ElDraw>(), new WinPressTemp(enthalpy1));
 					frame1.setVisible(true);
 
 				} catch (Exception e) {
@@ -125,10 +127,11 @@ public class WinEnthalpy extends JFrame {
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public WinEnthalpy(Pac vpac, Enthalpy venthalpy, MeasureTable vmeasureTable, List<ElDraw> veDrawL, WinPressTemp vwinPressTemp) {
+	public WinEnthalpy(Pac vpac, Enthalpy venthalpy, MeasureTable vmeasureTable, ResultTable vresultTable, List<ElDraw> veDrawL, WinPressTemp vwinPressTemp) {
 		pac = vpac;
 		enthalpy = venthalpy;
 		measureTable = vmeasureTable;
+		resultTable = vresultTable;
 		measureCollection = vmeasureTable.getMeasureCollection();
 		eDrawL = veDrawL;
 		winPressTemp = vwinPressTemp;
@@ -303,6 +306,7 @@ public class WinEnthalpy extends JFrame {
 							//System.out.println(measureCollection.getMeasurePL().get(n).getMH());
 							measureCollection.getMeasurePL().get(n).setMH(hResult);
 							measureTable.setAllTableValues();
+							resultTable.setAllTableValues();
 							//System.out.println(measureCollection.getMeasurePL().get(n).getMHreal());
 						}
 							

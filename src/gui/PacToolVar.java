@@ -33,6 +33,7 @@ import javax.swing.JProgressBar;
 import computation.COP;
 import computation.MeasureCollection;
 import computation.MeasureTable;
+import computation.ResultTable;
 import enthalpy.Enthalpy;
 import log4j.Log4j2Config;
 import pac.Pac;
@@ -45,7 +46,7 @@ public class PacToolVar {
 	// -------------------------------------------------------
 	// 						CONSTANTES (DEFINE)
 	// -------------------------------------------------------
-	public static final String PACTool_Version = "Version Alpha 0.3.2";
+	public static final String PACTool_Version = "Version Alpha 0.4.0";
 	
 	// By creating all the instances here, it assure that 
 	//   only 1 instance will be created
@@ -69,6 +70,9 @@ public class PacToolVar {
 
 	private MeasureTable measureTable;
 	private WinMeasureTable winMeasureTable;
+
+	private ResultTable resultTable;
+	private WinResultTable winResultTable;
 
 	private WinAbout winAbout;
 	private WinDefinition winDefinition;
@@ -123,7 +127,7 @@ public class PacToolVar {
 		
 		// -------------------------
 		int i = 1;
-		int iterations = 14;
+		int iterations = 16;
 		int percent = 0;
 		
 		pac = new Pac();								// Contains Pac Features
@@ -157,6 +161,12 @@ public class PacToolVar {
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
+		resultTable = new ResultTable(measureCollection);
+		lblLoading.setText("Loading...... Result Table");
+		percent = 100*i++/iterations;
+		progressBar.setValue(percent);
+
+		
 		winPressTemp = new WinPressTemp(enthalpy);
 		lblLoading.setText("Loading...... Win. Temperature/Pressure");
 		percent = 100*i++/iterations;
@@ -167,7 +177,7 @@ public class PacToolVar {
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
-		winEnthalpy = new WinEnthalpy(pac, enthalpy, measureTable, eDrawL,winPressTemp);
+		winEnthalpy = new WinEnthalpy(pac, enthalpy, measureTable, resultTable, eDrawL,winPressTemp);
 		lblLoading.setText("Loading...... Win. Enthalpy");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
@@ -179,6 +189,11 @@ public class PacToolVar {
 
 		winMeasureTable = new WinMeasureTable(measureTable);
 		lblLoading.setText("Loading...... Win. Measure Table");		
+		percent = 100*i++/iterations;
+		progressBar.setValue(percent);
+
+		winResultTable = new WinResultTable(resultTable);
+		lblLoading.setText("Loading...... Win. Result Table");		
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
@@ -204,6 +219,10 @@ public class PacToolVar {
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
+
+	public ResultTable getResultTable() {
+		return resultTable;
+	}
 
 	public Pac getPac() {
 		return pac;
@@ -256,6 +275,11 @@ public class PacToolVar {
 	public WinMeasureTable getWinMeasureTable() {
 		return winMeasureTable;
 	}
+	
+	public WinResultTable getWinResultTable() {
+		return winResultTable;
+	}
+
 	public WinPressTemp getWinPressTemp() {
 		return winPressTemp;
 	}
