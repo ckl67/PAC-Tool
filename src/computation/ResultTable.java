@@ -23,7 +23,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import gui.WinResultTable;
 
 public class ResultTable extends JTable {
 
@@ -47,20 +46,45 @@ public class ResultTable extends JTable {
 
 	public void setAllTableValues() {
 		for (ResultObject p : ResultObject.values()) {
-			
+
 			List<MeasurePoint> measureL = measureCollection.getMeasurePL();
+			double result = 0;
 			switch (p) {
 			case T1_T8: 
-				int nT1 = MeasureObject.T1.ordinal();
-				int nT8 = MeasureObject.T8.ordinal();
-				double val = measureL.get(nT1).getMT()- measureL.get(nT8).getMT();  
-				
-				setValueAt( (val*100)/100, p.ordinal(), 2);
-				
-			
+				result = measureL.get(MeasureObject.T1.ordinal()).getMT()- measureL.get(MeasureObject.T8.ordinal()).getMT();  
+				setValueAt( Math.round(result*100)/100, p.ordinal(), 2);
+				break;
+			case T2_T1: 
+				result = measureL.get(MeasureObject.T2.ordinal()).getMT()- measureL.get(MeasureObject.T1.ordinal()).getMT();  
+				setValueAt( Math.round(result*100)/100, p.ordinal(), 2);
+				break;
+			case T3_T2:
+				result = measureL.get(MeasureObject.P3.ordinal()).getMT()- measureL.get(MeasureObject.T2.ordinal()).getMT();  
+				setValueAt( Math.round(result*100)/100, p.ordinal(), 2);
+				break;
+			case T3T4:
+				result = measureL.get(MeasureObject.P3.ordinal()).getMT();  
+				setValueAt( Math.round(result*100)/100, p.ordinal(), 2);
+				break;
+			case T4_T5:
+				result = measureL.get(MeasureObject.P4.ordinal()).getMT()- measureL.get(MeasureObject.T5.ordinal()).getMT();  
+				setValueAt( Math.round(result*100)/100, p.ordinal(), 2);
+				break;
+			case T5_T6:
+				result = measureL.get(MeasureObject.T5.ordinal()).getMT()- measureL.get(MeasureObject.T6.ordinal()).getMT();  
+				setValueAt( Math.round(result*100)/100, p.ordinal(), 2);
+				break;
+			case T7:
+				result = measureL.get(MeasureObject.P7.ordinal()).getMT();  
+				setValueAt( Math.round(result*100)/100, p.ordinal(), 2);
+				break;
+			case T8_T7:
+				result = measureL.get(MeasureObject.T8.ordinal()).getMT()- measureL.get(MeasureObject.P7.ordinal()).getMT();  
+				setValueAt( Math.round(result*100)/100, p.ordinal(), 2);
 				break;
 			default :
 				break;
+
 			} 
 
 
@@ -80,15 +104,42 @@ public class ResultTable extends JTable {
 
 
 		// Initialize
+		double result = 0;
 		for (ResultObject p : ResultObject.values()) {
-			
+
 			List<MeasurePoint> measureL = measureCollection.getMeasurePL();
 			switch (p) {
 			case T1_T8: 
-				int nT1 = MeasureObject.T1.ordinal();
-				int nT8 = MeasureObject.T8.ordinal();
-				double val = measureL.get(nT1).getMT()- measureL.get(nT8).getMT();  
-				defaultTableModel.addRow( new Object[] {p.getDisplayTxt(),p.getDefinition(),val,p.getUnity()});				
+				result = measureL.get(MeasureObject.T1.ordinal()).getMT()- measureL.get(MeasureObject.T8.ordinal()).getMT();  
+				defaultTableModel.addRow( new Object[] {p.getDisplayTxt(),p.getDefinition(),result,p.getUnity()});				
+				break;
+			case T2_T1: 
+				result = measureL.get(MeasureObject.T2.ordinal()).getMT()- measureL.get(MeasureObject.T1.ordinal()).getMT();  
+				defaultTableModel.addRow( new Object[] {p.getDisplayTxt(),p.getDefinition(),result,p.getUnity()});				
+				break;
+			case T3_T2:
+				result = measureL.get(MeasureObject.P3.ordinal()).getMT()- measureL.get(MeasureObject.T2.ordinal()).getMT();  
+				defaultTableModel.addRow( new Object[] {p.getDisplayTxt(),p.getDefinition(),result,p.getUnity()});				
+				break;
+			case T3T4:
+				result = measureL.get(MeasureObject.P3.ordinal()).getMT();  
+				defaultTableModel.addRow( new Object[] {p.getDisplayTxt(),p.getDefinition(),result,p.getUnity()});				
+				break;
+			case T4_T5:
+				result = measureL.get(MeasureObject.P4.ordinal()).getMT()- measureL.get(MeasureObject.T5.ordinal()).getMT();  
+				defaultTableModel.addRow( new Object[] {p.getDisplayTxt(),p.getDefinition(),result,p.getUnity()});				
+				break;
+			case T5_T6:
+				result = measureL.get(MeasureObject.T5.ordinal()).getMT()- measureL.get(MeasureObject.T6.ordinal()).getMT();  
+				defaultTableModel.addRow( new Object[] {p.getDisplayTxt(),p.getDefinition(),result,p.getUnity()});				
+				break;
+			case T7:
+				result = measureL.get(MeasureObject.P7.ordinal()).getMT();  
+				defaultTableModel.addRow( new Object[] {p.getDisplayTxt(),p.getDefinition(),result,p.getUnity()});				
+				break;
+			case T8_T7:
+				result = measureL.get(MeasureObject.T8.ordinal()).getMT()- measureL.get(MeasureObject.P7.ordinal()).getMT();  
+				defaultTableModel.addRow( new Object[] {p.getDisplayTxt(),p.getDefinition(),result,p.getUnity()});				
 				break;
 			default :
 				break;
@@ -104,5 +155,5 @@ public class ResultTable extends JTable {
 	public MeasureCollection getMeasureCollection() {
 		return measureCollection;
 	}
-	
+
 }
