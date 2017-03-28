@@ -19,8 +19,10 @@
 package gui;
 
 public enum ItemCoord {
-	Compressor(490,65,50,50),
-	Circulator(795,45,20,20);
+	Compressor(490,70,50,50),
+	CirculatorSource(227,275,26,26),
+	CirculatorDistribution(732,50,26,26),
+	;
 
 	// --------------------------------------------------------------------
 	// DEFINITION OF VARIABLES USED IN ENUMERATION

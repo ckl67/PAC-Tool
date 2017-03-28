@@ -52,9 +52,9 @@ public class MeasureTable extends JTable {
 			List<MeasurePoint> measureL = measureCollection.getMeasurePL();
 			MeasurePoint m = measureL.get(n);  
 
-			setValueAt( Math.round(m.getMT()*100)/100, n, 2);
-			setValueAt( Math.round(m.getMP()*100)/100, n, 3);
-			setValueAt( Math.round(m.getMH()*100)/100, n, 4);
+			setValueAt( Math.round(m.getMT()*100.0)/100.0, n, 2);
+			setValueAt( Math.round(m.getMP()*100.0)/100.0, n, 3);
+			setValueAt( Math.round(m.getMH()*100.0)/100.0, n, 4);
 
 			logger.info(
 					"Point = {} Choice Status = {} value= {} T={} --> P={} ==> P0 or PK ={} H ={} ",
@@ -76,11 +76,7 @@ public class MeasureTable extends JTable {
 
 		// Initialize
 		for (MeasureObject p : MeasureObject.values()) {
-			int n = p.ordinal(); 		// p = T1,T2,... n = 0 , 1, 
-			List<MeasurePoint> measureL = measureCollection.getMeasurePL();
-			MeasurePoint m = measureL.get(n);  
-
-			defaultTableModel.addRow( new Object[] {p,p.getDefinition(),m.getMT(),m.getMP(),m.getMH()});
+			defaultTableModel.addRow( new Object[] {p,p.getDefinition(),"0.00","0.00","0.00"});
 		}
 		setModel(defaultTableModel);
 

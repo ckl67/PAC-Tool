@@ -9,7 +9,8 @@ public enum ResultObject {
 	T5_T6("T5-T6","Détente","°C"),
 	T7("T7","Point de Saturation Evaporation ","°C"),
 	T8_T7("T8-T7","Surchauffe","°C"),
-	
+	H2_H1("H2-H1","Travail du Compresseur H2-H1","kJ/Kg"),
+	H2_H5("H2-H5","Puissance Calorifique","kJ/Kg"),
 	;
 	
 	// --------------------------------------------------------------------

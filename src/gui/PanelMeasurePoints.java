@@ -33,7 +33,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -79,6 +78,8 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 	private MeasureTable measureTable;
 	private ResultTable resultTable;
 	private WinCompressor winCompressor;
+	private WinCirculatorDistr winCirculatorDistr;
+	private WinCirculatorSrc winCirculatorSrc;
 
 	private int bgImgWidth;
 	private  int bgImgHeight;
@@ -92,6 +93,7 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 	private BufferedImage img;
 	private JTextField textField;
 	private JTextField textFieldUnity;
+	private JButton btnReset;
 
 	private boolean pointMatched;
 	private int pointMatched_id;
@@ -103,25 +105,17 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				List<ElDraw> eDrawL1 = new ArrayList<ElDraw>();
-				MeasureCollection measureCollection1 = new MeasureCollection();
-				Enthalpy enthalpy1 = new Enthalpy();
-				Pac pac1 = new Pac();
-				WinPacToolConfig winPacToolConfig1 = new WinPacToolConfig();
-				
+			public void run() {			
 				JFrame frame = new JFrame();
-				frame.setBounds(100, 100, 446, 187);
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
-				PanelMeasurePoints panel1 = new PanelMeasurePoints(eDrawL1,measureCollection1,enthalpy1,new Pac(), new MeasureTable(measureCollection1), new ResultTable(measureCollection1), new WinCompressor(pac1, winPacToolConfig1) );
+				PanelMeasurePoints panel1 = new PanelMeasurePoints(new PacToolVar(null));		
 				frame.getContentPane().add(panel1, BorderLayout.CENTER);
+
+				frame.setBounds(100, 10, panel1.getBgImgWidth()+7, panel1.getBgImgHeight()+49);
+
 				frame.setVisible(true);
-
-				frame.setBounds(100, 10, panel1.getBgImgWidth()+8, panel1.getBgImgHeight()+50);
-				frame.setContentPane(panel1);
-
 			}
 		});
 	}
@@ -133,14 +127,16 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 	 * Create the application.
 	 * @param measurePL 
 	 */
-	public PanelMeasurePoints(List<ElDraw> veDrawL, MeasureCollection vmeasureCollection, Enthalpy venthalpy, Pac vpac, MeasureTable vmeasureTable, ResultTable vresultTable, WinCompressor vwinCompressor) {
-		measureCollection = vmeasureCollection;
-		eDrawL = veDrawL;
-		enthalpy = venthalpy;
-		pac = vpac;
-		measureTable = vmeasureTable;
-		resultTable = vresultTable;
-		winCompressor = vwinCompressor;
+	public PanelMeasurePoints(PacToolVar vpacToolVar) {
+		measureCollection = vpacToolVar.getMeasureCollection();
+		eDrawL = vpacToolVar.geteDrawL();
+		enthalpy = vpacToolVar.getEnthalpy();
+		pac = vpacToolVar.getPac();
+		measureTable = vpacToolVar.getMeasureTable();
+		resultTable = vpacToolVar.getResultTable();
+		winCompressor = vpacToolVar.getWinCompressor();
+		winCirculatorSrc = vpacToolVar.getWinCirculatorSrc();
+		winCirculatorDistr = vpacToolVar.getWinCirculatorDistr();
 
 		imgURL = "/gui/images/Cycle.png";
 		measurePL = measureCollection.getMeasurePL();
@@ -234,10 +230,10 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 		bgImgWidth = img.getWidth();
 		bgImgHeight = img.getHeight();
 
-		JButton btnNewButton = new JButton("Reset");
-		btnNewButton.setFocusable(false);
+		btnReset = new JButton("Reset");
+		btnReset.setFocusable(false);
 
-		btnNewButton.addActionListener(new ActionListener() {
+		btnReset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				logger.trace("Reset to Zero the measure points List");
 				for (int n = 0; n < measurePL.size(); n++ ) {
@@ -248,7 +244,7 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 			}
 		});
 
-		add(btnNewButton);
+
 
 		textField = new JTextField();
 		textField.setForeground(Color.BLACK);
@@ -277,13 +273,13 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 				measurePL.get(id).setMeasureChoiceStatus(MeasureChoiceStatus.Chosen);
 
 				logger.trace("New values added {}",String.format("%.2f", inValue));
-				logger.info("Update the Measure Collection data ");
+				logger.trace("Update the Measure Collection data ");
 				MeasureCollection.updateAllMeasurePoints(measureCollection,enthalpy,pac);
 
-				logger.info("Update MeasureTable");
+				logger.trace("Update MeasureTable");
 				measureTable.setAllTableValues();
 
-				logger.info("Update ResultTable");
+				logger.trace("Update ResultTable");
 				resultTable.setAllTableValues();
 
 				logger.trace("Reinitialse the complete Draw elements with the Measure Collection");
@@ -304,6 +300,7 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 
 		add(textField);
 		add(textFieldUnity);
+		add(btnReset);
 
 	}
 
@@ -393,14 +390,19 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 
 			if (evt.getButton() == MouseEvent.BUTTON3) {
 				String item = getItemName(evt.getX(),evt.getY());
-				
+
 				switch (item) {
 				case "Compressor":
-					logger.info("mousePressed choice: {} ",item);
+					logger.trace("mousePressed choice: {} ",item);
 					winCompressor.setVisible(true);
 					break;
-				case "Circulator":
-					logger.info("mousePressed choice: {} ",item);				
+				case "CirculatorSource":
+					logger.trace("mousePressed choice: {} ",item);
+					winCirculatorSrc.setVisible(true);
+					break;
+				case "CirculatorDistribution":
+					logger.trace("mousePressed choice: {} ",item);				
+					winCirculatorDistr.setVisible(true);
 					break;
 				default:
 					break;

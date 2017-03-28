@@ -62,6 +62,9 @@ public class PacToolVar {
 
 	private WinPacToolConfig winPacToolConfig;
 	private WinCompressor winCompressor;
+	
+	private WinCirculatorDistr winCirculatorDistr;
+	private WinCirculatorSrc winCirculatorSrc;
 
 	private WinEnthalpy winEnthalpy;
 	private WinConfEnthalpy winConfEnthalpy;
@@ -127,7 +130,7 @@ public class PacToolVar {
 		
 		// -------------------------
 		int i = 1;
-		int iterations = 16;
+		int iterations = 17;
 		int percent = 0;
 		
 		pac = new Pac();								// Contains Pac Features
@@ -177,6 +180,13 @@ public class PacToolVar {
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
+		winCirculatorDistr = new WinCirculatorDistr(pac);
+		winCirculatorSrc = new WinCirculatorSrc(pac);
+		lblLoading.setText("Loading...... Win. Circulator");
+		percent = 100*i++/iterations;
+		progressBar.setValue(percent);
+		
+		
 		winEnthalpy = new WinEnthalpy(pac, enthalpy, measureTable, resultTable, eDrawL,winPressTemp);
 		lblLoading.setText("Loading...... Win. Enthalpy");
 		percent = 100*i++/iterations;
@@ -252,6 +262,14 @@ public class PacToolVar {
 		return winCompressor;
 	}
 
+	public WinCirculatorDistr getWinCirculatorDistr() {
+		return winCirculatorDistr;
+	}
+
+	public WinCirculatorSrc getWinCirculatorSrc() {
+		return winCirculatorSrc;
+	}
+	
 	public WinEnthalpy getWinEnthalpy() {
 		return winEnthalpy;
 	}
