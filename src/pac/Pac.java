@@ -498,7 +498,66 @@ public class Pac {
 
 	// -------------------------------------------------------
 
+	// -------------------------------------------------------
+	
+	/**
+	 * selectCurrentCirculatorDistr
+	 * @param i
+	 */
+	public void selectCurrentCirculatorDistr(int i) {
+		id[PacItem.CRCLS.ordinal()] = i;
+		logger.info("Select Current CirculatorDistr N°{}",id[PacItem.CRCLS.ordinal()]);
+	}
 
+	
+	/**
+	 * getCurrentCirculatorDistr
+	 * @return CirculatorDistr
+	 */
+	// id[0] = 2 <==> id[PacItem.CRCLS.pos()] = 2;
+	public Circulator getCurrentCirculatorDistr() {
+		logger.info("Get Current CirculatorDistr N°{}",id[PacItem.CRCLS.ordinal()]);
+		return circulatorDistrL.get(id[PacItem.CRCLS.ordinal()]);
+	}
+	
+	/**
+	 * getCirculatorDistrNb
+	 * @return CirculatorDistr
+	 */
+	//id[0] = 2 <==> id[PacItem.COMP.pos()] = 2;
+	public Circulator getCirculatorDistrNb(int nb) {
+		logger.info("Get CirculatorDistr N°{}",nb);
+		return circulatorDistrL.get(nb);
+	}
+	
+	/**
+	 * getNbOfCirculatorDistrNb
+	 * @return
+	 */
+	public int getNbOfCirculatorDistrNb() {
+		return circulatorDistrL.size();
+	}
+
+	/**
+	 * addNewCirculatorDistr
+	 * @param position
+	 */
+	public void addNewCirculatorDistr(int position) {
+		logger.trace("Add New CirculatorDistr at position {} of a Total of {}",position,circulatorDistrL.size());
+		circulatorDistrL.add(position, new Circulator("New",220));	
+	}
+
+	/**
+	 * removeCirculatorDistr
+	 * @param position
+	 */
+	public void removeCirculatorDistr(int position) {
+		logger.trace("Remove CirculatorDistr position ={} of a Total of {}",position,circulatorDistrL.size());
+		circulatorDistrL.remove(position);	
+	}
+	
+
+	
 	public void selectCurrentCondenser(int i) {
 		id[PacItem.COND.ordinal()] = i;
 		logger.info("Choice Condenser N°{}",i);
@@ -588,10 +647,6 @@ public class Pac {
 
 	public HeatTransferFluid getCurrentFluidCaloSrc() {
 		return fluidCaloSrcL.get(id[PacItem.FLCAS.ordinal()]);
-	}
-
-	public Circulator getCurrentCirculatorDistr() {
-		return circulatorDistrL.get(id[PacItem.CRCLD.ordinal()]);
 	}
 
 	public HeatSrcDistrCircuit getCurrentCircuitDistr() {

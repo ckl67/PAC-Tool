@@ -32,10 +32,11 @@ public class JUnitCirculator {
 		System.out.println("\n---> ADD 1 feature at the end of the list");
 		vCirlculator.addFeatures(50, 5000, 500);
 		for (int i=0;i<vCirlculator.getNbOfFeatures();i++) {
+			vCirlculator.selectActiveFeature(i);
 			System.out.println(" Feature (" + i + ")");
-			System.out.println("    Current =" + vCirlculator.getCurrent(i));
-			System.out.println("    RotatePerMinutes  =" + vCirlculator.getRotatePerMinutes(i));
-			System.out.println("    Power  =" + vCirlculator.getPower(i));
+			System.out.println("    Current =" + vCirlculator.getActiveFeatureCurrent());
+			System.out.println("    RotatePerMinutes  =" + vCirlculator.getActiveFeatureRotatePerMinutes());
+			System.out.println("    Power  =" + vCirlculator.getActiveFeaturePower());
 		}
 
 		n=3;
@@ -59,20 +60,22 @@ public class JUnitCirculator {
 		System.out.println("\n---> ADD 1 feature at the end of the list");
 		vCirlculatorNew.addFeatures(50, 5000, 500);
 		for (int i=0;i<vCirlculatorNew.getNbOfFeatures();i++) {
+			vCirlculatorNew.selectActiveFeature(i);
 			System.out.println(" Feature (" + i + ")");
-			System.out.println("    Current =" + vCirlculatorNew.getCurrent(i));
-			System.out.println("    RotatePerMinutes  =" + vCirlculatorNew.getRotatePerMinutes(i));
-			System.out.println("    Power  =" + vCirlculatorNew.getPower(i));
+			System.out.println("    Current =" + vCirlculatorNew.getActiveFeatureCurrent());
+			System.out.println("    RotatePerMinutes  =" + vCirlculatorNew.getActiveFeatureRotatePerMinutes());
+			System.out.println("    Power  =" + vCirlculatorNew.getActiveFeaturePower());
 		}
 
 		// Modify Feature at position 0
 		System.out.println("\n---> Modify Feature at position 0");
-		vCirlculatorNew.modifyFeatures(0,10, 1000, 100);
+		vCirlculatorNew.modifyActiveFeatures(10, 1000, 100);
 		for (int i=0;i<vCirlculatorNew.getNbOfFeatures();i++) {
+			vCirlculatorNew.selectActiveFeature(i);
 			System.out.println(" Feature (" + i + ")");
-			System.out.println("    Current =" + vCirlculatorNew.getCurrent(i));
-			System.out.println("    RotatePerMinutes  =" + vCirlculatorNew.getRotatePerMinutes(i));
-			System.out.println("    Power  =" + vCirlculatorNew.getPower(i));
+			System.out.println("    Current =" + vCirlculatorNew.getActiveFeatureCurrent());
+			System.out.println("    RotatePerMinutes  =" + vCirlculatorNew.getActiveFeatureRotatePerMinutes());
+			System.out.println("    Power  =" + vCirlculatorNew.getActiveFeaturePower());
 		}
 
 		// set Class with the JSON object
@@ -86,10 +89,11 @@ public class JUnitCirculator {
 		System.out.println("    Voltage = " + vCirlculator.getVoltage());
 		System.out.println("    --> Display features");
 		for (int i=0;i<vCirlculatorNew.getNbOfFeatures();i++) {
+			vCirlculatorNew.selectActiveFeature(i);
 			System.out.println(" Feature (" + i + ")");
-			System.out.println("    Current =" + vCirlculatorNew.getCurrent(i));
-			System.out.println("    RotatePerMinutes  =" + vCirlculatorNew.getRotatePerMinutes(i));
-			System.out.println("    Power  =" + vCirlculatorNew.getPower(i));
+			System.out.println("    Current =" + vCirlculatorNew.getActiveFeatureCurrent());
+			System.out.println("    RotatePerMinutes  =" + vCirlculatorNew.getActiveFeatureRotatePerMinutes());
+			System.out.println("    Power  =" + vCirlculatorNew.getActiveFeaturePower());
 		}
 
 		System.out.println("\n--->Transfer Function");

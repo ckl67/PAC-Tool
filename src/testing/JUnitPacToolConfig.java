@@ -9,7 +9,7 @@ import org.json.simple.parser.JSONParser;
 import org.junit.Test;
 
 import enthalpy.Enthalpy;
-import gui.WinPacToolConfig;
+import gui.GuiConfig;
 
 public class JUnitPacToolConfig {
 
@@ -46,15 +46,15 @@ public class JUnitPacToolConfig {
 			e.printStackTrace();
 		}
 
-		// WinPacToolConfig: Set the Class Instance with JSON data
-		WinPacToolConfig winPacToolConfig = new WinPacToolConfig();
-		JSONObject jsonObjPrimeConfig = (JSONObject) jsonObj.get("WinPacToolConfig") ;
+		// GuiConfig: Set the Class Instance with JSON data
+		GuiConfig guiConfig = new GuiConfig();
+		JSONObject jsonObjPrimeConfig = (JSONObject) jsonObj.get("GuiConfig") ;
 		System.out.println(jsonObjPrimeConfig);
-		winPacToolConfig.setJsonObject(jsonObjPrimeConfig);
+		guiConfig.setJsonObject(jsonObjPrimeConfig);
 
-		System.out.println("   BTU=" +	winPacToolConfig.getUnitCompBTU());
-		System.out.println("   Pound=" +	winPacToolConfig.getUnitCompPound());
-		System.out.println("   Faren=" +	winPacToolConfig.getUnitCompFaren());
+		System.out.println("   BTU=" +	guiConfig.getUnitCompBTU());
+		System.out.println("   Pound=" +	guiConfig.getUnitCompPound());
+		System.out.println("   Faren=" +	guiConfig.getUnitCompFaren());
 
 		// Enthalpy (containing also EnthalpyBkgdImg)
 		Enthalpy enthalpy = new Enthalpy();

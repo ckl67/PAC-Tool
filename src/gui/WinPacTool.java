@@ -61,7 +61,7 @@ public class WinPacTool extends JFrame {
 	
 	private Pac pac;
 	private Enthalpy enthalpy;
-	private WinPacToolConfig winPacToolConfig;
+	private GuiConfig guiConfig;
 	private WinCompressor winCompressor;
 	private WinCirculatorDistr winCirculatorDistr;
 	private WinCirculatorSrc winCirculatorSrc;
@@ -91,7 +91,7 @@ public class WinPacTool extends JFrame {
 		
 		pac = vpacToolVar.getPac();
 		enthalpy = vpacToolVar.getEnthalpy();
-		winPacToolConfig = vpacToolVar.getWinPacToolConfig();
+		guiConfig = vpacToolVar.getGuiConfig();
 		winCompressor = vpacToolVar.getWinCompressor();
 		winCirculatorDistr =  vpacToolVar.getWinCirculatorDistr();
 		winCirculatorSrc = vpacToolVar.getWinCirculatorSrc();
@@ -161,9 +161,9 @@ public class WinPacTool extends JFrame {
 				if(returnVal == JFileChooser.APPROVE_OPTION) {
 
 					// Read the configuration from File
-					PacToolConfig.readConfigFile(pac, enthalpy, winPacToolConfig, chooser.getSelectedFile().getAbsolutePath());
+					PacToolConfig.readConfigFile(pac, enthalpy, guiConfig, chooser.getSelectedFile().getAbsolutePath());
 
-					winCompressor.applyConfig(winPacToolConfig);
+					winCompressor.applyConfig(guiConfig);
 
 				}
 			}
@@ -181,7 +181,7 @@ public class WinPacTool extends JFrame {
 				File workingDirectory = new File(System.getProperty("user.dir"));
 				chooser.setCurrentDirectory(workingDirectory);
 				if(chooser.showOpenDialog(contentPane) == JFileChooser.APPROVE_OPTION) {
-					PacToolConfig.saveConfigFile(pac, enthalpy, winPacToolConfig, chooser.getSelectedFile().getAbsolutePath());
+					PacToolConfig.saveConfigFile(pac, enthalpy, guiConfig, chooser.getSelectedFile().getAbsolutePath());
 				} 
 
 			}
@@ -341,7 +341,7 @@ public class WinPacTool extends JFrame {
 		JRadioButtonMenuItem mRationItemFrench = new JRadioButtonMenuItem("Francais");
 		mRationItemFrench.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				winPacToolConfig.setLanguage(Translation._FRENCH);
+				guiConfig.setLanguage(Translation._FRENCH);
 				winCompressor.changeLanguage();
 				winCirculatorSrc.changeLanguage();
 			}
@@ -353,7 +353,7 @@ public class WinPacTool extends JFrame {
 		JRadioButtonMenuItem mRationItemEnglisch = new JRadioButtonMenuItem("English");
 		mRationItemEnglisch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				winPacToolConfig.setLanguage(Translation._ENGLICH);
+				guiConfig.setLanguage(Translation._ENGLICH);
 				winCompressor.changeLanguage();
 				winCirculatorSrc.changeLanguage();
 			}

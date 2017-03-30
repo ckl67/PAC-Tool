@@ -22,7 +22,7 @@ import org.json.simple.JSONObject;
 
 import translation.Translation;
 
-public class WinPacToolConfig {
+public class GuiConfig {
 
 	private int language;		
 	
@@ -34,7 +34,7 @@ public class WinPacToolConfig {
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
-	public WinPacToolConfig() {
+	public GuiConfig() {
 		language = Translation._ENGLICH;
 		
 		unitCompBTU = true;

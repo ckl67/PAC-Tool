@@ -39,7 +39,7 @@ public class Circulator {
 	ArrayList<Integer> powerL = new ArrayList<Integer>();
 
 	private int idFeature;	
-	
+
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
@@ -49,7 +49,7 @@ public class Circulator {
 		this.voltage = 220;
 
 		this.idFeature = 0;
-		
+
 		//setNbListFeatures(3);
 		this.rotatePerMinutesL.add(1620);
 		this.powerL.add(190);
@@ -63,7 +63,7 @@ public class Circulator {
 		this.powerL.add(236);
 		this.currentL.add(1.0);		
 	}
-	
+
 	public Circulator (	String vname, double vvoltage) {
 		logger.trace("Circulator({},{}) --> New Circulator with features all set to 0 ", vname, vvoltage);
 		this.name = vname;
@@ -105,26 +105,29 @@ public class Circulator {
 
 	/**
 	 * Modify Circulator features at position id
-	 * @param position
 	 * @param vcurrent
 	 * @param vrotatePerMinutes
 	 * @param vpower
 	 */
-	public void modifyFeatures(int position, double vcurrent, int vrotatePerMinutes, int vpower ) {
-		logger.trace("modifyFeatures(position={},vcurrent={},vrotatePerMinutes={},vpower={})",position,vcurrent,vrotatePerMinutes,vpower);
-		rotatePerMinutesL.remove(position);
-		powerL.remove(position);
-		currentL.remove(position);
-		
-		rotatePerMinutesL.add(position,vrotatePerMinutes);
-		powerL.add(position,vpower);
-		currentL.add(position,vcurrent);
+	public void modifyActiveFeatures( double vcurrent, int vrotatePerMinutes, int vpower ) {
+		logger.trace("modifyFeatures(position={},vcurrent={},vrotatePerMinutes={},vpower={})",idFeature,vcurrent,vrotatePerMinutes,vpower);
+		rotatePerMinutesL.set(idFeature,vrotatePerMinutes);
+		powerL.set(idFeature,vpower);
+		currentL.set(idFeature,vcurrent);
 	}
 
+
+	public void clearActiveFeatures() {
+		rotatePerMinutesL.remove(idFeature);
+		powerL.remove(idFeature);
+		currentL.remove(idFeature);	
+	}
+
+
 	/**
-	 * Clear the Feature List
+	 * Clear the Feature List 
 	 */
-	public void clearFeatures() {
+	private void clearAllFeatures() {
 		rotatePerMinutesL.clear();
 		powerL.clear();
 		currentL.clear();
@@ -173,7 +176,7 @@ public class Circulator {
 		this.idFeature = ((Number)jsonObj.get("idFeature")).intValue();
 
 		// Clear all Features
-		clearFeatures();
+		clearAllFeatures();
 
 		// Fill all feature with jsonObj
 		JSONArray ObjFeatureL = (JSONArray) jsonObj.get("Features");
@@ -184,7 +187,7 @@ public class Circulator {
 			this.currentL.add( ((Number)jsonObjectL2.get("Current")).doubleValue());
 		}
 	}
-	
+
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
@@ -201,7 +204,7 @@ public class Circulator {
 		logger.trace("getNbFeaturesNb()--> Nb. of Features = {}",currentL.size());
 		return currentL.size();
 	}
-	
+
 	public void selectActiveFeature(int id) {
 		logger.trace("selectActiveFeature({}) --> Select Active feature {}",id, id);
 		idFeature = id;
@@ -227,16 +230,22 @@ public class Circulator {
 		return powerL.get(idFeature);
 	}
 
-	public Double getCurrent(int id) {
-		return currentL.get(id);
+	public void setActiveFeatureCurrent(double val) {
+		logger.trace("setActiveFeatureCurrent()--> id={} Current={}",idFeature,val);
+		currentL.set(idFeature, val);
+		logger.trace(" After                   --> id={} Current={}",idFeature,currentL.get(idFeature));
 	}
 
-	public int getRotatePerMinutes(int id) {
-		return rotatePerMinutesL.get(id);
+	public void setActiveFeatureRotatePerMinutes(int val) {
+		logger.trace("setActiveFeatureRotatePerMinutes()--> id={} Rotate per Minutes={}",idFeature,val);
+		rotatePerMinutesL.set(idFeature, val);
+		logger.trace(" After                            --> id={} Rotate per Minutes={}",idFeature,rotatePerMinutesL.get(idFeature));
 	}
 
-	public int getPower(int id) {
-		return powerL.get(id);
+	public void setActiveFeaturePower(int val ) {
+		logger.trace("setActiveFeaturePower()--> id={} Power={}",idFeature,val);
+		powerL.set(idFeature, val);
+		logger.trace(" After                 --> id={} Power={}",idFeature,powerL.get(idFeature));
 	}
 
 	public void setName(String name) {

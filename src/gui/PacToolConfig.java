@@ -49,11 +49,11 @@ public class PacToolConfig {
 	 * Save PAC-Tool overall configuration file
 	 * @param pacl
 	 * @param enthalpy
-	 * @param winPacToolConfig
+	 * @param guiConfig
 	 * @param fileName
 	 */
 	@SuppressWarnings("unchecked")
-	public static void saveConfigFile(Pac pac, Enthalpy enthalpy, WinPacToolConfig winPacToolConfig, String fileName) {
+	public static void saveConfigFile(Pac pac, Enthalpy enthalpy, GuiConfig guiConfig, String fileName) {
 
 		// Overall JSON object
 		JSONObject jsonObjPacTool = new JSONObject();
@@ -68,10 +68,10 @@ public class PacToolConfig {
 		jsonObjEnthalpy = enthalpy.getJsonObject();
 		jsonObjPacTool.put("Enthalpy",jsonObjEnthalpy);
 
-		// WinPacToolConfig
+		// GuiConfig
 		JSONObject jsonObjPrimeConfig = new JSONObject();
-		jsonObjPrimeConfig = winPacToolConfig.getJsonObject();
-		jsonObjPacTool.put("WinPacToolConfig",jsonObjPrimeConfig);
+		jsonObjPrimeConfig = guiConfig.getJsonObject();
+		jsonObjPacTool.put("GuiConfig",jsonObjPrimeConfig);
 
 		// Writing to a file  
 		try {  
@@ -126,10 +126,10 @@ public class PacToolConfig {
 	 * Read PAC-Tool overall configuration file
 	 * @param pacl
 	 * @param enthalpy
-	 * @param winPacToolConfig
+	 * @param guiConfig
 	 * @param fileName
 	 */
-	public static void readConfigFile(Pac pac, Enthalpy enthalpy, WinPacToolConfig winPacToolConfig, String fileName) {
+	public static void readConfigFile(Pac pac, Enthalpy enthalpy, GuiConfig guiConfig, String fileName) {
 		File file = new File (fileName);
 		Scanner sken = null;
 
@@ -157,9 +157,9 @@ public class PacToolConfig {
 			e.printStackTrace();  
 		}  
 
-		// WinPacToolConfig
-		JSONObject jsonObjPrimeConfig = (JSONObject) jsonObj.get("WinPacToolConfig") ;
-		winPacToolConfig.setJsonObject(jsonObjPrimeConfig);
+		// GuiConfig
+		JSONObject jsonObjPrimeConfig = (JSONObject) jsonObj.get("GuiConfig") ;
+		guiConfig.setJsonObject(jsonObjPrimeConfig);
 		//System.out.println(jsonObjPrimeConfig);
 				
 

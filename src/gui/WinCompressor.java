@@ -52,7 +52,7 @@ public class WinCompressor extends JFrame {
 	// 					INSTANCE VARIABLES
 	// -------------------------------------------------------
 	private Pac pac;
-	private WinPacToolConfig winPacToolConfig;
+	private GuiConfig guiConfig;
 
 	// Win Builder
 	private JTextField textFieldCompressorEvap;
@@ -94,7 +94,7 @@ public class WinCompressor extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {				
-					WinCompressor frame = new WinCompressor(new Pac(), new WinPacToolConfig() );
+					WinCompressor frame = new WinCompressor(new Pac(), new GuiConfig() );
 					frame.setVisible(true);
 
 				} catch (Exception e) {
@@ -110,11 +110,11 @@ public class WinCompressor extends JFrame {
 	/**
 	 * 
 	 * @param pac --> PAC
-	 * @param vwinPacToolConfig --> Whole configuration of PAC TOOL GUI
+	 * @param vguiConfig --> Whole configuration of PAC TOOL GUI
 	 */
-	public WinCompressor(Pac vpac, WinPacToolConfig vwinPacToolConfig) {
+	public WinCompressor(Pac vpac, GuiConfig vguiConfig) {
 		pac = vpac;
-		winPacToolConfig =vwinPacToolConfig;
+		guiConfig =vguiConfig;
 
 		initialize();
 	}
@@ -125,21 +125,22 @@ public class WinCompressor extends JFrame {
 
 	/**
 	 * Apply the WinPac GUI configuration to GUI Compressor.
-	 * @param winPacToolConfig
+	 * @param guiConfig
 	 */
-	public void applyConfig(WinPacToolConfig vwinPacToolConfig) {
+	public void applyConfig(GuiConfig vguiConfig) {
 
 		logger.info("applyConfig : NB Compressor={}", pac.getNbOfCompressorNb());
 		// Remove all Compressor items in ComboBox (except the first)
-		for(int i=1;i<comboBoxCompressor.getItemCount();i++) {
+		int tmpcnt = comboBoxCompressor.getItemCount();
+		for(int i=1;i<tmpcnt;i++) {
 			comboBoxCompressor.removeItemAt(1);
 		}
 
 		// Set the Compressor Check Box (Fahrenheit/Pound/BTU) before to affect the data to text field, 
 		// no actions will be performed by this settings 
-		checkoxFaren.setSelected(vwinPacToolConfig.getUnitCompFaren());
-		checkoxBTU.setSelected(vwinPacToolConfig.getUnitCompBTU()); 		
-		checkoxPound.setSelected(vwinPacToolConfig.getUnitCompPound()); 		
+		checkoxFaren.setSelected(vguiConfig.getUnitCompFaren());
+		checkoxBTU.setSelected(vguiConfig.getUnitCompBTU()); 		
+		checkoxPound.setSelected(vguiConfig.getUnitCompPound()); 		
 
 		// Fill Compressor ComboBox
 		for(int i=1;i<pac.getNbOfCompressorNb();i++) {
@@ -474,7 +475,7 @@ public class WinCompressor extends JFrame {
 		checkoxFaren.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if (checkoxFaren.isSelected()) {
-					winPacToolConfig.setUnitCompFaren(true);
+					guiConfig.setUnitCompFaren(true);
 					lblTemp_unity1.setText("°F");
 					lblTemp_unity2.setText("°F");
 					lblTemp_unity3.setText("°F");
@@ -498,7 +499,7 @@ public class WinCompressor extends JFrame {
 					tmp = Math.round(tcond - tliq);
 					textFieldCompressorSousRefroid.setText(String.valueOf(tmp));
 				} else {
-					winPacToolConfig.setUnitCompFaren(false);
+					guiConfig.setUnitCompFaren(false);
 					lblTemp_unity1.setText("°C");
 					lblTemp_unity2.setText("°C");
 					lblTemp_unity3.setText("°C");
@@ -701,7 +702,7 @@ public class WinCompressor extends JFrame {
 		checkoxBTU.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if (checkoxBTU.isSelected()) {
-					winPacToolConfig.setUnitCompBTU(true);
+					guiConfig.setUnitCompBTU(true);
 					lblCapacity_unity.setText("Btu/hr");
 					lblEER_unity.setText("BTU/(hr.W)");
 
@@ -713,7 +714,7 @@ public class WinCompressor extends JFrame {
 					textFieldCompressorDeltaH0.setText("-----");
 
 				} else {
-					winPacToolConfig.setUnitCompBTU(false);
+					guiConfig.setUnitCompBTU(false);
 					lblCapacity_unity.setText("Watt");
 					lblEER_unity.setText("");
 
@@ -743,7 +744,7 @@ public class WinCompressor extends JFrame {
 		checkoxPound.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (checkoxPound.isSelected()) {
-					winPacToolConfig.setUnitCompPound(true);
+					guiConfig.setUnitCompPound(true);
 					lblMassFlow_unity.setText("lbs/hr");
 
 					double vMassFlow = Misc.kg2pound(Double.valueOf(textFieldCompressorMassFlow.getText()));
@@ -752,7 +753,7 @@ public class WinCompressor extends JFrame {
 					textFieldCompressorDeltaH0.setText("-----");
 
 				} else {
-					winPacToolConfig.setUnitCompPound(false);
+					guiConfig.setUnitCompPound(false);
 					lblMassFlow_unity.setText("Kg/s");
 
 					double vCapacity = Double.valueOf( textFieldCompressorCapacity.getText());
@@ -936,6 +937,6 @@ public class WinCompressor extends JFrame {
 	}
 
 	void changeLanguage(){
-		lblEer.setText(Translation.EER.getLangue(winPacToolConfig.getLanguage()));
+		lblEer.setText(Translation.EER.getLangue(guiConfig.getLanguage()));
 	}
 }

@@ -60,7 +60,7 @@ public class PacToolVar {
 	private MeasureCollection measureCollection;
 	private List<ElDraw> eDrawL;
 
-	private WinPacToolConfig winPacToolConfig;
+	private GuiConfig guiConfig;
 	private WinCompressor winCompressor;
 	
 	private WinCirculatorDistr winCirculatorDistr;
@@ -143,7 +143,7 @@ public class PacToolVar {
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
-		winPacToolConfig = new WinPacToolConfig();		// GUI Configuration
+		guiConfig = new GuiConfig();		// GUI Configuration
 		lblLoading.setText("Loading...... GUI Configuration");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
@@ -175,13 +175,13 @@ public class PacToolVar {
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
-		winCompressor = new WinCompressor(pac, winPacToolConfig);
+		winCompressor = new WinCompressor(pac, guiConfig);
 		lblLoading.setText("Loading...... Win. Compressor");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
-		winCirculatorSrc = new WinCirculatorSrc(pac, winPacToolConfig);
-		winCirculatorDistr = new WinCirculatorDistr(pac,winPacToolConfig);
+		winCirculatorSrc = new WinCirculatorSrc(pac, guiConfig);
+		winCirculatorDistr = new WinCirculatorDistr(pac,guiConfig);
 		lblLoading.setText("Loading...... Win. Circulator");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
@@ -242,8 +242,8 @@ public class PacToolVar {
 		return enthalpy;
 	}
 
-	public WinPacToolConfig getWinPacToolConfig() {
-		return winPacToolConfig;
+	public GuiConfig getGuiConfig() {
+		return guiConfig;
 	}
 
 	public List<ElDraw> geteDrawL() {

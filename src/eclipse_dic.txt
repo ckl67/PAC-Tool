@@ -12,3 +12,4 @@ isotherm
 associable
 haprox
 hreal
+combobox
