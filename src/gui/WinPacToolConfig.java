@@ -20,8 +20,12 @@ package gui;
 
 import org.json.simple.JSONObject;
 
+import translation.Translation;
+
 public class WinPacToolConfig {
 
+	private int language;		
+	
 	private boolean unitCompBTU;		// checkoxBTU
 	private boolean unitCompPound;		// chckbxPound
 	private boolean unitCompFaren;		// checkoxFaren
@@ -31,6 +35,8 @@ public class WinPacToolConfig {
 	// -------------------------------------------------------
 
 	public WinPacToolConfig() {
+		language = Translation._ENGLICH;
+		
 		unitCompBTU = true;
 		unitCompPound = true;
 		unitCompFaren = true;
@@ -56,6 +62,7 @@ public class WinPacToolConfig {
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
 		JSONObject jsonObj = new JSONObject();  
+		jsonObj.put("language", this.language);	
 		jsonObj.put("unitCompBTU", this.unitCompBTU);	
 		jsonObj.put("unitCompPound", this.unitCompPound);
 		jsonObj.put("unitCompFaren", this.unitCompFaren);
@@ -68,6 +75,7 @@ public class WinPacToolConfig {
 	 * @param jsonObj : JSON Object
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
+		this.language = ((Number) jsonObj.get("language")).intValue();
 		this.unitCompBTU = (boolean) jsonObj.get("unitCompBTU");
 		this.unitCompPound = (boolean) jsonObj.get("unitCompPound");
 		this.unitCompFaren = (boolean) jsonObj.get("unitCompFaren");
@@ -113,6 +121,14 @@ public class WinPacToolConfig {
 
 	public void setUnitCompFaren(boolean unitCompFaren) {
 		this.unitCompFaren = unitCompFaren;
+	}
+
+	public int getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(int language) {
+		this.language = language;
 	}
 
 

@@ -42,6 +42,7 @@ import javax.swing.JButton;
 import computation.Misc;
 import pac.Compressor;
 import pac.Pac;
+import translation.Translation;
 
 public class WinCompressor extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -131,7 +132,7 @@ public class WinCompressor extends JFrame {
 		logger.info("applyConfig : NB Compressor={}", pac.getNbOfCompressorNb());
 		// Remove all Compressor items in ComboBox (except the first)
 		for(int i=1;i<comboBoxCompressor.getItemCount();i++) {
-			comboBoxCompressor.removeItemAt(i);
+			comboBoxCompressor.removeItemAt(1);
 		}
 
 		// Set the Compressor Check Box (Fahrenheit/Pound/BTU) before to affect the data to text field, 
@@ -146,7 +147,7 @@ public class WinCompressor extends JFrame {
 		}
 		comboBoxCompressor.setSelectedIndex(0);
 		pac.selectCurrentCompressor(0);
-		fillCompressorTexField(pac.getCurrentCompressor());
+		fillCompressorTextField(pac.getCurrentCompressor());
 
 	}
 
@@ -159,9 +160,9 @@ public class WinCompressor extends JFrame {
 	 * without data in the textfield !!
 	 * 
 	 */
-	private void fillCompressorTexField(Compressor compressor) {
+	private void fillCompressorTextField(Compressor compressor) {
 
-		logger.info("(fillCompressorTexField) Compressor Name {}",compressor.getName());
+		logger.info("(fillCompressorTextField) Compressor Name {}",compressor.getName());
 		boolean weclickf = false;
 		boolean weclickb = false;
 		boolean weclickp = false;
@@ -862,7 +863,7 @@ public class WinCompressor extends JFrame {
 		comboBoxCompressor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int ComboId = comboBoxCompressor.getSelectedIndex();
-				fillCompressorTexField(pac.getCompressorNb(ComboId));
+				fillCompressorTextField(pac.getCompressorNb(ComboId));
 				pac.selectCurrentCompressor(ComboId);
 			}
 		});
@@ -934,4 +935,7 @@ public class WinCompressor extends JFrame {
 
 	}
 
+	void changeLanguage(){
+		lblEer.setText(Translation.EER.getLangue(winPacToolConfig.getLanguage()));
+	}
 }

@@ -41,7 +41,7 @@ public class WinCirculatorDistr extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					WinCirculatorDistr frame = new WinCirculatorDistr(new Pac());
+					WinCirculatorDistr frame = new WinCirculatorDistr(new Pac(),new WinPacToolConfig());
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -53,7 +53,7 @@ public class WinCirculatorDistr extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public WinCirculatorDistr(Pac pac) {
+	public WinCirculatorDistr(Pac pac,WinPacToolConfig vwinPacToolConfig) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(WinCirculatorDistr.class.getResource("/gui/images/PAC-Tool_16.png")));
 		setTitle("Circulateur Distribution");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

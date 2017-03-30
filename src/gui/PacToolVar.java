@@ -180,8 +180,8 @@ public class PacToolVar {
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
-		winCirculatorDistr = new WinCirculatorDistr(pac);
-		winCirculatorSrc = new WinCirculatorSrc(pac);
+		winCirculatorSrc = new WinCirculatorSrc(pac, winPacToolConfig);
+		winCirculatorDistr = new WinCirculatorDistr(pac,winPacToolConfig);
 		lblLoading.setText("Loading...... Win. Circulator");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);

@@ -35,7 +35,6 @@ import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
-import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
 import java.awt.Toolkit;
@@ -44,11 +43,9 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import computation.MeasureCollection;
-import computation.MeasureTable;
-import computation.ResultTable;
 import enthalpy.Enthalpy;
 import pac.Pac;
+import translation.Translation;
 
 
 
@@ -73,13 +70,8 @@ public class WinPacTool extends JFrame {
 	private WinConfEnthalpy winConfEnthalpy;
 	private WinPressTemp winPressTemp;
 
-	private MeasureTable measureTable;
 	private WinMeasureTable winMeasureTable;
-	private ResultTable resultTable;
 	private WinResultTable winResultTable;
-
-	private MeasureCollection measureCollection;
-	private List<ElDraw> eDrawL;
 
 	private WinAbout winAbout;
 	private WinDefinition winDefinition;
@@ -99,16 +91,12 @@ public class WinPacTool extends JFrame {
 		
 		pac = vpacToolVar.getPac();
 		enthalpy = vpacToolVar.getEnthalpy();
-		measureCollection = vpacToolVar.getMeasureCollection();
-		eDrawL = vpacToolVar.geteDrawL();
 		winPacToolConfig = vpacToolVar.getWinPacToolConfig();
 		winCompressor = vpacToolVar.getWinCompressor();
 		winCirculatorDistr =  vpacToolVar.getWinCirculatorDistr();
 		winCirculatorSrc = vpacToolVar.getWinCirculatorSrc();
 		winEnthalpy = vpacToolVar.getWinEnthalpy();
 		winConfEnthalpy  = vpacToolVar.getWinConfEnthalpy();
-		measureTable = vpacToolVar.getMeasureTable();
-		resultTable = vpacToolVar.getResultTable();
 		winMeasureTable = vpacToolVar.getWinMeasureTable();
 		winResultTable = vpacToolVar.getWinResultTable();
 		winAbout = vpacToolVar.getWinAbout();
@@ -353,8 +341,9 @@ public class WinPacTool extends JFrame {
 		JRadioButtonMenuItem mRationItemFrench = new JRadioButtonMenuItem("Francais");
 		mRationItemFrench.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//String vlang = "fr";
-
+				winPacToolConfig.setLanguage(Translation._FRENCH);
+				winCompressor.changeLanguage();
+				winCirculatorSrc.changeLanguage();
 			}
 		});
 		buttonGroup.add(mRationItemFrench);
@@ -364,7 +353,9 @@ public class WinPacTool extends JFrame {
 		JRadioButtonMenuItem mRationItemEnglisch = new JRadioButtonMenuItem("English");
 		mRationItemEnglisch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//String vlang = "eng";
+				winPacToolConfig.setLanguage(Translation._ENGLICH);
+				winCompressor.changeLanguage();
+				winCirculatorSrc.changeLanguage();
 			}
 		});
 		mRationItemEnglisch.setSelected(true);

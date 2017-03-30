@@ -14,7 +14,7 @@ public class JunitPacTool {
 		JunitEnthalpyBkgdImg jtEnthalpyBkgdImg = new JunitEnthalpyBkgdImg();
 		JUnitMeasurePoint jtMeasurePoint = new JUnitMeasurePoint();
 		JUnitMisc jtMisc = new JUnitMisc();
-		JUnitThesaurus jtThesaurus = new JUnitThesaurus();
+		JUnitTranslation jtThesaurus = new JUnitTranslation();
 		
 		jtPac.test();
 		jtCOP.test();

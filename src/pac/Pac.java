@@ -383,7 +383,7 @@ public class Pac {
 	// -------------------------------------------------------
 
 	/**
-	 * 
+	 * selectCurrentCompressor
 	 * @param i
 	 */
 	public void selectCurrentCompressor(int i) {
@@ -392,7 +392,7 @@ public class Pac {
 	}
 
 	/**
-	 * 
+	 * getCurrentCompressor
 	 * @return Compressor
 	 */
 	// id[0] = 2 <==> id[PacItem.COMP.pos()] = 2;
@@ -402,7 +402,7 @@ public class Pac {
 	}
 
 	/**
-	 * 
+	 * getCompressorNb
 	 * @return Compressor
 	 */
 	//id[0] = 2 <==> id[PacItem.COMP.pos()] = 2;
@@ -411,19 +411,93 @@ public class Pac {
 		return compressorL.get(nb);
 	}
 
+	/**
+	 * getNbOfCompressorNb
+	 * @return
+	 */
 	public int getNbOfCompressorNb() {
 		return compressorL.size();
 	}
 
+	/**
+	 * addNewCompressor
+	 * @param position
+	 */
 	public void addNewCompressor(int position) {
+		logger.trace("Add New Compressor at position {} of a Total of {}",position,compressorL.size());
 		compressorL.add(position, new Compressor());	
 	}
 
+	/**
+	 * removeCompressor
+	 * @param position
+	 */
 	public void removeCompressor(int position) {
+		logger.trace("Remove Compressor at position = {} of a Total of {}",position,compressorL.size());
 		compressorL.remove(position);	
 	}
 
 	// -------------------------------------------------------
+		
+	/**
+	 * selectCurrentCirculatorSrc
+	 * @param i
+	 */
+	public void selectCurrentCirculatorSrc(int i) {
+		id[PacItem.CRCLS.ordinal()] = i;
+		logger.info("Select Current CirculatorSrc N°{}",id[PacItem.CRCLS.ordinal()]);
+	}
+
+	
+	/**
+	 * getCurrentCirculatorSrc
+	 * @return CirculatorSrc
+	 */
+	// id[0] = 2 <==> id[PacItem.CRCLS.pos()] = 2;
+	public Circulator getCurrentCirculatorSrc() {
+		logger.info("Get Current CirculatorSrc N°{}",id[PacItem.CRCLS.ordinal()]);
+		return circulatorSrcL.get(id[PacItem.CRCLS.ordinal()]);
+	}
+	
+	/**
+	 * getCirculatorSrcNb
+	 * @return CirculatorSrc
+	 */
+	//id[0] = 2 <==> id[PacItem.COMP.pos()] = 2;
+	public Circulator getCirculatorSrcNb(int nb) {
+		logger.info("Get CirculatorSrc N°{}",nb);
+		return circulatorSrcL.get(nb);
+	}
+	
+	/**
+	 * getNbOfCirculatorSrcNb
+	 * @return
+	 */
+	public int getNbOfCirculatorSrcNb() {
+		return circulatorSrcL.size();
+	}
+
+	/**
+	 * addNewCirculatorSrc
+	 * @param position
+	 */
+	public void addNewCirculatorSrc(int position) {
+		logger.trace("Add New CirculatorSrc at position {} of a Total of {}",position,circulatorSrcL.size());
+		circulatorSrcL.add(position, new Circulator("New",220));	
+	}
+
+	/**
+	 * removeCirculatorSrc
+	 * @param position
+	 */
+	public void removeCirculatorSrc(int position) {
+		logger.trace("Remove CirculatorSrc position ={} of a Total of {}",position,circulatorSrcL.size());
+		circulatorSrcL.remove(position);	
+	}
+	
+
+	// -------------------------------------------------------
+
 
 	public void selectCurrentCondenser(int i) {
 		id[PacItem.COND.ordinal()] = i;
@@ -450,10 +524,6 @@ public class Pac {
 		logger.info("Choice Fluid Refrigerant N°{}",i);
 	}
 
-	public void selectCurrenteCirculatorSrc(int i) {
-		id[PacItem.CRCLS.ordinal()] = i;
-		logger.info("Choice Circulator Source N°{}",i);
-	}
 
 	public void selectCurrenteCircuitSrc(int i) {
 		id[PacItem.CIRTS.ordinal()] = i;
@@ -511,9 +581,6 @@ public class Pac {
 		return fluidRefriL.get(id[PacItem.FLFRG.ordinal()]);
 	}
 
-	public Circulator getCurrentCirculatorSrc() {
-		return circulatorSrcL.get(id[PacItem.CRCLS.ordinal()]);
-	}
 
 	public HeatSrcDistrCircuit getCurrentCircuitSrc() {
 		return circuitSrcL.get(id[PacItem.CIRTS.ordinal()]);
