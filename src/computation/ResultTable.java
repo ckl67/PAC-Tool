@@ -111,7 +111,12 @@ public class ResultTable extends JTable {
 			defaultTableModel.addRow( new Object[] {p.getDisplayTxt(),p.getDefinition(guiConfig.getLanguage()),"0.00",p.getUnity()});				
 		}
 		setModel(defaultTableModel);
-
 	}
 
+	public void changeLanguage(){
+		for (ResultObject p : ResultObject.values()) {
+			int n = p.ordinal(); 		// p = T1,T2,... n = 0 , 1, 
+			setValueAt(p.getDefinition(guiConfig.getLanguage()), n, 1);
+		}
+	}
 }

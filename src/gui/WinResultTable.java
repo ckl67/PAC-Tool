@@ -143,5 +143,7 @@ public class WinResultTable extends JFrame {
 		}
 	}
 
-
+	public ResultTable getTable() {
+		return table;
+	}
 }

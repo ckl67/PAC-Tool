@@ -143,5 +143,8 @@ public class WinMeasureTable extends JFrame {
 		}
 	}
 
-
+	public MeasureTable getTable() {
+		return table;
+	}
+	
 }

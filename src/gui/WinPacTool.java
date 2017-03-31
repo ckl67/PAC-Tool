@@ -345,6 +345,8 @@ public class WinPacTool extends JFrame {
 				winCompressor.changeLanguage();
 				winCirculatorSrc.changeLanguage();
 				winCirculatorDistr.changeLanguage();
+				winMeasureTable.getTable().changeLanguage();
+				winResultTable.getTable().changeLanguage();
 			}
 		});
 		buttonGroup.add(mRationItemFrench);
@@ -358,6 +360,8 @@ public class WinPacTool extends JFrame {
 				winCompressor.changeLanguage();
 				winCirculatorSrc.changeLanguage();
 				winCirculatorDistr.changeLanguage();
+				winMeasureTable.getTable().changeLanguage();
+				winResultTable.getTable().changeLanguage();
 			}
 		});
 		mRationItemEnglisch.setSelected(true);

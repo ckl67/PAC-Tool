@@ -85,4 +85,10 @@ public class MeasureTable extends JTable {
 
 	}
 	
+	public void changeLanguage(){
+		for (MeasureObject p : MeasureObject.values()) {
+			int n = p.ordinal(); 		// p = T1,T2,... n = 0 , 1, 
+			setValueAt(p.getDefinition(guiConfig.getLanguage()), n, 1);
+		}
+	}
 }
