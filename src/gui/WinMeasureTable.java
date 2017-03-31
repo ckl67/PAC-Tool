@@ -24,7 +24,7 @@ import java.awt.Toolkit;
 import javax.swing.table.TableColumn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import computation.MeasureCollection;
+import computation.MeasurePoint;
 import computation.MeasureTable;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
@@ -34,6 +34,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.awt.event.ActionListener;
 import java.awt.print.PrinterException;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 
@@ -56,7 +57,7 @@ public class WinMeasureTable extends JFrame {
 			public void run() {
 				try {
 					WinMeasureTable window = new WinMeasureTable(
-							new MeasureTable(new MeasureCollection(), new GuiConfig()));
+							new MeasureTable(new ArrayList<MeasurePoint>(), new GuiConfig()));
 					window.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

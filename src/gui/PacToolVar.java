@@ -30,7 +30,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import computation.MeasureCollection;
+import computation.MeasureObject;
+import computation.MeasurePoint;
 import computation.MeasureTable;
 import computation.ResultTable;
 import enthalpy.Enthalpy;
@@ -55,7 +56,7 @@ public class PacToolVar {
 	private Pac pac;
 	private Enthalpy enthalpy;
 
-	private MeasureCollection measureCollection;
+	private List<MeasurePoint> measurePointL;
 	private List<ElDraw> eDrawL;
 
 	private GuiConfig guiConfig;
@@ -147,17 +148,25 @@ public class PacToolVar {
 		progressBar.setValue(percent);
 
 		eDrawL = new ArrayList<ElDraw>();				// Draw Elements
-		lblLoading.setText("Loading...... Draw Elements");
+		lblLoading.setText("Loading...... Draw Elements List");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
-		measureCollection = new MeasureCollection();	// Measure Collection
-		measureTable = new MeasureTable(measureCollection,guiConfig);
+		
+		measurePointL = new ArrayList<MeasurePoint>(); 
+		for (MeasureObject p : MeasureObject.values())
+			measurePointL.add(new MeasurePoint(p));
+		lblLoading.setText("Loading...... Measure Point Elements List");
+		percent = 100*i++/iterations;
+		progressBar.setValue(percent);
+
+		
+		measureTable = new MeasureTable(measurePointL,guiConfig);
 		lblLoading.setText("Loading...... Measure Collections");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
-		resultTable = new ResultTable(measureCollection,guiConfig);
+		resultTable = new ResultTable(measurePointL,guiConfig);
 		lblLoading.setText("Loading...... Result Table");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
@@ -180,7 +189,7 @@ public class PacToolVar {
 		progressBar.setValue(percent);
 		
 		
-		winEnthalpy = new WinEnthalpy(pac, enthalpy, measureTable, resultTable, eDrawL,winPressTemp);
+		winEnthalpy = new WinEnthalpy(pac, enthalpy, measureTable, resultTable, measurePointL, eDrawL,winPressTemp);
 		lblLoading.setText("Loading...... Win. Enthalpy");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
@@ -243,10 +252,10 @@ public class PacToolVar {
 		return eDrawL;
 	}
 
-	public MeasureCollection getMeasureCollection() {
-		return measureCollection;
+	public List<MeasurePoint> getMeasurePointL() {
+		return measurePointL;
 	}
-
+	
 	public WinCompressor getWinCompressor() {
 		return winCompressor;
 	}

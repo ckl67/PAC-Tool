@@ -32,15 +32,15 @@ public class MeasureTable extends JTable {
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LogManager.getLogger(WinMeasureTable.class.getName());
 
-	private MeasureCollection measureCollection;
+	private List<MeasurePoint> measurePointL;
 	private GuiConfig guiConfig;
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
-	public MeasureTable(MeasureCollection vmeasureCollection, GuiConfig vguiConfig) {
-		measureCollection = vmeasureCollection;
+	public MeasureTable(List<MeasurePoint> vmeasurePointL , GuiConfig vguiConfig) {
+		measurePointL = vmeasurePointL;
 		guiConfig = vguiConfig;
 		intiTable();
 
@@ -53,8 +53,7 @@ public class MeasureTable extends JTable {
 
 		for (MeasureObject p : MeasureObject.values()) {
 			int n = p.ordinal(); 		// p = T1,T2,... n = 0 , 1, 
-			List<MeasurePoint> measureL = measureCollection.getMeasurePL();
-			MeasurePoint m = measureL.get(n);  
+			MeasurePoint m = measurePointL.get(n);  
 
 			setValueAt( Math.round(m.getMT()*100.0)/100.0, n, 2);
 			setValueAt( Math.round(m.getMP()*100.0)/100.0, n, 3);
@@ -84,10 +83,6 @@ public class MeasureTable extends JTable {
 		}
 		setModel(defaultTableModel);
 
-	}
-
-	public MeasureCollection getMeasureCollection() {
-		return measureCollection;
 	}
 	
 }

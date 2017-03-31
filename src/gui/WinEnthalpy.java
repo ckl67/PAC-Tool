@@ -54,7 +54,7 @@ import org.apache.logging.log4j.Logger;
 import computation.MeasurePoint;
 import computation.MeasureTable;
 import computation.ResultTable;
-import computation.MeasureCollection;
+import computation.Comp;
 import computation.MeasureObject;
 import enthalpy.Enthalpy;
 import log4j.Log4j2Config;
@@ -74,10 +74,10 @@ public class WinEnthalpy extends JFrame {
 	 * 		INSTANCE VAR
 	 * ----------------------------------------*/
 	private Enthalpy enthalpy;		
+	private List<MeasurePoint> measurePointL;
 	private List<ElDraw> eDrawL;	
 	private MeasureTable measureTable;
 	private ResultTable resultTable;
-	private MeasureCollection measureCollection;
 	private Pac pac;
 	private WinPressTemp winPressTemp;
 
@@ -97,7 +97,6 @@ public class WinEnthalpy extends JFrame {
 	private static Point pointJPopupMenu; 	// JPopupMenu's Position --> Must be static
 	
 	private int ElDrawIdToMoveOnP;
-	private List<MeasurePoint> measurePL;
 	
 	// -------------------------------------------------------
 	// 				TEST THE APPLICATION STANDALONE 
@@ -113,12 +112,12 @@ public class WinEnthalpy extends JFrame {
 			public void run() {
 				try {
 					Enthalpy enthalpy1= new Enthalpy();
-					MeasureCollection measureCollection1 = new MeasureCollection();
 					WinEnthalpy frame1 = new WinEnthalpy(
 							new Pac(), 
 							enthalpy1, 
-							new MeasureTable(measureCollection1, new GuiConfig()), 
-							new ResultTable(measureCollection1, new GuiConfig()),
+							new MeasureTable(new ArrayList<MeasurePoint>(), new GuiConfig()), 
+							new ResultTable(new ArrayList<MeasurePoint>(), new GuiConfig()),
+							new ArrayList<MeasurePoint>(),
 							new ArrayList<ElDraw>(), 
 							new WinPressTemp(enthalpy1));
 					frame1.setVisible(true);
@@ -133,16 +132,15 @@ public class WinEnthalpy extends JFrame {
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public WinEnthalpy(Pac vpac, Enthalpy venthalpy, MeasureTable vmeasureTable, ResultTable vresultTable, List<ElDraw> veDrawL, WinPressTemp vwinPressTemp) {
+	public WinEnthalpy(Pac vpac, Enthalpy venthalpy, MeasureTable vmeasureTable, ResultTable vresultTable, List<MeasurePoint> vmeasurePointL, List<ElDraw> veDrawL, WinPressTemp vwinPressTemp) {
 		pac = vpac;
 		enthalpy = venthalpy;
 		measureTable = vmeasureTable;
 		resultTable = vresultTable;
-		measureCollection = vmeasureTable.getMeasureCollection();
+		measurePointL = vmeasurePointL;
 		eDrawL = veDrawL;
 		winPressTemp = vwinPressTemp;
 		
-		measurePL = measureCollection.getMeasurePL();
 		pointJPopupMenu = new Point();
 		
 		ElDrawIdToMoveOnP = -1;
@@ -155,8 +153,8 @@ public class WinEnthalpy extends JFrame {
 	// -------------------------------------------------------
 
 	public void updateAllTextField() {
-		textPHP.setText(String.format("%.2f",measurePL.get(MeasureObject._PK_VAPOR_ID).getValue()));
-		textPBP.setText(String.format("%.2f",measurePL.get(MeasureObject._BP_ID).getValue()));
+		textPHP.setText(String.format("%.2f",measurePointL.get(MeasureObject._PK_VAPOR_ID).getValue()));
+		textPBP.setText(String.format("%.2f",measurePointL.get(MeasureObject._BP_ID).getValue()));
 		
 	}
 
@@ -309,11 +307,11 @@ public class WinEnthalpy extends JFrame {
 						if (p.name() == name) {
 							int n = p.ordinal();  
 							//System.out.println(n);
-							//System.out.println(measureCollection.getMeasurePL().get(n).getMH());
-							measureCollection.getMeasurePL().get(n).setMH(hResult);
+							//System.out.println(measureCollection.getmeasurePointL().get(n).getMH());
+							measurePointL.get(n).setMH(hResult);
 							measureTable.setAllTableValues();
 							resultTable.setAllTableValues();
-							//System.out.println(measureCollection.getMeasurePL().get(n).getMHreal());
+							//System.out.println(measureCollection.getmeasurePointL().get(n).getMHreal());
 						}
 							
 					}
@@ -399,19 +397,19 @@ public class WinEnthalpy extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				double PK = Double.parseDouble(textPHP.getText());
 
-				measurePL.get(MeasureObject._PK_VAPOR_ID).setValue(PK);
-				measurePL.get(MeasureObject._PK_LIQUID_ID).setValue(PK);
-				textPHP.setText(String.format("%.2f",measurePL.get(MeasureObject._PK_VAPOR_ID).getValue()));
+				measurePointL.get(MeasureObject._PK_VAPOR_ID).setValue(PK);
+				measurePointL.get(MeasureObject._PK_LIQUID_ID).setValue(PK);
+				textPHP.setText(String.format("%.2f",measurePointL.get(MeasureObject._PK_VAPOR_ID).getValue()));
 
 				
-				MeasureCollection.updateAllMeasurePoints(measureCollection,enthalpy,pac);
+				Comp.updateAllMeasurePoints(measurePointL,enthalpy,pac);
 				eDrawL.clear();
-				eDrawL = ElDraw.createElDrawFrom(measureCollection,eDrawL);
+				eDrawL = ElDraw.createElDrawFrom(measurePointL,eDrawL);
 
 			}
 		});
 		textPHP.setHorizontalAlignment(SwingConstants.RIGHT);
-		textPHP.setText(String.format("%.2f",measurePL.get(MeasureObject._PK_VAPOR_ID).getValue()));
+		textPHP.setText(String.format("%.2f",measurePointL.get(MeasureObject._PK_VAPOR_ID).getValue()));
 		panelHight_Hight.add(textPHP);
 		textPHP.setColumns(10);
 
@@ -424,16 +422,16 @@ public class WinEnthalpy extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				double P0 = Double.parseDouble(textPBP.getText());
 				
-				measurePL.get(MeasureObject._BP_ID).setValue(P0);
-				textPBP.setText(String.format("%.2f",measurePL.get(MeasureObject._BP_ID).getValue()));
+				measurePointL.get(MeasureObject._BP_ID).setValue(P0);
+				textPBP.setText(String.format("%.2f",measurePointL.get(MeasureObject._BP_ID).getValue()));
 
-				MeasureCollection.updateAllMeasurePoints(measureCollection,enthalpy,pac);
+				Comp.updateAllMeasurePoints(measurePointL,enthalpy,pac);
 				eDrawL.clear();
-				eDrawL = ElDraw.createElDrawFrom(measureCollection,eDrawL);
+				eDrawL = ElDraw.createElDrawFrom(measurePointL,eDrawL);
 			}
 		});
 		textPBP.setHorizontalAlignment(SwingConstants.RIGHT);
-		textPBP.setText(String.format("%.2f",measurePL.get(MeasureObject._BP_ID).getValue()));
+		textPBP.setText(String.format("%.2f",measurePointL.get(MeasureObject._BP_ID).getValue()));
 		panelHight_Hight.add(textPBP);
 		textPBP.setColumns(10);
 

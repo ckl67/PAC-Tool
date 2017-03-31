@@ -25,7 +25,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import computation.MeasureChoiceStatus;
-import computation.MeasureCollection;
 import computation.MeasureObject;
 import computation.MeasurePoint;
 
@@ -130,13 +129,12 @@ public class ElDraw {
 	// 							METHOD
 	// -------------------------------------------------------
 
-	public static List<ElDraw> createElDrawFrom(MeasureCollection measureCollection, List<ElDraw> eDrawL) {
+	public static List<ElDraw> createElDrawFrom(List<MeasurePoint> measurePointL, List<ElDraw> eDrawL) {
 		boolean onshot = true;
 
 		for (MeasureObject p : MeasureObject.values()) {
 			int n = p.ordinal(); 		// p = T1,T2,... n = 0 , 1, 
-			List<MeasurePoint> measureL = measureCollection.getMeasurePL();
-			MeasurePoint m = measureL.get(n);  
+			MeasurePoint m = measurePointL.get(n);  
 
 			// ----------------------------------
 			// Will now create the Draw Element: 

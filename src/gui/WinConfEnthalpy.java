@@ -27,17 +27,15 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.basic.BasicArrowButton;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import computation.MeasureCollection;
+import computation.MeasurePoint;
 import computation.MeasureTable;
 import computation.ResultTable;
 import enthalpy.Enthalpy;
 import enthalpy.EnthalpyBkgdImg;
 import pac.Pac;
-
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
@@ -84,13 +82,13 @@ public class WinConfEnthalpy extends JFrame {
 			public void run() {
 				try {		
 					Enthalpy enthalpy1= new Enthalpy();
-					MeasureCollection measureCollection1 = new MeasureCollection();
 					WinEnthalpy vwinEnthalpy1 = new WinEnthalpy(
 							new Pac(), 
 							enthalpy1, 
-							new MeasureTable(measureCollection1, new GuiConfig()),
-							new ResultTable(measureCollection1, new GuiConfig()),
-							new ArrayList<ElDraw>(),
+							new MeasureTable(new ArrayList<MeasurePoint>(), new GuiConfig()), 
+							new ResultTable(new ArrayList<MeasurePoint>(), new GuiConfig()),
+							new ArrayList<MeasurePoint>(),
+							new ArrayList<ElDraw>(), 
 							new WinPressTemp(enthalpy1));
 					WinConfEnthalpy frame = new WinConfEnthalpy(vwinEnthalpy1);
 					frame.setVisible(true);

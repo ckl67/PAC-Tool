@@ -36,10 +36,8 @@ import java.io.IOException;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
-
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -48,9 +46,9 @@ import org.apache.logging.log4j.Logger;
 import computation.MeasurePoint;
 import computation.MeasureTable;
 import computation.ResultTable;
+import computation.Comp;
 import computation.MeasureChoiceStatus;
 import computation.MeasureObject;
-import computation.MeasureCollection;
 import enthalpy.Enthalpy;
 import pac.Pac;
 
@@ -71,7 +69,7 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 	 * 		INSTANCE VAR
 	 * ----------------------------------------*/
 
-	private MeasureCollection measureCollection;
+	private List<MeasurePoint> measurePointL;
 	private List<ElDraw> eDrawL;
 	private Enthalpy enthalpy;
 	private Pac pac;
@@ -89,7 +87,6 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 	//	LOCAL VARIABLES
 	// -------------------------------------------------------
 	private String imgURL;
-	private List<MeasurePoint> measurePL;
 
 	private BufferedImage img;
 	private JTextField textField;
@@ -126,10 +123,9 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 	// -------------------------------------------------------
 	/**
 	 * Create the application.
-	 * @param measurePL 
 	 */
 	public PanelMeasurePoints(PacToolVar vpacToolVar) {
-		measureCollection = vpacToolVar.getMeasureCollection();
+		measurePointL = vpacToolVar.getMeasurePointL();
 		eDrawL = vpacToolVar.geteDrawL();
 		enthalpy = vpacToolVar.getEnthalpy();
 		pac = vpacToolVar.getPac();
@@ -141,7 +137,6 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 		guiConfig = vpacToolVar.getGuiConfig();
 
 		imgURL = "/gui/images/Cycle.png";
-		measurePL = measureCollection.getMeasurePL();
 
 		pointMatched = false;
 		pointMatched_id = -1;
@@ -174,7 +169,7 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 
 
 	/**
-	 * Will return the nearest element id of measurePL 
+	 * Will return the nearest element id of measurePointL 
 	 * @param pX
 	 * @param pY
 	 * @return
@@ -184,9 +179,9 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 		int zoneX = 5;
 		int zoneY = 5;
 
-		for(int i=0;i<measurePL.size();i++) {
-			int X = measurePL.get(i).getMeasureObject().getXm();
-			int Y = measurePL.get(i).getMeasureObject().getYm(); 		
+		for(int i=0;i<measurePointL.size();i++) {
+			int X = measurePointL.get(i).getMeasureObject().getXm();
+			int Y = measurePointL.get(i).getMeasureObject().getYm(); 		
 			if ( ( pX < (X+zoneX)) && ( pX > (X-zoneX)) && (pY < (Y+zoneY)) && ( pY > (Y-zoneY)) ) {
 				id = i;
 			}
@@ -195,14 +190,14 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 	}
 
 	/**
-	 * Will return the element id of measurePL for a name 
+	 * Will return the element id of measurePointL for a name 
 	 * @param name
 	 * @return
 	 */
 	public int getIdForElem(String name) {
 		int id=-1;
-		for(int i=0;i<measurePL.size();i++) {
-			if  (measurePL.get(i).getMeasureObject().equals(name))
+		for(int i=0;i<measurePointL.size();i++) {
+			if  (measurePointL.get(i).getMeasureObject().equals(name))
 				id=i;
 		}
 		return id;	
@@ -238,8 +233,8 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 		btnReset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				logger.trace("Reset to Zero the measure points List");
-				for (int n = 0; n < measurePL.size(); n++ ) {
-					measurePL.get(n).clearMeasure();
+				for (int n = 0; n < measurePointL.size(); n++ ) {
+					measurePointL.get(n).clearMeasure();
 				}
 				logger.trace("Remove all Draw elements (eDrawL) (Clear the display)");
 				eDrawL.clear();
@@ -263,20 +258,20 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 
 				// HP1 = HP2 = PK_GAS = PK_LIQUID
 				if (id == MeasureObject._PK_VAPOR_ID)
-					measurePL.get(MeasureObject._PK_LIQUID_ID).setValue(inValue);
+					measurePointL.get(MeasureObject._PK_LIQUID_ID).setValue(inValue);
 				if (id == MeasureObject._PK_LIQUID_ID)
-					measurePL.get(MeasureObject._PK_VAPOR_ID).setValue(inValue);
+					measurePointL.get(MeasureObject._PK_VAPOR_ID).setValue(inValue);
 
-				// Affect Value to measurePL
-				measurePL.get(id).setValue(inValue);
+				// Affect Value to measurePointL
+				measurePointL.get(id).setValue(inValue);
 				// Indicate that the value has been chosen, 
 				// but there are some conditions to respect before 
 				// that the point can be validated 
-				measurePL.get(id).setMeasureChoiceStatus(MeasureChoiceStatus.Chosen);
+				measurePointL.get(id).setMeasureChoiceStatus(MeasureChoiceStatus.Chosen);
 
 				logger.trace("New values added {}",String.format("%.2f", inValue));
 				logger.trace("Update the Measure Collection data ");
-				MeasureCollection.updateAllMeasurePoints(measureCollection,enthalpy,pac);
+				Comp.updateAllMeasurePoints(measurePointL,enthalpy,pac);
 
 				logger.trace("Update MeasureTable");
 				measureTable.setAllTableValues();
@@ -286,7 +281,7 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 
 				logger.trace("Reinitialse the complete Draw elements with the Measure Collection");
 				eDrawL.clear();
-				eDrawL = ElDraw.createElDrawFrom(measureCollection,eDrawL);
+				eDrawL = ElDraw.createElDrawFrom(measurePointL,eDrawL);
 
 				textField.setVisible(false);
 				textFieldUnity.setVisible(false);
@@ -318,8 +313,8 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 		g2d.drawImage(img,0, 0, this);
 
 		if (pointMatched) {
-			int x = measurePL.get(pointMatched_id).getMeasureObject().getXm();
-			int y = measurePL.get(pointMatched_id).getMeasureObject().getYm();
+			int x = measurePointL.get(pointMatched_id).getMeasureObject().getXm();
+			int y = measurePointL.get(pointMatched_id).getMeasureObject().getYm();
 
 			// Create Circle
 			Point2D center = new Point2D.Float(x, y);
@@ -331,7 +326,7 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 			g2d.fill(new Ellipse2D.Double(x-radius, y-radius, 2*radius, 2*radius));
 
 			// Definition Text 
-			String defTxt = measurePL.get(pointMatched_id).getMeasureObject().getDefinition(guiConfig.getLanguage());
+			String defTxt = measurePointL.get(pointMatched_id).getMeasureObject().getDefinition(guiConfig.getLanguage());
 			Font font = new Font(null, Font.PLAIN, 15);
 			g2d.setFont(font);
 
@@ -415,11 +410,11 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 				int id = getIdNearest(evt.getX(),evt.getY());
 				if (id >= 0 ) {
 					textField.setBounds(evt.getX(), evt.getY(), 80, 20);
-					textField.setText(String.valueOf(measurePL.get(pointMatched_id).getValue()));
+					textField.setText(String.valueOf(measurePointL.get(pointMatched_id).getValue()));
 					textField.setVisible(true);
 
 					textFieldUnity.setBounds(evt.getX()+80, evt.getY(), 30, 20);
-					textFieldUnity.setText(measurePL.get(pointMatched_id).getMeasureObject().getUnity());
+					textFieldUnity.setText(measurePointL.get(pointMatched_id).getMeasureObject().getUnity());
 					textFieldUnity.setVisible(true);
 				} else {
 					textField.setVisible(false);			
