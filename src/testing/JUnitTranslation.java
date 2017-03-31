@@ -13,8 +13,8 @@ public class JUnitTranslation {
 		
 		System.out.println("TEST PAC-Tool CONFIGURATION");
 
-		System.out.println(Translation.Capacity.getLangue(Translation._ENGLICH));
-		System.out.println(Translation.Capacity.getLangue(Translation._FRENCH));
+		System.out.println(Translation.COMP_CAPACITY.getLangue(Translation._ENGLICH));
+		System.out.println(Translation.COMP_CAPACITY.getLangue(Translation._FRENCH));
 
 	}
 

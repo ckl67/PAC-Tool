@@ -55,7 +55,8 @@ public class WinMeasureTable extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					WinMeasureTable window = new WinMeasureTable(new MeasureTable(new MeasureCollection()));
+					WinMeasureTable window = new WinMeasureTable(
+							new MeasureTable(new MeasureCollection(), new GuiConfig()));
 					window.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

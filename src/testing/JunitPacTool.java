@@ -9,7 +9,6 @@ public class JunitPacTool {
 	public void test() {
 		
 		JUnitPac jtPac = new JUnitPac();
-		JUnitCOP jtCOP = new JUnitCOP();
 		JUnitEnthalpy jtEnthalpy = new JUnitEnthalpy();
 		JunitEnthalpyBkgdImg jtEnthalpyBkgdImg = new JunitEnthalpyBkgdImg();
 		JUnitMeasurePoint jtMeasurePoint = new JUnitMeasurePoint();
@@ -17,7 +16,6 @@ public class JunitPacTool {
 		JUnitTranslation jtThesaurus = new JUnitTranslation();
 		
 		jtPac.test();
-		jtCOP.test();
 		jtEnthalpy.test();
 		jtEnthalpyBkgdImg.test();
 		jtMeasurePoint.test();

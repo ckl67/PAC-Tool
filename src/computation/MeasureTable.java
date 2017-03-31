@@ -23,6 +23,8 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import gui.GuiConfig;
 import gui.WinMeasureTable;
 
 public class MeasureTable extends JTable {
@@ -31,13 +33,15 @@ public class MeasureTable extends JTable {
 	private static final Logger logger = LogManager.getLogger(WinMeasureTable.class.getName());
 
 	private MeasureCollection measureCollection;
+	private GuiConfig guiConfig;
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
-	public MeasureTable(MeasureCollection vmeasureCollection) {
+	public MeasureTable(MeasureCollection vmeasureCollection, GuiConfig vguiConfig) {
 		measureCollection = vmeasureCollection;
+		guiConfig = vguiConfig;
 		intiTable();
 
 	}
@@ -76,7 +80,7 @@ public class MeasureTable extends JTable {
 
 		// Initialize
 		for (MeasureObject p : MeasureObject.values()) {
-			defaultTableModel.addRow( new Object[] {p,p.getDefinition(),"0.00","0.00","0.00"});
+			defaultTableModel.addRow( new Object[] {p,p.getDefinition(guiConfig.getLanguage()),"0.00","0.00","0.00"});
 		}
 		setModel(defaultTableModel);
 

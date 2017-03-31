@@ -524,6 +524,6 @@ public class WinCirculatorDistr extends JFrame {
 	}
 
 	void changeLanguage(){
-		lblPower.setText(Translation.Power.getLangue(guiConfig.getLanguage()));
+		lblPower.setText(Translation.CIRCUL_POWER.getLangue(guiConfig.getLanguage()));
 	}
 }

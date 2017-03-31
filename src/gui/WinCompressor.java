@@ -937,6 +937,6 @@ public class WinCompressor extends JFrame {
 	}
 
 	void changeLanguage(){
-		lblEer.setText(Translation.EER.getLangue(guiConfig.getLanguage()));
+		lblEer.setText(Translation.COMP_EER.getLangue(guiConfig.getLanguage()));
 	}
 }

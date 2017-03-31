@@ -344,6 +344,7 @@ public class WinPacTool extends JFrame {
 				guiConfig.setLanguage(Translation._FRENCH);
 				winCompressor.changeLanguage();
 				winCirculatorSrc.changeLanguage();
+				winCirculatorDistr.changeLanguage();
 			}
 		});
 		buttonGroup.add(mRationItemFrench);
@@ -356,6 +357,7 @@ public class WinPacTool extends JFrame {
 				guiConfig.setLanguage(Translation._ENGLICH);
 				winCompressor.changeLanguage();
 				winCirculatorSrc.changeLanguage();
+				winCirculatorDistr.changeLanguage();
 			}
 		});
 		mRationItemEnglisch.setSelected(true);

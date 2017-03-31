@@ -24,19 +24,23 @@ import javax.swing.table.DefaultTableModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import gui.GuiConfig;
+
 public class ResultTable extends JTable {
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LogManager.getLogger(ResultTable.class.getName());
 
 	private MeasureCollection measureCollection;
+	private GuiConfig guiConfig;
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
-	public ResultTable(MeasureCollection vmeasureCollection) {
+	public ResultTable(MeasureCollection vmeasureCollection, GuiConfig vguiConfig) {
 		measureCollection = vmeasureCollection;
+		guiConfig = vguiConfig;
 		intiTable();
 
 	}
@@ -104,7 +108,7 @@ public class ResultTable extends JTable {
 
 		// Initialize
 		for (ResultObject p : ResultObject.values()) {
-			defaultTableModel.addRow( new Object[] {p.getDisplayTxt(),p.getDefinition(),"0.00",p.getUnity()});				
+			defaultTableModel.addRow( new Object[] {p.getDisplayTxt(),p.getDefinition(guiConfig.getLanguage()),"0.00",p.getUnity()});				
 		}
 		setModel(defaultTableModel);
 

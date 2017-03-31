@@ -23,12 +23,12 @@ import org.json.simple.JSONObject;
 public class MeasurePoint {
 
 	private MeasureObject measureObject;				// T1,T2,..
-	private double value;								// Pressure or Temperature,..
+	private double value;								// Pressure or Temperature or ..., Entered
 	private MeasureChoiceStatus measureChoiceStatus;	// MeasurePoint to be considered 
 	private double P;									// Pressure (can be different than P0 or PK)
 	private double T;									// Temperature
 	private double H;									// Value Enthalpy approximation or real=moved manually
-	private double P0PK;								// Value P0 or PK Pressure
+	private double P0PK;								// Value of P0 or PK Pressure
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR

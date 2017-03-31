@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import computation.MeasureObject;
 import computation.MeasurePoint;
+import translation.Translation;
 
 public class JUnitMeasurePoint {
 
@@ -28,7 +29,7 @@ public class JUnitMeasurePoint {
         if (ma.getMeasureObject().equals(MeasureObject.T1)) {
 			System.out.println(ma.getMeasureObject());				// = T1 from MeasureObject.T1 (First element of array)
 			System.out.println(ma.getMeasureObject().toString());	// = "T1"
-			System.out.println(ma.getMeasureObject().getDefinition());
+			System.out.println(ma.getMeasureObject().getDefinition(Translation._ENGLICH));
         }
         
         MeasurePoint mb = measurePL1.get(MeasureObject.T2.ordinal());

@@ -28,6 +28,7 @@ import pac.Pac;
 public class MeasureCollection {
 
 	private static final Logger logger = LogManager.getLogger(MeasureCollection.class.getName());
+	
 	private List<MeasurePoint> measurePL;
 
 	// -------------------------------------------------------

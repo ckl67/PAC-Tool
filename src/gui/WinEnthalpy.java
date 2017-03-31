@@ -114,7 +114,13 @@ public class WinEnthalpy extends JFrame {
 				try {
 					Enthalpy enthalpy1= new Enthalpy();
 					MeasureCollection measureCollection1 = new MeasureCollection();
-					WinEnthalpy frame1 = new WinEnthalpy(new Pac(), enthalpy1, new MeasureTable(measureCollection1), new ResultTable(measureCollection1), new ArrayList<ElDraw>(), new WinPressTemp(enthalpy1));
+					WinEnthalpy frame1 = new WinEnthalpy(
+							new Pac(), 
+							enthalpy1, 
+							new MeasureTable(measureCollection1, new GuiConfig()), 
+							new ResultTable(measureCollection1, new GuiConfig()),
+							new ArrayList<ElDraw>(), 
+							new WinPressTemp(enthalpy1));
 					frame1.setVisible(true);
 
 				} catch (Exception e) {

@@ -18,20 +18,23 @@
  */
 package computation;
 
-public enum MeasureObject {
-	T1(517,99,"Température des gaz BP\n après surchauffe interne\n et avant compression","°C",MeasureGroup.GROUP_BP),
-	T2(549,99,"Température des gaz HP\n en fin de compression\n (Cloche du compresseur)","°C",MeasureGroup.GROUP_HP),
-	P3(562,144,"Pression du début de condensation\n (Mesure HP Manifod)","Bar",MeasureGroup.GROUP_HP),
-	P4(562,214,"Pression de fin de condensation\n (Mesure HP Manifod)","Bar",MeasureGroup.GROUP_HP),
-	T5(515,255,"Température des gaz HP\n après sous refroidissement","°C",MeasureGroup.GROUP_HP),
-	T6(437,255,"Température sortie Détendeur / Capillaire","°C",MeasureGroup.GROUP_BP),
-	P7(419,178,"Pression évaporation\n (Mesure BP Manifold)","Bar",MeasureGroup.GROUP_BP ),
-	T8(481,98, "Température des gaz HP\naprès surchauffe externe","°C",MeasureGroup.GROUP_BP),
-	TMi(663,289,"Température Retour Eau Chauffage","°C",MeasureGroup.GROUP_HEAT),
-	TMo(664,65,"Température Départ Eau Chauffage","°C",MeasureGroup.GROUP_HEAT),
-	TCi(326,290,"Température Retour Eau Captage","°C",MeasureGroup.GROUP_SOURCE),
-	TCo(326,66,"Température Départ Eau Captage","°C",MeasureGroup.GROUP_SOURCE);
+import translation.Translation;
 
+public enum MeasureObject {
+	T1(517,99,Translation.DEF_MOBJ_T1,"°C",MeasureGroup.GROUP_BP),
+	T2(549,99,Translation.DEF_MOBJ_T2,"°C",MeasureGroup.GROUP_HP),
+	P3(562,144,Translation.DEF_MOBJ_P3,"Bar",MeasureGroup.GROUP_HP),
+	P4(562,214,Translation.DEF_MOBJ_P4,"Bar",MeasureGroup.GROUP_HP),
+	T5(515,255,Translation.DEF_MOBJ_T5,"°C",MeasureGroup.GROUP_HP),
+	T6(437,255,Translation.DEF_MOBJ_T6,"°C",MeasureGroup.GROUP_BP),
+	P7(419,178,Translation.DEF_MOBJ_P7,"Bar",MeasureGroup.GROUP_BP ),
+	T8(481,98,Translation.DEF_MOBJ_T8,"°C",MeasureGroup.GROUP_BP),
+	TMi(663,289,Translation.DEF_MOBJ_TMi,"°C",MeasureGroup.GROUP_HEAT),
+	TMo(664,65,Translation.DEF_MOBJ_TMo,"°C",MeasureGroup.GROUP_HEAT),
+	TCi(326,290,Translation.DEF_MOBJ_TCi,"°C",MeasureGroup.GROUP_SOURCE),
+	TCo(326,66,Translation.DEF_MOBJ_TCo,"°C",MeasureGroup.GROUP_SOURCE);
+
+	;
 	// --------------------------------------------------------------------
 	// CONSTANTS
 	// --------------------------------------------------------------------
@@ -48,14 +51,14 @@ public enum MeasureObject {
 
 	private int xm;
 	private int ym;
-	private String definition;
+	private Translation definition;
 	private String unity;
 	private MeasureGroup groupHpBp; 
 
 	// -------------------------------------------------------
 	// 					CONSTRUCTOR
 	// -------------------------------------------------------
-	MeasureObject(int vxm, int vym,String vdefinition, String vunity, MeasureGroup vgroupHpBp){
+	MeasureObject(int vxm, int vym,Translation vdefinition, String vunity, MeasureGroup vgroupHpBp){
 		this.xm = vxm;
 		this.ym = vym;
 		this.definition = vdefinition;
@@ -74,8 +77,8 @@ public enum MeasureObject {
 		return ym;
 	}
 
-	public String getDefinition() {
-		return definition;
+	public String getDefinition(int langage) {
+		return definition.getLangue(langage);
 	}
 
 	public String getUnity() {

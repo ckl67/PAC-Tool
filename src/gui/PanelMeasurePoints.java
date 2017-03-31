@@ -80,6 +80,7 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 	private WinCompressor winCompressor;
 	private WinCirculatorDistr winCirculatorDistr;
 	private WinCirculatorSrc winCirculatorSrc;
+	private GuiConfig guiConfig;
 
 	private int bgImgWidth;
 	private  int bgImgHeight;
@@ -137,6 +138,7 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 		winCompressor = vpacToolVar.getWinCompressor();
 		winCirculatorSrc = vpacToolVar.getWinCirculatorSrc();
 		winCirculatorDistr = vpacToolVar.getWinCirculatorDistr();
+		guiConfig = vpacToolVar.getGuiConfig();
 
 		imgURL = "/gui/images/Cycle.png";
 		measurePL = measureCollection.getMeasurePL();
@@ -329,7 +331,7 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 			g2d.fill(new Ellipse2D.Double(x-radius, y-radius, 2*radius, 2*radius));
 
 			// Definition Text 
-			String defTxt = measurePL.get(pointMatched_id).getMeasureObject().getDefinition();
+			String defTxt = measurePL.get(pointMatched_id).getMeasureObject().getDefinition(guiConfig.getLanguage());
 			Font font = new Font(null, Font.PLAIN, 15);
 			g2d.setFont(font);
 

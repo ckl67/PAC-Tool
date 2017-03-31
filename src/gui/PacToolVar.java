@@ -30,7 +30,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import computation.COP;
 import computation.MeasureCollection;
 import computation.MeasureTable;
 import computation.ResultTable;
@@ -55,7 +54,6 @@ public class PacToolVar {
 			
 	private Pac pac;
 	private Enthalpy enthalpy;
-	private COP cop;
 
 	private MeasureCollection measureCollection;
 	private List<ElDraw> eDrawL;
@@ -148,23 +146,18 @@ public class PacToolVar {
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
-		cop = new COP();								// COP Compute
-		lblLoading.setText("Loading...... COP");
-		percent = 100*i++/iterations;
-		progressBar.setValue(percent);
-
 		eDrawL = new ArrayList<ElDraw>();				// Draw Elements
 		lblLoading.setText("Loading...... Draw Elements");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
 		measureCollection = new MeasureCollection();	// Measure Collection
-		measureTable = new MeasureTable(measureCollection);
+		measureTable = new MeasureTable(measureCollection,guiConfig);
 		lblLoading.setText("Loading...... Measure Collections");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
-		resultTable = new ResultTable(measureCollection);
+		resultTable = new ResultTable(measureCollection,guiConfig);
 		lblLoading.setText("Loading...... Result Table");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
@@ -252,10 +245,6 @@ public class PacToolVar {
 
 	public MeasureCollection getMeasureCollection() {
 		return measureCollection;
-	}
-
-	public COP getCop() {
-		return cop;
 	}
 
 	public WinCompressor getWinCompressor() {

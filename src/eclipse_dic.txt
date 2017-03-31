@@ -13,3 +13,7 @@ associable
 haprox
 hreal
 combobox
+carnot
+froid
+chaud
+comp

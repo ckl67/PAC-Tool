@@ -55,7 +55,8 @@ public class WinResultTable extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					WinResultTable window = new WinResultTable(new ResultTable(new MeasureCollection()));
+					WinResultTable window = new WinResultTable(
+							new ResultTable(new MeasureCollection(), new GuiConfig()));
 					window.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

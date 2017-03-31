@@ -1,16 +1,18 @@
 package computation;
 
+import translation.Translation;
+
 public enum ResultObject {
-	T1_T8("T1-T8","Surchauffe Interne (Données Compresseur)","°C"),
-	T2_T1("T2-T1","Compression","°C"),
-	T3_T2("T3-T2","Désurchauffe","°C"),
-	T3T4("T3=T4","Point de saturation au niveau de la condensation","°C"),
-	T4_T5("T4-T5","Sous Refroidissement","°C"),
-	T5_T6("T5-T6","Détente","°C"),
-	T7("T7","Point de Saturation Evaporation ","°C"),
-	T8_T7("T8-T7","Surchauffe","°C"),
-	H2_H1("H2-H1","Travail du Compresseur H2-H1","kJ/Kg"),
-	H2_H5("H2-H5","Puissance Calorifique","kJ/Kg"),
+	T1_T8("T1-T8",Translation.DEF_ROBJ_T1_T8,"°C"),
+	T2_T1("T2-T1",Translation.DEF_ROBJ_T2_T1,"°C"),
+	T3_T2("T3-T2",Translation.DEF_ROBJ_T3_T2,"°C"),
+	T3T4("T3=T4",Translation.DEF_ROBJ_T3T4,"°C"),
+	T4_T5("T4-T5",Translation.DEF_ROBJ_T4_T5,"°C"),
+	T5_T6("T5-T6",Translation.DEF_ROBJ_T5_T6,"°C"),
+	T7("T7",Translation.DEF_ROBJ_T7,"°C"),
+	T8_T7("T8-T7",Translation.DEF_ROBJ_T8_T7,"°C"),
+	H2_H1("H2-H1",Translation.DEF_ROBJ_H2_H1,"kJ/Kg"),
+	H2_H5("H2-H5",Translation.DEF_ROBJ_H2_H5,"kJ/Kg"),
 	;
 	
 	// --------------------------------------------------------------------
@@ -18,13 +20,13 @@ public enum ResultObject {
 	// --------------------------------------------------------------------
 
 	public String displayTxt;
-	public String definition;
+	public Translation definition;
 	public String unity;
 
 	// -------------------------------------------------------
 	// 					CONSTRUCTOR
 	// -------------------------------------------------------
-	ResultObject(String vdisplayTxt, String vdefinition, String vunity) {
+	ResultObject(String vdisplayTxt, Translation vdefinition, String vunity) {
 		displayTxt = vdisplayTxt;
 		definition = vdefinition;
 		unity = vunity;
@@ -34,8 +36,8 @@ public enum ResultObject {
 		return displayTxt;
 	}
 
-	public String getDefinition() {
-		return definition;
+	public String getDefinition(int langage) {
+		return definition.getLangue(langage);
 	}
 
 	public String getUnity() {
