@@ -78,25 +78,25 @@ public class Comp {
 
 
 							// T1 is Over heated of T8 (Will be updated only if T1 = 0) :: T1 = T8 + OH
-							if (measurePointL.get(MeasureObject.T1.ordinal()).getValue() == 0) {
-								double ohT = measurePointL.get(MeasureObject.T8.ordinal()).getMT() + 
-										Math.round(pac.getCurrentCompressor().getOverheated());
-								logger.info("Computation of T1 --> (T8={} + Compressor over head={}) = {}",measurePointL.get(MeasureObject.T8.ordinal()).getMT(),Math.round(pac.getCurrentCompressor().getOverheated()),ohT);
+							//			if (measurePointL.get(MeasureObject.T1.ordinal()).getValue() == 0) {
+							double ohT = measurePointL.get(MeasureObject.T8.ordinal()).getMT() + 
+									Math.round(pac.getCurrentCompressor().getOverheated());
+							logger.info("Computation of T1 --> (T8={} + Compressor over head={}) = {}",measurePointL.get(MeasureObject.T8.ordinal()).getMT(),Math.round(pac.getCurrentCompressor().getOverheated()),ohT);
 
-								MeasurePoint m1 = measurePointL.get(MeasureObject.T1.ordinal());
-								m1.setValue(ohT);
-								m1.setMT(ohT);
-								m1.setMP( enthalpy.convT2P( m1.getMT()));
-								m1.setMP0PK( measurePointL.get(MeasureObject._P0).getValue()  );
+							MeasurePoint m1 = measurePointL.get(MeasureObject.T1.ordinal());
+							m1.setValue(ohT);
+							m1.setMT(ohT);
+							m1.setMP( enthalpy.convT2P( m1.getMT()));
+							m1.setMP0PK( measurePointL.get(MeasureObject._P0).getValue()  );
 
-								Hsat0 = enthalpy.matchP2HvaporSat( m1.getMP());
-								Psat0 = m1.getMP();
-								P0PK0 = m1.getMP0PK();
-								Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(Hsat0, Psat0, P0PK0); 
-								m1.setMH(Hmpiso0);
-								m1.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+							Hsat0 = enthalpy.matchP2HvaporSat( m1.getMP());
+							Psat0 = m1.getMP();
+							P0PK0 = m1.getMP0PK();
+							Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(Hsat0, Psat0, P0PK0); 
+							m1.setMH(Hmpiso0);
+							m1.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
 
-							} 
+							//			} 
 
 						}
 					}
@@ -196,9 +196,9 @@ public class Comp {
 			}
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Compute Cop Carnot Froid
 	 * @return : T0/(TK-T0)
@@ -206,9 +206,9 @@ public class Comp {
 	public static double cop_carnot_froid() {
 		double result = 0;
 
-	//	if ((TK-T0) != 0.0) {
-	//		result = (T0+273)/(TK-T0);
-	//	}
+		//	if ((TK-T0) != 0.0) {
+		//		result = (T0+273)/(TK-T0);
+		//	}
 		return result;		
 	}
 
@@ -251,5 +251,5 @@ public class Comp {
 		return result;		
 	}
 
-	
+
 }
