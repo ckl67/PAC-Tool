@@ -13,6 +13,7 @@ public enum ResultObject {
 	T8_T7("T8-T7",Translation.DEF_ROBJ_T8_T7,"°C"),
 	H2_H1("H2-H1",Translation.DEF_ROBJ_H2_H1,"kJ/Kg"),
 	H2_H5("H2-H5",Translation.DEF_ROBJ_H2_H5,"kJ/Kg"),
+	COPCOLD("COP",Translation.DEF_COPCOLD," "),
 	;
 	
 	// --------------------------------------------------------------------
@@ -32,6 +33,7 @@ public enum ResultObject {
 		unity = vunity;
 	}
 	
+
 	public String getDisplayTxt() {
 		return displayTxt;
 	}

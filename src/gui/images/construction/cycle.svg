@@ -250,8 +250,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="350.7567"
-     inkscape:cy="145.34631"
+     inkscape:cx="360.7567"
+     inkscape:cy="114.63202"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -512,7 +512,7 @@
          id="tspan9763-0"
          x="409.41122"
          y="534.61444"
-         style="font-size:11.25px">T2</tspan></text>
+         style="font-size:11.25px">P2</tspan></text>
     <circle
        style="display:inline;opacity:1;fill:#ffff00;fill-opacity:1;stroke:#000000;stroke-width:0.67699999;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-start:"
        id="path9765"
@@ -596,7 +596,7 @@
          id="tspan9763-05-0"
          x="381.6813"
          y="669.21722"
-         style="font-size:11.25px">T5</tspan></text>
+         style="font-size:11.25px">P5</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:12.5px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -608,7 +608,7 @@
          id="tspan9763-05-0-7"
          x="322.51059"
          y="668.63251"
-         style="font-size:11.25px">T6</tspan></text>
+         style="font-size:11.25px">P6</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:12.5px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -632,7 +632,7 @@
          id="tspan9763-05-0-6"
          x="342.71365"
          y="533.5246"
-         style="font-size:11.25px">T8</tspan></text>
+         style="font-size:11.25px">P8</tspan></text>
     <circle
        style="display:inline;opacity:1;fill:#ffff00;fill-opacity:1;stroke:#000000;stroke-width:0.67699999;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-start:"
        id="path9765-4-3-6-9"
@@ -668,7 +668,9 @@
          id="tspan9763-0-4"
          x="486.86731"
          y="693.53693"
-         style="font-size:11.25px">TMi</tspan></text>
+         style="font-size:11.25px">PH<tspan
+   style="font-size:64.99999762%;baseline-shift:sub"
+   id="tspan4286">eat</tspan>i</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:12.5px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -680,7 +682,9 @@
          id="tspan9763-0-4-4"
          x="488.85855"
          y="505.35907"
-         style="font-size:11.25px">TMo</tspan></text>
+         style="font-size:11.25px">PH<tspan
+   style="font-size:64.99999762%;baseline-shift:sub"
+   id="tspan4284">eat</tspan>o</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:12.5px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -692,7 +696,9 @@
          id="tspan9763-0-4-4-9"
          x="246.0564"
          y="695.49475"
-         style="font-size:11.25px">TCi</tspan></text>
+         style="font-size:11.25px">PC<tspan
+   style="font-size:64.99999762%;baseline-shift:sub"
+   id="tspan4276">apt</tspan>i</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:12.5px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -704,7 +710,9 @@
          id="tspan9763-0-4-4-0"
          x="249.42914"
          y="505.67865"
-         style="font-size:11.25px">TCo</tspan></text>
+         style="font-size:11.25px">PC<tspan
+   style="font-size:64.99999762%;baseline-shift:sub"
+   id="tspan4274">apt</tspan>o</tspan></text>
     <g
        id="g4292"
        transform="translate(19.821429,0.17857143)">
@@ -766,7 +774,7 @@
          id="tspan9763"
          x="382.99313"
          y="510.64905"
-         style="font-size:11.25px">T1</tspan></text>
+         style="font-size:11.25px">P1</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"

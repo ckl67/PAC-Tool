@@ -164,17 +164,41 @@ public class ElDraw {
 			// ----------------------------------
 			if ( (m.getMeasureChoiceStatus().equals(MeasureChoiceStatus.ChosenHaprox)) || 
 					(m.getMeasureChoiceStatus().equals(MeasureChoiceStatus.ChosenP0PK))) {
-			
+
+				/*
+
+				P
+				^
+				|
+				|
+				|                     XXXXXXXXXXXXX
+				|                  XXXX           XXXXX         (PK)
+				|        (5)+-----(4)-----------------(3)--------------------+ (2)
+				|           | XXXX                      XX                   /
+				|           |XX                          XX                 /
+				|           |X                            XX               /
+				|          X|                              XX             /
+				|         XX|                               X            /
+				|         X |                               XX          /
+				|        XX |             (P0)               X         /
+				|       XX  +---------------------------------+---+---+
+				|       X  (6)                               (7) (8)  (1)
+				|      XX                                     X
+				|      X                                      X
+				|
+				+------------------------------------------------------------------------> H
+
+				 */
 				switch (m.getMeasureObject()) {
-				case T1 : case T6 : case T8 :	// Points intersection with P0
+				case P1 : case P6 : case P8 :	// Points intersection with Pressure (P0)
 					logger.info("Point={} H={} P={}", m.getMeasureObject(),m.getMH(),m.getMP0PK());
 					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointP0_HP,true,Color.BLACK,m.getMH(),m.getMP0PK()));
 					break;
-				case T2 : case T5 :				// Points intersection with PK
+				case P2 : case P5 :				// Points intersection with PK
 					logger.info("Point={} H={} P={}", m.getMeasureObject(),m.getMH(),m.getMP0PK());
 					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointPK_HP,true,Color.BLACK,m.getMH(),m.getMP0PK()));
 					break;
-				case P3 : case P4 : 			// Points PK (P3 and P4) 
+				case P3 : case P4 : 			// Points PK intersection with Saturation Curve 
 					logger.info("Point={} H={} P={}", m.getMeasureObject(),m.getMH(),m.getMP0PK());
 					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointPK_HP,false,Color.BLACK,m.getMH(),m.getMP0PK()));
 					if (onshot) {
@@ -183,7 +207,7 @@ public class ElDraw {
 						eDrawL.add(new ElDraw("PK",ElDrawObject.LineP,false,Color.BLACK,m.getMP0PK()));											
 					}
 					break;			
-				case P7 :						// Point P0 (P7)
+				case P7 :						// Point P0 intersection with Saturation Curve
 					logger.info("Point={} H={} P={}", m.getMeasureObject(),m.getMH(),m.getMP0PK());
 					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointP0_HP,false,Color.BLACK,m.getMH(),m.getMP0PK()));
 					logger.info("Line={} P={}", m.getMeasureObject(),m.getMP0PK());

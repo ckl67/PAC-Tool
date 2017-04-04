@@ -50,9 +50,10 @@ import computation.Comp;
 import computation.MeasureChoiceStatus;
 import computation.MeasureObject;
 import enthalpy.Enthalpy;
+import log4j.Log4j2Config;
 import pac.Pac;
-
 import javax.imageio.ImageIO;
+
 
 public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseMotionListener {
 
@@ -90,8 +91,10 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 
 	private BufferedImage img;
 	private JTextField textField;
+	private JTextField textFieldCOP;
 	private JTextField textFieldUnity;
 	private JButton btnReset;
+	private JButton btnReCompute;
 
 	private boolean pointMatched;
 	private int pointMatched_id;
@@ -103,12 +106,20 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
-			public void run() {			
+			public void run() {		
+				Log4j2Config log4j2Config = new Log4j2Config();
+				logger.info("Read the Appenders Declared");
+				logger.info("  All declared Appenders = {} ",log4j2Config.getAllDeclaredAppenders());
+				
+				logger.info("Read the Appenders Activated in the Logger");
+				logger.info("  Is Logger Console active --> {}", log4j2Config.isLoggerConsole());
+				logger.info("  Is Logger File active --> {}", log4j2Config.isLoggerLogFile());
+				
 				JFrame frame = new JFrame();
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
-				PanelMeasurePoints panel1 = new PanelMeasurePoints(new PacToolVar(null));		
+				PanelMeasurePoints panel1 = new PanelMeasurePoints(new PacToolVar(log4j2Config));		
 				frame.getContentPane().add(panel1, BorderLayout.CENTER);
 
 				frame.setBounds(100, 10, panel1.getBgImgWidth()+7, panel1.getBgImgHeight()+49);
@@ -228,6 +239,7 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 		bgImgHeight = img.getHeight();
 
 		btnReset = new JButton("Reset");
+		btnReset.setBounds(24, 292, 61, 23);
 		btnReset.setFocusable(false);
 
 		btnReset.addActionListener(new ActionListener() {
@@ -241,9 +253,42 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 			}
 		});
 
+		btnReCompute = new JButton("Re-Compute");
+		btnReCompute.setBounds(24, 30, 93, 23);
+		btnReCompute.setFocusable(false);
+
+		btnReCompute.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				logger.trace("Update the Measure Collection data ");
+				Comp.updateAllMeasurePoints(measurePointL,enthalpy,pac);
+
+				logger.trace("Update MeasureTable");
+				measureTable.setAllTableValues();
+
+				logger.trace("Update ResultTable");
+				resultTable.setAllTableValues();
+
+				logger.trace("Reinitialse the complete Draw elements with the Measure Collection");
+				eDrawL.clear();
+				eDrawL = ElDraw.createElDrawFrom(measurePointL,eDrawL);
+			
+				logger.trace("COP ={}", Comp.cop(measurePointL,pac));
+				textFieldCOP.setText(String.valueOf(Comp.cop(measurePointL,pac)));
+			}
+		});
+
+		textFieldCOP = new JTextField();
+		textFieldCOP.setEditable(false);
+		textFieldCOP.setBackground(Color.LIGHT_GRAY);
+		textFieldCOP.setText("COP");
+		textFieldCOP.setBounds(800, 200, 78, 20);
+		textFieldCOP.setFont(new Font("Tahoma", Font.BOLD, 11));
+		textFieldCOP.setHorizontalAlignment(SwingConstants.CENTER);
 
 
 		textField = new JTextField();
+		textField.setBounds(134, 6, 6, 20);
 		textField.setForeground(Color.BLACK);
 		textField.setBackground(Color.YELLOW);
 		textField.setFont(new Font("Tahoma", Font.BOLD, 11));
@@ -257,10 +302,10 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 				double inValue = Double.valueOf(textField.getText());
 
 				// HP1 = HP2 = PK_GAS = PK_LIQUID
-				if (id == MeasureObject._PK_VAPOR_ID)
-					measurePointL.get(MeasureObject._PK_LIQUID_ID).setValue(inValue);
-				if (id == MeasureObject._PK_LIQUID_ID)
-					measurePointL.get(MeasureObject._PK_VAPOR_ID).setValue(inValue);
+				if (id == MeasureObject._PK_VAPOR)
+					measurePointL.get(MeasureObject._PK_LIQUID).setValue(inValue);
+				if (id == MeasureObject._PK_LIQUID)
+					measurePointL.get(MeasureObject._PK_VAPOR).setValue(inValue);
 
 				// Affect Value to measurePointL
 				measurePointL.get(id).setValue(inValue);
@@ -283,21 +328,28 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 				eDrawL.clear();
 				eDrawL = ElDraw.createElDrawFrom(measurePointL,eDrawL);
 
+				logger.trace("COP ={}", Comp.cop(measurePointL,pac));
+				textFieldCOP.setText(String.valueOf(Comp.cop(measurePointL,pac)));
+
 				textField.setVisible(false);
 				textFieldUnity.setVisible(false);
 			}
 		});
 
 		textFieldUnity = new JTextField();
+		textFieldUnity.setBounds(145, 6, 6, 20);
 		textFieldUnity.setForeground(Color.BLACK);
 		textFieldUnity.setBackground(Color.YELLOW);
 		textFieldUnity.setFont(new Font("Tahoma", Font.BOLD, 11));
 		textFieldUnity.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldUnity.setVisible(false);
+		setLayout(null);
 
 		add(textField);
+		add(textFieldCOP);
 		add(textFieldUnity);
 		add(btnReset);
+		add(btnReCompute);
 
 	}
 

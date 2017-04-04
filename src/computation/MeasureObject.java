@@ -21,18 +21,18 @@ package computation;
 import translation.Translation;
 
 public enum MeasureObject {
-	T1(517,99,Translation.DEF_MOBJ_T1,"°C",MeasureGroup.GROUP_BP),
-	T2(549,99,Translation.DEF_MOBJ_T2,"°C",MeasureGroup.GROUP_HP),
+	P1(517,99,Translation.DEF_MOBJ_P1,"°C",MeasureGroup.GROUP_BP),
+	P2(549,99,Translation.DEF_MOBJ_P2,"°C",MeasureGroup.GROUP_HP),
 	P3(562,144,Translation.DEF_MOBJ_P3,"Bar",MeasureGroup.GROUP_HP),
 	P4(562,214,Translation.DEF_MOBJ_P4,"Bar",MeasureGroup.GROUP_HP),
-	T5(515,255,Translation.DEF_MOBJ_T5,"°C",MeasureGroup.GROUP_HP),
-	T6(437,255,Translation.DEF_MOBJ_T6,"°C",MeasureGroup.GROUP_BP),
+	P5(515,255,Translation.DEF_MOBJ_P5,"°C",MeasureGroup.GROUP_HP),
+	P6(437,255,Translation.DEF_MOBJ_P6,"°C",MeasureGroup.GROUP_BP),
 	P7(419,178,Translation.DEF_MOBJ_P7,"Bar",MeasureGroup.GROUP_BP ),
-	T8(481,98,Translation.DEF_MOBJ_T8,"°C",MeasureGroup.GROUP_BP),
-	TMi(663,289,Translation.DEF_MOBJ_TMi,"°C",MeasureGroup.GROUP_HEAT),
-	TMo(664,65,Translation.DEF_MOBJ_TMo,"°C",MeasureGroup.GROUP_HEAT),
-	TCi(326,290,Translation.DEF_MOBJ_TCi,"°C",MeasureGroup.GROUP_SOURCE),
-	TCo(326,66,Translation.DEF_MOBJ_TCo,"°C",MeasureGroup.GROUP_SOURCE);
+	P8(481,98,Translation.DEF_MOBJ_P8,"°C",MeasureGroup.GROUP_BP),
+	PMi(663,289,Translation.DEF_MOBJ_PMi,"°C",MeasureGroup.GROUP_HEAT),
+	PMo(664,65,Translation.DEF_MOBJ_PMo,"°C",MeasureGroup.GROUP_HEAT),
+	PCi(326,290,Translation.DEF_MOBJ_PCi,"°C",MeasureGroup.GROUP_SOURCE),
+	PCo(326,66,Translation.DEF_MOBJ_PCo,"°C",MeasureGroup.GROUP_SOURCE);
 
 	;
 	// --------------------------------------------------------------------
@@ -40,10 +40,8 @@ public enum MeasureObject {
 	// --------------------------------------------------------------------
 	public static int _P0 = 6;	// = P7
 	public static int _PK = 2;	// = P3
-
-	public static int _BP_ID 		= 6;
-	public static int _PK_VAPOR_ID 	= 2;  	// = P3
-	public static int _PK_LIQUID_ID = 3;	// = P4
+	public static int _PK_VAPOR  = 2;  	// = P3
+	public static int _PK_LIQUID = 3;	// = P4
 
 	// --------------------------------------------------------------------
 	// DEFINITION OF VARIABLES USED IN ENUMERATION
@@ -69,6 +67,10 @@ public enum MeasureObject {
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
+	public int id() {
+		return this.ordinal();
+	}
+
 	public int getXm() {
 		return xm;
 	}

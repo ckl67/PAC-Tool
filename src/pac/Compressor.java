@@ -34,6 +34,12 @@ public class Compressor {
 	private double massFlow;
 	private double voltage;
 
+	private double currentMeasure;
+	private double voltageMeasure;
+	private int powerShaftPercent;
+
+
+
 	private double deltaP;	
 	private double deltaT;
 
@@ -52,6 +58,10 @@ public class Compressor {
 		this.current = 14.7;
 		this.massFlow = Math.round(Misc.pound2kg(488)*1000.0)/1000.0;		
 		this.voltage = 220;	
+		this.currentMeasure = 14.7;
+		this.voltageMeasure = 220;	
+		this.powerShaftPercent = 60;
+
 		this.deltaT = 0;
 		this.deltaP = 0;
 	}
@@ -97,6 +107,9 @@ public class Compressor {
 		jsonObj.put("Current", this.current);	
 		jsonObj.put("MassFlow", this.massFlow);	
 		jsonObj.put("Voltage", this.voltage);	
+		jsonObj.put("CurrentMeasure", this.currentMeasure);	
+		jsonObj.put("VoltageMeasure", this.voltageMeasure);	
+		jsonObj.put("PowerShaftPercent", this.powerShaftPercent);	
 		return jsonObj ;
 	}
 
@@ -115,6 +128,9 @@ public class Compressor {
 		this.current = ((Number) jsonObj.get("Current")).doubleValue();
 		this.massFlow = ((Number) jsonObj.get("MassFlow")).doubleValue();
 		this.voltage = ((Number) jsonObj.get("Voltage")).doubleValue();
+		this.currentMeasure = ((Number) jsonObj.get("CurrentMeasure")).doubleValue();
+		this.voltageMeasure = ((Number) jsonObj.get("VoltageMeasure")).doubleValue();
+		this.powerShaftPercent = ((Number) jsonObj.get("PowerShaftPercent")).intValue();
 	}
 
 	// -------------------------------------------------------
@@ -153,12 +169,20 @@ public class Compressor {
 		this.current = v;
 	}
 
+	public void setCurrentMeasure(double v) {
+		this.currentMeasure = v;
+	}
+
 	public void setMassFlow(double v) {
 		this.massFlow = v;
 	}
 
 	public void setVoltage(double v) {
 		this.voltage = v;
+	}
+
+	public void setVoltageMeasure(double v) {
+		this.voltageMeasure = v;
 	}
 
 	public String getName() {
@@ -193,12 +217,20 @@ public class Compressor {
 		return current;		
 	}
 
+	public double getCurrentMeasure() {
+		return currentMeasure;		
+	}
+
 	public double getMassFlow() {
 		return massFlow;		
 	}
 
 	public double getVoltage() {
 		return voltage;		
+	}
+
+	public double getVoltageMeasure() {
+		return voltageMeasure;		
 	}
 
 	public double getDeltaP() {
@@ -227,6 +259,13 @@ public class Compressor {
 		return tmp;
 	}
 	
+	public int getPowerShaftPercent() {
+		return powerShaftPercent;
+	}
+
+	public void setPowerShaftPercent(int powerShaftPercent) {
+		this.powerShaftPercent = powerShaftPercent;
+	}
 	
 	
 }

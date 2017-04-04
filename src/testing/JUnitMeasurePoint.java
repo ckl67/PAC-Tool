@@ -26,20 +26,20 @@ public class JUnitMeasurePoint {
 
         MeasurePoint ma = measurePL1.get(0);
         
-        if (ma.getMeasureObject().equals(MeasureObject.T1)) {
-			System.out.println(ma.getMeasureObject());				// = T1 from MeasureObject.T1 (First element of array)
-			System.out.println(ma.getMeasureObject().toString());	// = "T1"
+        if (ma.getMeasureObject().equals(MeasureObject.P1)) {
+			System.out.println(ma.getMeasureObject());				// = P1 from MeasureObject.P1 (First element of array)
+			System.out.println(ma.getMeasureObject().toString());	// = "P1"
 			System.out.println(ma.getMeasureObject().getDefinition(Translation._ENGLICH));
         }
         
-        MeasurePoint mb = measurePL1.get(MeasureObject.T2.ordinal());
+        MeasurePoint mb = measurePL1.get(MeasureObject.P2.ordinal());
         mb.setValue(12);
         System.out.println(mb.getMeasureObject());
 		System.out.println(mb.getValue() + " " + mb.getMeasureObject().getUnity());
 		System.out.println(mb.getMP() + " bars");
 		
 
-		MeasurePoint vMeasure = new MeasurePoint(MeasureObject.T1);
+		MeasurePoint vMeasure = new MeasurePoint(MeasureObject.P1);
 		vMeasure.setValue(23.457);
 		System.out.println(vMeasure.getMeasureObject());
 

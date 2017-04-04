@@ -55,15 +55,15 @@ public class ResultTable extends JTable {
 			double result = 0;
 			switch (p) {
 			case T1_T8: 
-				result = measurePointL.get(MeasureObject.T1.ordinal()).getMT()- measurePointL.get(MeasureObject.T8.ordinal()).getMT();  
+				result = measurePointL.get(MeasureObject.P1.ordinal()).getMT()- measurePointL.get(MeasureObject.P8.ordinal()).getMT();  
 				setValueAt( Math.round(result*100.0)/100.0, p.ordinal(), 2);
 				break;
 			case T2_T1: 
-				result = measurePointL.get(MeasureObject.T2.ordinal()).getMT()- measurePointL.get(MeasureObject.T1.ordinal()).getMT();  
+				result = measurePointL.get(MeasureObject.P2.ordinal()).getMT()- measurePointL.get(MeasureObject.P1.ordinal()).getMT();  
 				setValueAt( Math.round(result*100.0)/100.0, p.ordinal(), 2);
 				break;
 			case T3_T2:
-				result = measurePointL.get(MeasureObject.P3.ordinal()).getMT()- measurePointL.get(MeasureObject.T2.ordinal()).getMT();  
+				result = measurePointL.get(MeasureObject.P3.ordinal()).getMT()- measurePointL.get(MeasureObject.P2.ordinal()).getMT();  
 				setValueAt( Math.round(result*100.0)/100.0, p.ordinal(), 2);
 				break;
 			case T3T4:
@@ -71,11 +71,11 @@ public class ResultTable extends JTable {
 				setValueAt( Math.round(result*100.0)/100.0, p.ordinal(), 2);
 				break;
 			case T4_T5:
-				result = measurePointL.get(MeasureObject.P4.ordinal()).getMT()- measurePointL.get(MeasureObject.T5.ordinal()).getMT();  
+				result = measurePointL.get(MeasureObject.P4.ordinal()).getMT()- measurePointL.get(MeasureObject.P5.ordinal()).getMT();  
 				setValueAt( Math.round(result*100.0)/100.0, p.ordinal(), 2);
 				break;
 			case T5_T6:
-				result = measurePointL.get(MeasureObject.T5.ordinal()).getMT()- measurePointL.get(MeasureObject.T6.ordinal()).getMT();  
+				result = measurePointL.get(MeasureObject.P5.ordinal()).getMT()- measurePointL.get(MeasureObject.P6.ordinal()).getMT();  
 				setValueAt( Math.round(result*100.0)/100.0, p.ordinal(), 2);
 				break;
 			case T7:
@@ -83,7 +83,11 @@ public class ResultTable extends JTable {
 				setValueAt( Math.round(result*100.0)/100.0, p.ordinal(), 2);
 				break;
 			case T8_T7:
-				result = measurePointL.get(MeasureObject.T8.ordinal()).getMT()- measurePointL.get(MeasureObject.P7.ordinal()).getMT();  
+				result = measurePointL.get(MeasureObject.P8.ordinal()).getMT()- measurePointL.get(MeasureObject.P7.ordinal()).getMT();  
+				setValueAt( Math.round(result*100.0)/100.0, p.ordinal(), 2);
+				break;
+			case COPCOLD:
+				result = Comp.cop_carnot_froid(measurePointL);  
 				setValueAt( Math.round(result*100.0)/100.0, p.ordinal(), 2);
 				break;
 			default :
