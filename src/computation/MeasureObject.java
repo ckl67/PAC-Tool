@@ -18,21 +18,22 @@
  */
 package computation;
 
+import enthalpy.EnthalpyZone;
 import translation.Translation;
 
 public enum MeasureObject {
-	P1(517,99,Translation.DEF_MOBJ_P1,"°C",MeasureGroup.GROUP_BP),
-	P2(549,99,Translation.DEF_MOBJ_P2,"°C",MeasureGroup.GROUP_HP),
-	P3(562,144,Translation.DEF_MOBJ_P3,"Bar",MeasureGroup.GROUP_HP),
-	P4(562,214,Translation.DEF_MOBJ_P4,"Bar",MeasureGroup.GROUP_HP),
-	P5(515,255,Translation.DEF_MOBJ_P5,"°C",MeasureGroup.GROUP_HP),
-	P6(437,255,Translation.DEF_MOBJ_P6,"°C",MeasureGroup.GROUP_BP),
-	P7(419,178,Translation.DEF_MOBJ_P7,"Bar",MeasureGroup.GROUP_BP ),
-	P8(481,98,Translation.DEF_MOBJ_P8,"°C",MeasureGroup.GROUP_BP),
-	PMi(663,289,Translation.DEF_MOBJ_PMi,"°C",MeasureGroup.GROUP_HEAT),
-	PMo(664,65,Translation.DEF_MOBJ_PMo,"°C",MeasureGroup.GROUP_HEAT),
-	PCi(326,290,Translation.DEF_MOBJ_PCi,"°C",MeasureGroup.GROUP_SOURCE),
-	PCo(326,66,Translation.DEF_MOBJ_PCo,"°C",MeasureGroup.GROUP_SOURCE);
+	P1(517,99,Translation.DEF_MOBJ_P1,"°C",MeasureGroup.GROUP_BP,EnthalpyZone.VAPOR),
+	P2(549,99,Translation.DEF_MOBJ_P2,"°C",MeasureGroup.GROUP_HP,EnthalpyZone.VAPOR),
+	P3(562,144,Translation.DEF_MOBJ_P3,"Bar",MeasureGroup.GROUP_HP,EnthalpyZone.VAPOR),
+	P4(562,214,Translation.DEF_MOBJ_P4,"Bar",MeasureGroup.GROUP_HP,EnthalpyZone.LIQUID),
+	P5(515,255,Translation.DEF_MOBJ_P5,"°C",MeasureGroup.GROUP_HP,EnthalpyZone.LIQUID),
+	P6(437,255,Translation.DEF_MOBJ_P6,"°C",MeasureGroup.GROUP_BP,EnthalpyZone.LIQUID_VAPOR),
+	P7(419,178,Translation.DEF_MOBJ_P7,"Bar",MeasureGroup.GROUP_BP,EnthalpyZone.VAPOR ),
+	P8(481,98,Translation.DEF_MOBJ_P8,"°C",MeasureGroup.GROUP_BP,EnthalpyZone.VAPOR),
+	PMi(663,289,Translation.DEF_MOBJ_PMi,"°C",MeasureGroup.GROUP_HEAT,EnthalpyZone.NOT_APPLICABLE),
+	PMo(664,65,Translation.DEF_MOBJ_PMo,"°C",MeasureGroup.GROUP_HEAT,EnthalpyZone.NOT_APPLICABLE),
+	PCi(326,290,Translation.DEF_MOBJ_PCi,"°C",MeasureGroup.GROUP_SOURCE,EnthalpyZone.NOT_APPLICABLE),
+	PCo(326,66,Translation.DEF_MOBJ_PCo,"°C",MeasureGroup.GROUP_SOURCE,EnthalpyZone.NOT_APPLICABLE);
 
 	;
 	// --------------------------------------------------------------------
@@ -52,17 +53,20 @@ public enum MeasureObject {
 	private Translation definition;
 	private String unity;
 	private MeasureGroup groupHpBp; 
+	private EnthalpyZone enthalpyZone;
 
 	// -------------------------------------------------------
 	// 					CONSTRUCTOR
 	// -------------------------------------------------------
-	MeasureObject(int vxm, int vym,Translation vdefinition, String vunity, MeasureGroup vgroupHpBp){
+	MeasureObject(int vxm, int vym,Translation vdefinition, String vunity, MeasureGroup vgroupHpBp, EnthalpyZone venthalpyZone){
 		this.xm = vxm;
 		this.ym = vym;
 		this.definition = vdefinition;
 		this.unity =vunity;
 		this.groupHpBp = vgroupHpBp;
+		this.enthalpyZone = venthalpyZone;
 	}
+
 
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
@@ -91,4 +95,7 @@ public enum MeasureObject {
 		return groupHpBp;
 	}
 
+	public EnthalpyZone getEnthalpyZone() {
+		return enthalpyZone;
+	}
 }

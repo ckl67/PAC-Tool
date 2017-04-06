@@ -30,6 +30,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JTextField;
+
 import computation.MeasureObject;
 import computation.MeasurePoint;
 import computation.MeasureTable;
@@ -48,10 +50,10 @@ public class PacToolVar {
 	// -------------------------------------------------------
 	public static final String PACTool_Version = "Version Alpha 0.4.0";
 	
-	// By creating all the instances here, it assure that 
-	//   only 1 instance will be created
-	//   all data are loaded once
-	//   no problem of missing variables 
+	// Create all instances which will be used in WinPacTool + PanelPacTool
+	// AND which must be used outside of WinPacTool + PanelPacTool
+	// 		By creating all the instances here, it assure that only 1 instance will be created
+	//  	All data are loaded once --> no problem of missing variables 
 			
 	private Pac pac;
 	private Enthalpy enthalpy;
@@ -79,6 +81,8 @@ public class PacToolVar {
 	private WinAbout winAbout;
 	private WinDefinition winDefinition;
 	private WinLogger winLogger;
+	
+	private JTextField panelPacToolTextFieldCOP;
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -129,7 +133,7 @@ public class PacToolVar {
 		
 		// -------------------------
 		int i = 1;
-		int iterations = 17;
+		int iterations = 18;
 		int percent = 0;
 		
 		pac = new Pac();								// Contains Pac Features
@@ -188,8 +192,9 @@ public class PacToolVar {
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 		
+		panelPacToolTextFieldCOP = new JTextField();
 		
-		winEnthalpy = new WinEnthalpy(pac, enthalpy, measureTable, resultTable, measurePointL, eDrawL,winPressTemp);
+		winEnthalpy = new WinEnthalpy(pac, enthalpy, measureTable, resultTable, measurePointL, eDrawL,winPressTemp, panelPacToolTextFieldCOP);
 		lblLoading.setText("Loading...... Win. Enthalpy");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
@@ -304,4 +309,7 @@ public class PacToolVar {
 		return measureTable;
 	}
 
+	public JTextField getPanelPacToolTextFieldCOP() {
+		return panelPacToolTextFieldCOP;
+	}
 }

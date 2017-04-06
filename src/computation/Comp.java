@@ -86,10 +86,7 @@ public class Comp {
 
 						// ------------ P1--------------
 						if (m.getMeasureObject().equals(MeasureObject.P1)) {
-							double Hsat0 = enthalpy.matchP2HvaporSat( m.getMP());
-							double Psat0 = m.getMP();
-							double P0PK0 = m.getMP0PK();
-							double Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(Hsat0, Psat0, P0PK0); 
+							double Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(m); 
 							m.setMH(Hmpiso0);
 							m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
 						}
@@ -102,13 +99,9 @@ public class Comp {
 
 						// ------------ P8--------------
 						if (m.getMeasureObject().equals(MeasureObject.P8)) {
-							double Hsat0 = enthalpy.matchP2HvaporSat( m.getMP());
-							double Psat0 = m.getMP();
-							double P0PK0 = m.getMP0PK();
-							double Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(Hsat0, Psat0, P0PK0); 
+							double Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(m); 
 							m.setMH(Hmpiso0);
 							m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
-
 
 							// T1 is Over heated of T8 --> T1 = T8 + OH
 							double ohT = measurePointL.get(MeasureObject.P8.ordinal()).getMT() + 
@@ -121,10 +114,8 @@ public class Comp {
 							m1.setMP( enthalpy.convT2P( m1.getMT()));
 							m1.setMP0PK( measurePointL.get(MeasureObject._P0).getValue()  );
 
-							Hsat0 = enthalpy.matchP2HvaporSat( m1.getMP());
-							Psat0 = m1.getMP();
-							P0PK0 = m1.getMP0PK();
-							Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(Hsat0, Psat0, P0PK0); 
+							Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(m1); 
+
 							m1.setMH(Hmpiso0);
 							m1.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
 						}
@@ -142,10 +133,7 @@ public class Comp {
 
 						// ------------ P2--------------
 						if (m.getMeasureObject().equals(MeasureObject.P2)) {
-							double Hsat1 = enthalpy.matchP2HvaporSat( m.getMP());
-							double Psat1 = m.getMP();
-							double P0PK1 = m.getMP0PK();
-							double Hmpiso1 = enthalpy.CompHmatchPSatWithP0PK(Hsat1, Psat1, P0PK1); 
+							double Hmpiso1 = enthalpy.CompHmatchPSatWithP0PK(m); 
 							m.setMH(Hmpiso1);
 							m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
 						}

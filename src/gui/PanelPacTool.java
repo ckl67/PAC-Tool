@@ -55,11 +55,11 @@ import pac.Pac;
 import javax.imageio.ImageIO;
 
 
-public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseMotionListener {
+public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionListener {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger logger = LogManager.getLogger(PanelMeasurePoints.class.getName());
+	private static final Logger logger = LogManager.getLogger(PanelPacTool.class.getName());
 
 	// --------------------------------------------------------------------
 	// Objective is to display the coordinate for the points to match
@@ -80,6 +80,8 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 	private WinCirculatorDistr winCirculatorDistr;
 	private WinCirculatorSrc winCirculatorSrc;
 	private GuiConfig guiConfig;
+	private WinEnthalpy winEnthalpy;
+
 
 	private int bgImgWidth;
 	private  int bgImgHeight;
@@ -119,7 +121,7 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
-				PanelMeasurePoints panel1 = new PanelMeasurePoints(new PacToolVar(log4j2Config));		
+				PanelPacTool panel1 = new PanelPacTool(new PacToolVar(log4j2Config));		
 				frame.getContentPane().add(panel1, BorderLayout.CENTER);
 
 				frame.setBounds(100, 10, panel1.getBgImgWidth()+7, panel1.getBgImgHeight()+49);
@@ -135,7 +137,7 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 	/**
 	 * Create the application.
 	 */
-	public PanelMeasurePoints(PacToolVar vpacToolVar) {
+	public PanelPacTool(PacToolVar vpacToolVar) {
 		measurePointL = vpacToolVar.getMeasurePointL();
 		eDrawL = vpacToolVar.geteDrawL();
 		enthalpy = vpacToolVar.getEnthalpy();
@@ -146,7 +148,10 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 		winCirculatorSrc = vpacToolVar.getWinCirculatorSrc();
 		winCirculatorDistr = vpacToolVar.getWinCirculatorDistr();
 		guiConfig = vpacToolVar.getGuiConfig();
-
+		winEnthalpy = vpacToolVar.getWinEnthalpy();
+		
+		textFieldCOP = vpacToolVar.getPanelPacToolTextFieldCOP();
+		
 		imgURL = "/gui/images/Cycle.png";
 
 		pointMatched = false;
@@ -250,6 +255,19 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 				}
 				logger.trace("Remove all Draw elements (eDrawL) (Clear the display)");
 				eDrawL.clear();
+				
+				logger.trace("Update MeasureTable");
+				measureTable.setAllTableValues();
+
+				logger.trace("Update ResultTable");
+				resultTable.setAllTableValues();
+			
+				logger.trace("Repaint and Complete winEnthalpy");
+				winEnthalpy.repaint();
+				winEnthalpy.updateAllTextField();
+				
+				logger.trace("COP ={}", Comp.cop(measurePointL,pac));
+				textFieldCOP.setText(String.valueOf(Comp.cop(measurePointL,pac)));
 			}
 		});
 
@@ -273,6 +291,10 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 				eDrawL.clear();
 				eDrawL = ElDraw.createElDrawFrom(measurePointL,eDrawL);
 			
+				logger.trace("Repaint and Complete winEnthalpy");
+				winEnthalpy.repaint();
+				winEnthalpy.updateAllTextField();
+				
 				logger.trace("COP ={}", Comp.cop(measurePointL,pac));
 				textFieldCOP.setText(String.valueOf(Comp.cop(measurePointL,pac)));
 			}
@@ -327,6 +349,10 @@ public class PanelMeasurePoints extends JPanel implements MouseListener,  MouseM
 				logger.trace("Reinitialse the complete Draw elements with the Measure Collection");
 				eDrawL.clear();
 				eDrawL = ElDraw.createElDrawFrom(measurePointL,eDrawL);
+
+				logger.trace("Repaint and Complete winEnthalpy");
+				winEnthalpy.repaint();
+				winEnthalpy.updateAllTextField();
 
 				logger.trace("COP ={}", Comp.cop(measurePointL,pac));
 				textFieldCOP.setText(String.valueOf(Comp.cop(measurePointL,pac)));

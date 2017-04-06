@@ -27,6 +27,8 @@ import java.util.Scanner;
 import org.json.simple.JSONObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import computation.MeasurePoint;
 import computation.Misc;
 
 public class Enthalpy {
@@ -292,30 +294,28 @@ public class Enthalpy {
 	}
 
 	/**
-	 * Compute H, Matching PSat (T-Isotherm) with P0PK 
+	 * Compute H, Matching PSat (T-Isotherm) with P0-PK 
 	 * In all the cases the result must be positive !!
 	 * If not: Error to address and result = Hsat !!
-	 * @param Hsatv
-	 * @param Psat
-	 * @param P0PK = P0 or PK
-	 * @return H0HK
 	 */
-	public double CompHmatchPSatWithP0PK(double Hsat, double Psat, double P0PK) {
-		double H0HK;
-		
-		if (Psat > P0PK) {
-			H0HK = Hsat + (Psat-P0PK) / Math.abs(Math.tan(angleHmatchPSatWithP0PK*Math.PI/180));
+	public double CompHmatchPSatWithP0PK(MeasurePoint measurePoint) {
+		double Psat0 = measurePoint.getMP();
+		double P0PK0 = measurePoint.getMP0PK();
+		double Hsat0 = 0;
+		double H0HK = 0;
+		if (measurePoint.getMeasureObject().getEnthalpyZone() ==  EnthalpyZone.VAPOR) 
+			Hsat0 = matchP2HvaporSat( Psat0);
+		else
+			Hsat0 = matchP2HliquidSat( Psat0);
+			
+		if (Psat0 > P0PK0) {
+			H0HK = Hsat0 + (Psat0-P0PK0) / Math.abs(Math.tan(angleHmatchPSatWithP0PK*Math.PI/180));
 		}
 		else {
-			H0HK = Hsat;
-			logger.error("(CompHmatchPSatWithP0PK) H0HK = Hsat " + H0HK + " " + Hsat);
+			H0HK = Hsat0;
+			logger.error("(CompHmatchPSatWithP0PK) H0HK {} = Hsat {} ",H0HK,Hsat0);
 		}
-
-		//System.out.println("Psat= " + Psat);
-		//System.out.println("P0PK= " + P0PK);
-		//System.out.println("Hsat= " + Hsat);
-		//System.out.println("H0HK=" + H0HK);
-
+		
 		return H0HK;
 	}
 

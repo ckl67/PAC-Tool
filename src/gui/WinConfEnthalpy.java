@@ -89,7 +89,8 @@ public class WinConfEnthalpy extends JFrame {
 							new ResultTable(new ArrayList<MeasurePoint>(), new GuiConfig()),
 							new ArrayList<MeasurePoint>(),
 							new ArrayList<ElDraw>(), 
-							new WinPressTemp(enthalpy1));
+							new WinPressTemp(enthalpy1),
+							new JTextField());
 					WinConfEnthalpy frame = new WinConfEnthalpy(vwinEnthalpy1);
 					frame.setVisible(true);
 

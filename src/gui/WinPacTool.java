@@ -77,7 +77,7 @@ public class WinPacTool extends JFrame {
 	private WinDefinition winDefinition;
 	private WinLogger winLogger;
 
-	private PanelMeasurePoints contentPane;
+	private PanelPacTool contentPane;
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -131,7 +131,7 @@ public class WinPacTool extends JFrame {
 		// 													PANEL
 		// ===============================================================================================================
 
-		contentPane = new PanelMeasurePoints(pacToolVar);
+		contentPane = new PanelPacTool(pacToolVar);
 		getContentPane().add(contentPane, BorderLayout.CENTER);
 		//setBounds(100, 10, contentPane.getBgImgWidth()+7, contentPane.getBgImgHeight()+49);
 		setBounds(100, 10, contentPane.getBgImgWidth()+7, contentPane.getBgImgHeight()+49);
