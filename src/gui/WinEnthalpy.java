@@ -157,8 +157,8 @@ public class WinEnthalpy extends JFrame {
 	// -------------------------------------------------------
 
 	public void updateAllTextField() {
-		textPHP.setText(String.format("%.2f",measurePointL.get(MeasureObject._PK).getValue()));
-		textPBP.setText(String.format("%.2f",measurePointL.get(MeasureObject._P0).getValue()));
+		textPHP.setText(String.format("%.2f",measurePointL.get(MeasureObject._PK_ID).getValue()));
+		textPBP.setText(String.format("%.2f",measurePointL.get(MeasureObject._P0_ID).getValue()));
 		
 	}
 
@@ -401,9 +401,9 @@ public class WinEnthalpy extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				double PK = Double.parseDouble(textPHP.getText());
 
-				measurePointL.get(MeasureObject._PK_VAPOR).setValue(PK);
-				measurePointL.get(MeasureObject._PK_LIQUID).setValue(PK);
-				textPHP.setText(String.format("%.2f",measurePointL.get(MeasureObject._PK_VAPOR).getValue()));
+				measurePointL.get(MeasureObject._PK_VAPOR_ID).setValue(PK);
+				measurePointL.get(MeasureObject._PK_LIQUID_ID).setValue(PK);
+				textPHP.setText(String.format("%.2f",measurePointL.get(MeasureObject._PK_VAPOR_ID).getValue()));
 
 				logger.trace("Update the Measure Collection data ");
 				Comp.updateAllMeasurePoints(measurePointL,enthalpy,pac);
@@ -427,7 +427,7 @@ public class WinEnthalpy extends JFrame {
 			}
 		});
 		textPHP.setHorizontalAlignment(SwingConstants.RIGHT);
-		textPHP.setText(String.format("%.2f",measurePointL.get(MeasureObject._PK_VAPOR).getValue()));
+		textPHP.setText(String.format("%.2f",measurePointL.get(MeasureObject._PK_VAPOR_ID).getValue()));
 		panelHight_Hight.add(textPHP);
 		textPHP.setColumns(10);
 
@@ -440,8 +440,8 @@ public class WinEnthalpy extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				double P0 = Double.parseDouble(textPBP.getText());
 				
-				measurePointL.get(MeasureObject._P0).setValue(P0);
-				textPBP.setText(String.format("%.2f",measurePointL.get(MeasureObject._P0).getValue()));
+				measurePointL.get(MeasureObject._P0_ID).setValue(P0);
+				textPBP.setText(String.format("%.2f",measurePointL.get(MeasureObject._P0_ID).getValue()));
 
 				logger.trace("Update the Measure Collection data ");
 				Comp.updateAllMeasurePoints(measurePointL,enthalpy,pac);
@@ -465,7 +465,7 @@ public class WinEnthalpy extends JFrame {
 			}
 		});
 		textPBP.setHorizontalAlignment(SwingConstants.RIGHT);
-		textPBP.setText(String.format("%.2f",measurePointL.get(MeasureObject._P0).getValue()));
+		textPBP.setText(String.format("%.2f",measurePointL.get(MeasureObject._P0_ID).getValue()));
 		panelHight_Hight.add(textPBP);
 		textPBP.setColumns(10);
 

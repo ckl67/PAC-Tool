@@ -39,10 +39,10 @@ public enum MeasureObject {
 	// --------------------------------------------------------------------
 	// CONSTANTS
 	// --------------------------------------------------------------------
-	public static int _P0 = 6;	// = P7
-	public static int _PK = 2;	// = P3
-	public static int _PK_VAPOR  = 2;  	// = P3
-	public static int _PK_LIQUID = 3;	// = P4
+	public static int _P0_ID = 6;	// = P7
+	public static int _PK_ID = 2;	// = P3
+	public static int _PK_VAPOR_ID  = 2;  	// = P3
+	public static int _PK_LIQUID_ID = 3;	// = P4
 
 	// --------------------------------------------------------------------
 	// DEFINITION OF VARIABLES USED IN ENUMERATION

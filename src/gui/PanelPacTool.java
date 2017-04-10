@@ -324,10 +324,10 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 				double inValue = Double.valueOf(textField.getText());
 
 				// HP1 = HP2 = PK_GAS = PK_LIQUID
-				if (id == MeasureObject._PK_VAPOR)
-					measurePointL.get(MeasureObject._PK_LIQUID).setValue(inValue);
-				if (id == MeasureObject._PK_LIQUID)
-					measurePointL.get(MeasureObject._PK_VAPOR).setValue(inValue);
+				if (id == MeasureObject._PK_VAPOR_ID)
+					measurePointL.get(MeasureObject._PK_LIQUID_ID).setValue(inValue);
+				if (id == MeasureObject._PK_LIQUID_ID)
+					measurePointL.get(MeasureObject._PK_VAPOR_ID).setValue(inValue);
 
 				// Affect Value to measurePointL
 				measurePointL.get(id).setValue(inValue);

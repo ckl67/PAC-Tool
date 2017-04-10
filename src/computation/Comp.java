@@ -22,7 +22,7 @@ package computation;
 // Online tool used to draw this picture:
 // http://asciiflow.com/
 /*
-  
+
 			P
 			^
 			|
@@ -43,8 +43,8 @@ package computation;
 			|      X                                      X
 			|
 			+------------------------------------------------------------------------> H
-			
-*/
+
+ */
 
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
@@ -68,144 +68,247 @@ public class Comp {
 	 */
 	public static void updateAllMeasurePoints (List<MeasurePoint> measurePointL ,Enthalpy enthalpy, Pac pac ) {
 
-		logger.info("updateAllMeasurePoints()");
+		logger.info(" Input updateAllMeasurePoints()");
 		for (MeasureObject p : MeasureObject.values()) {
-			int n = p.ordinal(); 		// p = P1,P2,... n = 0 , 1, 
+			int n = p.id(); 	// p = P1,P2,... --> n = 0 , 1, 
+
 			MeasurePoint m = measurePointL.get(n);  
+			// ------------------------------------------
+			// Value to be completed for each Points : 
+			//		T, P,P0PK,H
+			// ------------------------------------------
 
 			switch (p) {
-			case P1 : case P6 : case P8 :	// Points intersection with P0
-				m.setMT( m.getValue() );
-				m.setMP( enthalpy.convT2P( m.getValue() ) );
-				// p can be P1,P6,P8, we have to Check if point has been chosen and if P > 0 
-				// then only H can be computed  
+			case P1 :
+				// BP gas temperature after internal overheating and before compression
+				// 	Should never happen as P1_T = P8_T + overheating, 
+				// 	but here, the user has chosen to enter P1
+				//  Value Entered = Temperature
+				/*
+				|         X |                               XX          /
+				|        XX |             (P0)               X         /
+				|       XX  +---------------------------------+---+---+
+				|       X  (6)                               (7) (8)  (1)
+				|      XX                                     X
+				 */
 				if (m.getMeasureChoiceStatus() == MeasureChoiceStatus.Chosen ) {
+					m.setMT(m.getValue());
+					m.setMP( enthalpy.convT2P( m.getValue() ));
+					// if P0 > 0 then only H can be computed
+					if ( measurePointL.get(MeasureObject._P0_ID).getValue() > 0 ) {
+						m.setMP0PK( measurePointL.get(MeasureObject._P0_ID).getValue() );
+						double Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(m); 
+						m.setMH(Hmpiso0);
+						m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+					}
+				}
+				break;
+			case P2 :
+				// HP gas temperature at the end of compression (Compressor top Bell)
+				//  Value Entered = Temperature
+				/*
+				|                  XXXX           XXXXX         (PK)
+				|        (5)+-----(4)-----------------(3)--------------------+ (2)
+				|           | XXXX                      XX                   /
+				|           |XX                          XX                 /
+				 */
+				if (m.getMeasureChoiceStatus() == MeasureChoiceStatus.Chosen ) {
+					m.setMT( m.getValue() );
+					m.setMP( enthalpy.convT2P( m.getValue()) );
+					// if PK > 0 then only H can be computed
+					if ( measurePointL.get(MeasureObject._PK_ID).getValue() > 0 ) {
+						m.setMP0PK( measurePointL.get(MeasureObject._PK_ID).getValue() );
+						double Hmpiso1 = enthalpy.CompHmatchPSatWithP0PK(m); 
+						m.setMH(Hmpiso1);
+						m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+					}
+				}
+				break;
+			case P5 :
+				// HP gas temperature after cooling
+				//  Value Entered = Temperature
+				/*
+				|                  XXXX           XXXXX         (PK)
+				|        (5)+-----(4)-----------------(3)--------------------+ (2)
+				|           | XXXX                      XX                   /
+				|           |XX                          XX                 /
+				 */
+				if (m.getMeasureChoiceStatus() == MeasureChoiceStatus.Chosen ) {
+					m.setMT( m.getValue() );
+					m.setMP( enthalpy.convT2P( m.getValue() ) );
+					// if PK > 0 then only H can be computed
+					double Hsat = 0;
+					if ( measurePointL.get(MeasureObject._PK_ID).getValue() > 0 ) {
+						m.setMP0PK( measurePointL.get(MeasureObject._PK_ID).getValue()  );
+						Hsat = enthalpy.matchP2HliquidSat( m.getMP());
+						m.setMH(Hsat);
+						m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+					}
 
-					if ( measurePointL.get(MeasureObject._P0).getValue() > 0 ) {
-						m.setMP0PK( measurePointL.get(MeasureObject._P0).getValue()  );
+					// Compute P6 = Output Temperature Regulator / Capillary
+					/*
+					|        XX |             (P0)               X         /
+					|       XX  +---------------------------------+---+---+
+					|       X  (6)                               (7) (8)  (1)
+					|      XX                                     X
+					 */
+					// if P0 > 0 then only H can be computed for P6
+					if ( measurePointL.get(MeasureObject._P0_ID).getValue() > 0 ) {
+						MeasurePoint m6 = measurePointL.get(MeasureObject.P6.id());
+						double tmpP = measurePointL.get(MeasureObject._P0_ID).getValue(); 
+						m6.setMP(tmpP);
+						m6.setMP0PK(tmpP);
+						double tmpT = enthalpy.convP2T(tmpP); 
+						m6.setValue(Math.round(tmpT*100)/100.0);
+						m6.setMT(tmpT);
+						m6.setMH(Hsat);
+						m6.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+					}
+				}
+				break;
+			case P6 :
+				// Output Temperature Regulator / Capillary
+				//  Value Entered = Temperature
+				/*
+				|         X |                               XX          /
+				|        XX |             (P0)               X         /
+				|       XX  +---------------------------------+---+---+
+				|       X  (6)                               (7) (8)  (1)
+				|      XX                                     X
+				 */
+				break;
 
-						// ------------ P1--------------
-						if (m.getMeasureObject().equals(MeasureObject.P1)) {
-							double Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(m); 
-							m.setMH(Hmpiso0);
-							m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
-						}
+			case P8 :	
+				// HP gas temperature after external heating
+				//  Value Entered = Temperature
+				/*
+				|         X |                               XX          /
+				|        XX |             (P0)               X         /
+				|       XX  +---------------------------------+---+---+
+				|       X  (6)                               (7) (8)  (1)
+				|      XX                                     X
+				 */
+				if (m.getMeasureChoiceStatus() == MeasureChoiceStatus.Chosen ) {
+					m.setMT(m.getValue());
+					m.setMP( enthalpy.convT2P( m.getValue() ));
+					// if P0 > 0 then only H can be computed
+					if ( measurePointL.get(MeasureObject._P0_ID).getValue() > 0 ) {
+						m.setMP0PK( measurePointL.get(MeasureObject._P0_ID).getValue()  );
+						double Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(m); 
+						m.setMH(Hmpiso0);
+						m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+					}
 
-						// ------------ P6--------------
-						if (m.getMeasureObject().equals(MeasureObject.P6)) {
+					// Will Also Compute P1 
+					// 	=>	BP gas temperature after internal overheating and before compression
+					// 	T1 is Over heated of T8 --> T1 = T8 + OH
+					double ohT = m.getValue() + Math.round(pac.getCurrentCompressor().getOverheated());
+					logger.info("Computation of T1 --> (T8={} + Compressor over head={}) = {}",m.getValue(),Math.round(pac.getCurrentCompressor().getOverheated()),ohT);
+					MeasurePoint m1 = measurePointL.get(MeasureObject.P1.id());
+					m1.setValue(Math.round(ohT*100)/100.0);
+					m1.setMT(ohT);
+					m1.setMP( enthalpy.convT2P( m1.getMT()));
 
+					// if P0 > 0 then only H can be computed
+					if ( measurePointL.get(MeasureObject._P0_ID).getValue() > 0 ) {
+						m1.setMP0PK( measurePointL.get(MeasureObject._P0_ID).getValue()  );
+						double Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(m1); 
+						m1.setMH(Hmpiso0);
+						m1.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+					}
+				}
+				break;
 
-						}
+			case P3 : 
+				// Initial condensation pressure (HP Manifold measurement)
+				//  Value Entered = Pressure
+				/*
+				|                  XXXX           XXXXX         (PK)
+				|        (5)+-----(4)-----------------(3)--------------------+ (2)
+				|           | XXXX                      XX                   /
+				|           |XX                          XX                 /
+				 */
+				if (m.getMeasureChoiceStatus() == MeasureChoiceStatus.Chosen ) {
+					// P must be > 0
+					if (m.getValue() > 0 ) {
+						m.setMP( m.getValue() );
+						m.setMT( enthalpy.convP2T( m.getValue()) );
+						m.setMP0PK( m.getValue() );
+						double Hsat = enthalpy.matchP2HvaporSat( m.getMP());
+						m.setMH(Hsat);
+						m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+					}					
+				}
+				break;
 
-						// ------------ P8--------------
-						if (m.getMeasureObject().equals(MeasureObject.P8)) {
-							double Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(m); 
-							m.setMH(Hmpiso0);
-							m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+			case P4 :
+				// Condensation end pressure (HP Manifold measurement)	
+				//  Value Entered = Pressure
+				/*
+				|                  XXXX           XXXXX         (PK)
+				|        (5)+-----(4)-----------------(3)--------------------+ (2)
+				|           | XXXX                      XX                   /
+				|           |XX                          XX                 /
+				 */
+				if (m.getMeasureChoiceStatus() == MeasureChoiceStatus.Chosen ) {
+					// P must be > 0
+					if (m.getValue() > 0 ) {
+						m.setMP( m.getValue() );
+						m.setMT( enthalpy.convP2T( m.getValue()) );
+						m.setMP0PK( m.getValue() );
+						double Hsat = enthalpy.matchP2HvaporSat( m.getMP());
+						m.setMH(Hsat);
+						m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
 
-							// T1 is Over heated of T8 --> T1 = T8 + OH
-							double ohT = measurePointL.get(MeasureObject.P8.ordinal()).getMT() + 
-									Math.round(pac.getCurrentCompressor().getOverheated());
-							logger.info("Computation of T1 --> (T8={} + Compressor over head={}) = {}",measurePointL.get(MeasureObject.P8.ordinal()).getMT(),Math.round(pac.getCurrentCompressor().getOverheated()),ohT);
+						// T5 is under cooling of T4 
+						double ucT = m.getMT() - Math.round(pac.getCurrentCompressor().getUnderCooling());
+						logger.info("Computation of T5 --> (T4={}  Under Colling ={}) = {}",m.getMT(),Math.round(pac.getCurrentCompressor().getUnderCooling()),ucT);
 
-							MeasurePoint m1 = measurePointL.get(MeasureObject.P1.ordinal());
-							m1.setValue(ohT);
-							m1.setMT(ohT);
-							m1.setMP( enthalpy.convT2P( m1.getMT()));
-							m1.setMP0PK( measurePointL.get(MeasureObject._P0).getValue()  );
+						MeasurePoint m5 = measurePointL.get(MeasureObject.P5.id());
+						m5.setMT(ucT);
+						m5.setValue(Math.round(ucT*100)/100.0);
+						m5.setMP( enthalpy.convT2P( m5.getMT()));
+						m5.setMP0PK( measurePointL.get(MeasureObject._PK_ID).getValue()  );
+						double Hsatm5 = enthalpy.matchP2HliquidSat( m5.getMP());
+						m5.setMH(Hsatm5);
+						m5.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
 
-							Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(m1); 
-
-							m1.setMH(Hmpiso0);
-							m1.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+						// Compute P6 = Output Temperature Regulator / Capillary
+						/*
+						|        XX |             (P0)               X         /
+						|       XX  +---------------------------------+---+---+
+						|       X  (6)                               (7) (8)  (1)
+						|      XX                                     X
+						 */
+						// if P0 > 0 then only H can be computed for P6
+						if ( measurePointL.get(MeasureObject._P0_ID).getValue() > 0 ) {
+							MeasurePoint m6 = measurePointL.get(MeasureObject.P6.id());
+							double tmpP = measurePointL.get(MeasureObject._P0_ID).getValue(); 
+							m6.setMP(tmpP);
+							m6.setMP0PK(tmpP);
+							double tmpT = enthalpy.convP2T(tmpP); 
+							m6.setValue(Math.round(tmpT*100)/100.0);
+							m6.setMT(tmpT);
+							m6.setMH(Hsat);
+							m6.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
 						}
 					}
 				}
 				break;
-			case P2 : case P5 :				// Points intersection with PK
-				m.setMT( m.getValue() );
-				m.setMP( enthalpy.convT2P( m.getValue() ) );
-				// p can be P2,P5, we have to Check if point has been chosen and if P > 0 
-				// then only H can be computed  
-				if (m.getMeasureChoiceStatus() == MeasureChoiceStatus.Chosen) {
-					if ( measurePointL.get(MeasureObject._PK).getValue() > 0 ) {
-						m.setMP0PK( measurePointL.get(MeasureObject._PK).getValue()  );
-
-						// ------------ P2--------------
-						if (m.getMeasureObject().equals(MeasureObject.P2)) {
-							double Hmpiso1 = enthalpy.CompHmatchPSatWithP0PK(m); 
-							m.setMH(Hmpiso1);
-							m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
-						}
-
-						// ------------ P5--------------
-						if (m.getMeasureObject().equals(MeasureObject.P5)) {
-							double Hsat = enthalpy.matchP2HliquidSat( m.getMP());
-							m.setMH(Hsat);
-							m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
-
-							// P6 will be computed only if P6 = 0
-							if (measurePointL.get(MeasureObject.P6.ordinal()).getValue() == 0) {
-
-								// Compute P6
-								MeasurePoint m6 = measurePointL.get(MeasureObject.P6.ordinal());
-								m6.setMP0PK( measurePointL.get(MeasureObject._P0).getValue());
-								m6.setMH(Hsat);
-								//m6.setMT();
-								m6.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
-							}
-						}
-					}
-				}
-				break;
-
-			case P3 : case P4 : case P7 :	// Line P0 or PK All point have to be computed
+			case P7 :	
+				// Evaporation Pressure \n (BP Manifold Measurement
 				// P must be > 0
 				if (m.getValue() > 0 ) {
 
 					m.setMP( m.getValue() );
 					m.setMT( enthalpy.convP2T( m.getValue() ) );
 					m.setMP0PK( m.getValue()  );
-
-					// if P3 == _PK_GAS_ID, we have also to Fill P4
-					if (m.getMeasureObject().equals(MeasureObject.P3)) {
-						double Hsat = enthalpy.matchP2HvaporSat( m.getMP());
-						m.setMH(Hsat);
-					}
-
-					// P4 == _PK_LIQUID_ID
-					if (m.getMeasureObject().equals(MeasureObject.P4)) {
-						double Hsat = enthalpy.matchP2HliquidSat( m.getMP());
-						m.setMH(Hsat);
-
-
-						// T5 is under cooling of T4 :: T5 = T4 - UC
-						double ucT = measurePointL.get(MeasureObject.P4.ordinal()).getMT() - 
-								Math.round(pac.getCurrentCompressor().getUnderCooling());
-						logger.info("Computation of T5 --> (T4={}  Under Colling ={}) = {}",measurePointL.get(MeasureObject.P4.ordinal()).getMT(),Math.round(pac.getCurrentCompressor().getUnderCooling()),ucT);
-
-						MeasurePoint m5 = measurePointL.get(MeasureObject.P5.ordinal());
-						m5.setMT(ucT);
-						m5.setValue(Math.round(ucT*100)/100.0);
-						m5.setMP( enthalpy.convT2P( m5.getMT()));
-						m5.setMP0PK( measurePointL.get(MeasureObject._PK).getValue()  );
-
-						double Hsatm5 = enthalpy.matchP2HliquidSat( m5.getMP());
-						m5.setMH(Hsatm5);
-						m5.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
-						//}
-
-
-					}
-
-					// P7 == _P0_GAS_ID
-					if (m.getMeasureObject().equals(MeasureObject.P7)) {
-						double Hsat = enthalpy.matchP2HvaporSat( m.getMP());
-						m.setMH(Hsat);
-					}
+					double Hsat = enthalpy.matchP2HvaporSat( m.getMP());
+					m.setMH(Hsat);
 					m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenP0PK);
 				}
-				break;			
+				break;		
+				
 			default:
 				break;
 			}
@@ -217,7 +320,10 @@ public class Comp {
 						p, m.getMeasureChoiceStatus(),m.getValue(),m.getMT(),m.getMP(),m.getMP0PK(),m.getMH()						
 						);
 			}
-		}
+			
+		} // End for (MeasureObject p : MeasureObject.values()) {
+		logger.info(" Output updateAllMeasurePoints()");
+
 	}
 
 
@@ -229,8 +335,8 @@ public class Comp {
 	public static double cop_carnot_froid(List<MeasurePoint> measurePointL) {
 		double result = 0;
 
-		double T0 = measurePointL.get(MeasureObject._P0).getMT();
-		double TK = measurePointL.get(MeasureObject._PK).getMT();
+		double T0 = measurePointL.get(MeasureObject._P0_ID).getMT();
+		double TK = measurePointL.get(MeasureObject._PK_ID).getMT();
 
 		if ((TK-T0) != 0.0) {
 			result = (T0+273)/(TK-T0);
@@ -245,8 +351,8 @@ public class Comp {
 	public static double cop_carnot_chaud(List<MeasurePoint> measurePointL) {
 		double result = 0;
 
-		double T0 = measurePointL.get(MeasureObject._P0).getMT();
-		double TK = measurePointL.get(MeasureObject._PK).getMT();
+		double T0 = measurePointL.get(MeasureObject._P0_ID).getMT();
+		double TK = measurePointL.get(MeasureObject._PK_ID).getMT();
 
 		if ((TK-T0) != 0.0) {
 			result = (TK+273)/(TK-T0);
@@ -262,12 +368,12 @@ public class Comp {
 
 		double travailCompresseur = measurePointL.get(MeasureObject.P2.id()).getMH() - 
 				measurePointL.get(MeasureObject.P1.id()).getMH();
-		
+
 		double puissanceCalorifique = measurePointL.get(MeasureObject.P2.id()).getMH() - 
 				measurePointL.get(MeasureObject.P1.id()).getMH();
-		
+
 		double rapportPcalSurTravComp = puissanceCalorifique/travailCompresseur;
-		
+
 		Compressor compressor = pac.getCurrentCompressor();
 		double cosPhi = Math.round(
 				Misc.cosphi(
@@ -282,11 +388,11 @@ public class Comp {
 		double puissanceUtile = puissanceAbsorbee * cosPhi;
 
 		double puissanceDispoArbreMoteur = puissanceUtile * compressor.getPowerShaftPercent()/100.0;
-		
+
 		double puissanceCalorifiqueVrai =  puissanceDispoArbreMoteur * rapportPcalSurTravComp;
-		
+
 		COP = puissanceCalorifiqueVrai / puissanceAbsorbee;
-		
+
 		return COP;		
 	}
 
