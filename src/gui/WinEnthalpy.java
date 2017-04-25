@@ -55,6 +55,7 @@ import computation.MeasurePoint;
 import computation.MeasureTable;
 import computation.ResultTable;
 import computation.Comp;
+import computation.MeasureChoiceStatus;
 import computation.MeasureObject;
 import enthalpy.Enthalpy;
 import log4j.Log4j2Config;
@@ -66,7 +67,7 @@ import javax.swing.UIManager;
 
 
 public class WinEnthalpy extends JFrame {
-	
+
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LogManager.getLogger(WinEnthalpy.class.getName());
 
@@ -80,9 +81,9 @@ public class WinEnthalpy extends JFrame {
 	private ResultTable resultTable;
 	private Pac pac;
 	private WinPressTemp winPressTemp;
-	
+
 	private JTextField panelPacToolTextFieldCOP;
-	
+
 	/* 	----------------------------------------
 	 * 		WIN BUILDER
 	 * ----------------------------------------*/
@@ -97,9 +98,9 @@ public class WinEnthalpy extends JFrame {
 	private JTextField textPHP;
 	private JTextField textPBP;
 	private static Point pointJPopupMenu; 	// JPopupMenu's Position --> Must be static
-	
+
 	private int ElDrawIdToMoveOnP;
-	
+
 	// -------------------------------------------------------
 	// 				TEST THE APPLICATION STANDALONE 
 	// -------------------------------------------------------
@@ -144,12 +145,12 @@ public class WinEnthalpy extends JFrame {
 		eDrawL = veDrawL;
 		winPressTemp = vwinPressTemp;
 		panelPacToolTextFieldCOP = vpanelPacToolTextFieldCOP;
-		
+
 		pointJPopupMenu = new Point();
-		
+
 		ElDrawIdToMoveOnP = -1;
 		initialize();
-		
+
 	}
 
 	// -------------------------------------------------------
@@ -159,7 +160,7 @@ public class WinEnthalpy extends JFrame {
 	public void updateAllTextField() {
 		textPHP.setText(String.format("%.2f",measurePointL.get(MeasureObject._PK_ID).getValue()));
 		textPBP.setText(String.format("%.2f",measurePointL.get(MeasureObject._P0_ID).getValue()));
-		
+
 	}
 
 
@@ -266,7 +267,7 @@ public class WinEnthalpy extends JFrame {
 				panelEnthalpyDrawArea.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			}
 		});
-		
+
 		panelEnthalpyDrawArea.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseMoved(MouseEvent evt) {
@@ -301,7 +302,7 @@ public class WinEnthalpy extends JFrame {
 				} else {
 					lblFollower.setText(String.format("----------"));
 				}
-				
+
 				if (ElDrawIdToMoveOnP >=0 ){
 					panelEnthalpyDrawArea.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 
@@ -317,7 +318,7 @@ public class WinEnthalpy extends JFrame {
 							resultTable.setAllTableValues();
 							//System.out.println(measureCollection.getmeasurePointL().get(n).getMHreal());
 						}
-							
+
 					}
 				}
 				repaint();
@@ -356,7 +357,7 @@ public class WinEnthalpy extends JFrame {
 				id = panelEnthalpyDrawArea.getIdNearest(eDrawL, ElDrawObject.PointPK_HP,panelEnthalpyDrawArea.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpyDrawArea.getPoYm((int)pointJPopupMenu.getY()));
 				if (id < 0)
 					id = panelEnthalpyDrawArea.getIdNearest(eDrawL, ElDrawObject.PointP0_HP, panelEnthalpyDrawArea.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpyDrawArea.getPoYm((int)pointJPopupMenu.getY()));
-				
+
 				logger.info(" Element to delete {} ", id);
 				if (id >= 0) {
 					eDrawL.remove(id);
@@ -379,7 +380,7 @@ public class WinEnthalpy extends JFrame {
 			}
 		});
 		popupMenu.add(mntmMove);
-		
+
 		// ----------------------------------------
 		// Command on the Right side (different level of JPanels 
 		// ----------------------------------------
@@ -403,11 +404,15 @@ public class WinEnthalpy extends JFrame {
 
 				measurePointL.get(MeasureObject._PK_VAPOR_ID).setValue(PK);
 				measurePointL.get(MeasureObject._PK_LIQUID_ID).setValue(PK);
+
+				measurePointL.get(MeasureObject._PK_LIQUID_ID).setMeasureChoiceStatus(MeasureChoiceStatus.Chosen);
+				measurePointL.get(MeasureObject._PK_VAPOR_ID).setMeasureChoiceStatus(MeasureChoiceStatus.Chosen);
+
 				textPHP.setText(String.format("%.2f",measurePointL.get(MeasureObject._PK_VAPOR_ID).getValue()));
 
 				logger.trace("Update the Measure Collection data ");
 				Comp.updateAllMeasurePoints(measurePointL,enthalpy,pac);
-				
+
 				logger.trace("Update MeasureTable");
 				measureTable.setAllTableValues();
 
@@ -420,7 +425,7 @@ public class WinEnthalpy extends JFrame {
 
 				logger.trace("Repaint winEnthalpy");
 				repaint();
-				
+
 				logger.trace("COP ={}", Comp.cop(measurePointL,pac));
 				panelPacToolTextFieldCOP.setText(String.valueOf(Comp.cop(measurePointL,pac)));
 
@@ -439,13 +444,15 @@ public class WinEnthalpy extends JFrame {
 		textPBP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				double P0 = Double.parseDouble(textPBP.getText());
-				
+
 				measurePointL.get(MeasureObject._P0_ID).setValue(P0);
+				measurePointL.get(MeasureObject._P0_ID).setMeasureChoiceStatus(MeasureChoiceStatus.Chosen);
+				
 				textPBP.setText(String.format("%.2f",measurePointL.get(MeasureObject._P0_ID).getValue()));
 
 				logger.trace("Update the Measure Collection data ");
 				Comp.updateAllMeasurePoints(measurePointL,enthalpy,pac);
-				
+
 				logger.trace("Update MeasureTable");
 				measureTable.setAllTableValues();
 
@@ -458,10 +465,10 @@ public class WinEnthalpy extends JFrame {
 
 				logger.trace("Repaint winEnthalpy");
 				repaint();
-				
+
 				logger.trace("COP ={}", Comp.cop(measurePointL,pac));
 				panelPacToolTextFieldCOP.setText(String.valueOf(Comp.cop(measurePointL,pac)));
-				
+
 			}
 		});
 		textPBP.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -541,7 +548,7 @@ public class WinEnthalpy extends JFrame {
 		panelBottom_Bottom.add(btnClear);
 	}
 
-	
+
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
@@ -549,7 +556,7 @@ public class WinEnthalpy extends JFrame {
 	public Enthalpy getEnthalpy() {
 		return enthalpy;
 	}
-	
+
 	public PanelEnthalpy getPanelEnthalpyDrawArea() {
 		return panelEnthalpyDrawArea;
 	}

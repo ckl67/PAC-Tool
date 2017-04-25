@@ -256,7 +256,7 @@ public class Comp {
 						m.setMP( m.getValue() );
 						m.setMT( enthalpy.convP2T( m.getValue()) );
 						m.setMP0PK( m.getValue() );
-						double Hsat = enthalpy.matchP2HvaporSat( m.getMP());
+						double Hsat = enthalpy.matchP2HliquidSat( m.getMP());
 						m.setMH(Hsat);
 						m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
 
@@ -289,7 +289,7 @@ public class Comp {
 							double tmpT = enthalpy.convP2T(tmpP); 
 							m6.setValue(Math.round(tmpT*100)/100.0);
 							m6.setMT(tmpT);
-							m6.setMH(Hsat);
+							m6.setMH(Hsatm5);
 							m6.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
 						}
 					}
@@ -325,7 +325,6 @@ public class Comp {
 		logger.info(" Output updateAllMeasurePoints()");
 
 	}
-
 
 
 	/**
@@ -392,6 +391,7 @@ public class Comp {
 		double puissanceCalorifiqueVrai =  puissanceDispoArbreMoteur * rapportPcalSurTravComp;
 
 		COP = puissanceCalorifiqueVrai / puissanceAbsorbee;
+		System.out.println("COP= "+ COP);
 
 		return COP;		
 	}
