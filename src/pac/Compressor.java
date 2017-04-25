@@ -38,8 +38,6 @@ public class Compressor {
 	private double voltageMeasure;
 	private int powerShaftPercent;
 
-
-
 	private double deltaP;	
 	private double deltaT;
 

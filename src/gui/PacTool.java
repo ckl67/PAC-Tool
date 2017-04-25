@@ -18,6 +18,8 @@
  */
 package gui;
 
+import java.util.Locale;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,6 +33,9 @@ public class PacTool {
 	// 							MAIN
 	// -------------------------------------------------------
 	public static void main(String[] args){
+		
+		// Force point (".") as decimal separator --> set your Locale
+		Locale.setDefault(new Locale("en", "US"));
 		
 		Log4j2Config log4j2Config = new Log4j2Config();
 		logger.info("Read the Appenders Declared");

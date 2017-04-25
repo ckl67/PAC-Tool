@@ -27,7 +27,7 @@ public enum PacItem {
 	 * Will return the position of the element
 	 * @return
 	 */
-	public int Pos() {
+	public int pos() {
 		return this.ordinal();
 	}
 	

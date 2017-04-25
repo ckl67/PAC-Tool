@@ -4,7 +4,8 @@ package testing;
 
 import org.junit.Test;
 
-import translation.Translation;
+import translation.TCompressor;
+import translation.TLanguage;
 
 public class JUnitTranslation {
 
@@ -13,8 +14,9 @@ public class JUnitTranslation {
 		
 		System.out.println("TEST PAC-Tool CONFIGURATION");
 
-		System.out.println(Translation.COMP_CAPACITY.getLangue(Translation._ENGLICH));
-		System.out.println(Translation.COMP_CAPACITY.getLangue(Translation._FRENCH));
+		System.out.println(TCompressor.COMP_CAPACITY.getLangue(TLanguage.ENGLICH));
+		System.out.println(TCompressor.COMP_CAPACITY.getLangue(TLanguage.FRENCH));
+		System.out.println(TCompressor.COMP_CAPACITY.getLangue(TLanguage.GERMAN));
 
 	}
 

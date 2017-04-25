@@ -42,7 +42,7 @@ import javax.swing.JButton;
 import computation.Misc;
 import pac.Compressor;
 import pac.Pac;
-import translation.Translation;
+import translation.TCompressor;
 
 public class WinCompressor extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -997,6 +997,6 @@ public class WinCompressor extends JFrame {
 	}
 
 	void changeLanguage(){
-		lblEer.setText(Translation.COMP_EER.getLangue(guiConfig.getLanguage()));
+		lblEer.setText(TCompressor.COMP_EER.getLangue(guiConfig.getLanguage()));
 	}
 }

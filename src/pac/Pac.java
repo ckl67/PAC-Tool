@@ -48,7 +48,6 @@ public class Pac {
 
 	private int[] id = new int[12];
 
-
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
@@ -105,41 +104,41 @@ public class Pac {
 
 		switch (GasInjected) {
 		case COMPRESSOR : 
-			fluidRefriL.set(id[PacItem.FLFRG.Pos()],    compressorL.get(id[PacItem.COMP.nb()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.Pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.Pos()],    condenserL.get(id[PacItem.COND.Pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.Pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.Pos()],    dehydratorL.get(id[PacItem.DEHY.Pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.Pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.Pos()],    expansionValveL.get(id[PacItem.EPVA.Pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.Pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.Pos()],    evaporatorL.get(id[PacItem.EVAP.Pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.Pos()])));
+			fluidRefriL.set(id[PacItem.FLFRG.pos()],    compressorL.get(id[PacItem.COMP.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
+			fluidRefriL.set(id[PacItem.FLFRG.pos()],    condenserL.get(id[PacItem.COND.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
+			fluidRefriL.set(id[PacItem.FLFRG.pos()],    dehydratorL.get(id[PacItem.DEHY.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
+			fluidRefriL.set(id[PacItem.FLFRG.pos()],    expansionValveL.get(id[PacItem.EPVA.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
+			fluidRefriL.set(id[PacItem.FLFRG.pos()],    evaporatorL.get(id[PacItem.EVAP.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
 			break;
 		case CONDENSER : 
-			fluidRefriL.set(id[PacItem.FLFRG.Pos()],    condenserL.get(id[PacItem.COND.Pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.Pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.Pos()],    dehydratorL.get(id[PacItem.DEHY.Pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.Pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.Pos()],    expansionValveL.get(id[PacItem.EPVA.Pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.Pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.Pos()],    evaporatorL.get(id[PacItem.EVAP.Pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.Pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.Pos()],    compressorL.get(id[PacItem.COMP.Pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.Pos()])));
+			fluidRefriL.set(id[PacItem.FLFRG.pos()],    condenserL.get(id[PacItem.COND.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
+			fluidRefriL.set(id[PacItem.FLFRG.pos()],    dehydratorL.get(id[PacItem.DEHY.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
+			fluidRefriL.set(id[PacItem.FLFRG.pos()],    expansionValveL.get(id[PacItem.EPVA.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
+			fluidRefriL.set(id[PacItem.FLFRG.pos()],    evaporatorL.get(id[PacItem.EVAP.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
+			fluidRefriL.set(id[PacItem.FLFRG.pos()],    compressorL.get(id[PacItem.COMP.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
 			break;
 		case EXPANSIONVALVE : 
-			fluidRefriL.set(id[PacItem.FLFRG.Pos()],    expansionValveL.get(id[PacItem.EPVA.Pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.Pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.Pos()],    evaporatorL.get(id[PacItem.EVAP.Pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.Pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.Pos()],    compressorL.get(id[PacItem.COMP.Pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.Pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.Pos()],    condenserL.get(id[PacItem.COND.Pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.Pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.Pos()],    dehydratorL.get(id[PacItem.DEHY.Pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.Pos()])));
+			fluidRefriL.set(id[PacItem.FLFRG.pos()],    expansionValveL.get(id[PacItem.EPVA.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
+			fluidRefriL.set(id[PacItem.FLFRG.pos()],    evaporatorL.get(id[PacItem.EVAP.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
+			fluidRefriL.set(id[PacItem.FLFRG.pos()],    compressorL.get(id[PacItem.COMP.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
+			fluidRefriL.set(id[PacItem.FLFRG.pos()],    condenserL.get(id[PacItem.COND.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
+			fluidRefriL.set(id[PacItem.FLFRG.pos()],    dehydratorL.get(id[PacItem.DEHY.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
 			break;
 		default:
-			fluidRefriL.set(id[PacItem.FLFRG.Pos()],    evaporatorL.get(id[PacItem.EVAP.Pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.Pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.Pos()],    compressorL.get(id[PacItem.COMP.Pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.Pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.Pos()],    condenserL.get(id[PacItem.COND.Pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.Pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.Pos()],    dehydratorL.get(id[PacItem.DEHY.Pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.Pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.Pos()],    expansionValveL.get(id[PacItem.EPVA.Pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.Pos()])));
+			fluidRefriL.set(id[PacItem.FLFRG.pos()],    evaporatorL.get(id[PacItem.EVAP.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
+			fluidRefriL.set(id[PacItem.FLFRG.pos()],    compressorL.get(id[PacItem.COMP.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
+			fluidRefriL.set(id[PacItem.FLFRG.pos()],    condenserL.get(id[PacItem.COND.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
+			fluidRefriL.set(id[PacItem.FLFRG.pos()],    dehydratorL.get(id[PacItem.DEHY.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
+			fluidRefriL.set(id[PacItem.FLFRG.pos()],    expansionValveL.get(id[PacItem.EPVA.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
 			break;
 		}
 		// Cycle Heat Source 
-		fluidCaloSrcL.set(id[PacItem.FLCAS.Pos()],    circulatorSrcL.get(id[PacItem.CRCLS.Pos()]).transfer(fluidCaloSrcL.get(id[PacItem.FLCAS.Pos()])));
-		fluidCaloSrcL.set(id[PacItem.FLCAS.Pos()],    circuitSrcL.get(id[PacItem.CIRTS.Pos()]).transfer(fluidCaloSrcL.get(id[PacItem.FLCAS.Pos()])));
+		fluidCaloSrcL.set(id[PacItem.FLCAS.pos()],    circulatorSrcL.get(id[PacItem.CRCLS.pos()]).transfer(fluidCaloSrcL.get(id[PacItem.FLCAS.pos()])));
+		fluidCaloSrcL.set(id[PacItem.FLCAS.pos()],    circuitSrcL.get(id[PacItem.CIRTS.pos()]).transfer(fluidCaloSrcL.get(id[PacItem.FLCAS.pos()])));
 
 		// Cycle Heat Distribution
-		fluidCaloDistrL.set(id[PacItem.FLCAD.Pos()],    circulatorDistrL.get(id[PacItem.CRCLD.Pos()]).transfer(fluidCaloDistrL.get(id[PacItem.FLCAD.Pos()])));
-		fluidCaloDistrL.set(id[PacItem.FLCAD.Pos()],    circuitDistrL.get(id[PacItem.CIRTD.Pos()]).transfer(fluidCaloDistrL.get(id[PacItem.FLCAD.Pos()])));	
+		fluidCaloDistrL.set(id[PacItem.FLCAD.pos()],    circulatorDistrL.get(id[PacItem.CRCLD.pos()]).transfer(fluidCaloDistrL.get(id[PacItem.FLCAD.pos()])));
+		fluidCaloDistrL.set(id[PacItem.FLCAD.pos()],    circuitDistrL.get(id[PacItem.CIRTD.pos()]).transfer(fluidCaloDistrL.get(id[PacItem.FLCAD.pos()])));	
 	}			
 
 	// -------------------------------------------------------

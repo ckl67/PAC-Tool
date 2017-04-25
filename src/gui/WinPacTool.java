@@ -45,9 +45,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import enthalpy.Enthalpy;
 import pac.Pac;
-import translation.Translation;
-
-
+import translation.TLanguage;
 
 public class WinPacTool extends JFrame {
 
@@ -341,7 +339,7 @@ public class WinPacTool extends JFrame {
 		JRadioButtonMenuItem mRationItemFrench = new JRadioButtonMenuItem("Francais");
 		mRationItemFrench.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				guiConfig.setLanguage(Translation._FRENCH);
+				guiConfig.setLanguage(TLanguage.FRENCH);
 				winCompressor.changeLanguage();
 				winCirculatorSrc.changeLanguage();
 				winCirculatorDistr.changeLanguage();
@@ -356,7 +354,7 @@ public class WinPacTool extends JFrame {
 		JRadioButtonMenuItem mRationItemEnglisch = new JRadioButtonMenuItem("English");
 		mRationItemEnglisch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				guiConfig.setLanguage(Translation._ENGLICH);
+				guiConfig.setLanguage(TLanguage.ENGLICH);
 				winCompressor.changeLanguage();
 				winCirculatorSrc.changeLanguage();
 				winCirculatorDistr.changeLanguage();

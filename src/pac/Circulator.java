@@ -123,7 +123,6 @@ public class Circulator {
 		currentL.remove(idFeature);	
 	}
 
-
 	/**
 	 * Clear the Feature List 
 	 */

@@ -20,11 +20,11 @@ package gui;
 
 import org.json.simple.JSONObject;
 
-import translation.Translation;
+import translation.TLanguage;
 
 public class GuiConfig {
 
-	private int language;		
+	private TLanguage language;		
 	
 	private boolean unitCompBTU;		// checkoxBTU
 	private boolean unitCompPound;		// chckbxPound
@@ -35,7 +35,7 @@ public class GuiConfig {
 	// -------------------------------------------------------
 
 	public GuiConfig() {
-		language = Translation._ENGLICH;
+		language = TLanguage.ENGLICH;
 		
 		unitCompBTU = true;
 		unitCompPound = true;
@@ -62,7 +62,7 @@ public class GuiConfig {
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
 		JSONObject jsonObj = new JSONObject();  
-		jsonObj.put("language", this.language);	
+		jsonObj.put("language", this.language.ordinal());	
 		jsonObj.put("unitCompBTU", this.unitCompBTU);	
 		jsonObj.put("unitCompPound", this.unitCompPound);
 		jsonObj.put("unitCompFaren", this.unitCompFaren);
@@ -75,7 +75,15 @@ public class GuiConfig {
 	 * @param jsonObj : JSON Object
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
-		this.language = ((Number) jsonObj.get("language")).intValue();
+		int language_ordinal;
+		
+		language_ordinal = ((Number) jsonObj.get("language")).intValue();
+		
+		   for (TLanguage p : TLanguage.values()) {
+			   if (p.ordinal() == language_ordinal)
+				   this.language = p;
+		   }
+			   
 		this.unitCompBTU = (boolean) jsonObj.get("unitCompBTU");
 		this.unitCompPound = (boolean) jsonObj.get("unitCompPound");
 		this.unitCompFaren = (boolean) jsonObj.get("unitCompFaren");
@@ -123,11 +131,11 @@ public class GuiConfig {
 		this.unitCompFaren = unitCompFaren;
 	}
 
-	public int getLanguage() {
+	public TLanguage getLanguage() {
 		return language;
 	}
 
-	public void setLanguage(int language) {
+	public void setLanguage(TLanguage language) {
 		this.language = language;
 	}
 

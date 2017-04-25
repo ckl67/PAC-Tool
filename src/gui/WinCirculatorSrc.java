@@ -38,8 +38,7 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 import pac.Circulator;
 import pac.Pac;
-import translation.Translation;
-
+import translation.TCirculator;
 
 public class WinCirculatorSrc extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -523,6 +522,6 @@ public class WinCirculatorSrc extends JFrame {
 	}
 
 	void changeLanguage(){
-		lblPower.setText(Translation.CIRCUL_POWER.getLangue(guiConfig.getLanguage()));
+		lblPower.setText(TCirculator.CIRCUL_POWER.getLangue(guiConfig.getLanguage()));
 	}
 }
