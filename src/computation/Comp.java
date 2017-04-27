@@ -19,8 +19,6 @@
 
 package computation;
 
-// Online tool used to draw this picture:
-// http://asciiflow.com/
 /*
 
 			P
@@ -296,16 +294,43 @@ public class Comp {
 				}
 				break;
 			case P7 :	
-				// Evaporation Pressure \n (BP Manifold Measurement
+				// Evaporation Pressure (BP Manifold Measurement)
 				// P must be > 0
+				/*
+				|        XX |             (P0)               X         /
+				|       XX  +---------------------------------+---+---+
+				|       X  (6)                               (7) (8)  (1)
+				|      XX                                     X
+				 */
 				if (m.getValue() > 0 ) {
-
 					m.setMP( m.getValue() );
 					m.setMT( enthalpy.convP2T( m.getValue() ) );
 					m.setMP0PK( m.getValue()  );
 					double Hsat = enthalpy.matchP2HvaporSat( m.getMP());
 					m.setMH(Hsat);
-					m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenP0PK);
+					m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+					
+					// Will also compute P6 if P5 is present
+					/*
+					|                  XXXX           XXXXX         (PK)
+					|        (5)+-----(4)-----------------(3)--------------------+ (2)
+					|           | XXXX                      XX                   /
+					|           |XX                          XX                 /
+					 */
+
+					MeasurePoint m5 = measurePointL.get(MeasureObject.P5.id());
+					if ( m5.getMH() > 0 ) {
+						MeasurePoint m6 = measurePointL.get(MeasureObject.P6.id());
+						double tmpP = measurePointL.get(MeasureObject._P0_ID).getValue(); 
+						m6.setMP(tmpP);
+						m6.setMP0PK(tmpP);
+						double tmpT = enthalpy.convP2T(tmpP); 
+						m6.setValue(Math.round(tmpT*100)/100.0);
+						m6.setMT(tmpT);
+						m6.setMH(m5.getMH());
+						m6.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+					}
+						
 				}
 				break;		
 				

@@ -293,10 +293,11 @@ public class WinEnthalpy extends JFrame {
 
 				if (rdbtnSaturation.isSelected()) {
 					double pSat = enthalpy.convSatH2P(hResult,pResult);
+					double tSat = enthalpy.convP2T(pSat);
 					panelEnthalpyDrawArea.setCurveFollowerX(hResult);
 					panelEnthalpyDrawArea.setCurveFollowerY(pSat);
 					if (pSat > 0 )
-						lblFollower.setText(String.format("PSat=%.2f bar",pSat));
+						lblFollower.setText(String.format("PSat=%.2f / Tsat=%.2f",pSat,tSat));
 					else
 						lblFollower.setText(String.format("----------"));			
 				} else {
