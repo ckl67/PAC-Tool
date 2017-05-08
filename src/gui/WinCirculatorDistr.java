@@ -22,6 +22,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.awt.EventQueue;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.border.TitledBorder;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -105,15 +106,15 @@ public class WinCirculatorDistr extends JFrame {
 
 		logger.info("applyConfig : NB CirculatorDistr={}", pac.getNbOfCirculatorDistrNb());
 		// Remove all CirculatorDistr items in ComboBox (except the first)
-		int tmpcnt = comboBoxCirculatorDistr.getItemCount();
-		for(int i=1;i<tmpcnt;i++) {
-			comboBoxCirculatorDistr.removeItemAt(1);
-		}
+//		int tmpcnt = comboBoxCirculatorDistr.getItemCount();
+//		for(int i=1;i<tmpcnt;i++) {
+//			comboBoxCirculatorDistr.removeItemAt(i);
+//		}
 
 		// Fill CirculatorDistr ComboBox
-		for(int i=1;i<pac.getNbOfCirculatorDistrNb();i++) {
-			comboBoxCirculatorDistr.insertItemAt(pac.getCirculatorDistrNb(i).getName(),i);
-		}
+//		for(int i=1;i<pac.getNbOfCirculatorDistrNb();i++) {
+//			comboBoxCirculatorDistr.insertItemAt(pac.getCirculatorDistrNb(i).getName(),i);
+//		}
 		comboBoxCirculatorDistr.setSelectedIndex(0);
 		pac.selectCurrentCirculatorDistr(0);
 		fillCirculatorDistrTexField(pac.getCurrentCirculatorDistr());
@@ -178,11 +179,27 @@ public class WinCirculatorDistr extends JFrame {
 
 		setTitle("Circulator Distribution");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(WinAbout.class.getResource("/gui/images/PAC-Tool_16.png")));
-		setBounds(100, 100, 436, 403);
+		setBounds(100, 100, 437, 431);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
 
+		// ===============================================================================================================
+		//													TABBED PANE
+		// ===============================================================================================================
+
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setBounds(0, 0, 431, 401);
+		getContentPane().add(tabbedPane);
+
+		// ===============================================================================================================
+		//									                 PANEL COMPRESSOR
+		// ===============================================================================================================
+		JPanel panelCirculator = new JPanel();
+		tabbedPane.addTab("Circulator", null, panelCirculator, null);
+		panelCirculator.setLayout(null);
+
+		
 		// ================================================================
 		// 					  	 To Be created at First
 		// ================================================================
@@ -192,7 +209,7 @@ public class WinCirculatorDistr extends JFrame {
 		// ================================================================
 		JPanel panel1 = new JPanel();
 		panel1.setBounds(10, 88, 410, 71);
-		getContentPane().add(panel1);
+		panelCirculator.add(panel1);
 		panel1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Donn\u00E9es Constructeur", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panel1.setLayout(null);
 
@@ -220,7 +237,7 @@ public class WinCirculatorDistr extends JFrame {
 		// ---------------------------------------------------------------
 		textFieldCirculatorDistrName = new JTextField();
 		textFieldCirculatorDistrName.setBounds(10, 11, 167, 52);
-		getContentPane().add(textFieldCirculatorDistrName);
+		panelCirculator.add(textFieldCirculatorDistrName);
 		textFieldCirculatorDistrName.setToolTipText("Name can be modified");
 		textFieldCirculatorDistrName.setForeground(new Color(0, 0, 128));
 		textFieldCirculatorDistrName.setBorder(null);
@@ -234,7 +251,7 @@ public class WinCirculatorDistr extends JFrame {
 		// ---------------------------------------------------------------
 		JButton btnSaveCirculatorDistr = new JButton("Sauv.");
 		btnSaveCirculatorDistr.setBounds(265, 48, 68, 23);
-		getContentPane().add(btnSaveCirculatorDistr);
+		panelCirculator.add(btnSaveCirculatorDistr);
 		btnSaveCirculatorDistr.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int ComboId = comboBoxCirculatorDistr.getSelectedIndex();
@@ -257,7 +274,7 @@ public class WinCirculatorDistr extends JFrame {
 		// ---------------------------------------------------------------
 		JButton btnDeleteCirculatorDistr = new JButton("Suppr.");
 		btnDeleteCirculatorDistr.setBounds(340, 48, 68, 23);
-		getContentPane().add(btnDeleteCirculatorDistr);
+		panelCirculator.add(btnDeleteCirculatorDistr);
 		btnDeleteCirculatorDistr.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int ComboId = comboBoxCirculatorDistr.getSelectedIndex();
@@ -278,7 +295,7 @@ public class WinCirculatorDistr extends JFrame {
 		// ---------------------------------------------------------------
 		JButton btnNewCirculatorDistr = new JButton("Nouv.");
 		btnNewCirculatorDistr.setBounds(187, 48, 68, 23);
-		getContentPane().add(btnNewCirculatorDistr);
+		panelCirculator.add(btnNewCirculatorDistr);
 		btnNewCirculatorDistr.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int ComboId = comboBoxCirculatorDistr.getSelectedIndex();
@@ -291,10 +308,14 @@ public class WinCirculatorDistr extends JFrame {
 
 				// For a new item we have to reset the feature list
 				if (comboBoxFeature != null) {
-					int tmpcnt = comboBoxFeature.getItemCount();
-					for(int i=0;i<tmpcnt;i++) {
-						comboBoxFeature.removeItemAt(0);
-					}
+					// Normally Do not use comboBoxFeature.removeItemAt(..) 
+					// because it will move the combo Box, and launch the function behind
+					// But here we must either that it will remove the arrow ???
+					//int tmpcnt = comboBoxFeature.getItemCount();
+					//for(int i=0;i<tmpcnt;i++) {
+					//	comboBoxFeature.removeItemAt(i);
+					//}
+					
 					comboBoxFeature.addItem("Feature: 0");
 					comboBoxFeature.setSelectedIndex(0);
 				}
@@ -313,7 +334,7 @@ public class WinCirculatorDistr extends JFrame {
 		JPanel panel2 = new JPanel();
 		panel2.setBorder(new TitledBorder(null, "Features", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel2.setBounds(10, 165, 410, 199);
-		getContentPane().add(panel2);
+		panelCirculator.add(panel2);
 		panel2.setLayout(null);
 
 		// -----------------------
@@ -439,7 +460,7 @@ public class WinCirculatorDistr extends JFrame {
 		// ---------------------------------------------------------------
 		comboBoxCirculatorDistr = new JComboBox<String>();
 		comboBoxCirculatorDistr.setBounds(252, 11, 131, 20);
-		getContentPane().add(comboBoxCirculatorDistr);
+		panelCirculator.add(comboBoxCirculatorDistr);
 		comboBoxCirculatorDistr.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int ComboId = comboBoxCirculatorDistr.getSelectedIndex();
@@ -454,10 +475,9 @@ public class WinCirculatorDistr extends JFrame {
 				
 				fillCirculatorDistrFeature(circulatorDistr);
 				if (comboBoxFeature != null) {
-					int tmpcnt = comboBoxFeature.getItemCount();
-					for(int i=0;i<tmpcnt;i++) {
-						comboBoxFeature.removeItemAt(0);
-					}
+					// Do not use comboBoxFeature.removeItemAt(..) because 
+					// it will move the combo Box, and launch the function behind 
+					comboBoxFeature.removeAllItems();
 
 					for(int i=0;i<pac.getCirculatorDistrNb(ComboId).getNbOfFeatures();i++) {
 						comboBoxFeature.addItem("Feature:"+i);
@@ -505,10 +525,15 @@ public class WinCirculatorDistr extends JFrame {
 				int featureId = comboBoxFeature.getSelectedIndex();
 
 				if ((ComboId>=0) && (featureId>=0)) {
-					int tmpcnt = comboBoxFeature.getItemCount();
-					for(int i=0;i<tmpcnt;i++) {
-						comboBoxFeature.removeItemAt(0);
-					}
+					
+					// Do not use comboBoxFeature.removeItemAt(..) because 
+					// it will move the combo Box, and launch the function behind 
+					comboBoxFeature.removeAllItems();
+
+					//int tmpcnt = comboBoxFeature.getItemCount();
+					//for(int i=0;i<tmpcnt;i++) {
+					//	comboBoxFeature.removeItemAt(0);
+					//}
 
 					for(int i=0;i<pac.getCirculatorDistrNb(ComboId).getNbOfFeatures();i++) {
 						comboBoxFeature.addItem("Feature:"+i);

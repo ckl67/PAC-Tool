@@ -1,0 +1,8 @@
+Le principe consiste à récupérer les caractéristiques en .pdf des gaz, puis de convertir les données en fichier Excel
+Tous les résultats seront consignés au niveau du fichier Excel : Gaz_Table_Conversion.xlsx
+
+Outil pour découper fichier .pdf, afin de ne garder que la partie intéressante
+http://www.pdfsam.org/
+
+Conversion .pdf en excel
+http://pdftoxls.com/ 

@@ -73,22 +73,7 @@ public class EnthalpyBkgdImg {
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
-	/**
-	 * Load the EnthalpyImageFile
-	 */
-	public BufferedImage openEnthalpyImageFile() {
-		BufferedImage image=null;
-		try {
-			File file = new File(enthalpyImageFile);
-			logger.info("Read File: {}", enthalpyImageFile);
 
-			image = ImageIO.read(file);	
-		} catch (IOException e) {
-			logger.error(e);
-			e.printStackTrace(); 
-		}
-		return image;
-	}
 	
 	// -------------------------------------------------------
 	// 							JSON
@@ -119,7 +104,7 @@ public class EnthalpyBkgdImg {
 	}
 	
 	/**
-	 * Set the JSON d<ata, to the Class instance
+	 * Set the JSON data, to the Class instance
 	 * @param jsonObj : JSON Object
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
@@ -213,6 +198,11 @@ public class EnthalpyBkgdImg {
 
 	public void setEnthalpyImageFile(String enthalpyImageFile) {
 		this.enthalpyImageFile = enthalpyImageFile;
+		logger.info("setEnthalpyImageFile :: enthalpyImageFile = {}", enthalpyImageFile);
+	}
+
+	public String getEnthalpyImageFile() {
+		return enthalpyImageFile;
 	}
 
 }

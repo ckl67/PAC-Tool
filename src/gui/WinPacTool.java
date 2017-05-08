@@ -75,7 +75,7 @@ public class WinPacTool extends JFrame {
 	private WinDefinition winDefinition;
 	private WinLogger winLogger;
 
-	private PanelPacTool contentPane;
+	private PanelPacTool contentPanel;
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -129,10 +129,10 @@ public class WinPacTool extends JFrame {
 		// 													PANEL
 		// ===============================================================================================================
 
-		contentPane = new PanelPacTool(pacToolVar);
-		getContentPane().add(contentPane, BorderLayout.CENTER);
-		//setBounds(100, 10, contentPane.getBgImgWidth()+7, contentPane.getBgImgHeight()+49);
-		setBounds(100, 10, contentPane.getBgImgWidth()+7, contentPane.getBgImgHeight()+49);
+		contentPanel = new PanelPacTool(pacToolVar);
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		//setBounds(100, 10, contentPanel.getBgImgWidth()+7, contentPanel.getBgImgHeight()+49);
+		setBounds(100, 10, contentPanel.getBgImgWidth()+7, contentPanel.getBgImgHeight()+49);
 
 
 		// ===============================================================================================================
@@ -155,13 +155,15 @@ public class WinPacTool extends JFrame {
 				chooser.setFileFilter(filter);
 				File workingDirectory = new File(System.getProperty("user.dir"));
 				chooser.setCurrentDirectory(workingDirectory);
-				int returnVal = chooser.showOpenDialog(contentPane);
+				int returnVal = chooser.showOpenDialog(contentPanel);
 				if(returnVal == JFileChooser.APPROVE_OPTION) {
 
 					// Read the configuration from File
 					PacToolConfig.readConfigFile(pac, enthalpy, guiConfig, chooser.getSelectedFile().getAbsolutePath());
 
-					winCompressor.applyConfig(guiConfig);
+					winCompressor.applyConfig();
+					winEnthalpy.applyConfig();
+					winConfEnthalpy.applyConfig();
 
 				}
 			}
@@ -178,7 +180,7 @@ public class WinPacTool extends JFrame {
 				chooser.setFileFilter(filter);
 				File workingDirectory = new File(System.getProperty("user.dir"));
 				chooser.setCurrentDirectory(workingDirectory);
-				if(chooser.showOpenDialog(contentPane) == JFileChooser.APPROVE_OPTION) {
+				if(chooser.showOpenDialog(contentPanel) == JFileChooser.APPROVE_OPTION) {
 					PacToolConfig.saveConfigFile(pac, enthalpy, guiConfig, chooser.getSelectedFile().getAbsolutePath());
 				} 
 
@@ -206,7 +208,7 @@ public class WinPacTool extends JFrame {
 							Graphics2D g2d = (Graphics2D)g;
 							g2d.translate(pageFormat.getImageableX(),pageFormat.getImageableY());
 
-							contentPane.paint(g2d);
+							contentPanel.paint(g2d);
 							return(PAGE_EXISTS); 
 						}
 					}
@@ -325,6 +327,7 @@ public class WinPacTool extends JFrame {
 		mImgEnthalpyCfg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				logger.trace("JMenuItem: Open winConfEnthalpy");
+				System.out.println("getNameRefrigerant() : " + enthalpy.getNameRefrigerant());
 				winConfEnthalpy.setVisible(true);
 			}
 		});

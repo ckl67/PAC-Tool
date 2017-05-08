@@ -136,25 +136,25 @@ public class WinCompressor extends JFrame {
 	 * Apply the WinPac GUI configuration to GUI Compressor.
 	 * @param guiConfig
 	 */
-	public void applyConfig(GuiConfig vguiConfig) {
+	public void applyConfig() {
 
 		logger.info("applyConfig : NB Compressor={}", pac.getNbOfCompressorNb());
 		// Remove all Compressor items in ComboBox (except the first)
-		int tmpcnt = comboBoxComp.getItemCount();
-		for(int i=1;i<tmpcnt;i++) {
-			comboBoxComp.removeItemAt(1);
-		}
+	//	int tmpcnt = comboBoxComp.getItemCount();
+	//	for(int i=1;i<tmpcnt;i++) {
+	//		comboBoxComp.removeItemAt(i);
+	//	}
 
 		// Set the Compressor Check Box (Fahrenheit/Pound/BTU) before to affect the data to text field, 
 		// no actions will be performed by this settings 
-		checkoxFaren.setSelected(vguiConfig.getUnitCompFaren());
-		checkoxBTU.setSelected(vguiConfig.getUnitCompBTU()); 		
-		checkoxPound.setSelected(vguiConfig.getUnitCompPound()); 		
+		checkoxFaren.setSelected(guiConfig.getUnitCompFaren());
+		checkoxBTU.setSelected(guiConfig.getUnitCompBTU()); 		
+		checkoxPound.setSelected(guiConfig.getUnitCompPound()); 		
 
 		// Fill Compressor ComboBox
-		for(int i=1;i<pac.getNbOfCompressorNb();i++) {
-			comboBoxComp.insertItemAt(pac.getCompressorNb(i).getName(),i);
-		}
+	//	for(int i=1;i<pac.getNbOfCompressorNb();i++) {
+	//		comboBoxComp.insertItemAt(pac.getCompressorNb(i).getName(),i);
+	//	}
 		comboBoxComp.setSelectedIndex(0);
 		pac.selectCurrentCompressor(0);
 		fillCompressorTextField(pac.getCurrentCompressor());

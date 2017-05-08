@@ -43,10 +43,10 @@ public class Enthalpy {
 	/* ----------------
 	 * Diagram Enthalpy  
 	 * ----------------*/
-	private String nameRefrigerant;			// Name (R22/..)
-	private double xHmin;  					//  Enthalpy Minimum of the range of values displayed.
-	private double xHmax;    				//  Enthalpy Maximum of the range of value displayed.
-
+	private String nameRefrigerant;			// Name (R22/R407 C)
+	
+	private double xHmin;  					// Enthalpy Minimum of the range of values displayed.
+	private double xHmax;    				// Enthalpy Maximum of the range of value displayed.
 	private double yPmin;  					// Pressure Minimum of the range of Pressure value
 	private double yPmax;     				// Pressure Maximum of the range of Pressure value. 
 
@@ -54,7 +54,9 @@ public class Enthalpy {
 	   Diagram Pressure-Temperature
 	 * ----------------------------*/
 	private String fileNameTP;						// Data file with : Temperature / Pressure relation
-	private List<Point2D.Double> listTP;			// Coordinate Temperature / Pressure : List
+	private List<Point2D.Double> listSatTPf;		// Coordinate Temperature (Saturation) / Pressure Fluid (Liquid)
+	private List<Point2D.Double> listSatTPg;		// Coordinate Temperature (Saturation) / Pressure Gas (Vapor)
+
 	private double deltaP;							// Delta pressure absolute / relative
 
 	/* -----------------------------
@@ -103,7 +105,9 @@ public class Enthalpy {
 		   Diagram Pressure-Temperature
 		 * ----------------------------*/
 		this.fileNameTP = "./ressources/R22/P2T_R22.txt";
-		this.listTP = new ArrayList<Point2D.Double>();
+		this.listSatTPf = new ArrayList<Point2D.Double>();
+		this.listSatTPg = new ArrayList<Point2D.Double>();
+		
 		this.deltaP = 0.0;
 		this.loadPTFile();
 
@@ -154,7 +158,7 @@ public class Enthalpy {
 				double temp = Double.parseDouble(val [0].replace(",", "."));
 				double press = Double.parseDouble(val [1].replace(",", "."));
 
-				listTP.add(new Point2D.Double(temp, press));
+				listSatTPf.add(new Point2D.Double(temp, press));
 			}
 		}
 		// Close scanner to avoid memory leak
@@ -330,15 +334,15 @@ public class Enthalpy {
 		double presso=0;
 		double min = Double.MAX_VALUE;
 		int id=0;
-		if (listTP.size() != 0) {
-			for(int n = 0; n < listTP.size(); n++){
+		if (listSatTPf.size() != 0) {
+			for(int n = 0; n < listSatTPf.size(); n++){
 				double diff = Math.abs(getT(n) - temp);
 				if (diff < min) {
 					min = diff;
 					id = n;
 				}
 			}
-			if (id == listTP.size()-1) {
+			if (id == listSatTPf.size()-1) {
 				id = id-1;
 			} 
 
@@ -371,15 +375,15 @@ public class Enthalpy {
 		double min = Double.MAX_VALUE;
 		int id=0;
 		double pressi = press - deltaP; 
-		if (listTP.size() != 0) {
-			for(int n = 0; n < listTP.size(); n++){
+		if (listSatTPf.size() != 0) {
+			for(int n = 0; n < listSatTPf.size(); n++){
 				double diff = Math.abs(getP(n) - pressi);
 				if (diff < min) {
 					min = diff;
 					id = n;
 				}
 			}
-			if (id == listTP.size()-1) {
+			if (id == listSatTPf.size()-1) {
 				id = id-1;
 			} 
 
@@ -401,7 +405,7 @@ public class Enthalpy {
 	 * @return T
 	 */
 	public double getT(int id) {
-		return listTP.get(id).getX();
+		return listSatTPf.get(id).getX();
 	}
 
 	// -------------------------------------------------------
@@ -411,7 +415,7 @@ public class Enthalpy {
 	 * @return P
 	 */
 	public double getP(int id) {
-		return listTP.get(id).getY();
+		return listSatTPf.get(id).getY();
 	}
 
 	// -------------------------------------------------------
@@ -628,11 +632,11 @@ public class Enthalpy {
 	}
 
 	public List<Point2D.Double> getlistTP() {
-		return listTP;
+		return listSatTPf;
 	}
 
 	public void setlistTP(List<Point2D.Double> listTP) {
-		this.listTP = listTP;
+		this.listSatTPf = listTP;
 	}
 
 	public String getFileNameSAT() {

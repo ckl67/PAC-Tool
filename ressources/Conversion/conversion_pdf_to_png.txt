@@ -1,0 +1,6 @@
+With Gimp
+Open .pdf
+During import to choose width ~3100 pixels
+After import to reajust to width = 3000 pixels
+Save in .png
+That's all !

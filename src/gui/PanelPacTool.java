@@ -544,4 +544,7 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 		return bgImgHeight;
 	}
 
+	public void updateCOP(double vCOP) {
+		textFieldCOP.setText(String.valueOf(vCOP));
+	}
 }

@@ -20,6 +20,7 @@ package gui;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
@@ -76,10 +77,12 @@ public class WinEnthalpy extends JFrame {
 	 * ----------------------------------------*/
 	private Enthalpy enthalpy;		
 	private List<MeasurePoint> measurePointL;
+
 	private List<ElDraw> eDrawL;	
 	private MeasureTable measureTable;
 	private ResultTable resultTable;
 	private Pac pac;
+
 	private WinPressTemp winPressTemp;
 
 	private JTextField panelPacToolTextFieldCOP;
@@ -87,7 +90,7 @@ public class WinEnthalpy extends JFrame {
 	/* 	----------------------------------------
 	 * 		WIN BUILDER
 	 * ----------------------------------------*/
-	private PanelEnthalpy panelEnthalpyDrawArea;
+	private PanelEnthalpy panelEnthalpy;
 	private JLabel lblMouseCoordinate;
 	private JLabel lblEnthalpyCoord;
 	private JLabel lblPressureCoord;
@@ -156,6 +159,19 @@ public class WinEnthalpy extends JFrame {
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
+
+	public void applyConfig() {
+		panelEnthalpy.setBufBkgdImg(panelEnthalpy.openEnthalpyImageFile());
+		
+		panelEnthalpy.setxHmin(enthalpy.getxHmin());
+		panelEnthalpy.setxHmax(enthalpy.getxHmax());
+		panelEnthalpy.setyPmin(enthalpy.getyPmin());
+		panelEnthalpy.setyPmax(enthalpy.getyPmax());
+	}
+	
+	public JTextField getPanelPacToolTextFieldCOP() {
+		return panelPacToolTextFieldCOP;
+	}
 
 	public void updateAllTextField() {
 		textPHP.setText(String.format("%.2f",measurePointL.get(MeasureObject._PK_ID).getValue()));
@@ -252,32 +268,32 @@ public class WinEnthalpy extends JFrame {
 		// Panel Draw Enthalpy : Base
 		// ----------------------------------------
 
-		panelEnthalpyDrawArea = new PanelEnthalpy(enthalpy,eDrawL);	
-		panelEnthalpyDrawArea.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-		panelEnthalpyDrawArea.setBackground(Color.WHITE);
-		getContentPane().add(panelEnthalpyDrawArea, BorderLayout.CENTER);
+		panelEnthalpy = new PanelEnthalpy(enthalpy, eDrawL);	
+		panelEnthalpy.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		panelEnthalpy.setBackground(Color.WHITE);
+		getContentPane().add(panelEnthalpy, BorderLayout.CENTER);
 
 		// **************************
 		// MOUSE MOTION LISTENER  !!
 		// **************************
-		panelEnthalpyDrawArea.addMouseListener(new MouseAdapter() {
+		panelEnthalpy.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent evt) {
 				ElDrawIdToMoveOnP = -1;
-				panelEnthalpyDrawArea.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				panelEnthalpy.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			}
 		});
 
-		panelEnthalpyDrawArea.addMouseMotionListener(new MouseMotionAdapter() {
+		panelEnthalpy.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseMoved(MouseEvent evt) {
 
 				lblMouseCoordinate.setText(String.format("(x: %d y: %d)", evt.getX(), evt.getY()));
 
-				double hResult = panelEnthalpyDrawArea.getHoXm(evt.getX());
+				double hResult = panelEnthalpy.getHoXm(evt.getX());
 				lblEnthalpyCoord.setText(String.format("H=%.2f kJ/kg",hResult));
 
-				double pResult = panelEnthalpyDrawArea.getPoYm(evt.getY());
+				double pResult = panelEnthalpy.getPoYm(evt.getY());
 				lblPressureCoord.setText(String.format("P=%.2f bar",pResult));
 
 				double tRresult = enthalpy.convP2T(pResult);
@@ -294,8 +310,8 @@ public class WinEnthalpy extends JFrame {
 				if (rdbtnSaturation.isSelected()) {
 					double pSat = enthalpy.convSatH2P(hResult,pResult);
 					double tSat = enthalpy.convP2T(pSat);
-					panelEnthalpyDrawArea.setCurveFollowerX(hResult);
-					panelEnthalpyDrawArea.setCurveFollowerY(pSat);
+					panelEnthalpy.setCurveFollowerX(hResult);
+					panelEnthalpy.setCurveFollowerY(pSat);
 					if (pSat > 0 )
 						lblFollower.setText(String.format("PSat=%.2f / Tsat=%.2f",pSat,tSat));
 					else
@@ -305,7 +321,7 @@ public class WinEnthalpy extends JFrame {
 				}
 
 				if (ElDrawIdToMoveOnP >=0 ){
-					panelEnthalpyDrawArea.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+					panelEnthalpy.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 
 					eDrawL.get(ElDrawIdToMoveOnP).setX1(hResult);
 					String name = eDrawL.get(ElDrawIdToMoveOnP).getEnsembleName(); // T1,T2,..
@@ -333,31 +349,31 @@ public class WinEnthalpy extends JFrame {
 		JSlider slider = new JSlider();
 		slider.setBackground(Color.WHITE);
 		slider.setFocusable(false);
-		slider.setValue((int)(panelEnthalpyDrawArea.getAlphaBlurBkgdImg()*100));
+		slider.setValue((int)(panelEnthalpy.getAlphaBlurBkgdImg()*100));
 
 		slider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				int v = slider.getValue();
-				panelEnthalpyDrawArea.setImageAlphaBlure((float) v / slider.getMaximum());
-				panelEnthalpyDrawArea.repaint();
+				panelEnthalpy.setImageAlphaBlure((float) v / slider.getMaximum());
+				panelEnthalpy.repaint();
 			}
 		});
-		panelEnthalpyDrawArea.add(slider, BorderLayout.NORTH);
+		panelEnthalpy.add(slider, BorderLayout.NORTH);
 
 		// ----------------------------------------
 		// Panel Draw Enthalpy : POPUP Menu
 		// ----------------------------------------
 		JPopupMenu popupMenu = new JPopupMenu();
-		addPopup(panelEnthalpyDrawArea, popupMenu);
+		addPopup(panelEnthalpy, popupMenu);
 
 		JMenuItem mntmDelete = new JMenuItem("Delete");
 		mntmDelete.setIcon(new ImageIcon(WinEnthalpy.class.getResource("/com/sun/javafx/scene/control/skin/modena/HTMLEditor-Cut-Black.png")));
 		mntmDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int id; 
-				id = panelEnthalpyDrawArea.getIdNearest(eDrawL, ElDrawObject.PointPK_HP,panelEnthalpyDrawArea.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpyDrawArea.getPoYm((int)pointJPopupMenu.getY()));
+				id = panelEnthalpy.getIdNearest(eDrawL, ElDrawObject.PointPK_HP,panelEnthalpy.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpy.getPoYm((int)pointJPopupMenu.getY()));
 				if (id < 0)
-					id = panelEnthalpyDrawArea.getIdNearest(eDrawL, ElDrawObject.PointP0_HP, panelEnthalpyDrawArea.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpyDrawArea.getPoYm((int)pointJPopupMenu.getY()));
+					id = panelEnthalpy.getIdNearest(eDrawL, ElDrawObject.PointP0_HP, panelEnthalpy.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpy.getPoYm((int)pointJPopupMenu.getY()));
 
 				logger.info(" Element to delete {} ", id);
 				if (id >= 0) {
@@ -371,9 +387,9 @@ public class WinEnthalpy extends JFrame {
 		mntmMove.setIcon(new ImageIcon(WinEnthalpy.class.getResource("/com/sun/javafx/scene/control/skin/modena/HTMLEditor-Paste-Black.png")));
 		mntmMove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int id = panelEnthalpyDrawArea.getIdNearest(eDrawL, ElDrawObject.PointPK_HP, panelEnthalpyDrawArea.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpyDrawArea.getPoYm((int)pointJPopupMenu.getY()));
+				int id = panelEnthalpy.getIdNearest(eDrawL, ElDrawObject.PointPK_HP, panelEnthalpy.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpy.getPoYm((int)pointJPopupMenu.getY()));
 				if (id < 0)
-					id = panelEnthalpyDrawArea.getIdNearest(eDrawL, ElDrawObject.PointP0_HP, panelEnthalpyDrawArea.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpyDrawArea.getPoYm((int)pointJPopupMenu.getY()));
+					id = panelEnthalpy.getIdNearest(eDrawL, ElDrawObject.PointP0_HP, panelEnthalpy.getHoXm((int)pointJPopupMenu.getX()), panelEnthalpy.getPoYm((int)pointJPopupMenu.getY()));
 				logger.info(" Element to move {} ", id);
 				if (id >= 0) {
 					ElDrawIdToMoveOnP = id;
@@ -532,8 +548,8 @@ public class WinEnthalpy extends JFrame {
 		btnResetZoom.setMaximumSize(new Dimension(85, 23));
 		btnResetZoom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				panelEnthalpyDrawArea.centerImg();
-				panelEnthalpyDrawArea.repaint();			
+				panelEnthalpy.centerImg();
+				panelEnthalpy.repaint();			
 			}
 		});
 		panelBottom_Bottom.add(btnResetZoom);
@@ -543,7 +559,7 @@ public class WinEnthalpy extends JFrame {
 		btnClear.setMaximumSize(new Dimension(85, 23));
 		btnClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				panelEnthalpyDrawArea.clean();
+				panelEnthalpy.clean();
 			}
 		});
 		panelBottom_Bottom.add(btnClear);
@@ -558,8 +574,26 @@ public class WinEnthalpy extends JFrame {
 		return enthalpy;
 	}
 
-	public PanelEnthalpy getPanelEnthalpyDrawArea() {
-		return panelEnthalpyDrawArea;
+	public PanelEnthalpy getPanelEnthalpy() {
+		return panelEnthalpy;
+	}
+	public List<ElDraw> geteDrawL() {
+		return eDrawL;
+	}
+
+	public List<MeasurePoint> getMeasurePointL() {
+		return measurePointL;
+	}
+	public MeasureTable getMeasureTable() {
+		return measureTable;
+	}
+
+	public ResultTable getResultTable() {
+		return resultTable;
+	}
+
+	public Pac getPac() {
+		return pac;
 	}
 
 }

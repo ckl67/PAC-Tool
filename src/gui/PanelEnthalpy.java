@@ -37,7 +37,11 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import org.apache.logging.log4j.LogManager;
@@ -72,6 +76,7 @@ public class PanelEnthalpy extends JPanel {
 	private double log10_yPmax;     		// Pressure Maximum of the range of value displayed. --> Math.log10(100) = 2
 
 	private BufferedImage bufBkgdImg;		// Enthalpy Image Background
+
 	private float alphaBlurBkgdImg;			// Blur the Background image  
 
 	private Point offset;					// Supplementary Offset
@@ -98,12 +103,12 @@ public class PanelEnthalpy extends JPanel {
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public PanelEnthalpy(Enthalpy vconfEnthalpy, List<ElDraw> veDrawL) {
+	public PanelEnthalpy(Enthalpy vEnthalpy, List<ElDraw> veDrawL) {
 		super();
 
 		logger.info("PanelEnthalpy");
 
-		this.enthalpy = vconfEnthalpy;
+		this.enthalpy = vEnthalpy;
 		this.enthalpyBkgdImg = enthalpy.getEnthalpyBkgImage();
 		this.xHmin = enthalpy.getxHmin();  				
 		this.xHmax = enthalpy.getxHmax();    				
@@ -112,7 +117,7 @@ public class PanelEnthalpy extends JPanel {
 		this.log10_yPmin = Math.log10(yPmin);
 		this.log10_yPmax = Math.log10(yPmax);
 
-		this.bufBkgdImg = enthalpyBkgdImg.openEnthalpyImageFile();
+		this.bufBkgdImg = openEnthalpyImageFile();
 
 		this.alphaBlurBkgdImg=0.5f;
 
@@ -197,6 +202,24 @@ public class PanelEnthalpy extends JPanel {
 	// 							METHOD
 	// -------------------------------------------------------
 
+	/**
+	 * Load the EnthalpyImageFile
+	 */
+	public BufferedImage openEnthalpyImageFile() {
+		BufferedImage image=null;
+		
+		try {
+			File file = new File(enthalpyBkgdImg.getEnthalpyImageFile());
+			logger.info("Read File: {}", enthalpyBkgdImg.getEnthalpyImageFile());
+
+			image = ImageIO.read(file);	
+		} catch (IOException e) {
+			logger.error(e);
+			e.printStackTrace(); 
+		}
+		return image;
+	}
+	
 	/** 
 	 * Clean the screen + Clear the list of the draw elements
 	 */
@@ -325,10 +348,6 @@ public class PanelEnthalpy extends JPanel {
 		g2AfT.scale(zoomx, -zoomy);
 		g2AfT.translate(offset.x-(xHmax+xHmin)/2, -offset.y/mvoYf-(log10_yPmax+log10_yPmin)/2);
 		g2.transform(g2AfT);
-
-		//g2.translate(getWidth()/2,getHeight()/2);
-		//g2.scale(zoomx, -zoomy);
-		//g2.translate(offset.x-(xHmax+xHmin)/2, -offset.y/mvoYf-(log10_yPmax+log10_yPmin)/2);
 
 		// -----------------------------------
 		// Image
@@ -559,12 +578,20 @@ public class PanelEnthalpy extends JPanel {
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
 
-	public double getXmin() {
-		return xHmin;
+	public void setxHmin(double xHmin) {
+		this.xHmin = xHmin;
 	}
 
-	public double getXmax() {
-		return xHmax;
+	public void setxHmax(double xHmax) {
+		this.xHmax = xHmax;
+	}
+
+	public void setyPmin(double yPmin) {
+		this.yPmin = yPmin;
+	}
+
+	public void setyPmax(double yPmax) {
+		this.yPmax = yPmax;
 	}
 
 	public float getAlphaBlurBkgdImg() {
@@ -583,4 +610,8 @@ public class PanelEnthalpy extends JPanel {
 		this.curveFollowerY = curveFollowerY;
 	}
 
+	public void setBufBkgdImg(BufferedImage bufBkgdImg) {
+		this.bufBkgdImg = bufBkgdImg;
+	}
+	
 }

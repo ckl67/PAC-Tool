@@ -66,8 +66,11 @@ public class Comp {
 	 */
 	public static void updateAllMeasurePoints (List<MeasurePoint> measurePointL ,Enthalpy enthalpy, Pac pac ) {
 
+		//int nb = 0;
 		logger.info(" Input updateAllMeasurePoints()");
 		for (MeasureObject p : MeasureObject.values()) {
+			
+			//System.out.println(nb++);
 			int n = p.id(); 	// p = P1,P2,... --> n = 0 , 1, 
 
 			MeasurePoint m = measurePointL.get(n);  
