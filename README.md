@@ -1,100 +1,102 @@
  PAC-Tool
 ----------
-Outil pour Pompe à Chaleur
+Outil pour Pompe Ã  Chaleur
 
- Définition 
+ DÃ©finition 
 -------------
-Outil qui permet de vérifier les données contructeur (COP) et de calculer le COP de votre pompe à  chaleur à  partir de vos mesures. 
-(Programme écrit en Java)
+Outil qui permet de vÃ©rifier les donnÃ©es contructeur (COP) et de calculer le COP de votre pompe Ã Â  chaleur Ã Â  partir de vos mesures. 
+(Programme Ã©crit en Java)
 
-Pour le test final, préférer la méthode en ligne de commande
+Pour le test final, prÃ©fÃ©rer la mÃ©thode en ligne de commande
 java -jar PAC-Tool.jar
 
- Chaine de Développement
+ Chaine de DÃ©veloppement
 --------------------------
-La chaine d'outil pour le développement est la suivante:
+La chaine d'outil pour le dÃ©veloppement est la suivante:
 
 Java
 	http://www.oracle.com/technetwork/java/javase/downloads/index.html
 	Version minimale: jre8u111
 	Je conseille d'utiliser JDK
 
-Fuite mémoire
-	Afin de trouver les fuites mémoires, il est conseillé d'activer les paramètres de vérification code au niveau Eclipse
-	Par la suite, un outil très intéressant est: visualvm
+Fuite mÃ©moire
+	Afin de trouver les fuites mÃ©moires, il est conseillÃ© d'activer les paramÃ¨tres de vÃ©rification code au niveau Eclipse
+	Par la suite, un outil trÃ¨s intÃ©ressant est: visualvm
 	https://visualvm.github.io/download.html
 	Introduction:
 	https://developers.redhat.com/blog/2014/08/14/find-fix-memory-leaks-java-application/
 	
-Environnement de développement intégré / (Integrated Development Environment)
+Environnement de dÃ©veloppement intÃ©grÃ© / (Integrated Development Environment)
 	Eclipse IDE for Java Developers
 	Version minimale: Neon.1a Release (4.6.1)
 	https://eclipse.org/downloads/
 	Choisir: Eclipse IDE for Java Developers
 
 WindowBuilder (Eclipse)
-	Installation WindowBuilder à travers Marketplace dans Eclipse
+	Installation WindowBuilder Ã  travers Marketplace dans Eclipse
 
 log4j Logger
 	Log4j Plugin pour le logging  
-	Doit être téléchargé sur le site officiel
+	Doit Ãªtre tÃ©lÃ©chargÃ© sur le site officiel
 		Download : https://logging.apache.org/log4j/2.x/download.html 
 	Utilisation:
 	http://logging.apache.org/log4j/2.x/manual/api.html
 		
-Langage de modélisation unifié, Unified Modeling Language (UML) intégré à  Eclipse
+Langage de modÃ©lisation unifiÃ©, Unified Modeling Language (UML) intÃ©grÃ© Ã Â  Eclipse
 	ObjectAid
-	Installer uniquement les modules ne nécessitant pas de licences.
+	Installer uniquement les modules ne nÃ©cessitant pas de licences.
 	Au niveau Eclipse dans Install New Software
 	Name: ObjectAid UML Explorer
 	URL: http://www.objectaid.com/update
 	
 Editeur HTML
 	Par exemple: kompozer-0.7.10-win32
-	Intégré à Eclipse
+	IntÃ©grÃ© Ã  Eclipse
 
 Gestion de versions Git
-	Git est intégré à Eclipse, mais je préfère utiliser SourceTree.
-	Git est donc intégré à SourceTree, mais afin de pouvoir créer une animation montrant l'évolution du développement
-	Git est nécessaire en local sous windows
+	Git est intÃ©grÃ© Ã  Eclipse, mais je prÃ©fÃ¨re utiliser SourceTree.
+	Git est donc intÃ©grÃ© Ã Â SourceTree, mais afin de pouvoir crÃ©er une animation montrant l'Ã©volution du dÃ©veloppement
+	Git est nÃ©cessaire en local sous windows
 	https://git-scm.com/download/win		
 	
 SourceTree	
-	Client graphique claire et structurée, compatible avec Git
-	Dans option Git, activer: "Update Embedded Git" afin d'avoir la version intégrée de Git
+	Client graphique claire et structurÃ©e, compatible avec Git
+	Lors de l'installation de SourceTree, il sera demandÃ© de pointer vers le rÃ©pertoire Git installÃ© Ã  part, 
+	et de tÃ©lÃ©charger une version embarquÃ©e de Mercudial
+	Dans option Git, activer: "Update Embedded Git" afin d'avoir la version intÃ©grÃ©e de Git
 	https://www.sourcetreeapp.com/
 	
 GitHub 
-	Service Web d'hébergement et de gestion de développement de logiciels. 
+	Service Web d'hÃ©bergement et de gestion de dÃ©veloppement de logiciels. 
 	https://github.com/ckl67/PAC-Tool
 	Projet sous: PAC-Tool
 
 ffmpeg
 	converteur video
-	Après installation modifier variable d'environnement pour pointer sur ffmpeg
+	AprÃ¨s installation modifier variable d'environnement pour pointer sur ffmpeg
 	https://ffmpeg.zeranoe.com/builds/
 	
 Gource
 	Outil d'animation du projet
 	http://gource.io/#
-	Generation video: (durant la génération la fenêtre doit resté ouverte )
+	Generation video: (durant la gÃ©nÃ©ration la fenÃªtre doit restÃ© ouverte )
 	https://github.com/acaudwell/Gource/wiki/Videos
 	
 Conversion Jar vers Exe
-	Launch4j est une application qui permet de créer des "lanceurs" (exécutables Windows classiques 
-	pour des applications développées en Java. 
+	Launch4j est une application qui permet de crÃ©er des "lanceurs" (exÃ©cutables Windows classiques 
+	pour des applications dÃ©veloppÃ©es en Java. 
 	http://launch4j.sourceforge.net/
-	Pour avoir une version standalone (Java bundled) il faut que Java soit installé dans un répertoire
+	Pour avoir une version standalone (Java bundled) il faut que Java soit installÃ© dans un rÃ©pertoire
 	relatif.
 	Je conseille d'utiliser JDK, et de le copier sous: ...\pac-tool\jar
 
 Creation d'un installateur avec Inno.
-	Inno permet de créer un installeur Window
+	Inno permet de crÃ©er un installeur Window
 	http://www.jrsoftware.org/isinfo.php
 	
 wxMaxima
 	Outil de calcul symbolique.
-	Très utile pour la simplification des expressions mathématiques
+	TrÃ¨s utile pour la simplification des expressions mathÃ©matiques
 	http://andrejv.github.io/wxmaxima/index.html
 
 Introduction au Java
@@ -102,7 +104,7 @@ Introduction au Java
 OpenClassRooms est une excellente introduction au Java
 * https://openclassrooms.com/courses/apprenez-a-programmer-en-java
 
-D'autres références sont données au niveau du répertoire: 
+D'autres rÃ©fÃ©rences sont donnÃ©es au niveau du rÃ©pertoire: 
 ..\pac-tool\dev_help
 
  Autre
