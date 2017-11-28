@@ -4,38 +4,52 @@ Outil pour Pompe à Chaleur
 
  Définition 
 -------------
-Outil qui permet de vérifier les données contructeur (COP) et de calculer le COP de votre pompe à  chaleur à  partir de vos mesures. 
-(Programme écrit en Java)
-<br>
-Pour le test final, préférer la méthode en ligne de commande<br>
-java -jar PAC-Tool.jar
+Outil qui permet de vérifier les données contructeur (COP) et de calculer le COP de votre pompe à chaleur à partir de vos mesures. 
+<i>(Programme écrit en Java)</i>
 
  Chaine de Développement
 --------------------------
-La chaine d'outil pour le développement est la suivante:
+La chaine d'outil pour le développement est la suivante:<br>
+<i>Je donne ci-dessous l'ordre dans lequel je conseille de procéder à l'installation de la chaîne de développement.</i>
 
 Java
-	http://www.oracle.com/technetwork/java/javase/downloads/index.html
-	Version minimale: jre8u111<br>
-	Je conseille d'utiliser JDK<br>
+----
+Java Platform, Standard Edition<br>
+http://www.oracle.com/technetwork/java/javase/downloads/index.html
+Version minimale: jre8u111<br>
+Utiliser JDK<br>
 
-Fuite mémoire
-	Afin de trouver les fuites mémoires, il est conseillé d'activer les paramètres de vérification code au niveau Eclipse<br>
-	Par la suite, un outil très intéressant est: visualvm<br>
-	https://visualvm.github.io/download.html<br>
-	Introduction:<br>
-	https://developers.redhat.com/blog/2014/08/14/find-fix-memory-leaks-java-application/<br>
+SourceTree
+-----------
+Client graphique clair et structuré, compatible avec Git <br>
+Lors de l'installation de SourceTree, il faudra
+
+	Créer un compte Altassian, ou utiliser un compte Google<br>
+	Choisir GitHub (L'association devrait se faire automatiquement)
+	L'outil va 
+télécharger automatiquement la version embarquée de Git<br> 
+<i>(Dans le cas contraire ne pas pointer vers une version installée GIT voir plus loin )</i>, <br>
+télécharger la version embarquée de Mercudial<br>
+	Dans option Git, activer: "Update Embedded Git" afin d'avoir la version intégrée de Git<br>
+	https://www.sourcetreeapp.com/
 	
-Environnement de développement intégré / (Integrated Development Environment)
-	Eclipse IDE for Java Developers<br>
-	Version minimale: Neon.1a Release (4.6.1)<br>
-	https://eclipse.org/downloads/<br>
-	Choisir: Eclipse IDE for Java Developers<br>
+	
+Eclipse: Environnement de développement intégré
+-----------------------------------------------
+Eclipse IDE <i>(Integrated Development Environment)</i> for Java Developers<br>
+Version minimale: Neon Release<br>
+https://www.eclipse.org/downloads/eclipse-packages/<br>
+Choisir: Eclipse Installer
+Lors de l'installation choisir: Eclipse IDE for Java Developers<br>
 
-WindowBuilder (Eclipse)
+Add-ons intégrés à Eclipse (IDE)
+--------------------------------
+WindowBuilder
+-------------
 	Installation WindowBuilder à travers Marketplace dans Eclipse
 
 log4j Logger
+------------
 	Log4j Plugin pour le logging  <br>
 	Doit être téléchargé sur le site officiel<br>
 		Download : https://logging.apache.org/log4j/2.x/download.html <br>
@@ -53,19 +67,29 @@ Editeur HTML
 	Par exemple: kompozer-0.7.10-win32<br>
 	Intégré à Eclipse<br>
 
+
+Fuite mémoire
+	Afin de trouver les fuites mémoires, il est conseillé d'activer les paramètres de vérification code au niveau Eclipse<br>
+	Par la suite, un outil très intéressant est: visualvm<br>
+	https://visualvm.github.io/download.html<br>
+	Introduction:<br>
+	https://developers.redhat.com/blog/2014/08/14/find-fix-memory-leaks-java-application/<br>
+	
+
+	<br>
+Pour le test final, préférer la méthode en ligne de commande<br>
+java -jar PAC-Tool.jar
+
+
+
+
 Gestion de versions Git
 	Git est intégré à Eclipse, mais je préfère utiliser SourceTree.<br>
 	Git est donc intégré à SourceTree, mais afin de pouvoir créer une animation montrant l'évolution du développement<br>
 	Git est nécessaire en local sous windows<br>
 	https://git-scm.com/download/win<br>
 	
-SourceTree	
-	Client graphique claire et structurée, compatible avec Git <br>
-	Lors de l'installation de SourceTree, il faudra <br>
-	télécharger la version embarquée de Git (ne pas pointer vers la version installée voir ci-dessus), <br>
-	télécharger une version embarquée de Mercudial<br>
-	Dans option Git, activer: "Update Embedded Git" afin d'avoir la version intégrée de Git<br>
-	https://www.sourcetreeapp.com/
+
 	
 GitHub 
 	Service Web d'hébergement et de gestion de développement de logiciels. <br>
