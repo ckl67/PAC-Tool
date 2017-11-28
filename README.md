@@ -1,170 +1,120 @@
- PAC-Tool
-----------
-Outil pour Pompe à  Chaleur
+# PAC-Tool
+Outil pour Pompe à Chaleur
 
- Définition 
--------------
-Outil qui permet de vÃ©rifier les donnÃ©es contructeur (COP) et de calculer le COP de votre pompe Ã  chaleur Ã  partir de vos mesures. 
-<i>(Programme Ã©crit en Java)</i>
+# Définition 
+Outil qui permet de vérifier les données contructeur (COP) et de calculer le COP de votre pompe à chaleur à partir de vos mesures.  
+*(Programme écrit en Java)*
 
+# Chaine de Développement
+La chaine d'outil pour le développement est la suivante:  
+*Je donne ci-dessous l'ordre dans lequel je conseille de procéder à l'installation de la chaîne de développement.*
 
- Chaine de DÃ©veloppement
---------------------------
-La chaine d'outil pour le dÃ©veloppement est la suivante:<br>
-<i>Je donne ci-dessous l'ordre dans lequel je conseille de procÃ©der Ã  l'installation de la chaÃ®ne de dÃ©veloppement.</i>
+# GitHub
+Service Web d'hébergement et de gestion de développement de logiciels : **https://github.com/ckl67/PAC-Tool**
+Projet sous: PAC-Tool
 
-CrÃ©ation Compte Github
-----------------------
-La premiÃ¨re chose va consister Ã  crÃ©er un compte sur https://github.com/ afin que je puisse vous ajouter au projet.
-Une fois cette opÃ©ration faite, il faudra me contacter afin que je vous autorise Ã  participer au projet.
+## Création Compte Github
+La première chose va consister à créer un compte sur : **https://github.com/** afin que je puisse vous ajouter au projet.  
+Une fois cette opération faite, il faudra me contacter afin que je vous autorise à participer au projet.
 
-Java
-----
-Installation de Java
-Java Platform, Standard Edition<br>
-http://www.oracle.com/technetwork/java/javase/downloads/index.html
-Version minimale: jre8u111<br>
-Utiliser JDK<br>
+# Java
+Installation de Java : **http://www.oracle.com/technetwork/java/javase/downloads/index.html**  
+Choisir:   
+* Java Platform, Standard Edition
+* Version minimale: jre8u111
+* Utiliser JDK
 
-SourceTree
------------
-Client graphique clair et structurÃ©, compatible avec Git <br>
-https://www.sourcetreeapp.com/
-Lors de l'installation de SourceTree, il faudra
-
-	CrÃ©er un compte Altassian, ou utiliser un compte Google
-	Choisir GitHub (L'association devrait se faire automatiquement)
-	L'outil va 
-		tÃ©lÃ©charger automatiquement la version embarquÃ©e de Git 
-			(Dans le cas contraire ne pas pointer vers une version installÃ©e GIT voir plus loin)
-		tÃ©lÃ©charger la version embarquÃ©e de Mercudial<br>
-	Au niveau du clone (cad version locale) je vous invite Ã  choisir un rÃ©prtoire sous workspace
-	\Users\<nom>\workspace\pac-tool
-	Par la suite, sourcetree demandera les informations utilisateurs que vous voulez associer.
-	Il sagira ici de rentrer les informations de votre compte Github
+# SourceTree
+Client graphique clair et structuré, compatible avec Git : **https://www.sourcetreeapp.com/**  
+Lors de l'installation de SourceTree, il faudra  
+* Créer un compte Altassian, ou utiliser un compte Google
+* Choisir GitHub (L'association devrait se faire automatiquement)
+* L'outil va 
+* télécharger automatiquement la version embarquée de Git
+* télécharger la version embarquée de Mercudial
+* Au niveau du clone *(cad version locale)*, je vous invite à choisir un répertoire sous workspace : \Users\<votre compte windows>\workspace
 	
+# Eclipse: Environnement de développement intégré
+Eclipse IDE *(Integrated Development Environment)* for Java Developers : **https://www.eclipse.org/downloads/eclipse-packages/**
+* Version minimale: Oxygene Release
+* Choisir: Eclipse Installer
+* Lors de l'installation choisir: Eclipse IDE for Java Developers
+* Une fois installer, faire pointer sur le répertoire : \Users\<nom>\workspace
+
+## Add-ons intégrés à Eclipse (IDE)
+### WindowBuilder
+Permet de créer des interface graphique  
+A travers Marketplace dans Eclipse : **WindowBuilder**   
+
+### Editeur HTML
+Editeur HTML, *(non wysiwyg)*  
+A travers Marketplace dans Eclipse : **HTML Editor WPT** 
 	
-Eclipse: Environnement de dÃ©veloppement intÃ©grÃ©
------------------------------------------------
-Eclipse IDE <i>(Integrated Development Environment)</i> for Java Developers<br>
-Version minimale: Neon Release<br>
-https://www.eclipse.org/downloads/eclipse-packages/<br>
-Choisir: Eclipse Installer<br>
-Lors de l'installation choisir: Eclipse IDE for Java Developers<br>
+### Langage de modélisation unifié (UML)
+Unified Modeling Language (UML) intégré à Eclipse, permet de voir l'arborescence des classes  
+ObjectAid
+* Installer uniquement les modules ne nécessitant pas de licences.
+* Au niveau Eclipse dans Install New Software
+* Work with: **http://www.objectaid.com/update/current**
+* Name: ObjectAid UML Explorer
 
-	Une fois installer, faire pointer sur le rÃ©pertoire : \Users\<nom>\workspace\pac-tool
+### log4j Logger
+Log4j est un Plugin pour le logging 
+Il n'y a rien à faire, car les jar files font déjà partis du projets.
+C'est uniquement dans le cas de mise à jour qu'il faudra copier les fichiers au niveau du répertoirelib du projet    
+Principe  
+Doit être téléchargé sur le site officiel : **https://logging.apache.org/log4j/2.x/download.html** 
+* Apache "Log4j 2 binary (zip)" --> choisir : log4j-api-2.x.y.jar et log4j-core-2.x.y.jar)
+* Utilisation: http://logging.apache.org/log4j/2.x/manual/api.html
 
-Add-ons intÃ©grÃ©s Ã  Eclipse (IDE)
---------------------------------
-WindowBuilder
--------------
-	Installation WindowBuilder Ã  travers Marketplace dans Eclipse
+### JSON
+Afin de pouvoir travailler avec du JSON, nous utilisons le fichier jar: json-simple  
+Ici encore une fois, cette opération n'est nécessaire que dans le cas d'une mise à jour de json-simple  
+Pour plus d'explication voir : **https://www.tutorialspoint.com/json/json_java_example.htm**	
 
-Editeur HTML
-	Par exemple: kompozer-0.7.10-win32
-	Intégré à Eclipse
-	HTML Editor WPT 
+# Fuite mémoiree
+Afin de trouver les fuites mémoires, il est conseillé d'activer les paramètres de vérification code au niveau Eclipse  
+Par la suite, un outil très intéressant est: visualv : **https://visualvm.github.io/download.html**  
+Introduction : https://developers.redhat.com/blog/2014/08/14/find-fix-memory-leaks-java-application/
+
+# Gestion de versions Git
+Git est intégré à Eclipse, mais je préfère utiliser SourceTree.
+Git est donc intégré à SourceTree, mais afin de pouvoir créer une animation montrant l'évolution du développement
+Git est nécessaire en local sous windows
+https://git-scm.com/download/win
+
+# ffmpeg
+converteur vidéoo
+Après installation modifier variable d'environnement pour pointer sur ffmpeg : 	**https://ffmpeg.zeranoe.com/builds**/
+
+# Gource
+Outil d'animation du projet : **http://gource.io/**
+Generation video: (durant la génération la fenêtre doit resté ouverte) 
+https://github.com/acaudwell/Gource/wiki/Video
+
+# Conversion Jar vers .Exec
+Launch4j est une application qui permet de créer des "lanceurs" *(exécutables Windows classiques)* pour des applications développées en Java. 
+Se trouve : **http://launch4j.sourceforge.net/**  
+Pour avoir une version standalone (Java bundled) il faut que Java soit installé dans un répertoire relatif.  
+Je conseille d'utiliser JDK, et de le copier sous: ...\pac-tool\jarr
+
+# Inno : Installateur Windows 
+Inno permet de créer un installeur Windows : **http://www.jrsoftware.org/isinfo.php **
 	
-Langage de modélisation unifié, Unified Modeling Language (UML) intégré à  Eclipse
-	ObjectAid
-	Installer uniquement les modules ne nécessitant pas de licences.
-	Au niveau Eclipse dans Install New Software
-	Name: ObjectAid UML Explorer
-	URL: http://www.objectaid.com/update/current
+# wxMaxima
+Outil de calcul symbolique.
+Très utile pour la simplification des expressions mathématiques : **http://andrejv.github.io/wxmaxima/index.html**
 
-log4j Logger
-<<<<<<< HEAD
-	Log4j Plugin pour le logging  
-	Doit être téléchargé sur le site officiel
-		Download : https://logging.apache.org/log4j/2.x/download.html 
-	Utilisation:
-	http://logging.apache.org/log4j/2.x/manual/api.html
-	
-=======
-------------
-	Log4j Plugin pour le logging  <br>
-	Doit Ãªtre tÃ©lÃ©chargÃ© sur le site officiel<br>
-		Download : https://logging.apache.org/log4j/2.x/download.html <br>
-	Utilisation:<br>
-	http://logging.apache.org/log4j/2.x/manual/api.html<br>
-		
-Langage de modÃ©lisation unifiÃ©, Unified Modeling Language (UML) intÃ©grÃ© Ã Â  Eclipse
-	ObjectAid<br>
-	Installer uniquement les modules ne nÃ©cessitant pas de licences.<br>
-	Au niveau Eclipse dans Install New Software<br>
-	Name: ObjectAid UML Explorer<br>
-	URL: http://www.objectaid.com/update<br>
-	
-Editeur HTML
-	Par exemple: kompozer-0.7.10-win32<br>
-	IntÃ©grÃ© Ã  Eclipse<br>
+# Autre
 
-
-Fuite mÃ©moire
-	Afin de trouver les fuites mÃ©moires, il est conseillÃ© d'activer les paramÃ¨tres de vÃ©rification code au niveau Eclipse<br>
-	Par la suite, un outil trÃ¨s intÃ©ressant est: visualvm<br>
-	https://visualvm.github.io/download.html<br>
-	Introduction:<br>
-	https://developers.redhat.com/blog/2014/08/14/find-fix-memory-leaks-java-application/<br>
-	
-
-	<br>
-Pour le test final, prÃ©fÃ©rer la mÃ©thode en ligne de commande<br>
-java -jar PAC-Tool.jar
-
-
-
->>>>>>> a9baa606100f8c7b12d179c6b4bd0fd0262bf888
-
-Gestion de versions Git
-	Git est intÃ©grÃ© Ã  Eclipse, mais je prÃ©fÃ¨re utiliser SourceTree.<br>
-	Git est donc intÃ©grÃ© Ã Â SourceTree, mais afin de pouvoir crÃ©er une animation montrant l'Ã©volution du dÃ©veloppement<br>
-	Git est nÃ©cessaire en local sous windows<br>
-	https://git-scm.com/download/win<br>
+## Conseils
+Pour le test final, préférer la méthode en ligne de command : **java -jar PAC-Tool.java*
 	
 
-	
-GitHub 
-	Service Web d'hÃ©bergement et de gestion de dÃ©veloppement de logiciels. <br>
-	https://github.com/ckl67/PAC-Tool<br>
-	Projet sous: PAC-Tool<br>
-
-ffmpeg
-	converteur video
-	AprÃ¨s installation modifier variable d'environnement pour pointer sur ffmpeg<br>
-	https://ffmpeg.zeranoe.com/builds/<br>
-	
-Gource
-	Outil d'animation du projet<br>
-	http://gource.io/#<br>
-	Generation video: (durant la gÃ©nÃ©ration la fenÃªtre doit restÃ© ouverte )<br>
-	https://github.com/acaudwell/Gource/wiki/Videos<br>
-	
-Conversion Jar vers Exe
-	Launch4j est une application qui permet de crÃ©er des "lanceurs" (exÃ©cutables Windows classiques 
-	pour des applications dÃ©veloppÃ©es en Java. <br>
-	http://launch4j.sourceforge.net/<br>
-	Pour avoir une version standalone (Java bundled) il faut que Java soit installÃ© dans un rÃ©pertoire
-	relatif.<br>
-	Je conseille d'utiliser JDK, et de le copier sous: ...\pac-tool\jar<br>
-
-Creation d'un installateur avec Inno.
-	Inno permet de crÃ©er un installeur Window<br>
-	http://www.jrsoftware.org/isinfo.php<br>
-	
-wxMaxima
-	Outil de calcul symbolique.<br>
-	TrÃ¨s utile pour la simplification des expressions mathÃ©matiques<br>
-	http://andrejv.github.io/wxmaxima/index.html<br>
-
-Introduction au Java
---------------------
-OpenClassRooms est une excellente introduction au Java<br>
-* https://openclassrooms.com/courses/apprenez-a-programmer-en-java
-
-D'autres rÃ©fÃ©rences sont donnÃ©es au niveau du rÃ©pertoire: <br>
+## Introduction au Java
+OpenClassRooms est une excellente introduction au Java : **https://openclassrooms.com/courses/apprenez-a-programmer-en-java **  
+D'autres références sont données au niveau du répertoire: 
 ..\pac-tool\dev_help
 
- Autre
--------
+## Youtube
 La chaine de diffusion Youtube est sous le compte: christian.klugesherz@geosolterm.fr
