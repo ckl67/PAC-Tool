@@ -1,39 +1,63 @@
  PAC-Tool
 ----------
-Outil pour Pompe ‡ Chaleur
+Outil pour Pompe √† Chaleur
 
- DÈfinition 
+ D√©finition 
 -------------
-Outil qui permet de vÈrifier les donnÈes contructeur (COP) et de calculer le COP de votre pompe ‡† chaleur ‡† partir de vos mesures. 
-(Programme Ècrit en Java)
+Outil qui permet de v√©rifier les donn√©es contructeur (COP) et de calculer le COP de votre pompe √† chaleur √† partir de vos mesures. 
+<i>(Programme √©crit en Java)</i>
 
-Pour le test final, prÈfÈrer la mÈthode en ligne de commande
-java -jar PAC-Tool.jar
-
- Chaine de DÈveloppement
+ Chaine de D√©veloppement
 --------------------------
-La chaine d'outil pour le dÈveloppement est la suivante:
+La chaine d'outil pour le d√©veloppement est la suivante:<br>
+<i>Je donne ci-dessous l'ordre dans lequel je conseille de proc√©der √† l'installation de la cha√Æne de d√©veloppement.</i>
+
+Cr√©ation Compte Github
+----------------------
+La premi√®re chose va consister √† cr√©er un compte sur https://github.com/ afin que je puisse vous ajouter au projet.
+Une fois cette op√©ration faite, il faudra me contacter afin que je vous autorise √† participer au projet.
 
 Java
-	http://www.oracle.com/technetwork/java/javase/downloads/index.html
-	Version minimale: jre8u111
-	Je conseille d'utiliser JDK
+----
+Installation de Java
+Java Platform, Standard Edition<br>
+http://www.oracle.com/technetwork/java/javase/downloads/index.html
+Version minimale: jre8u111<br>
+Utiliser JDK<br>
 
-Fuite mÈmoire
-	Afin de trouver les fuites mÈmoires, il est conseillÈ d'activer les paramËtres de vÈrification code au niveau Eclipse
-	Par la suite, un outil trËs intÈressant est: visualvm
-	https://visualvm.github.io/download.html
-	Introduction:
-	https://developers.redhat.com/blog/2014/08/14/find-fix-memory-leaks-java-application/
+SourceTree
+-----------
+Client graphique clair et structur√©, compatible avec Git <br>
+https://www.sourcetreeapp.com/
+Lors de l'installation de SourceTree, il faudra
+
+	Cr√©er un compte Altassian, ou utiliser un compte Google
+	Choisir GitHub (L'association devrait se faire automatiquement)
+	L'outil va 
+		t√©l√©charger automatiquement la version embarqu√©e de Git 
+			(Dans le cas contraire ne pas pointer vers une version install√©e GIT voir plus loin)
+		t√©l√©charger la version embarqu√©e de Mercudial<br>
+	Au niveau du clone (cad version locale) je vous invite √† choisir un r√©prtoire sous workspace
+	\Users\<nom>\workspace\pac-tool
+	Par la suite, sourcetree demandera les informations utilisateurs que vous voulez associer.
+	Il sagira ici de rentrer les informations de votre compte Github
 	
-Environnement de dÈveloppement intÈgrÈ / (Integrated Development Environment)
-	Eclipse IDE for Java Developers
-	Version minimale: Neon.1a Release (4.6.1)
-	https://eclipse.org/downloads/
-	Choisir: Eclipse IDE for Java Developers
+	
+Eclipse: Environnement de d√©veloppement int√©gr√©
+-----------------------------------------------
+Eclipse IDE <i>(Integrated Development Environment)</i> for Java Developers<br>
+Version minimale: Neon Release<br>
+https://www.eclipse.org/downloads/eclipse-packages/<br>
+Choisir: Eclipse Installer<br>
+Lors de l'installation choisir: Eclipse IDE for Java Developers<br>
 
-WindowBuilder (Eclipse)
-	Installation WindowBuilder ‡ travers Marketplace dans Eclipse
+	Une fois installer, faire pointer sur le r√©pertoire : \Users\<nom>\workspace\pac-tool
+
+Add-ons int√©gr√©s √† Eclipse (IDE)
+--------------------------------
+WindowBuilder
+-------------
+	Installation WindowBuilder √† travers Marketplace dans Eclipse
 
 Editeur HTML
 	Par exemple: kompozer-0.7.10-win32
@@ -48,63 +72,96 @@ Langage de modÈlisation unifiÈ, Unified Modeling Language (UML) intÈgrÈ ‡† Eclip
 	URL: http://www.objectaid.com/update/current
 
 log4j Logger
+<<<<<<< HEAD
 	Log4j Plugin pour le logging  
 	Doit Ítre tÈlÈchargÈ sur le site officiel
 		Download : https://logging.apache.org/log4j/2.x/download.html 
 	Utilisation:
 	http://logging.apache.org/log4j/2.x/manual/api.html
 	
+=======
+------------
+	Log4j Plugin pour le logging  <br>
+	Doit √™tre t√©l√©charg√© sur le site officiel<br>
+		Download : https://logging.apache.org/log4j/2.x/download.html <br>
+	Utilisation:<br>
+	http://logging.apache.org/log4j/2.x/manual/api.html<br>
+		
+Langage de mod√©lisation unifi√©, Unified Modeling Language (UML) int√©gr√© √†¬† Eclipse
+	ObjectAid<br>
+	Installer uniquement les modules ne n√©cessitant pas de licences.<br>
+	Au niveau Eclipse dans Install New Software<br>
+	Name: ObjectAid UML Explorer<br>
+	URL: http://www.objectaid.com/update<br>
+	
+Editeur HTML
+	Par exemple: kompozer-0.7.10-win32<br>
+	Int√©gr√© √† Eclipse<br>
+
+
+Fuite m√©moire
+	Afin de trouver les fuites m√©moires, il est conseill√© d'activer les param√®tres de v√©rification code au niveau Eclipse<br>
+	Par la suite, un outil tr√®s int√©ressant est: visualvm<br>
+	https://visualvm.github.io/download.html<br>
+	Introduction:<br>
+	https://developers.redhat.com/blog/2014/08/14/find-fix-memory-leaks-java-application/<br>
+	
+
+	<br>
+Pour le test final, pr√©f√©rer la m√©thode en ligne de commande<br>
+java -jar PAC-Tool.jar
+
+
+
+>>>>>>> a9baa606100f8c7b12d179c6b4bd0fd0262bf888
 
 Gestion de versions Git
-	Git est intÈgrÈ ‡ Eclipse, mais je prÈfËre utiliser SourceTree.
-	Git est donc intÈgrÈ ‡†SourceTree, mais afin de pouvoir crÈer une animation montrant l'Èvolution du dÈveloppement
-	Git est nÈcessaire en local sous windows
-	https://git-scm.com/download/win		
+	Git est int√©gr√© √† Eclipse, mais je pr√©f√®re utiliser SourceTree.<br>
+	Git est donc int√©gr√© √†¬†SourceTree, mais afin de pouvoir cr√©er une animation montrant l'√©volution du d√©veloppement<br>
+	Git est n√©cessaire en local sous windows<br>
+	https://git-scm.com/download/win<br>
 	
-SourceTree	
-	Client graphique claire et structurÈe, compatible avec Git
-	Dans option Git, activer: "Update Embedded Git" afin d'avoir la version intÈgrÈe de Git
-	https://www.sourcetreeapp.com/
+
 	
 GitHub 
-	Service Web d'hÈbergement et de gestion de dÈveloppement de logiciels. 
-	https://github.com/ckl67/PAC-Tool
-	Projet sous: PAC-Tool
+	Service Web d'h√©bergement et de gestion de d√©veloppement de logiciels. <br>
+	https://github.com/ckl67/PAC-Tool<br>
+	Projet sous: PAC-Tool<br>
 
 ffmpeg
 	converteur video
-	AprËs installation modifier variable d'environnement pour pointer sur ffmpeg
-	https://ffmpeg.zeranoe.com/builds/
+	Apr√®s installation modifier variable d'environnement pour pointer sur ffmpeg<br>
+	https://ffmpeg.zeranoe.com/builds/<br>
 	
 Gource
-	Outil d'animation du projet
-	http://gource.io/#
-	Generation video: (durant la gÈnÈration la fenÍtre doit restÈ ouverte )
-	https://github.com/acaudwell/Gource/wiki/Videos
+	Outil d'animation du projet<br>
+	http://gource.io/#<br>
+	Generation video: (durant la g√©n√©ration la fen√™tre doit rest√© ouverte )<br>
+	https://github.com/acaudwell/Gource/wiki/Videos<br>
 	
 Conversion Jar vers Exe
-	Launch4j est une application qui permet de crÈer des "lanceurs" (exÈcutables Windows classiques 
-	pour des applications dÈveloppÈes en Java. 
-	http://launch4j.sourceforge.net/
-	Pour avoir une version standalone (Java bundled) il faut que Java soit installÈ dans un rÈpertoire
-	relatif.
-	Je conseille d'utiliser JDK, et de le copier sous: ...\pac-tool\jar
+	Launch4j est une application qui permet de cr√©er des "lanceurs" (ex√©cutables Windows classiques 
+	pour des applications d√©velopp√©es en Java. <br>
+	http://launch4j.sourceforge.net/<br>
+	Pour avoir une version standalone (Java bundled) il faut que Java soit install√© dans un r√©pertoire
+	relatif.<br>
+	Je conseille d'utiliser JDK, et de le copier sous: ...\pac-tool\jar<br>
 
 Creation d'un installateur avec Inno.
-	Inno permet de crÈer un installeur Window
-	http://www.jrsoftware.org/isinfo.php
+	Inno permet de cr√©er un installeur Window<br>
+	http://www.jrsoftware.org/isinfo.php<br>
 	
 wxMaxima
-	Outil de calcul symbolique.
-	TrËs utile pour la simplification des expressions mathÈmatiques
-	http://andrejv.github.io/wxmaxima/index.html
+	Outil de calcul symbolique.<br>
+	Tr√®s utile pour la simplification des expressions math√©matiques<br>
+	http://andrejv.github.io/wxmaxima/index.html<br>
 
 Introduction au Java
 --------------------
-OpenClassRooms est une excellente introduction au Java
+OpenClassRooms est une excellente introduction au Java<br>
 * https://openclassrooms.com/courses/apprenez-a-programmer-en-java
 
-D'autres rÈfÈrences sont donnÈes au niveau du rÈpertoire: 
+D'autres r√©f√©rences sont donn√©es au niveau du r√©pertoire: <br>
 ..\pac-tool\dev_help
 
  Autre
