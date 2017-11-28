@@ -17,7 +17,7 @@ public class Refrigerant extends Enthalpy {
 	public Refrigerant() {
 		this.name = "R22";
 		this.P = 0.0;
-		this.T = 0.0;
+		this.T = 0.0; 
 	}
 
 	// -------------------------------------------------------

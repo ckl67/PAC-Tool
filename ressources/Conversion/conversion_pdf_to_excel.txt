@@ -1,8 +1,27 @@
 Le principe consiste à récupérer les caractéristiques en .pdf des gaz, puis de convertir les données en fichier Excel
-Tous les résultats seront consignés au niveau du fichier Excel : Gaz_Table_Conversion.xlsx
 
 Outil pour découper fichier .pdf, afin de ne garder que la partie intéressante
 http://www.pdfsam.org/
 
 Conversion .pdf en excel
 http://pdftoxls.com/ 
+
+Copier le fichier Excel dans un fichier txt
+
+ATTENTION:
+==========
+	UTF-8 BOM
+	==========
+	Il faut sauvegarder en encodage "UTF-8" sans BOM, et NON en encodage "UTF-8-BOM",
+	BOM (Byte Order Mark), se place en début du fichier à travers les caractères: "ï»¿"
+
+	Java assumes the UTF8 don't have a BOM so if the BOM is present it won't be discarded and it will be seen as data.
+	please remove it by enconding in UTF8 wihout BOM
+
+
+	Signe -
+	========
+	Lors de la copie, dans beaucoup de cas, le signe - (moins) est rempalcé par le signe – (cactères spécifiques â€“ = x96)
+	Il suffit de repasser en mode "ANSI" et de remplacer (– (qui est un peu plus long en ANSI)) en (-)
+	puis de revenir en mode "UTF-8"
+

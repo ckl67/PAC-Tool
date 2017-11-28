@@ -18,705 +18,194 @@
  */
 package enthalpy;
 
-import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import org.json.simple.JSONObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import computation.MeasurePoint;
-import computation.Misc;
 
 public class Enthalpy {
 
 	private static final Logger logger = LogManager.getLogger(Enthalpy.class.getName());
-	
+
+	/* (http://asciiflow.com/)
+
+					P
+					^
+					|
+					|
+					|                     XXXXXXXXXXXXX
+					|                  XXXX           XXXXX             
+					|                 XX                  XX                          
+					|             XXXX                      XX                    
+					|            XX                          XX                  
+				5,6	|     (T=0)  X---_____                    XX                
+					|          XX         ---------- ____     XX              
+				4,6	|         XX                           ----X (T=0)             
+					|         X                                 XX           
+					|        XX                                  X           
+					|       XX                                   X         
+					|       X                                     X          
+					|      XX                                     X
+					|      X                                      X
+					|
+					+------------------------------------------------------------------------> H
+
+						T      P(Liquid)	P(Gas)
+						0		5,6787		4,6071	
+
+	 */
 
 	// -------------------------------------------------------
 	// 					INSTANCE VARIABLES
 	// -------------------------------------------------------
 
-	/* ----------------
-	 * Diagram Enthalpy  
-	 * ----------------*/
-	private String nameRefrigerant;			// Name (R22/R407 C)
-	
-	private double xHmin;  					// Enthalpy Minimum of the range of values displayed.
-	private double xHmax;    				// Enthalpy Maximum of the range of value displayed.
-	private double yPmin;  					// Pressure Minimum of the range of Pressure value
-	private double yPmax;     				// Pressure Maximum of the range of Pressure value. 
-
-	/* -----------------------------
-	   Diagram Pressure-Temperature
-	 * ----------------------------*/
-	private String fileNameTP;						// Data file with : Temperature / Pressure relation
-	private List<Point2D.Double> listSatTPf;		// Coordinate Temperature (Saturation) / Pressure Fluid (Liquid)
-	private List<Point2D.Double> listSatTPg;		// Coordinate Temperature (Saturation) / Pressure Gas (Vapor)
-
+	private List<List<Double>> gasSaturationTable;
+	private String nameRefrigerant;			
 	private double deltaP;							// Delta pressure absolute / relative
-
-	/* -----------------------------
-	   Diagram Saturation Curve:
-	   Temperature --> Enthalpy  (Liquid / Vapor)  
-	 * ----------------------------*/
-	private String fileNameSAT;
-	private List<Point2D.Double> listSatHlP;			// Coordinate Temperature / H : List
-	private List<Point2D.Double> listSatHvP;			// Coordinate Temperature / H : List
-		
-	private double angleHmatchPSatWithP0PK;				// Angle approximation for H Matching PSat with P0PK
-
-	/* -----------------------------
-	   Enthalpy Image
-	 * ----------------------------*/
-	private EnthalpyBkgdImg enthalpyBkgdImg;
 
 	// -------------------------------------------------------
 	//	LOCAL VARIABLES
 	// -------------------------------------------------------
-	
-	private double hSatMin = 1000;					// H Saturation Zone [hSatMin - hSatMax] --> Computed by reading the file !
-	private double hSatMax = 0;						// H Saturation Zone [hSatMin - hSatMax] --> Computed by reading the file !
-	private double hSatErrLoc = 0;					// H saturation Error Location. --> Computed by reading the file !
-	
+
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 	/**
-	 * Constructor will instance by default the R22 Enthalpy object
-	 * All instances variables can be modified afterwards in case 
-	 * another Refrigerant is used.
+	 * Constructor will load gasSaturationTable.
 	 */
-	public Enthalpy() {
-		/* ----------------
-		 * Diagram Enthalpy  
-		 * ----------------*/
-		this.nameRefrigerant = "R22";
-		this.xHmin = 140;  				
-		this.xHmax = 520;    				
-
-		this.yPmin = 0.5;  
-		this.yPmax = 60;    
-
-		/* -----------------------------
-		   Diagram Pressure-Temperature
-		 * ----------------------------*/
-		this.fileNameTP = "./ressources/R22/P2T_R22.txt";
-		this.listSatTPf = new ArrayList<Point2D.Double>();
-		this.listSatTPg = new ArrayList<Point2D.Double>();
-		
-		this.deltaP = 0.0;
-		this.loadPTFile();
-
-		/* -----------------------------
-		   Diagram Saturation Curve:
-		   Temperature --> Enthalpy  (Liquid / Vapor)  
-		   		let h the value to search in the list
-				let h0,h1 the nearest H found in the list, 
-				if h0 and h1 are to faraway of h, it means that the p zone was too narrow 
-		 * ----------------------------*/
-		this.fileNameSAT = "./ressources/R22/SaturationCurve_R22.txt";
-		this.listSatHlP = new ArrayList<Point2D.Double>();
-		this.listSatHvP = new ArrayList<Point2D.Double>();
-		this.loadHlvPSatFile();
-
-		this.angleHmatchPSatWithP0PK = -30; 	// In degree
-		
-		/* -----------------------------
-		   Enthalpy Image
-		 * ----------------------------*/
-		this.enthalpyBkgdImg = new EnthalpyBkgdImg();
-		
+	public Enthalpy(String fileNameGas) {
+		gasSaturationTable = new ArrayList<List<Double>>();
+		nameRefrigerant = loadGasSaturationData(fileNameGas);
+		deltaP=0;
 	}
 
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
 
+	public void ChangeGas(String fileNameGas) {
+		gasSaturationTable.clear();
+		nameRefrigerant = loadGasSaturationData(fileNameGas);
+	}
+
 	/**
-	 * Read Data file containing: Pressure /Temperature relation (P. relative) 
-	 * Will fill the : listTP (T,P) list
+	 * Read Saturation data file containing:
+	    # Temp.   Press       Press     Density  Density          Enthalpy           Entropy  Entropy
+		#  °C      kPa         kPa       kg/m3    kg/m3     kJ/kg   kJ/kg  kJ/kg    kJ/kg K  kJ/kg K
+		#        liquid        gas      liquid     gas      Liquid  latent  gas      liquid    gas
 	 */
-	public void loadPTFile() {
-		File file = new File (fileNameTP);
-		logger.info("Read File: {}", fileNameTP);
+	private String loadGasSaturationData(String fileNameGas) {
+		String gasName = null;
+		String unityP="kPa";
+
+		File file = new File (fileNameGas);
+		logger.info("Read File: {}", fileNameGas);
 
 		Scanner sken = null;
 		try {
 			sken = new Scanner (file);
 		} catch (FileNotFoundException e) {
-			logger.error("Ops! (loadPTFile)", e);
+			logger.error("Ops! (loadGasSaturationData)", e);
+			System.exit(0);
 		}
 
 		while (sken.hasNext () ){
 			String first = sken.nextLine ();
-			if (!first.startsWith("#") ) {
-				String[] val = first.split ("\t");
-				double temp = Double.parseDouble(val [0].replace(",", "."));
-				double press = Double.parseDouble(val [1].replace(",", "."));
+			if (first.startsWith("Name:") ) {
+				String[] val = first.split (":");
+				gasName = val [1];
+				logger.trace("Refrigerant = {}",gasName);
+			} else if (first.startsWith("Unity P:") ) {
+				String[] val = first.split (":");
+				unityP = val [1];
+				logger.trace("Unity of Pressure = {}",unityP);
 
-				listSatTPf.add(new Point2D.Double(temp, press));
+			} else if (!first.startsWith("#") ) {
+				String[] val = first.split ("\t");
+				List<Double> row = new ArrayList<Double>();
+				// Temperature
+				row.add(Double.parseDouble(val [0].replace(",", ".")));
+				// Pressure Liquid 
+				if (unityP.equals("kPa"))
+					row.add(Double.parseDouble(val [1].replace(",", "."))*0.01);
+				else
+					row.add(Double.parseDouble(val [1].replace(",", ".")));
+
+				// Pressure Gas 
+				if (unityP.equals("kPa"))
+					row.add(Double.parseDouble(val [2].replace(",", "."))*0.01);
+				else
+					row.add(Double.parseDouble(val [2].replace(",", ".")));
+
+				// Density Liquid
+				row.add(Double.parseDouble(val [3].replace(",", ".")));
+				// Density Gas
+				row.add(Double.parseDouble(val [4].replace(",", ".")));
+				// Enthalpy Liquid
+				row.add(Double.parseDouble(val [5].replace(",", ".")));
+				// Enthalpy Latent
+				row.add(Double.parseDouble(val [6].replace(",", ".")));
+				// Enthalpy Gas
+				row.add(Double.parseDouble(val [7].replace(",", ".")));
+				// Entropy Liquid
+				row.add(Double.parseDouble(val [8].replace(",", ".")));
+				// Entropy Gas
+				row.add(Double.parseDouble(val [9].replace(",", ".")));
+
+				gasSaturationTable.add(row);
+
+				int r = gasSaturationTable.size()-1;
+				logger.trace("T={} pf={} pg={}",
+						gasSaturationTable.get(r).get(SaturationTable.Temperature.col()),
+						gasSaturationTable.get(r).get(SaturationTable.PressureL.col()),
+						gasSaturationTable.get(r).get(SaturationTable.PressureG.col()));
 			}
 		}
 		// Close scanner to avoid memory leak
 		sken.close();
+		return(gasName);
 	}
 
-	// -------------------------------------------------------
-	/**
-	 * Read Data file containing: 
-	 * Temperature [degree C] / Enthalpy (kJ/kg) Liquid / Enthalpy (kJ/kg) Vapor
-	 * Will fill the : setlistSatHlP (H,P) / setlistSatHvP (H,P) list
-	 */
-	public void loadHlvPSatFile() {
-		File file = new File (fileNameSAT);
-		logger.info("Read File: {}", fileNameSAT);
+	private int rIndex(SaturationTable item, double value) {
+		double min = Double.MAX_VALUE;
+		int id=0;
 
-		Scanner sken = null;
-		try {
-			sken = new Scanner (file);
-		} catch (FileNotFoundException e) {
-			logger.error("Ops! (loadHlvPSatFile)", e);
-		}
-
-		while (sken.hasNext () ){
-			String first = sken.nextLine ();
-			if (!first.startsWith("#") ) {
-				String[] val = first.split ("\t");
-				double temp = Double.parseDouble(val [0].replace(",", "."));
-				double enthL = Double.parseDouble(val [1].replace(",", "."));
-				double enthV = Double.parseDouble(val [2].replace(",", "."));
-
-				// System.out.println("enthL / temp = " + enthL +"/"+ temp + "     enthV / temp = " + enthV +"/"+ temp);
-				listSatHlP.add(new Point2D.Double(enthL,convT2P(temp)));
-				listSatHvP.add(new Point2D.Double(enthV,convT2P(temp)));
-				// System.out.println("enthL / P = " + enthL +"/"+ convT2P(temp) + "     enthV / P = " + enthV +"/"+ convT2P(temp));
-
-				//	if ( Math.abs(enthL-hSatErrLoc>))
-				if (enthL < hSatMin )
-					hSatMin = enthL;
-				if (enthV < hSatMin )
-					hSatMin = enthV;
-				if (enthL > hSatMax )
-					hSatMax = enthL; 
-				if (enthV > hSatMax )
-					hSatMax = enthV; 
+		if (gasSaturationTable.size() != 0) {
+			for(int r = 0; r < gasSaturationTable.size(); r++){
+				double tmp = gasSaturationTable.get(r).get(item.col());
+				double diff = Math.abs( tmp - value);
+				if (diff < min) {
+					min = diff;
+					id = r;
+				}
 			}
 		}
-		List<Double> linL = new ArrayList<Double>();
-		for(int i=0;i<listSatHlP.size();i++)
-			linL.add(getSatHl(i));
-		List<Double> linV = new ArrayList<Double>();
-		for(int i=0;i<listSatHlP.size();i++)
-			linV.add(getSatHv(i));
+		return(id);
+	}
 
-		hSatErrLoc = Misc.maxIntervalL(linL);
-		if (hSatErrLoc < Misc.maxIntervalL(linV))
-			hSatErrLoc = Misc.maxIntervalL(linV);
-		// Security margin linked to the fact that at the limit of the list, 
-		// the chosen element can be at n-1 position (due to end of list)
-		hSatErrLoc = hSatErrLoc*2;
+	public double findNearestItem(SaturationTable item, double value) {
+		int id=rIndex(item, value);
+		return gasSaturationTable.get(id).get(item.col());
+	}
+
+	public double findNearestItem(SaturationTable itemi, double value, SaturationTable itemo) {
+		int id=rIndex(itemi, value);
+		return gasSaturationTable.get(id).get(itemo.col());
+	}	
+
+	
+	public double convT(double T) {
 		
-		// Close scanner to avoid memory leak
-		sken.close();
-
-	}
-
-	// -------------------------------------------------------
-
-	/**
-	 * Match Pressure to H vapor Saturation curve
-	 * Correspond to intersection between P and Saturation H vapor
-	 * @param pressure
-	 * @return
-	 */
-	public double  matchP2HvaporSat(double press ) {
-		double ho=0;
-		double min = Double.MAX_VALUE;
-		int id=0;
-		if (listSatHvP.size() != 0) {
-			for(int n = 0; n < listSatHvP.size(); n++){
-				double diff = Math.abs(getSatP(n) - press);
-				if (diff < min) {
-					min = diff;
-					id = n;
-				}
-			}
-			//System.out.println(press + " " + getSatP(id) + " " + getSatHv(id));
-			if (id == listSatHvP.size()-1) {
-				id = id-1;
-			} 
-
-			double x,y0,y1,x0,x1;
-			x  = press;
-			x0 = getSatP(id);
-			x1 = getSatP(id+1);
-			y0 = getSatHv(id);
-			y1 = getSatHv(id+1);
-			ho = (x-x0)*(y1-y0)/(x1-x0)+ y0;
-		}
-		return ho;
-	}
-
-	// -------------------------------------------------------
-
-	/**
-	 * Match Pressure to H Liquid Saturation curve
-	 * Correspond to intersection between P and Saturation H Liquid
-	 * @param pressure
-	 * @return
-	 */
-	public double  matchP2HliquidSat(double press ) {
-		double ho=0;
-		double min = Double.MAX_VALUE;
-		int id=0;
-		if (listSatHlP.size() != 0) {
-			for(int n = 0; n < listSatHlP.size(); n++){
-				double diff = Math.abs(getSatP(n) - press);
-				if (diff < min) {
-					min = diff;
-					id = n;
-				}
-			}
-			//System.out.println(press + " " + getSatP(id) + " " + getSatHv(id));
-			if (id == listSatHlP.size()-1) {
-				id = id-1;
-			} 
-
-			double x,y0,y1,x0,x1;
-			x  = press;
-			x0 = getSatP(id);
-			x1 = getSatP(id+1);
-			y0 = getSatHl(id);
-			y1 = getSatHl(id+1);
-			ho = (x-x0)*(y1-y0)/(x1-x0)+ y0;
-		}
-		return ho;
-	}
-
-	/**
-	 * Compute H, Matching PSat (T-Isotherm) with P0-PK 
-	 * In all the cases the result must be positive !!
-	 * If not: Error to address and result = Hsat !!
-	 */
-	public double CompHmatchPSatWithP0PK(MeasurePoint measurePoint) {
-		double Psat0 = measurePoint.getMP();
-		double P0PK0 = measurePoint.getMP0PK();
-		double Hsat0 = 0;
-		double H0HK = 0;
-		if (measurePoint.getMeasureObject().getEnthalpyZone() ==  EnthalpyZone.VAPOR) 
-			Hsat0 = matchP2HvaporSat( Psat0);
-		else
-			Hsat0 = matchP2HliquidSat( Psat0);
-			
-		if (Psat0 > P0PK0) {
-			H0HK = Hsat0 + (Psat0-P0PK0) / Math.abs(Math.tan(angleHmatchPSatWithP0PK*Math.PI/180));
-		}
-		else {
-			H0HK = Hsat0;
-			logger.error("(CompHmatchPSatWithP0PK) H0HK {} = Hsat {} ",H0HK,Hsat0);
-		}
 		
-		return H0HK;
 	}
-
-	// -------------------------------------------------------
-
-	/**
-	 * Convert Temperature(°C) to Pressure (bar) 
-	 * @param temp: temperature (°C)
-	 * @return : Pressure (bar absolute)
-	 */
-	public double convT2P(double temp){
-		double presso=0;
-		double min = Double.MAX_VALUE;
-		int id=0;
-		if (listSatTPf.size() != 0) {
-			for(int n = 0; n < listSatTPf.size(); n++){
-				double diff = Math.abs(getT(n) - temp);
-				if (diff < min) {
-					min = diff;
-					id = n;
-				}
-			}
-			if (id == listSatTPf.size()-1) {
-				id = id-1;
-			} 
-
-			double x,y0,y1,x0,x1;
-			x  = temp;
-			x0 = getT(id);
-			x1 = getT(id+1);
-			y0 = getP(id);
-			y1 = getP(id+1);
-			
-			if (x1==x0) {
-				logger.error("(convT2P )");
-				logger.error("  2 same valeurs of temperature will cause and issue and must be removed ");
-				logger.error("	in P2T_Rxx.txt and SaturationCurve_Rxx2.txt File !!!!");
-			}
-			presso = (x-x0)*(y1-y0)/(x1-x0)+ y0;
-		}
-		return presso+deltaP;
-	}
-
-	// -------------------------------------------------------
-
-	/**
-	 * Convert Pressure (bar) to Temperature(°C)  
-	 * @param : Pressure (absolute) press
-	 * @return : Temperature (°C)
-	 */
-	public double convP2T(double press){
-		double tempo=0;
-		double min = Double.MAX_VALUE;
-		int id=0;
-		double pressi = press - deltaP; 
-		if (listSatTPf.size() != 0) {
-			for(int n = 0; n < listSatTPf.size(); n++){
-				double diff = Math.abs(getP(n) - pressi);
-				if (diff < min) {
-					min = diff;
-					id = n;
-				}
-			}
-			if (id == listSatTPf.size()-1) {
-				id = id-1;
-			} 
-
-			double x,y0,y1,x0,x1;
-			x  = pressi;
-			x0 = getP(id);
-			x1 = getP(id+1);
-			y0 = getT(id);
-			y1 = getT(id+1);
-			tempo = (x-x0)*(y1-y0)/(x1-x0)+ y0;
-		}
-		return tempo;
-	}
-
-	// -------------------------------------------------------
-	/**
-	 * Return T from List listTP
-	 * @param id
-	 * @return T
-	 */
-	public double getT(int id) {
-		return listSatTPf.get(id).getX();
-	}
-
-	// -------------------------------------------------------
-	/**
-	 * Return P from List listTP
-	 * @param id
-	 * @return P
-	 */
-	public double getP(int id) {
-		return listSatTPf.get(id).getY();
-	}
-
-	// -------------------------------------------------------
-	/**
-	 * Return      P  from List listSatHlP
-	 *  	 	   P  from List listSatHvP
-	 *  It is the same value as for both ! 
-	 * @param id 
-	 * @return P
-	 */
-	public double getSatP(int id) {
-		return listSatHlP.get(id).getY();
-	}
-
-	// -------------------------------------------------------
-	/**
-	 * Return Enthalpy Vapor from List listSatHlP
-	 * @param id
-	 * @return H
-	 */
-	public double getSatHv(int id) {
-		return listSatHvP.get(id).getX();
-	}
-
-	// -------------------------------------------------------
-	/**
-	 * Return Enthalpy Liquid from List listSatHlP
-	 * @param id
-	 * @return H Liquid
-	 */
-	public double getSatHl(int id) {
-		return listSatHlP.get(id).getX();
-	}
-
-	/**
-	 * Conversion Saturation Enthalpy value to Pressure
-	 *   The table H can decrease/increase , so we have to take into account supplementary parameters 
-	 *     Zone of pressure
-	 *     Zone of H
-	 *   Zone of pressure is computed based on : 
-	 *   	Current pressure=pNear and pDelta --> 
-	 *   	Zone of pressure = pNear +- pDelta
-	 *   Zone of H is computed based on  hSatErrLoc
-	 * @param pNear
-	 * @param pDelta
-	 * @return pressure in bar !
-	 */
-	public double  convSatH2P(double h, double pNear ) {
-		double po=-1000;
-		double min = 1000;
-		double diff;
-		double pDelta;
-		double pmin; 
-		double pmax;
-		int idlx=-1;
-		int idvx=-1;
-		double x = 0, y0 = 0,y1 = 0,x0 = 0,x1 = 0;
-
-		if (pNear < 5) 
-			pDelta = 2;
-		else if ((pNear>=5) && (pNear<10) )
-			pDelta = 5;
-		else if ((pNear>=10) && (pNear<20) )
-			pDelta = 7;
-		else if ((pNear>=20) && (pNear<40) )
-			pDelta = 10;
-		else
-			pDelta = 20;
-
-		pmin = ((pNear-pDelta)>0) ? (pNear-pDelta): 0.0;
-		pmax = (pNear+pDelta);
-
-		//System.out.println("-------------------------------------------------------");	
-		//System.out.println("      h="+h);	
-		//System.out.println("     "+ pmin +" < " + "  pNear= "+pNear + " < "+ pmax );
-
-		if ((h>= hSatMin) && (h <= hSatMax)) {
-
-			for(int i=0;i<listSatHlP.size();i++) {
-				if ((getSatP(i) < pmax) && (getSatP(i) > pmin)) {
-
-					diff = Math.abs(getSatHl(i)-h);
-					if (diff < min) {
-						min = diff;
-						idlx = i;
-						idvx = -1;
-					}
-
-					diff = Math.abs(getSatHv(i)-h);
-					if (diff < min) {
-						min = diff;
-						idvx = i;
-						idlx = -1;
-					}
-				}
-			}
-			// Avoid to get outside the list
-			if (idlx >= listSatHlP.size()-1) 
-				idlx = idlx-1;
-			if (idvx >= listSatHlP.size()-1) 
-				idvx = idvx-1;
-			//System.out.println("      idlx="+idlx+"   idvx="+idvx);
-
-			// We check that the x0 and x1 are in the H Zone (Liquid) 
-			if (idlx != -1) {
-				x  = h;
-				x0 = getSatHl(idlx);
-				x1 = getSatHl(idlx+1);
-				//System.out.println("     |h("+h+") - x0("+x0+")|="+ (Math.abs(h-x0)+ "<-->" + hSatErrLoc ));
-				//System.out.println("     |h("+h+") - x1("+x1+")|="+ (Math.abs(h-x1)+ "<-->" + hSatErrLoc ));
-				if ( (Math.abs(h-x0) > hSatErrLoc || Math.abs(h-x1) > hSatErrLoc ) ) {
-					idlx = -1;
-				}
-			}
-			// We check that the x0 and x1 are in the H Zone (Vapor) 
-			if (idvx != -1) {
-				x  = h;
-				x0 = getSatHv(idvx);
-				x1 = getSatHv(idvx+1);
-				//System.out.println("     |h("+h+") - x0("+x0+")|="+ (Math.abs(h-x0)+ "<-->" + hSatErrLoc ));
-				//System.out.println("     |h("+h+") - x1("+x1+")|="+ (Math.abs(h-x1)+ "<-->" + hSatErrLoc ));
-				if ( (Math.abs(h-x0) > hSatErrLoc || Math.abs(h-x1) > hSatErrLoc ) ) {
-					idvx = -1;
-				}
-			}
-			//System.out.println("      H Zone Checked");
-			//System.out.println("      idlx="+idlx+"   idvx="+idvx);
-			if (idlx != -1) {
-				// Zone Liquid
-				//System.out.println("       Liquid");
-				y0 = getSatP(idlx);
-				y1 = getSatP(idlx+1);
-				//System.out.println("     "+"h("+idlx+")="+x0 +" < " + h + " < "+"h("+idlx+"+1"+")="+ x1);
-				//System.out.println("     "+"x="+x+"  x0="+x0+"  x1="+x1+"  y0="+y0+"  y1="+y1);
-				po = (x-x0)*(y1-y0)/(x1-x0)+ y0;
-				//System.out.println("     "+y0+" < " + po + " < "+ y1);
-			} else 	if (idvx != -1) {
-				// Zone Vapor
-				//System.out.println("      Vapor");
-				y0 = getSatP(idvx);
-				y1 = getSatP(idvx+1);	
-				//System.out.println("     "+"h("+idvx+")="+x0+" < " + h + " < "+"h("+idvx+"+1"+")="+ x1);
-				//System.out.println("     "+"x="+x+"  x0="+x0+"  x1="+x1+"  y0="+y0+"  y1="+y1);
-				po = (x-x0)*(y1-y0)/(x1-x0)+ y0;
-				//System.out.println("     "+y0+" < " + po + " < "+ y1);
-			} else {
-				// Zone Vapor
-				//System.out.println("      Error");
-				//System.out.println("     "+po );
-			}
-		}
-		return po;
-	}
-
-
-	// -------------------------------------------------------
-	// 							JSON
-	// -------------------------------------------------------
-	//	Squiggly brackets {} act as containers  
-	//	Names and values are separated by a colon(:) 	--> put
-	//  Square brackets[] represents arrays.			--> add
-	//  {  "Planet": "Earth" , "Countries": [  { "Name": "India", "Capital": "Delhi"}, { "Name": "France", "Major": "Paris" } ]  }  
-	// -------------------------------------------------------
-
-	/**
-	 * Construct the JSON data
-	 * @return : JSONObject
-	 */
-	@SuppressWarnings("unchecked")
-	public JSONObject getJsonObject() {
-		JSONObject jsonObj = new JSONObject();  
-		jsonObj.put("NameRefrigerant", this.nameRefrigerant);
-		jsonObj.put("xHmin", this.xHmin);	
-		jsonObj.put("xHmax", this.xHmax);	
-		jsonObj.put("yPmin", this.yPmin);	
-		jsonObj.put("yPmax", this.yPmax);	
-		jsonObj.put("FileNameTP", this.fileNameTP);	
-		jsonObj.put("DeltaP", this.deltaP);	
-		jsonObj.put("FileNameSAT", this.fileNameSAT);	
-		jsonObj.put("AngleHmatchPSatWithP0PK", this.angleHmatchPSatWithP0PK);	
-		jsonObj.put("EnthalpyBkgdImg", this.enthalpyBkgdImg.getJsonObject());	
-		return jsonObj ;
-	}
-
-	/**
-	 * Set the JSON data, to the Class instance
-	 * @param jsonObj : JSON Object
-	 */
-	public void setJsonObject(JSONObject jsonObj) {
-		this.nameRefrigerant = (String) jsonObj.get("NameRefrigerant");
-		this.xHmin = ((Number) jsonObj.get("xHmin")).doubleValue();
-		this.xHmax = ((Number) jsonObj.get("xHmax")).doubleValue();
-		this.yPmin = ((Number) jsonObj.get("yPmin")).doubleValue();
-		this.yPmax = ((Number) jsonObj.get("yPmax")).doubleValue();
-		this.fileNameTP = (String) jsonObj.get("FileNameTP");
-		this.deltaP = ((Number) jsonObj.get("DeltaP")).doubleValue();
-		this.fileNameSAT = (String) jsonObj.get("FileNameSAT");
-		this.angleHmatchPSatWithP0PK = ((Number) jsonObj.get("AngleHmatchPSatWithP0PK")).doubleValue();
-
-		JSONObject jsonObjEImg = (JSONObject) jsonObj.get("EnthalpyBkgdImg");
-		this.enthalpyBkgdImg.setJsonObject(jsonObjEImg); 
-	}
-
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
-
-	public String getFileNameTP() {
-		return fileNameTP;
-	}
-
-	public void setFileNameTP(String fileNameTP) {
-		this.fileNameTP = fileNameTP;
-	}
-
-	public List<Point2D.Double> getlistTP() {
-		return listSatTPf;
-	}
-
-	public void setlistTP(List<Point2D.Double> listTP) {
-		this.listSatTPf = listTP;
-	}
-
-	public String getFileNameSAT() {
-		return fileNameSAT;
-	}
-
-	public void setFileNameSAT(String fileNameSAT) {
-		this.fileNameSAT = fileNameSAT;
-	}
-
-	public List<Point2D.Double> getlistSatHlP() {
-		return listSatHlP;
-	}
-
-	public void setlistSatHlP(List<Point2D.Double> listSatHlP) {
-		this.listSatHlP = listSatHlP;
-	}
-
-	public List<Point2D.Double> getlistSatHvP() {
-		return listSatHvP;
-	}
-
-	public void setlistSatHvP(List<Point2D.Double> listSatHvP) {
-		this.listSatHvP = listSatHvP;
-	}
-
 	public String getNameRefrigerant() {
 		return nameRefrigerant;
-	}
-
-	public void setNameRefrigerant(String nameRefrigerant) {
-		this.nameRefrigerant = nameRefrigerant;
-	}
-
-	public EnthalpyBkgdImg getEnthalpyBkgImage() {
-		return enthalpyBkgdImg;
-	}
-
-	public void setEnthalpyBkgImage(EnthalpyBkgdImg enthalpyBkgdImg) {
-		this.enthalpyBkgdImg = enthalpyBkgdImg;
-	}
-
-	public double getxHmin() {
-		return xHmin;
-	}
-
-	public void setxHmin(double xHmin) {
-		this.xHmin = xHmin;
-	}
-
-	public double getxHmax() {
-		return xHmax;
-	}
-
-	public void setxHmax(double xHmax) {
-		this.xHmax = xHmax;
-	}
-
-	public double getyPmin() {
-		return yPmin;
-	}
-
-	public void setyPmin(double yPmin) {
-		this.yPmin = yPmin;
-	}
-
-	public double getyPmax() {
-		return yPmax;
-	}
-
-	public void setyPmax(double yPmax) {
-		this.yPmax = yPmax;
-	}
-
-	public double getDeltaP() {
-		return deltaP;
-	}
-
-	public void setDeltaP(double deltaP) {
-		this.deltaP = deltaP;
 	}
 
 }

@@ -35,23 +35,25 @@ Environnement de développement intégré / (Integrated Development Environment)
 WindowBuilder (Eclipse)
 	Installation WindowBuilder à travers Marketplace dans Eclipse
 
+Editeur HTML
+	Par exemple: kompozer-0.7.10-win32
+	Intégré à Eclipse
+	HTML Editor WPT 
+	
+Langage de modélisation unifié, Unified Modeling Language (UML) intégré à  Eclipse
+	ObjectAid
+	Installer uniquement les modules ne nécessitant pas de licences.
+	Au niveau Eclipse dans Install New Software
+	Name: ObjectAid UML Explorer
+	URL: http://www.objectaid.com/update/current
+
 log4j Logger
 	Log4j Plugin pour le logging  
 	Doit être téléchargé sur le site officiel
 		Download : https://logging.apache.org/log4j/2.x/download.html 
 	Utilisation:
 	http://logging.apache.org/log4j/2.x/manual/api.html
-		
-Langage de modélisation unifié, Unified Modeling Language (UML) intégré à  Eclipse
-	ObjectAid
-	Installer uniquement les modules ne nécessitant pas de licences.
-	Au niveau Eclipse dans Install New Software
-	Name: ObjectAid UML Explorer
-	URL: http://www.objectaid.com/update
 	
-Editeur HTML
-	Par exemple: kompozer-0.7.10-win32
-	Intégré à Eclipse
 
 Gestion de versions Git
 	Git est intégré à Eclipse, mais je préfère utiliser SourceTree.
