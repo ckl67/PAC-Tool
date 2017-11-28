@@ -12,8 +12,14 @@ Outil qui permet de vérifier les données contructeur (COP) et de calculer le C
 La chaine d'outil pour le développement est la suivante:<br>
 <i>Je donne ci-dessous l'ordre dans lequel je conseille de procéder à l'installation de la chaîne de développement.</i>
 
+Création Compte Github
+----------------------
+La première chose va consister à créer un compte sur https://github.com/ afin que je puisse vous ajouter au projet.
+Une fois cette opération faite, il faudra me contacter afin que je vous autorise à participer au projet.
+
 Java
 ----
+Installation de Java
 Java Platform, Standard Edition<br>
 http://www.oracle.com/technetwork/java/javase/downloads/index.html
 Version minimale: jre8u111<br>
@@ -22,16 +28,19 @@ Utiliser JDK<br>
 SourceTree
 -----------
 Client graphique clair et structuré, compatible avec Git <br>
+https://www.sourcetreeapp.com/
 Lors de l'installation de SourceTree, il faudra
 
-	Créer un compte Altassian, ou utiliser un compte Google<br>
+	Créer un compte Altassian, ou utiliser un compte Google
 	Choisir GitHub (L'association devrait se faire automatiquement)
 	L'outil va 
-télécharger automatiquement la version embarquée de Git<br> 
-<i>(Dans le cas contraire ne pas pointer vers une version installée GIT voir plus loin )</i>, <br>
-télécharger la version embarquée de Mercudial<br>
-	Dans option Git, activer: "Update Embedded Git" afin d'avoir la version intégrée de Git<br>
-	https://www.sourcetreeapp.com/
+		télécharger automatiquement la version embarquée de Git 
+			(Dans le cas contraire ne pas pointer vers une version installée GIT voir plus loin)
+		télécharger la version embarquée de Mercudial<br>
+	Au niveau du clone (cad version locale) je vous invite à choisir un réprtoire sous workspace
+	\Users\<nom>\workspace\pac-tool
+	Par la suite, sourcetree demandera les informations utilisateurs que vous voulez associer.
+	Il sagira ici de rentrer les informations de votre compte Github
 	
 	
 Eclipse: Environnement de développement intégré
@@ -39,8 +48,10 @@ Eclipse: Environnement de développement intégré
 Eclipse IDE <i>(Integrated Development Environment)</i> for Java Developers<br>
 Version minimale: Neon Release<br>
 https://www.eclipse.org/downloads/eclipse-packages/<br>
-Choisir: Eclipse Installer
+Choisir: Eclipse Installer<br>
 Lors de l'installation choisir: Eclipse IDE for Java Developers<br>
+
+	Une fois installer, faire pointer sur le répertoire : \Users\<nom>\workspace\pac-tool
 
 Add-ons intégrés à Eclipse (IDE)
 --------------------------------
