@@ -25,29 +25,29 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import coolant.HeatTransferFluid;
+
 public class Circulator {
 
-	private static final Logger logger = LogManager.getLogger(Pac.class.getName());
+	private static final Logger logger = LogManager.getLogger(Circulator.class.getName());
 
 	// --------------------------------------------------------------------
 	// Instance variables
 	// --------------------------------------------------------------------
 	private String name;
 	private double voltage;
-	ArrayList<Double> currentL = new ArrayList<Double>();
-	ArrayList<Integer> rotatePerMinutesL = new ArrayList<Integer>();
-	ArrayList<Integer> powerL = new ArrayList<Integer>();
-
 	private int idFeature;	
+	private ArrayList<Double> currentL = new ArrayList<Double>();
+	private ArrayList<Integer> rotatePerMinutesL = new ArrayList<Integer>();
+	private ArrayList<Integer> powerL = new ArrayList<Integer>();
+
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 	public Circulator () {
-		logger.trace("Circulator() --> New Circulator default");
 		this.name = "DAB A 80/180XM";
 		this.voltage = 220;
-
 		this.idFeature = 0;
 
 		//setNbListFeatures(3);
@@ -65,16 +65,13 @@ public class Circulator {
 	}
 
 	public Circulator (	String vname, double vvoltage) {
-		logger.trace("Circulator({},{}) --> New Circulator with features all set to 0 ", vname, vvoltage);
 		this.name = vname;
 		this.voltage = vvoltage;
-
 		this.idFeature = 0;
 
 		this.rotatePerMinutesL.add(0);
 		this.powerL.add(0);
 		this.currentL.add(0.0);
-
 	}
 	// -------------------------------------------------------
 	// 							METHOD
@@ -98,6 +95,7 @@ public class Circulator {
 	 * @param vpower
 	 */
 	public void addFeatures(double vcurrent, int vrotatePerMinutes, int vpower ) {
+		logger.trace("addFeatures(position={},vcurrent={},vrotatePerMinutes={},vpower={})",idFeature,vcurrent,vrotatePerMinutes,vpower);
 		rotatePerMinutesL.add(vrotatePerMinutes);
 		powerL.add(vpower);
 		currentL.add(vcurrent);
@@ -200,7 +198,7 @@ public class Circulator {
 	}
 
 	public int getNbOfFeatures() {
-		logger.trace("getNbFeaturesNb()--> Nb. of Features = {}",currentL.size());
+		//logger.trace("getNbFeaturesNb()--> Nb. of Features = {}",currentL.size());
 		return currentL.size();
 	}
 
@@ -210,41 +208,41 @@ public class Circulator {
 	}
 
 	public int getActiveFeatureId() {
-		logger.trace("getActiveFeatureId() --> Active feature = {}", idFeature);
+		//logger.trace("getActiveFeatureId() --> Active feature = {}", idFeature);
 		return idFeature;
 	}
 
 	public Double getActiveFeatureCurrent() {
-		logger.trace("getActiveFeatureCurrent()--> id={} Current={}",idFeature,currentL.get(idFeature));
+		//logger.trace("getActiveFeatureCurrent()--> id={} Current={}",idFeature,currentL.get(idFeature));
 		return currentL.get(idFeature);
 	}
 
 	public int getActiveFeatureRotatePerMinutes() {
-		logger.trace("getActiveFeatureRotatePerMinutes()--> id={} Rotate per Minutes={}",idFeature,rotatePerMinutesL.get(idFeature));
+		//logger.trace("getActiveFeatureRotatePerMinutes()--> id={} Rotate per Minutes={}",idFeature,rotatePerMinutesL.get(idFeature));
 		return rotatePerMinutesL.get(idFeature);
 	}
 
 	public int getActiveFeaturePower() {
-		logger.trace("getActiveFeaturePower()--> id={} Power={}",idFeature,powerL.get(idFeature));
+		//logger.trace("getActiveFeaturePower()--> id={} Power={}",idFeature,powerL.get(idFeature));
 		return powerL.get(idFeature);
 	}
 
 	public void setActiveFeatureCurrent(double val) {
-		logger.trace("setActiveFeatureCurrent()--> id={} Current={}",idFeature,val);
+		//logger.trace("setActiveFeatureCurrent()--> id={} Current={}",idFeature,val);
 		currentL.set(idFeature, val);
-		logger.trace(" After                   --> id={} Current={}",idFeature,currentL.get(idFeature));
+		//logger.trace(" After                   --> id={} Current={}",idFeature,currentL.get(idFeature));
 	}
 
 	public void setActiveFeatureRotatePerMinutes(int val) {
-		logger.trace("setActiveFeatureRotatePerMinutes()--> id={} Rotate per Minutes={}",idFeature,val);
+		//logger.trace("setActiveFeatureRotatePerMinutes()--> id={} Rotate per Minutes={}",idFeature,val);
 		rotatePerMinutesL.set(idFeature, val);
-		logger.trace(" After                            --> id={} Rotate per Minutes={}",idFeature,rotatePerMinutesL.get(idFeature));
+		//logger.trace(" After                            --> id={} Rotate per Minutes={}",idFeature,rotatePerMinutesL.get(idFeature));
 	}
 
 	public void setActiveFeaturePower(int val ) {
-		logger.trace("setActiveFeaturePower()--> id={} Power={}",idFeature,val);
+		//logger.trace("setActiveFeaturePower()--> id={} Power={}",idFeature,val);
 		powerL.set(idFeature, val);
-		logger.trace(" After                 --> id={} Power={}",idFeature,powerL.get(idFeature));
+		//logger.trace(" After                 --> id={} Power={}",idFeature,powerL.get(idFeature));
 	}
 
 	public void setName(String name) {

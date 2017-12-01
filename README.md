@@ -55,7 +55,7 @@ Editeur HTML, *(non wysiwyg)*
 Sous Eclipse, à travers Help/Marketplace installer : **HTML Editor WPT**  
 A l'installation, il pourrait y avoir un conflit avec XML, dans ce cas je vous conseille de choisir : "Keep My installation the same"  
 *(Pour l'instant je n'ai pas réussi à trouver un éditeur HTML wysiwyg)*
-  	
+
 ### Langage de modélisation unifié (UML)
 Unified Modeling Language (UML) permet de voir l'arborescence des classes  
 ObjectAid

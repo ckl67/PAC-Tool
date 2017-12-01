@@ -21,6 +21,8 @@ package pac;
 
 import org.json.simple.JSONObject;
 
+import coolant.HeatTransferFluid;
+
 public class HeatSrcDistrCircuit {
 
 	private String name;

@@ -6,7 +6,7 @@ import org.json.simple.JSONObject;
 import org.junit.Test;
 
 import pac.ExpansionValve;
-import pac.Refrigerant;
+import refrigerant.Refrigerant;
 
 public class JUnitExpansionValve {
 

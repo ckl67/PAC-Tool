@@ -21,6 +21,8 @@ package pac;
 
 import org.json.simple.JSONObject;
 
+import refrigerant.Refrigerant;
+
 public class Dehydrator {
 
 	private String name;

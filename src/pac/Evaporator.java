@@ -20,6 +20,8 @@ package pac;
 
 import org.json.simple.JSONObject;
 
+import refrigerant.Refrigerant;
+
 public class Evaporator {
 
 	private String name;

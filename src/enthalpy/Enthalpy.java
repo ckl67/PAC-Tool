@@ -159,9 +159,9 @@ public class Enthalpy {
 
 				int r = gasSaturationTable.size()-1;
 				logger.trace("T={} pf={} pg={}",
-						gasSaturationTable.get(r).get(SaturationTable.Temperature.col()),
-						gasSaturationTable.get(r).get(SaturationTable.PressureL.col()),
-						gasSaturationTable.get(r).get(SaturationTable.PressureG.col()));
+						gasSaturationTable.get(r).get(0),
+						gasSaturationTable.get(r).get(1),
+						gasSaturationTable.get(r).get(3));
 			}
 		}
 		// Close scanner to avoid memory leak

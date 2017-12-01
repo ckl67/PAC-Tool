@@ -21,6 +21,7 @@ package pac;
 import org.json.simple.JSONObject;
 
 import computation.Misc;
+import refrigerant.Refrigerant;
 
 public class Compressor {
 	private String name;
@@ -85,7 +86,10 @@ public class Compressor {
 	//	Squiggly brackets {} act as containers  
 	//	Names and values are separated by a colon(:) 	--> put
 	//  Square brackets[] represents arrays.			--> add
-	//  {  "Planet": "Earth" , "Countries": [  { "Name": "India", "Capital": "Delhi"}, { "Name": "France", "Major": "Paris" } ]  }  
+	//  {  "Planet": "Earth" , "Countries": [  
+	//											{ "Name": "India", "Capital": "Delhi"}, 
+	//                   						{ "Name": "France", "Major": "Paris" } 
+	//										]  }  
 	// -------------------------------------------------------
 
 	/**
@@ -264,6 +268,4 @@ public class Compressor {
 	public void setPowerShaftPercent(int powerShaftPercent) {
 		this.powerShaftPercent = powerShaftPercent;
 	}
-	
-	
 }

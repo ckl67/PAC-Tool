@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import org.json.simple.JSONObject;
 import org.junit.Test;
 
+import coolant.HeatTransferFluid;
 import pac.Circulator;
-import pac.HeatTransferFluid;
 
 public class JUnitCirculator {
 

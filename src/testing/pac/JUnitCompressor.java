@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import pac.Compressor;
 import pac.Pac;
-import pac.Refrigerant;
+import refrigerant.Refrigerant;
 
 public class JUnitCompressor {
 

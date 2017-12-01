@@ -1,29 +1,44 @@
-package pac;
+/*
+ * - PAC-Tool - 
+ * Tool for understanding basics and computation of PAC (Pompe à Chaleur)
+ * Copyright (C) 2016 christian.klugesherz@gmail.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License (version 2)
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+package coolant;
 
 import org.json.simple.JSONObject;
 
-import enthalpy.Enthalpy;
-
-public class Refrigerant extends Enthalpy {
+public class HeatTransferFluid {
 
 	private String name;
-	private double P;
-	private double T;
+	private double T;	// Heat Transfer Fluid Temperature in °C
+	private double P; 	// Heat Transfer Fluid Pressure in bar
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
-	public Refrigerant() {
-		this.name = "R22";
-		this.P = 0.0;
-		this.T = 0.0; 
+	public HeatTransferFluid() {
+		this.name = "Fluide caloporteur";
+		this.T  = 0; 		
+		this.P = 0;		
 	}
 
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
-
 
 	// -------------------------------------------------------
 	// 							JSON
@@ -33,7 +48,7 @@ public class Refrigerant extends Enthalpy {
 	//  Square brackets[] represents arrays.			--> add
 	//  {  "Planet": "Earth" , "Countries": [  { "Name": "India", "Capital": "Delhi"}, { "Name": "France", "Major": "Paris" } ]  }  
 	// -------------------------------------------------------
-	
+
 	/**
 	 * Construct the JSON data
 	 * @return : JSONObject
@@ -60,7 +75,6 @@ public class Refrigerant extends Enthalpy {
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
-
 	public String getName() {
 		return name;
 	}
@@ -69,20 +83,16 @@ public class Refrigerant extends Enthalpy {
 		this.name = name;
 	}
 
-	public double getP() {
-		return P;
-	}
-
-	public void setP(double P) {
-		this.P = P;
-	}
-
 	public double getT() {
 		return T;
 	}
-
 	public void setT(double T) {
 		this.T = T;
 	}
-
+	public double getP() {
+		return P;
+	}
+	public void setP(double P) {
+		this.P = P;
+	}
 }

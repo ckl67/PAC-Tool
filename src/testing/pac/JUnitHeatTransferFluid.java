@@ -5,7 +5,7 @@ package testing.pac;
 import org.json.simple.JSONObject;
 import org.junit.Test;
 
-import pac.HeatTransferFluid;
+import coolant.HeatTransferFluid;
 
 public class JUnitHeatTransferFluid {
 

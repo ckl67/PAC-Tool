@@ -9,6 +9,5 @@ public enum PacGasInjected {
 	CONDENSER,
 	EXPANSIONVALVE,
 	EVAPORATOR;
-
 }
 

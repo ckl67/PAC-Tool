@@ -15,13 +15,11 @@ public enum PacItem {
 	DEHY,
 	EPVA,
 	EVAP,
-	FLFRG,
 	CRCLS,
 	CIRTS,
-	FLCAS,
 	CRCLD,
-	CIRTD,
-	FLCAD;
+	CIRTD;
+
 	
 	/**
 	 * Will return the position of the element

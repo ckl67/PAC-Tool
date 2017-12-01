@@ -26,6 +26,9 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import coolant.HeatTransferFluid;
+import refrigerant.Refrigerant;
+
 public class Pac {
 
 	private static final Logger logger = LogManager.getLogger(Pac.class.getName());
@@ -38,10 +41,8 @@ public class Pac {
 	private List<Dehydrator> dehydratorL = new ArrayList<Dehydrator>();
 	private List<ExpansionValve> expansionValveL = new ArrayList<ExpansionValve>();
 	private List<Evaporator> evaporatorL = new ArrayList<Evaporator>();
-	private List<Refrigerant> fluidRefriL = new ArrayList<Refrigerant>();
 	private List<Circulator> circulatorSrcL = new ArrayList<Circulator>();
 	private List<HeatSrcDistrCircuit> circuitSrcL = new ArrayList<HeatSrcDistrCircuit>();
-	private List<HeatTransferFluid> fluidCaloSrcL = new ArrayList<HeatTransferFluid>();
 	private List<Circulator> circulatorDistrL = new ArrayList<Circulator>();
 	private List<HeatSrcDistrCircuit> circuitDistrL = new ArrayList<HeatSrcDistrCircuit>();
 	private List<HeatTransferFluid> fluidCaloDistrL = new ArrayList<HeatTransferFluid>();
@@ -57,11 +58,9 @@ public class Pac {
 		dehydratorL.add(new Dehydrator());
 		expansionValveL.add(new ExpansionValve());
 		evaporatorL.add(new Evaporator());
-		fluidRefriL.add(new Refrigerant());
 
 		circulatorSrcL.add(new Circulator());
 		circuitSrcL.add(new HeatSrcDistrCircuit());
-		fluidCaloSrcL.add(new HeatTransferFluid());
 
 		circulatorDistrL.add(new Circulator());
 		circuitDistrL.add(new HeatSrcDistrCircuit());
@@ -72,13 +71,11 @@ public class Pac {
 		id[PacItem.DEHY.ordinal()]=0;
 		id[PacItem.EPVA.ordinal()]=0;
 		id[PacItem.EVAP.ordinal()]=0;
-		id[PacItem.FLFRG.ordinal()]=0;
 		id[PacItem.CRCLS.ordinal()]=0;
 		id[PacItem.CIRTS.ordinal()]=0;
-		id[PacItem.FLCAS.ordinal()]=0;
 		id[PacItem.CRCLD.ordinal()]=0;
 		id[PacItem.CIRTD.ordinal()]=0;
-		id[PacItem.FLCAD.ordinal()]=0;
+
 	}
 
 	// -------------------------------------------------------

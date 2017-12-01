@@ -5,40 +5,40 @@ import static org.junit.Assert.*;
 import org.json.simple.JSONObject;
 import org.junit.Test;
 
-import pac.Condenser;
+import pac.Evaporator;
 import refrigerant.Refrigerant;
 
-public class JUnitCondenser {
+public class JUnitEvaporator {
 
 	@Test
 	public void test() {
-		System.out.println("TEST CONDENSER");
+		System.out.println("TEST Evaporator");
 
-		Condenser vCondenser = new Condenser();
+		Evaporator vEvaporator = new Evaporator();
 
-		assertEquals("Condenseur",vCondenser.getName());
+		assertEquals("Evaporateur",vEvaporator.getName());
 
 		System.out.println("---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();
-		jsonObj = vCondenser.getJsonObject();
+		jsonObj = vEvaporator.getJsonObject();
 		System.out.println("jsonObj =" + jsonObj);
 
 		System.out.println("---> Test Modify the instance ");
-		vCondenser.setName("Toto");
-		assertEquals("Toto",vCondenser.getName());
+		vEvaporator.setName("Toto");
+		assertEquals("Toto",vEvaporator.getName());
 
 		System.out.println("--> Set the Class Instance with JSON data");
-		vCondenser.setJsonObject(jsonObj);
+		vEvaporator.setJsonObject(jsonObj);
 
 		System.out.println("---> Read afterwards ");
-		assertEquals("Condenseur",vCondenser.getName());
+		assertEquals("Evaporateur",vEvaporator.getName());
 
 		Refrigerant vGas = new Refrigerant();
 		vGas.setT(10);
 
 		System.out.println("--->Transfer Function");
 		System.out.println("Input --> Output");
-		System.out.println(vGas.getT()+"°C-->"+vCondenser.transfer(vGas).getT()+"°C");
+		System.out.println(vGas.getT()+"°C-->"+vEvaporator.transfer(vGas).getT()+"°C");
 	}
 
 }

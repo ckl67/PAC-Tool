@@ -5,7 +5,7 @@ package testing.pac;
 import org.json.simple.JSONObject;
 import org.junit.Test;
 
-import pac.Refrigerant;
+import refrigerant.Refrigerant;
 
 public class JUnitRefrigerant {
 

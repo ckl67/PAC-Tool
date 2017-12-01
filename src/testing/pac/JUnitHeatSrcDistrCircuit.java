@@ -5,8 +5,8 @@ package testing.pac;
 import org.json.simple.JSONObject;
 import org.junit.Test;
 
+import coolant.HeatTransferFluid;
 import pac.HeatSrcDistrCircuit;
-import pac.HeatTransferFluid;
 
 public class JUnitHeatSrcDistrCircuit {
 
