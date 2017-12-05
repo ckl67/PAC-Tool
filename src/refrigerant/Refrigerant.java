@@ -2,24 +2,25 @@ package refrigerant;
 
 import org.json.simple.JSONObject;
 
-public class Refrigerant {
+public class Refrigerant extends SatCurveTable {
 
 	// --------------------------------------------------------------------
 	// Instance variables
 	// --------------------------------------------------------------------
-	
 	private String name;
 	private double P;
 	private double T;
+	private double H;
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-
-	public Refrigerant() {
-		this.name = "R22";
+	public Refrigerant(String fileNameGas) {
+		this.name = loadGasSaturationData(fileNameGas);;
 		this.P = 0.0;
 		this.T = 0.0; 
+		this.H = 0.0; 
+		
 	}
 
 	// -------------------------------------------------------
@@ -67,10 +68,6 @@ public class Refrigerant {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public double getP() {
 		return P;
 	}
@@ -85,6 +82,14 @@ public class Refrigerant {
 
 	public void setT(double T) {
 		this.T = T;
+	}
+
+	public double getH() {
+		return H;
+	}
+
+	public void setH(double H) {
+		this.H = H;
 	}
 
 }

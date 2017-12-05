@@ -169,7 +169,7 @@ public class Enthalpy {
 		return(gasName);
 	}
 
-	private int rIndex(SaturationTable item, double value) {
+	private int rIndex(SatTable item, double value) {
 		double min = Double.MAX_VALUE;
 		int id=0;
 
@@ -186,12 +186,12 @@ public class Enthalpy {
 		return(id);
 	}
 
-	public double findNearestItem(SaturationTable item, double value) {
+	public double findNearestItem(SatTable item, double value) {
 		int id=rIndex(item, value);
 		return gasSaturationTable.get(id).get(item.col());
 	}
 
-	public double findNearestItem(SaturationTable itemi, double value, SaturationTable itemo) {
+	public double findNearestItem(SatTable itemi, double value, SatTable itemo) {
 		int id=rIndex(itemi, value);
 		return gasSaturationTable.get(id).get(itemo.col());
 	}	
