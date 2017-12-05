@@ -2,7 +2,7 @@ package refrigerant;
 
 import org.json.simple.JSONObject;
 
-public class Refrigerant extends SatCurveTable {
+public class Refrigerant extends SatCurve {
 
 	// --------------------------------------------------------------------
 	// Instance variables

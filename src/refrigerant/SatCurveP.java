@@ -1,6 +1,6 @@
 package refrigerant;
 
-public class SatCurvePressure {
+public class SatCurveP {
 
 	// -------------------------------------------------------
 	// 					INSTANCE VARIABLES
@@ -11,7 +11,7 @@ public class SatCurvePressure {
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public SatCurvePressure() {
+	public SatCurveP() {
 		PGas = 0.0;
 		PLiquid = 0.0;
 	}
