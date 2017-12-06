@@ -1,6 +1,6 @@
 package refrigerant;
 
-public class SatCurveT {
+public class TSat {
 
 	// -------------------------------------------------------
 	// 					INSTANCE VARIABLES
@@ -11,7 +11,7 @@ public class SatCurveT {
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public SatCurveT() {
+	public TSat() {
 		TGas = 0.0;
 		TLiquid = 0.0;
 	}

@@ -1,38 +1,38 @@
 package refrigerant;
 
-public class SatCurveP {
+public class HSat {
 
 	// -------------------------------------------------------
 	// 					INSTANCE VARIABLES
 	// -------------------------------------------------------
-	private double PGas;
-	private double PLiquid;
+	private double HGas;
+	private double HLiquid;
 	
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public SatCurveP() {
-		PGas = 0.0;
-		PLiquid = 0.0;
+	public HSat() {
+		HGas = 0.0;
+		HLiquid = 0.0;
 	}
 
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
-	public double getPGas() {
-		return PGas;
+	public double getHGas() {
+		return HGas;
 	}
 
-	public void setPGas(double PGas) {
-		this.PGas = PGas;
+	public void setHGas(double HGas) {
+		this.HGas = HGas;
 	}
 
-	public double getPLiquid() {
-		return PLiquid;
+	public double getHLiquid() {
+		return HLiquid;
 	}
 
-	public void setPLiquid(double PLiquid) {
-		this.PLiquid = PLiquid;
+	public void setHLiquid(double HLiquid) {
+		this.HLiquid = HLiquid;
 	}
 
 	

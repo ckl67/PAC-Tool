@@ -23,6 +23,11 @@ public class JUnitRefrigant {
 				" --> T Saturation(gas)= "     + refrigerant.convSatP2T(P).getTGas()    + "(°C)" +
 				" --> T Saturation (Liquid)= " + refrigerant.convSatP2T(P).getTLiquid() + "(°C)");
 
+		T=0;
+		System.out.println(	"T= " + T + "°C " +  
+				" --> H Saturation(gas)= "     + refrigerant.convSatT2H(T).getHGas()    + "(kJ/kg)" +
+				" --> H Saturation (Liquid)= " + refrigerant.convSatT2H(T).getHLiquid() + "(kJ/kg)");
+
 	}
 
 }

@@ -25,8 +25,6 @@ public class SatCurve {
 	private final int id_H_Gas = 7;
 	private final int id_Entropy_Liquid = 8;
 	private final int id_Entropy_Gas = 9;
-	
-	
 
 	// -------------------------------------------------------
 	// 					INSTANCE VARIABLES
@@ -156,10 +154,10 @@ public class SatCurve {
 	 *
 	 * ===============================================================================================
 	 */
-	public SatCurveP convSatT2P(double temp){
+	public PSat convSatT2P(double temp){
 		double pGas=0;
 		double pLiquid=0;
-		SatCurveP pOut = new SatCurveP();
+		PSat pOut = new PSat();
 		double min = Double.MAX_VALUE;
 		int id=0;
 
@@ -218,10 +216,10 @@ public class SatCurve {
 	 *	 #	17		953,26		803,81	
 	 * ===============================================================================================
 	 */
-	public SatCurveT convSatP2T(double pressure){
+	public TSat convSatP2T(double pressure){
 		double tGas=0;
 		double tLiquid=0;
-		SatCurveT tOut = new SatCurveT();
+		TSat tOut = new TSat();
 		double min = Double.MAX_VALUE;
 		int id=0;
 
@@ -278,6 +276,60 @@ public class SatCurve {
 
 		return tOut;
 		
+	}
+
+	/**
+	 * ===============================================================================================
+	 * Convert Saturation Temperature(°C) to Enthalpy  (kJ/kg)
+	 * @param temp: temperature (°C)
+	 * @return : Enthalpy (kJ/kg) --> (hGas,hLiquid)
+	 * 
+	 * gasSaturationTable Table
+	 *   # Temp.   Press       Press     Density  Density          Enthalpy           Entropy  Entropy
+	 *	 #  °C      kPa         kPa       kg/m3    kg/m3     kJ/kg   kJ/kg  kJ/kg    kJ/kg K  kJ/kg K
+	 *	 #        liquid        gas      liquid     gas      Liquid  latent  gas      liquid    gas
+	 *
+	 * ===============================================================================================
+	 */
+	public HSat convSatT2H(double temp){
+		double hGas=0;
+		double hLiquid=0;
+		HSat hOut = new HSat();
+		double min = Double.MAX_VALUE;
+		int id=0;
+
+		for(int n = 0; n < gasSaturationTable.size(); n++){
+			double diff = Math.abs(gasSaturationTable.get(n).get(id_Temp) - temp);
+			if (diff < min) {
+				min = diff;
+				id = n;
+			}
+		}
+		if (id == gasSaturationTable.size()-1) {
+			id = id-1;
+		} 
+
+		double x,y0,y1,x0,x1;
+		x  = temp;
+		x0 = gasSaturationTable.get(id).get(id_Temp);
+		x1 = gasSaturationTable.get(id+1).get(id_Temp);
+		if (x1==x0) {
+			logger.error("(convSatT2P )");
+			logger.error("  2 same valeurs of temperature will cause and issue and must be removed ");
+		}
+
+		y0 = gasSaturationTable.get(id).get(id_H_Liquid);
+		y1 = gasSaturationTable.get(id+1).get(id_H_Liquid);
+		hLiquid = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+
+		y0 = gasSaturationTable.get(id).get(id_H_Gas);
+		y1 = gasSaturationTable.get(id+1).get(id_H_Gas);
+		hGas = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+
+		hOut.setHGas(hGas);
+		hOut.setHLiquid(hLiquid);
+
+		return hOut;
 	}
 
 		
