@@ -5,7 +5,7 @@
 # Saturation Table
 # 
 # Temp.   Press       Press     Density  Density          Enthalpy           Entropy  Entropy
-#  °C      kPa         kPa       kg/m3    kg/m3     kJ/kg   kJ/kg  kJ/kg    kJ/kg K  kJ/kg K
+#  Â°C      kPa         kPa       kg/m3    kg/m3     kJ/kg   kJ/kg  kJ/kg    kJ/kg K  kJ/kg K
 #        liquid        gas      liquid     gas      Liquid  latent  gas      liquid    gas
 Name:R407C
 Unity P:kPa

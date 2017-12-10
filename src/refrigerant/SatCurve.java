@@ -46,7 +46,6 @@ public class SatCurve {
 	// 							METHOD
 	// -------------------------------------------------------
 
-
 	/**
 	 * ===============================================================================================
 	 * Read Saturation data file containing, and will complete the 
@@ -142,6 +141,8 @@ public class SatCurve {
 		return(gasName);
 	}
 
+	// -------------------------------------------------------
+	
 	/**
 	 * ===============================================================================================
 	 * Convert Saturation Temperature(°C) to Pressure (bar) 
@@ -276,7 +277,6 @@ public class SatCurve {
 		tOut.setTLiquid(tLiquid);
 
 		return tOut;
-
 	}
 
 	/**
@@ -333,7 +333,6 @@ public class SatCurve {
 		return hOut;
 	}
 
-
 	/**
 	 * ===============================================================================================
 	 * Convert Saturation Pressure (bar) to Enthalpy  (kJ/kg)
@@ -345,34 +344,127 @@ public class SatCurve {
 	 *	 #  °C      kPa         kPa       kg/m3    kg/m3     kJ/kg   kJ/kg  kJ/kg    kJ/kg K  kJ/kg K
 	 *	 #        liquid        gas      liquid     gas      Liquid  latent  gas      liquid    gas
 	 *
-	 *	-28		203,43			151,87	1331,6	6,7861		161,42	233,28	394,70	0,85216	1,82
-	 *	-21		269,32			205,89	1308,8	9,06		170,88	227,72	398,60	0,88998	1,8058
+	 *  -28		201,5			149,8	1336,3	6,599		162,2	234,9	397,2	0,8554	1,8278
+	* 	-21		266,3			202,6	1311,1	8,775		171		230,5	401,5	0,8907	1,8176
+
 	 * ===============================================================================================
 	 */
 	public HSat getHSatFromP(double pressure){
 		double hGas=0;
 		double hLiquid=0;
 		HSat hOut = new HSat();
-		
-		// We have to find the temperature from pressure
-		TSat Temp = getTSatFromP(pressure);
-		
-		hLiquid = getHSatFromT(Temp.getTLiquid()).getHLiquid();
-		hGas = getHSatFromT(Temp.getTGas()).getHGas();
-		hOut.setHLiquid(hLiquid);
+		double min = Double.MAX_VALUE;
+		int id=0;
+
+		// Liquid
+		for(int n = 0; n < gasSatTable.size(); n++){
+			double diff = Math.abs(gasSatTable.get(n).get(id_P_Liquid) - pressure);
+			if (diff < min) {
+				min = diff;
+				id = n;
+			}
+		}
+		if (id == gasSatTable.size()-1) {
+			id = id-1;
+		} 
+
+		double x,y0,y1,x0,x1;
+		x  = pressure;
+		x0 = gasSatTable.get(id).get(id_P_Liquid);
+		x1 = gasSatTable.get(id+1).get(id_P_Liquid);
+		if (x1==x0) {
+			logger.error("(getHSat )");
+			logger.error("  2 same value will cause and issue and must be removed ");
+		}
+		y0 = gasSatTable.get(id).get(id_H_Liquid);
+		y1 = gasSatTable.get(id+1).get(id_H_Liquid);
+		hLiquid = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+
+		// Gas
+		for(int n = 0; n < gasSatTable.size(); n++){
+			double diff = Math.abs(gasSatTable.get(n).get(id_P_Gas) - pressure);
+			if (diff < min) {
+				min = diff;
+				id = n;
+			}
+		}
+		if (id == gasSatTable.size()-1) {
+			id = id-1;
+		} 
+
+		x  = pressure;
+		x0 = gasSatTable.get(id).get(id_P_Gas);
+		x1 = gasSatTable.get(id+1).get(id_P_Gas);
+		if (x1==x0) {
+			logger.error("(convSatP2T )");
+			logger.error("  2 same valeurs of pressure will cause and issue and must be removed ");
+		}
+		y0 = gasSatTable.get(id).get(id_H_Gas);
+		y1 = gasSatTable.get(id+1).get(id_H_Gas);
+		hGas = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+
 		hOut.setHGas(hGas);
-		
-		return hOut;		
+		hOut.setHLiquid(hLiquid);
+
+		return hOut;	
 	}
 
+	// -------------------------------------------------------
 
-	public double getIsobarP(double refP, double H) {
+	/**
+	 * Get Pressure of Isobaric 
+	 * No sense because == refP, but for the principle
+	 * @param refP
+	 * @param H
+	 * @return
+	 */
+	public double getIsobaricP(double refP, double H) {
 		// Whatever H
 		double outP=refP;			
 		return outP;
 	}
 
-	public String getIsobarState(double refP, double H) {
+	/**
+	 * Get Temperature of Isobaric
+	 * @param refP
+	 * @param H
+	 * @return
+	 */
+	public double getIsobaricT(double refP, double H) {
+		double outT = 0;
+		double satHLiquid = this.getHSatFromP(refP).getHLiquid();
+		double satHGas = this.getHSatFromP(refP).getHGas();
+
+		double satTLiquid = this.getTSatFromP(refP).getTLiquid();
+		double satTGas = this.getTSatFromP(refP).getTGas();
+		
+		if (H< satHLiquid) 
+			outT = 0.0;
+		else if (H> satHGas)
+			outT = 0.0;
+		else {
+			double x,y0,y1,x0,x1;
+			x  = H;
+			x0 = satHLiquid;
+			x1 = satHGas;
+			if (x1==x0) {
+				logger.error("(getIsobaricT )");
+				logger.error("  2 same value will cause and issue and must be removed ");
+			}
+			y0 = satTLiquid;
+			y1 = satTGas;
+			outT = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+		}
+		return outT;
+	}
+
+	/**
+	 * Get State of Isobaric 
+	 * @param refP
+	 * @param H
+	 * @return
+	 */
+	public String getIsobaricState(double refP, double H) {
 		String outState="Empty";
 
 		double satHLiquid = this.getHSatFromP(refP).getHLiquid();
@@ -388,4 +480,70 @@ public class SatCurve {
 		return outState;
 	}
 
+	// -------------------------------------------------------
+
+	/** Get Pressure of IsoThermal
+	 * 
+	 * @param refT
+	 * @param H
+	 * @param Pin
+	 * @return
+	 */
+	public double getIsoThermalP(double refT, double H, double Pin, double pente) {
+		double outP = 0;
+		double satHLiquid = this.getHSatFromT(refT).getHLiquid();
+		double satHGas = this.getHSatFromT(refT).getHGas();
+
+		//System.out.println(refT + " " + satHLiquid + "  " + satHGas );
+		double satPLiquid = this.getPSatFromT(refT).getPLiquid();
+		double satPGas = this.getPSatFromT(refT).getPGas();
+
+		if (H< satHLiquid) 
+			outP = Pin;
+		else if (H> satHGas) {
+			double x,y0,x0;
+			x  = H;
+			x0 = satHGas;
+			y0 = satPGas;
+			outP = (x-x0)*pente+ y0;
+			if (outP <= 0)
+				outP = 0;
+		}
+		else {
+			double x,y0,y1,x0,x1;
+			x  = H;
+			x0 = satHLiquid;
+			x1 = satHGas;
+			if (x1==x0) {
+				logger.error("(getIsoThermalP )");
+				logger.error("  2 same value will cause and issue and must be removed ");
+			}
+			y0 = satPLiquid;
+			y1 = satPGas;
+			outP = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+		}
+		return outP;
+	}
+	
+	/**
+	 * Get State from IsoThermal
+	 * @param refT
+	 * @param H
+	 * @return
+	 */
+	public String getIsoThermalState(double refT, double H) {
+		String outS = "Unknow";
+		double satHLiquid = this.getHSatFromT(refT).getHLiquid();
+		double satHGas = this.getHSatFromT(refT).getHGas();
+
+		if (H< satHLiquid) 
+			outS = "Liquid";
+		else if (H> satHGas)
+			outS = "Gas";
+		else
+			outS = "Liquid + Gas";
+
+		return(outS);
+	}
+	
 }

@@ -13,7 +13,6 @@ public class JUnitRefrigant {
 
 		P = 2.0;
 		T = -40.0;
-		H = 100.0;
 
 		Refrigerant refrigerant = new Refrigerant("D:/Users/kluges1/workspace/pac-tool/ressources/R407/R407C/Saturation Table R407C Dupont-Suva.txt");
 		//Refrigerant refrigerant = new Refrigerant("D:/Users/kluges1/workspace/pac-tool/ressources/R22/Saturation Table R22.txt");
@@ -43,17 +42,30 @@ public class JUnitRefrigant {
 				" --> H Saturation(gas)= "     + refrigerant.getHSatFromP(P).getHGas()    + "(kJ/kg)" 
 				);
 
-		for(int n=0;n<10;n++) {
+		System.out.println("\n\n ISOBAR");
+		H = 100.0;
+		for(int n=0;n<15;n++) {
 			H = H +30.0;
 
 			System.out.println(	"P = " +P + "(bar) " +
 					"H= " +H + "(kJ/kg) " +
-					" --> Isobar P =  " + refrigerant.getIsobarP(P, H) + "(bar)" +
-					" --> Isobar P State = "     + refrigerant.getIsobarState(P, H) 	
+					" --> Isobar P =  " + refrigerant.getIsobaricP(P, H) + "(bar)" +
+					" --> Isobar T =  " + refrigerant.getIsobaricT(P, H) + "(°C)" +
+					" --> Isobar P State = "     + refrigerant.getIsobaricState(P, H) 	
 					);
-
-			
 		}
+
+		System.out.println("\n\n ISOTHERM");
+		H = 100.0;
+		for(int n=0;n<15;n++) {
+			H = H +30.0;
+			System.out.println(	"T = " +T + "(°C) " +
+					"H= " +H + "(kJ/kg) " +
+					" --> IsoTherme P =  " + refrigerant.getIsoThermalP(T, H, 1.0, -0.001) + "(bar)" +
+					" --> IsoTherme  State = "     + refrigerant.getIsoThermalState(T, H) 	
+					);
+		}
+
 	}
 
 }
