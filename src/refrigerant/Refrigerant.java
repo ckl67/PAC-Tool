@@ -7,26 +7,25 @@ public class Refrigerant extends SatCurve {
 	// --------------------------------------------------------------------
 	// Instance variables
 	// --------------------------------------------------------------------
-	private String name;
-	private double P;
-	private double T;
-	private double H;
+	private String rfgName;
+	private double rfgP;
+	private double rfgT;
+	private double rfgH;
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 	public Refrigerant(String fileNameGas) {
-		this.name = loadGasSaturationData(fileNameGas);;
-		this.P = 0.0;
-		this.T = 0.0; 
-		this.H = 0.0; 
-		
+		this.rfgName = loadGasSaturationData(fileNameGas);
+		this.rfgP = 0.0;
+		this.rfgT = 0.0; 
+		this.rfgH = 0.0; 	
 	}
 
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
-
+	
 
 	// -------------------------------------------------------
 	// 							JSON
@@ -36,7 +35,7 @@ public class Refrigerant extends SatCurve {
 	//  Square brackets[] represents arrays.			--> add
 	//  {  "Planet": "Earth" , "Countries": [  { "Name": "India", "Capital": "Delhi"}, { "Name": "France", "Major": "Paris" } ]  }  
 	// -------------------------------------------------------
-	
+
 	/**
 	 * Construct the JSON data
 	 * @return : JSONObject
@@ -44,9 +43,9 @@ public class Refrigerant extends SatCurve {
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
 		JSONObject jsonObj = new JSONObject();  
-		jsonObj.put("Name", this.name);
-		jsonObj.put("T", this.T);	
-		jsonObj.put("P", this.P);	
+		jsonObj.put("rfgName", this.rfgName);
+		jsonObj.put("rfgT", this.rfgT);	
+		jsonObj.put("rfgP", this.rfgP);	
 		return jsonObj ;
 	}
 
@@ -55,41 +54,37 @@ public class Refrigerant extends SatCurve {
 	 * @param jsonObj : JSON Object
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
-		this.name = (String) jsonObj.get("Name");
-		this.T = ((Number) jsonObj.get("T")).doubleValue();
-		this.P = ((Number) jsonObj.get("P")).doubleValue();
+		this.rfgName = (String) jsonObj.get("rfgName");
+		this.rfgT = ((Number) jsonObj.get("rfgT")).doubleValue();
+		this.rfgP = ((Number) jsonObj.get("rfgP")).doubleValue();
 	}
 
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
 
-	public String getName() {
-		return name;
+	public String getRfgName() {
+		return rfgName;
 	}
 
-	public double getP() {
-		return P;
+	public double getRfgP() {
+		return rfgP;
 	}
 
-	public void setP(double P) {
-		this.P = P;
+	public double getRfgT() {
+		return rfgT;
 	}
 
-	public double getT() {
-		return T;
+	public double getRfgH() {
+		return rfgH;
 	}
 
-	public void setT(double T) {
-		this.T = T;
+	public void setRfgP(double P) {
+		this.rfgP = P;
 	}
 
-	public double getH() {
-		return H;
-	}
-
-	public void setH(double H) {
-		this.H = H;
+	public void setRfgT(double T) {
+		this.rfgT = T;
 	}
 
 }

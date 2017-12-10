@@ -49,8 +49,8 @@ public class Dehydrator {
 	 * @return Refrigerant
 	 */
 	public Refrigerant transfer(Refrigerant vinGas) {
-		vinGas.setT(  vinGas.getT() + deltaT );
-		vinGas.setP(  vinGas.getP() + deltaP );
+		vinGas.setRfgT(  vinGas.getRfgT() + deltaT );
+		vinGas.setRfgP(  vinGas.getRfgP() + deltaP );
 		return vinGas;
 	}
 
