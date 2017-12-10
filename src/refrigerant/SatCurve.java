@@ -142,7 +142,23 @@ public class SatCurve {
 	}
 
 	// -------------------------------------------------------
-	
+
+	public double getSatTableSize() {
+		return gasSatTable.size();
+	}
+
+	public double getTSat(int n) {
+		return gasSatTable.get(n).get(id_Temp);
+	}
+
+	public double getPSat_Liquid(int n) {
+		return gasSatTable.get(n).get(id_P_Liquid);
+	}
+
+	public double getPSat_Gas(int n) {
+		return gasSatTable.get(n).get(id_P_Gas);
+	}
+
 	/**
 	 * ===============================================================================================
 	 * Convert Saturation Temperature(°C) to Pressure (bar) 
@@ -345,7 +361,7 @@ public class SatCurve {
 	 *	 #        liquid        gas      liquid     gas      Liquid  latent  gas      liquid    gas
 	 *
 	 *  -28		201,5			149,8	1336,3	6,599		162,2	234,9	397,2	0,8554	1,8278
-	* 	-21		266,3			202,6	1311,1	8,775		171		230,5	401,5	0,8907	1,8176
+	 * 	-21		266,3			202,6	1311,1	8,775		171		230,5	401,5	0,8907	1,8176
 
 	 * ===============================================================================================
 	 */
@@ -437,7 +453,7 @@ public class SatCurve {
 
 		double satTLiquid = this.getTSatFromP(refP).getTLiquid();
 		double satTGas = this.getTSatFromP(refP).getTGas();
-		
+
 		if (H< satHLiquid) 
 			outT = 0.0;
 		else if (H> satHGas)
@@ -524,7 +540,7 @@ public class SatCurve {
 		}
 		return outP;
 	}
-	
+
 	/**
 	 * Get State from IsoThermal
 	 * @param refT
@@ -545,5 +561,5 @@ public class SatCurve {
 
 		return(outS);
 	}
-	
+
 }

@@ -40,7 +40,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import javax.swing.border.MatteBorder;
 
-import enthalpy.Enthalpy;
+import refrigerant.Refrigerant;
 
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
@@ -58,14 +58,14 @@ public class WinPressTemp extends JFrame {
 	/* 	----------------------------------------
 	 * 		INSTANCE VAR
 	 * ----------------------------------------*/
-	private Enthalpy enthalpy;
+	private Refrigerant rfg;
 
 	/* 	----------------------------------------
 	 * 		WIN BUILDER
 	 * ----------------------------------------*/
 
-	private JLabel lblTemperature;
-	private JLabel lblPressure;
+	private JLabel lblTempPressGas;
+	private JLabel lblTempPressLiquid;
 
 	// -------------------------------------------------------
 	// 				TEST THE APPLICATION STANDALONE 
@@ -77,7 +77,9 @@ public class WinPressTemp extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					WinPressTemp window = new WinPressTemp(new Enthalpy());
+					Refrigerant refrigerant = new Refrigerant("D:/Users/kluges1/workspace/pac-tool/ressources/R407/R407C/Saturation Table R407C Dupont-Suva.txt");
+
+					WinPressTemp window = new WinPressTemp(refrigerant);
 					window.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -93,8 +95,8 @@ public class WinPressTemp extends JFrame {
 	/**
 	 * Create the application.
 	 */
-	public WinPressTemp(Enthalpy vconfEnthalpy)  {
-		enthalpy = vconfEnthalpy;
+	public WinPressTemp(Refrigerant vrfg)  {
+		rfg = vrfg;
 		initialize();
 	}
 
@@ -126,15 +128,15 @@ public class WinPressTemp extends JFrame {
 		getContentPane().add(panelValue, BorderLayout.SOUTH);
 		panelValue.setLayout(new GridLayout(0, 2, 0, 0));
 
-		lblPressure = new JLabel("P");
-		lblPressure.setBorder(new MatteBorder(2, 1, 1, 1, (Color) Color.LIGHT_GRAY));
-		lblPressure.setHorizontalAlignment(SwingConstants.CENTER);
-		panelValue.add(lblPressure);
+		lblTempPressLiquid = new JLabel("P");
+		lblTempPressLiquid.setBorder(new MatteBorder(2, 1, 1, 1, (Color) Color.LIGHT_GRAY));
+		lblTempPressLiquid.setHorizontalAlignment(SwingConstants.CENTER);
+		panelValue.add(lblTempPressLiquid);
 
-		lblTemperature = new JLabel("T");
-		lblTemperature.setBorder(new MatteBorder(2, 1, 1, 1, (Color) Color.LIGHT_GRAY));
-		lblTemperature.setHorizontalAlignment(SwingConstants.CENTER);
-		panelValue.add(lblTemperature);
+		lblTempPressGas = new JLabel("T");
+		lblTempPressGas.setBorder(new MatteBorder(2, 1, 1, 1, (Color) Color.LIGHT_GRAY));
+		lblTempPressGas.setHorizontalAlignment(SwingConstants.CENTER);
+		panelValue.add(lblTempPressGas);
 
 		panelTempPressDrawArea = new PDisplay();
 		getContentPane().add(panelTempPressDrawArea, BorderLayout.CENTER);
@@ -236,8 +238,8 @@ public class WinPressTemp extends JFrame {
 			fontReal = fontReal.deriveFont(Font.BOLD, 14.0f);
 			g2.setFont(fontReal);
 			metrics = g.getFontMetrics(fontReal);		
-			g2.drawString(enthalpy.getNameRefrigerant(), 
-					(float)((xmax-marginx - metrics.getStringBounds(enthalpy.getNameRefrigerant(),g2).getWidth())), 
+			g2.drawString(rfg.getRfgName(), 
+					(float)((xmax-marginx - metrics.getStringBounds(rfg.getRfgName(),g2).getWidth())), 
 					(float)(ymax+marginy/4));
 			
 			// Text
@@ -272,10 +274,16 @@ public class WinPressTemp extends JFrame {
 			// -----------------------------------		
 			g2.setColor(Color.red);
 			g2.setStroke(new BasicStroke(0.5f));
-			for(int i=1;i<enthalpy.getlistTP().size();i++) {
-				g2.draw( new Line2D.Double(enthalpy.getT(i-1),enthalpy.getP(i-1),enthalpy.getT(i),enthalpy.getP(i)));			 
+			for(int i=1;i<rfg.getSatTableSize();i++) {
+				g2.draw( new Line2D.Double(rfg.getTSat(i-1),rfg.getPSat_Liquid(i-1),rfg.getTSat(i),rfg.getPSat_Liquid(i)));			 
 			}
 			
+			g2.setColor(Color.green);
+			g2.setStroke(new BasicStroke(0.5f));
+			for(int i=1;i<rfg.getSatTableSize();i++) {
+				g2.draw( new Line2D.Double(rfg.getTSat(i-1),rfg.getPSat_Gas(i-1),rfg.getTSat(i),rfg.getPSat_Gas(i)));			 
+			}
+
 			// Follow the graph based on Eclipse
 	        g2.setPaint(Color.BLUE);
 	        g2.fill (new Ellipse2D.Double(posX-3/2, posY-3/2, 3, 3));
@@ -290,22 +298,24 @@ public class WinPressTemp extends JFrame {
 			// TODO Auto-generated method stub
 		}
 
-		public void spotTempPressFollower(double temp, double press) {
+		public void spotTempPressFollower(double temp) {
 			String s;
-			s = "T: %.2f°C --> P: %.2fbar";
-			lblTemperature.setText(String.format(s, temp,enthalpy.convT2P(temp) ));
+			s = "T: %.2f°C --> P:%.2fbar(gas)";
+			lblTempPressGas.setText(String.format(s, temp,rfg.getPSatFromT(temp).getPGas() ));
 
-			s = "P: %.2fbar --> T: %.2f°C";
-			lblPressure.setText(String.format(s,press ,enthalpy.convP2T(press) ));
+			s = "T: %.2f°C --> P:%.2fbar(liq)";
+			lblTempPressLiquid.setText(String.format(s, temp,rfg.getPSatFromT(temp).getPLiquid() ));
+			//lblTempPressLiquid.setText(String.format(s,press ,rfg.getTSatFromP(press) ));
 			
-			posX=temp;
-			posY = enthalpy.convT2P(temp);
+			posX = temp;
+			posY = rfg.getPSatFromT(temp).getPLiquid();
 			repaint();
 		}
 		
 		@Override
 		public void mouseMoved(MouseEvent m) {
-			spotTempPressFollower(m.getX()/zoomx+xmin-marginx, -m.getY()/zoomy+marginy+ymax);
+			//spotTempPressFollower(m.getX()/zoomx+xmin-marginx, -m.getY()/zoomy+marginy+ymax);
+			spotTempPressFollower(m.getX()/zoomx+xmin-marginx);
 		}
 
 		@Override
