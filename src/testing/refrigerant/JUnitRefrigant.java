@@ -14,8 +14,10 @@ public class JUnitRefrigant {
 		P = 2.0;
 		T = -40.0;
 
-		Refrigerant refrigerant = new Refrigerant("D:/Users/kluges1/workspace/pac-tool/ressources/R407/R407C/Saturation Table R407C Dupont-Suva.txt");
+		//Refrigerant refrigerant = new Refrigerant("D:/Users/kluges1/workspace/pac-tool/ressources/R407/R407C/Saturation Table R407C Dupont-Suva.txt");
 		//Refrigerant refrigerant = new Refrigerant("D:/Users/kluges1/workspace/pac-tool/ressources/R22/Saturation Table R22.txt");
+		Refrigerant refrigerant = new Refrigerant();
+		refrigerant.loadGasSaturationData("D:/Users/kluges1/workspace/pac-tool/ressources/R22/Saturation Table R22.txt");
 		System.out.println(refrigerant.getRfgName());
 
 		//T=80;

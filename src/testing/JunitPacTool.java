@@ -2,6 +2,8 @@ package testing;
 
 import org.junit.Test;
 
+import testing.pac.JUnitPac;
+
 
 public class JunitPacTool {
 

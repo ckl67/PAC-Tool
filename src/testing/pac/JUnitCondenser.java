@@ -34,11 +34,11 @@ public class JUnitCondenser {
 		assertEquals("Condenseur",vCondenser.getName());
 
 		Refrigerant vGas = new Refrigerant();
-		vGas.setT(10);
+		vGas.setRfgT(10);
 
 		System.out.println("--->Transfer Function");
 		System.out.println("Input --> Output");
-		System.out.println(vGas.getT()+"°C-->"+vCondenser.transfer(vGas).getT()+"°C");
+		System.out.println(vGas.getRfgT()+"°C-->"+vCondenser.transfer(vGas).getRfgT()+"°C");
 	}
 
 }

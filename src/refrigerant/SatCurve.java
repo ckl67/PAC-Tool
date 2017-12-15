@@ -58,9 +58,12 @@ public class SatCurve {
 	 * @return : Name of Gas declared in the File.
 	 * ===============================================================================================
 	 */
-	protected String loadGasSaturationData(String fileNameGas) {
+	public String loadGasSaturationData(String fileNameGas) {
 		String unityP="kPa";
 
+		// Clear list by setting element to id = 0
+		gasSatTable.clear();
+		
 		File file = new File (fileNameGas);
 		logger.info("Read File: {}", fileNameGas);
 

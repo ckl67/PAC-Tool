@@ -54,12 +54,12 @@ public class JUnitCompressor {
 		System.out.println("    Name="+vCompressor.getName());
 
 		Refrigerant vRefrigeranR22 =  new Refrigerant();
-		vRefrigeranR22.setP(25);
+		vRefrigeranR22.setRfgP(25);
 		vCompressor.setDeltaP(40);
 
 		System.out.println("\n--->Transfer Function");
 		System.out.println("    Input --> Output");
-		System.out.println("    "+vRefrigeranR22.getP() + "-->" + vCompressor.transfer(vRefrigeranR22).getP());
+		System.out.println("    "+vRefrigeranR22.getRfgP() + "-->" + vCompressor.transfer(vRefrigeranR22).getRfgP());
 		
 	}
 }

@@ -29,6 +29,8 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import java.awt.GridLayout;
 import java.awt.RenderingHints;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -146,7 +148,7 @@ public class WinPressTemp extends JFrame {
 	//												JPANEL Display
 	// ===================================================================================================================
 
-	public class PDisplay extends JPanel implements MouseListener, MouseMotionListener {
+	public class PDisplay extends JPanel implements MouseListener, MouseMotionListener, KeyListener {
 		private static final long serialVersionUID = 1L;
 		
 		// Supplementary margin on both sides of the display
@@ -169,13 +171,20 @@ public class WinPressTemp extends JFrame {
 
 		private double posX,posY;
 		
+		private int keyCodePressed;
+		
 		// -------------------------------------------------------
 		// 						CONSTRUCTOR
 		// -------------------------------------------------------
 		public PDisplay() {
 			addMouseListener(this);
-			addMouseMotionListener(this);			
+			addMouseMotionListener(this);	
+			addKeyListener(this);
+
+			this.setFocusable(true);
+			this.requestFocusInWindow();
 		}
+		
 		
 		// -------------------------------------------------------
 		// 						PAINT 
@@ -300,6 +309,15 @@ public class WinPressTemp extends JFrame {
 
 		public void spotTempPressFollower(double temp) {
 			String s;
+			
+			if (keyCodePressed == 16) {
+				lblTempPressLiquid.setForeground(Color.GRAY);
+				lblTempPressGas.setForeground(Color.BLACK);
+			} else {
+				lblTempPressLiquid.setForeground(Color.BLACK);
+				lblTempPressGas.setForeground(Color.GRAY);
+			}
+			
 			s = "T: %.2f°C --> P:%.2fbar(gas)";
 			lblTempPressGas.setText(String.format(s, temp,rfg.getPSatFromT(temp).getPGas() ));
 
@@ -308,7 +326,11 @@ public class WinPressTemp extends JFrame {
 			//lblTempPressLiquid.setText(String.format(s,press ,rfg.getTSatFromP(press) ));
 			
 			posX = temp;
-			posY = rfg.getPSatFromT(temp).getPLiquid();
+			if (keyCodePressed == 16)
+				posY = rfg.getPSatFromT(temp).getPGas();
+			else
+				posY = rfg.getPSatFromT(temp).getPLiquid();
+			
 			repaint();
 		}
 		
@@ -340,6 +362,21 @@ public class WinPressTemp extends JFrame {
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+	        keyCodePressed = e.getKeyCode();
+		}
+
+		@Override
+		public void keyReleased(KeyEvent arg0) {
+	        keyCodePressed = 0;
+		}
+
+		@Override
+		public void keyTyped(KeyEvent arg0) {
 			// TODO Auto-generated method stub
 		}
 

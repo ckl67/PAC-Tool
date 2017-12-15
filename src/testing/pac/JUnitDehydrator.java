@@ -19,7 +19,7 @@ public class JUnitDehydrator {
 		assertEquals("Dehydrator",vDehydrator.getName());
 		
 		vDehydrator.setDeltaT(50.0);
-		vGas.setT(10);
+		vGas.setRfgT(10);
 
 		System.out.println("\n---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();
@@ -39,7 +39,7 @@ public class JUnitDehydrator {
 
 		System.out.println("\n--->Transfer Function");
 		System.out.println("Input --> Output");
-		System.out.println(vGas.getT()+"°C-->"+vDehydrator.transfer(vGas).getT()+"°C");
+		System.out.println(vGas.getRfgT()+"°C-->"+vDehydrator.transfer(vGas).getRfgT()+"°C");
 	}
 
 }

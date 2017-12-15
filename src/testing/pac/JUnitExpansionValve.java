@@ -19,8 +19,8 @@ public class JUnitExpansionValve {
 		System.out.println(vExpansionValve.getName());
 
 		Refrigerant vRefrigeranR22 =  new Refrigerant();
-		vRefrigeranR22.setP(25);
-		vRefrigeranR22.setT(5);
+		vRefrigeranR22.setRfgP(25);
+		vRefrigeranR22.setRfgT(5);
 
 		vExpansionValve.setDeltaP(-40);
 		vExpansionValve.setDeltaT(+75);
@@ -41,8 +41,8 @@ public class JUnitExpansionValve {
 		System.out.println("    Name="+vExpansionValve.getName());
 
 		System.out.println("Input --> Output");
-		System.out.println("P:" + vRefrigeranR22.getP() + "-->" + vExpansionValve.transfer(vRefrigeranR22).getP());
-		System.out.println("T:" + vRefrigeranR22.getT() + "-->" + vExpansionValve.transfer(vRefrigeranR22).getT());
+		System.out.println("P:" + vRefrigeranR22.getRfgP() + "-->" + vExpansionValve.transfer(vRefrigeranR22).getRfgP());
+		System.out.println("T:" + vRefrigeranR22.getRfgT() + "-->" + vExpansionValve.transfer(vRefrigeranR22).getRfgT());
 
 	}
 

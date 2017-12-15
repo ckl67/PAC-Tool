@@ -2,7 +2,6 @@ package testing.pac;
 
 //import static org.junit.Assert.*;
 
-import org.json.simple.JSONObject;
 import org.junit.Test;
 
 import refrigerant.Refrigerant;
@@ -16,14 +15,11 @@ public class JUnitRefrigerant {
 
 		Refrigerant vRefrigerant = new Refrigerant();
 
-		vRefrigerant.setT(45);
-		vRefrigerant.setP(25);
+		vRefrigerant.setRfgT(45);
+		vRefrigerant.setRfgP(25);
 		System.out.println("Temp. / Pression");
-		System.out.println(vRefrigerant.getT()+"°C -- "+vRefrigerant.getP()+"bar");
+		System.out.println(vRefrigerant.getRfgT()+"°C -- "+vRefrigerant.getRfgP()+"bar");
 
-		JSONObject jsonObj = new JSONObject();
-		jsonObj = vRefrigerant.getJsonObject();
-		System.out.println(jsonObj);
 	}
 
 }

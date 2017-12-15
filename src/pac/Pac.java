@@ -34,25 +34,43 @@ public class Pac {
 	private static final Logger logger = LogManager.getLogger(Pac.class.getName());
 
 	// --------------------------------------------------------------------
+	// Define
+	// --------------------------------------------------------------------
+	private final int _COMP_=0;
+	private final int _COND_=1;
+	private final int _DEHY_=2;
+	private final int _EPVA_=3;
+	private final int _EVAP_=4;
+	private final int _CRCLS_=5;
+	private final int _CIRTS_=6;
+	private final int _CRCLD_=7;
+	private final int _CIRTD_=8;
+
+	// --------------------------------------------------------------------
 	// Instance variables
 	// --------------------------------------------------------------------
+	private List<Circulator> circulatorSrcL = new ArrayList<Circulator>();
+	private List<Circulator> circulatorDistrL = new ArrayList<Circulator>();
 	private List<Compressor> compressorL = new ArrayList<Compressor>();
 	private List<Condenser> condenserL = new ArrayList<Condenser>();
 	private List<Dehydrator> dehydratorL = new ArrayList<Dehydrator>();
-	private List<ExpansionValve> expansionValveL = new ArrayList<ExpansionValve>();
 	private List<Evaporator> evaporatorL = new ArrayList<Evaporator>();
-	private List<Circulator> circulatorSrcL = new ArrayList<Circulator>();
+	private List<ExpansionValve> expansionValveL = new ArrayList<ExpansionValve>();
 	private List<HeatSrcDistrCircuit> circuitSrcL = new ArrayList<HeatSrcDistrCircuit>();
-	private List<Circulator> circulatorDistrL = new ArrayList<Circulator>();
 	private List<HeatSrcDistrCircuit> circuitDistrL = new ArrayList<HeatSrcDistrCircuit>();
-	private List<HeatTransferFluid> fluidCaloDistrL = new ArrayList<HeatTransferFluid>();
+	
+	private HeatTransferFluid coolantHome = new HeatTransferFluid();
+	private HeatTransferFluid coolantYard = new HeatTransferFluid();
 
-	private int[] id = new int[12];
+	private Refrigerant rfg = new Refrigerant();
+
+	private int[] id = new int[9];
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 	public Pac() {
+		
 		compressorL.add(new Compressor());
 		condenserL.add(new Condenser());
 		dehydratorL.add(new Dehydrator());
@@ -64,17 +82,16 @@ public class Pac {
 
 		circulatorDistrL.add(new Circulator());
 		circuitDistrL.add(new HeatSrcDistrCircuit());
-		fluidCaloDistrL.add(new HeatTransferFluid());
 
-		id[PacItem.COMP.ordinal()]=0;
-		id[PacItem.COND.ordinal()]=0;
-		id[PacItem.DEHY.ordinal()]=0;
-		id[PacItem.EPVA.ordinal()]=0;
-		id[PacItem.EVAP.ordinal()]=0;
-		id[PacItem.CRCLS.ordinal()]=0;
-		id[PacItem.CIRTS.ordinal()]=0;
-		id[PacItem.CRCLD.ordinal()]=0;
-		id[PacItem.CIRTD.ordinal()]=0;
+		id[_COMP_]=0;
+		id[_COND_]=0;
+		id[_DEHY_]=0;
+		id[_EPVA_]=0;
+		id[_EVAP_]=0;
+		id[_CRCLS_]=0;
+		id[_CIRTS_]=0;
+		id[_CRCLD_]=0;
+		id[_CIRTD_]=0;
 
 	}
 
@@ -90,7 +107,7 @@ public class Pac {
 	 * @id : Corresponds to the item element index to simulate:
 	 * 			Example: In case we want to test with the compressor N°2 
 	 *          COMP corresponds to position 0 in the array
-	 *          id[0] = 2 <==> id[PacItem.COMP.pos()] = 2;
+	 *          id[0] = 2 <==> id[_COMP_] = 2;
 	 */
 	public void PacCycle(PacGasInjected GasInjected) {
 
@@ -99,43 +116,46 @@ public class Pac {
 		// id[COMP] = 5
 		// compressorL.get(id[COMP])
 
+		
 		switch (GasInjected) {
+		
+		
 		case COMPRESSOR : 
-			fluidRefriL.set(id[PacItem.FLFRG.pos()],    compressorL.get(id[PacItem.COMP.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.pos()],    condenserL.get(id[PacItem.COND.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.pos()],    dehydratorL.get(id[PacItem.DEHY.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.pos()],    expansionValveL.get(id[PacItem.EPVA.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.pos()],    evaporatorL.get(id[PacItem.EVAP.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
+			rfg = compressorL.get(id[_COMP_]).transfer(rfg);
+			rfg = condenserL.get(id[_COND_]).transfer(rfg);
+			rfg = dehydratorL.get(id[_DEHY_]).transfer(rfg);
+			rfg = expansionValveL.get(id[_EPVA_]).transfer(rfg);
+			rfg = evaporatorL.get(id[_EVAP_]).transfer(rfg);
 			break;
 		case CONDENSER : 
-			fluidRefriL.set(id[PacItem.FLFRG.pos()],    condenserL.get(id[PacItem.COND.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.pos()],    dehydratorL.get(id[PacItem.DEHY.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.pos()],    expansionValveL.get(id[PacItem.EPVA.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.pos()],    evaporatorL.get(id[PacItem.EVAP.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.pos()],    compressorL.get(id[PacItem.COMP.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
+			rfg = condenserL.get(id[_COND_]).transfer(rfg);
+			rfg = dehydratorL.get(id[_DEHY_]).transfer(rfg);
+			rfg = expansionValveL.get(id[_EPVA_]).transfer(rfg);
+			rfg = evaporatorL.get(id[_EVAP_]).transfer(rfg);
+			rfg = compressorL.get(id[_COMP_]).transfer(rfg);
 			break;
 		case EXPANSIONVALVE : 
-			fluidRefriL.set(id[PacItem.FLFRG.pos()],    expansionValveL.get(id[PacItem.EPVA.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.pos()],    evaporatorL.get(id[PacItem.EVAP.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.pos()],    compressorL.get(id[PacItem.COMP.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.pos()],    condenserL.get(id[PacItem.COND.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.pos()],    dehydratorL.get(id[PacItem.DEHY.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
+			rfg = expansionValveL.get(id[_EPVA_]).transfer(rfg);
+			rfg = evaporatorL.get(id[_EVAP_]).transfer(rfg);
+			rfg = compressorL.get(id[_COMP_]).transfer(rfg);
+			rfg = condenserL.get(id[_COND_]).transfer(rfg);
+			rfg = dehydratorL.get(id[_DEHY_]).transfer(rfg);
 			break;
 		default:
-			fluidRefriL.set(id[PacItem.FLFRG.pos()],    evaporatorL.get(id[PacItem.EVAP.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.pos()],    compressorL.get(id[PacItem.COMP.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.pos()],    condenserL.get(id[PacItem.COND.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.pos()],    dehydratorL.get(id[PacItem.DEHY.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
-			fluidRefriL.set(id[PacItem.FLFRG.pos()],    expansionValveL.get(id[PacItem.EPVA.pos()]).transfer(fluidRefriL.get(id[PacItem.FLFRG.pos()])));
+			rfg = evaporatorL.get(id[_EVAP_]).transfer(rfg);
+			rfg = compressorL.get(id[_COMP_]).transfer(rfg);
+			rfg = condenserL.get(id[_COND_]).transfer(rfg);
+			rfg = dehydratorL.get(id[_DEHY_]).transfer(rfg);
+			rfg = expansionValveL.get(id[_EPVA_]).transfer(rfg);
 			break;
 		}
 		// Cycle Heat Source 
-		fluidCaloSrcL.set(id[PacItem.FLCAS.pos()],    circulatorSrcL.get(id[PacItem.CRCLS.pos()]).transfer(fluidCaloSrcL.get(id[PacItem.FLCAS.pos()])));
-		fluidCaloSrcL.set(id[PacItem.FLCAS.pos()],    circuitSrcL.get(id[PacItem.CIRTS.pos()]).transfer(fluidCaloSrcL.get(id[PacItem.FLCAS.pos()])));
+		coolantYard=circulatorSrcL.get(id[_CRCLS_]).transfer(coolantYard);
+		coolantYard=circuitSrcL.get(id[_CIRTS_]).transfer(coolantYard);
 
 		// Cycle Heat Distribution
-		fluidCaloDistrL.set(id[PacItem.FLCAD.pos()],    circulatorDistrL.get(id[PacItem.CRCLD.pos()]).transfer(fluidCaloDistrL.get(id[PacItem.FLCAD.pos()])));
-		fluidCaloDistrL.set(id[PacItem.FLCAD.pos()],    circuitDistrL.get(id[PacItem.CIRTD.pos()]).transfer(fluidCaloDistrL.get(id[PacItem.FLCAD.pos()])));	
+		coolantHome =circulatorDistrL.get(id[_CRCLD_]).transfer(coolantHome);
+		coolantHome =circuitDistrL.get(id[_CIRTD_]).transfer(coolantHome);	
 	}			
 
 	// -------------------------------------------------------
@@ -195,13 +215,6 @@ public class Pac {
 		}
 		jsonObj.put("ExpansionValveL", ObjExpansionValveL);
 
-		JSONArray ObjFluidRefriL = new JSONArray();
-		for(int i=0; i< fluidRefriL.size();i++) {
-			JSONObject Obj = new JSONObject();  
-			Obj.put("FluidRefri", this.fluidRefriL.get(i).getJsonObject());
-			ObjFluidRefriL.add(Obj);
-		}
-		jsonObj.put("FluidRefriL", ObjFluidRefriL);
 
 		JSONArray ObjCirculatorSrcL = new JSONArray();
 		for(int i=0; i< circulatorSrcL.size();i++) {
@@ -219,14 +232,6 @@ public class Pac {
 		}
 		jsonObj.put("CircuitSrcL", ObjCircuitSrcL);
 
-		JSONArray ObjFluidCaloSrcL = new JSONArray();
-		for(int i=0; i< fluidCaloSrcL.size();i++) {
-			JSONObject Obj = new JSONObject();  
-			Obj.put("FluidCaloSrc", this.fluidCaloSrcL.get(i).getJsonObject());
-			ObjFluidCaloSrcL.add(Obj);
-		}
-		jsonObj.put("FluidCaloSrcL", ObjFluidCaloSrcL);
-
 		JSONArray ObjCirculatorDistrL = new JSONArray();
 		for(int i=0; i< circulatorDistrL.size();i++) {
 			JSONObject Obj = new JSONObject();  
@@ -243,17 +248,9 @@ public class Pac {
 		}
 		jsonObj.put("CircuitDistrL", ObjCircuitDistrL);
 
-		JSONArray ObjFluidCaloDistrL = new JSONArray();
-		for(int i=0; i< fluidCaloDistrL.size();i++) {
-			JSONObject Obj = new JSONObject();  
-			Obj.put("FluidCaloDistr", this.fluidCaloDistrL.get(i).getJsonObject());
-			ObjFluidCaloDistrL.add(Obj);
-		}
-		jsonObj.put("FluidCaloDistrL", ObjFluidCaloDistrL);
-
 		JSONObject Obj = new JSONObject();  
-		for (PacItem p : PacItem.values()) {
-			Obj.put(p, id[p.ordinal()]);
+		for (int i=0; i<id.length;i++) {
+			Obj.put(i, id[i]);
 		}
 		jsonObj.put("ItemID", Obj);
 
@@ -309,14 +306,6 @@ public class Pac {
 			expansionValveL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("ExpansionValve")));
 		}
 
-		ObjL = (JSONArray) jsonObj.get("FluidRefriL");
-		fluidRefriL.clear();
-		for(int i=0; i< ObjL.size();i++) {
-			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
-			fluidRefriL.add(i, new Refrigerant());
-			fluidRefriL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("FluidRefri")));
-		}
-
 		ObjL = (JSONArray) jsonObj.get("CirculatorSrcL");
 		circulatorSrcL.clear();
 		for(int i=0; i< ObjL.size();i++) {
@@ -333,13 +322,6 @@ public class Pac {
 			circuitSrcL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("CircuitSrc")));
 		}
 
-		ObjL = (JSONArray) jsonObj.get("FluidCaloSrcL");
-		fluidCaloSrcL.clear();
-		for(int i=0; i< ObjL.size();i++) {
-			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
-			fluidCaloSrcL.add(i, new HeatTransferFluid());
-			fluidCaloSrcL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("FluidCaloSrc")));
-		}
 
 		ObjL = (JSONArray) jsonObj.get("CirculatorDistrL");
 		circulatorDistrL.clear();
@@ -357,18 +339,10 @@ public class Pac {
 			circuitDistrL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("CircuitDistr")));
 		}
 
-		ObjL = (JSONArray) jsonObj.get("FluidCaloDistrL");
-		fluidCaloDistrL.clear();
-		for(int i=0; i< ObjL.size();i++) {
-			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
-			fluidCaloDistrL.add(i, new HeatTransferFluid());
-			fluidCaloDistrL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("FluidCaloDistr")));
-		}
-
 		JSONObject Obj = (JSONObject) jsonObj.get("ItemID");
-
-		for (PacItem p : PacItem.values()) {
-			id[p.ordinal()] = (int) ((Number) Obj.get(p.toString())).doubleValue();
+		for(int i=0; i< ObjL.size();i++) {
+			//JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
+			id[i]= (int) ((Number) Obj.get(i)).doubleValue();
 		}
 
 
@@ -383,25 +357,25 @@ public class Pac {
 	 * @param i
 	 */
 	public void selectCurrentCompressor(int i) {
-		id[PacItem.COMP.ordinal()] = i;
-		logger.info("Select Current Compressor N°{}",id[PacItem.COMP.ordinal()]);
+		id[_COMP_] = i;
+		logger.info("Select Current Compressor N°{}",id[_COMP_]);
 	}
 
 	/**
 	 * getCurrentCompressor
 	 * @return Compressor
 	 */
-	// id[0] = 2 <==> id[PacItem.COMP.pos()] = 2;
+	// id[0] = 2 <==> id[_COMP_] = 2;
 	public Compressor getCurrentCompressor() {
-		logger.info("Get Current Compressor N°{}",id[PacItem.COMP.ordinal()]);
-		return compressorL.get(id[PacItem.COMP.ordinal()]);
+		logger.info("Get Current Compressor N°{}",id[_COMP_]);
+		return compressorL.get(id[_COMP_]);
 	}
 
 	/**
 	 * getCompressorNb
 	 * @return Compressor
 	 */
-	//id[0] = 2 <==> id[PacItem.COMP.pos()] = 2;
+	//id[0] = 2 <==> id[_COMP_] = 2;
 	public Compressor getCompressorNb(int nb) {
 		logger.info("Get Compressor N°{}",nb);
 		return compressorL.get(nb);
@@ -440,8 +414,8 @@ public class Pac {
 	 * @param i
 	 */
 	public void selectCurrentCirculatorSrc(int i) {
-		id[PacItem.CRCLS.ordinal()] = i;
-		logger.info("Select Current CirculatorSrc N°{}",id[PacItem.CRCLS.ordinal()]);
+		id[_CRCLS_] = i;
+		logger.info("Select Current CirculatorSrc N°{}",id[_CRCLS_]);
 	}
 
 	
@@ -449,17 +423,17 @@ public class Pac {
 	 * getCurrentCirculatorSrc
 	 * @return CirculatorSrc
 	 */
-	// id[0] = 2 <==> id[PacItem.CRCLS.pos()] = 2;
+	// id[0] = 2 <==> id[_CRCLS_] = 2;
 	public Circulator getCurrentCirculatorSrc() {
-		logger.info("Get Current CirculatorSrc N°{}",id[PacItem.CRCLS.ordinal()]);
-		return circulatorSrcL.get(id[PacItem.CRCLS.ordinal()]);
+		logger.info("Get Current CirculatorSrc N°{}",id[_CRCLS_]);
+		return circulatorSrcL.get(id[_CRCLS_]);
 	}
 	
 	/**
 	 * getCirculatorSrcNb
 	 * @return CirculatorSrc
 	 */
-	//id[0] = 2 <==> id[PacItem.COMP.pos()] = 2;
+	//id[0] = 2 <==> id[_COMP_] = 2;
 	public Circulator getCirculatorSrcNb(int nb) {
 		logger.info("Get CirculatorSrc N°{}",nb);
 		return circulatorSrcL.get(nb);
@@ -501,8 +475,8 @@ public class Pac {
 	 * @param i
 	 */
 	public void selectCurrentCirculatorDistr(int i) {
-		id[PacItem.CRCLS.ordinal()] = i;
-		logger.info("Select Current CirculatorDistr N°{}",id[PacItem.CRCLS.ordinal()]);
+		id[_CRCLS_] = i;
+		logger.info("Select Current CirculatorDistr N°{}",id[_CRCLS_]);
 	}
 
 	
@@ -510,17 +484,17 @@ public class Pac {
 	 * getCurrentCirculatorDistr
 	 * @return CirculatorDistr
 	 */
-	// id[0] = 2 <==> id[PacItem.CRCLS.pos()] = 2;
+	// id[0] = 2 <==> id[_CRCLS_] = 2;
 	public Circulator getCurrentCirculatorDistr() {
-		logger.info("Get Current CirculatorDistr N°{}",id[PacItem.CRCLS.ordinal()]);
-		return circulatorDistrL.get(id[PacItem.CRCLS.ordinal()]);
+		logger.info("Get Current CirculatorDistr N°{}",id[_CRCLS_]);
+		return circulatorDistrL.get(id[_CRCLS_]);
 	}
 	
 	/**
 	 * getCirculatorDistrNb
 	 * @return CirculatorDistr
 	 */
-	//id[0] = 2 <==> id[PacItem.COMP.pos()] = 2;
+	//id[0] = 2 <==> id[_COMP_] = 2;
 	public Circulator getCirculatorDistrNb(int nb) {
 		logger.info("Get CirculatorDistr N°{}",nb);
 		return circulatorDistrL.get(nb);
@@ -555,103 +529,90 @@ public class Pac {
 
 	
 	public void selectCurrentCondenser(int i) {
-		id[PacItem.COND.ordinal()] = i;
+		id[_COND_] = i;
 		logger.info("Choice Condenser N°{}",i);
 	}
 
 	public void selectCurrenteDehydrator(int i) {
-		id[PacItem.DEHY.ordinal()] = i;
+		id[_DEHY_] = i;
 		logger.info("Choice Dehydrator N°{}",i);
 	}
 
 	public void selectCurrenteExpansionValve(int i) {
-		id[PacItem.EPVA.ordinal()] = i;
+		id[_EPVA_] = i;
 		logger.info("Choice Expansion Valve N°{}",i);
 	}
 
 	public void selectCurrenteEvaporator(int i) {
-		id[PacItem.EVAP.ordinal()] = i;
+		id[_EVAP_] = i;
 		logger.info("Choice Evaporator N°{}",i);
-	}
-
-	public void selectCurrenteFluidRefri(int i) {
-		id[PacItem.FLFRG.ordinal()] = i;
-		logger.info("Choice Fluid Refrigerant N°{}",i);
 	}
 
 
 	public void selectCurrenteCircuitSrc(int i) {
-		id[PacItem.CIRTS.ordinal()] = i;
+		id[_CIRTS_] = i;
 		logger.info("Choice Circuit Source N°{}",i);
 	}
 
-	public void selectCurrenteFluidCaloSrc(int i) {
-		id[PacItem.FLCAS.ordinal()] = i;
-		logger.info("Choice Fluid Caloporter Source N°{}",i);
-	}
-
 	public void selectCurrenteCirculatorDistr(int i) {
-		id[PacItem.CRCLD.ordinal()] = i;
+		id[_CRCLD_] = i;
 		logger.info("Choice Circulator Distribution N°{}",i);
 	}
 
 	public void selectCurrenteCircuitDistr(int i) {
-		id[PacItem.CIRTD.ordinal()] = i;
+		id[_CIRTD_] = i;
 		logger.info("Choice Circuit Distribution N°{}",i);
 	}
 
-	public void selectCurrenteFluidCaloDistr(int i) {
-		id[PacItem.FLCAD.ordinal()] = i;
-		logger.info("Choice Fluid Caloporter Distribution N°{}",i);
-	}
 
 	// -------------------------------------------------------
 
 	public int[] getPacComponentId() {
-		for (PacItem p : PacItem.values()) {
-			logger.info(" For: {}, Chosen id = {}",p,id[p.ordinal()]);
+		
+		for (int i=0; i<id.length;i++) {
+			logger.info(" [{}] = {}",i,id[i]);
 		}
 		return id;
 	}
 
 
-
 	public Condenser getCurrentCondenser() {
-		return condenserL.get(id[PacItem.COND.ordinal()]);
+		return condenserL.get(id[_COND_]);
 	}
 
 	public Dehydrator getCurrentDehydrator() {
-		return dehydratorL.get(id[PacItem.DEHY.ordinal()]);
+		return dehydratorL.get(id[_DEHY_]);
 	}
 
 	public ExpansionValve getCurrentExpansionValve() {
-		return expansionValveL.get(id[PacItem.EPVA.ordinal()]);
+		return expansionValveL.get(id[_EPVA_]);
 	}
 
 	public Evaporator getCurrentEvaporator() {
-		return evaporatorL.get(id[PacItem.EVAP.ordinal()]);
+		return evaporatorL.get(id[_EVAP_]);
 	}
-
-	public Refrigerant getCurrentFluidRefri() {
-		return fluidRefriL.get(id[PacItem.FLFRG.ordinal()]);
-	}
-
 
 	public HeatSrcDistrCircuit getCurrentCircuitSrc() {
-		return circuitSrcL.get(id[PacItem.CIRTS.ordinal()]);
-	}
-
-	public HeatTransferFluid getCurrentFluidCaloSrc() {
-		return fluidCaloSrcL.get(id[PacItem.FLCAS.ordinal()]);
+		return circuitSrcL.get(id[_CIRTS_]);
 	}
 
 	public HeatSrcDistrCircuit getCurrentCircuitDistr() {
-		return circuitDistrL.get(id[PacItem.CIRTD.ordinal()]);
+		return circuitDistrL.get(id[_CIRTD_]);
+	}
+
+	// ----------------------------------------------------------------------
+	
+	public Refrigerant getCurrentFluidRefri() {
+		return rfg;
+	}
+
+	public HeatTransferFluid getCurrentFluidCaloSrc() {
+		return coolantYard;
 	}
 
 	public HeatTransferFluid getCurrentFluidCaloDistr() {
-		return fluidCaloDistrL.get(id[PacItem.FLCAD.ordinal()]);
+		return coolantHome;
 	}
 
-
+	
 }

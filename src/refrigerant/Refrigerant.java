@@ -1,7 +1,5 @@
 package refrigerant;
 
-import org.json.simple.JSONObject;
-
 public class Refrigerant extends SatCurve {
 
 	// --------------------------------------------------------------------
@@ -11,7 +9,7 @@ public class Refrigerant extends SatCurve {
 	private double rfgP;
 	private double rfgT;
 	private double rfgH;
-
+	
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
@@ -22,43 +20,17 @@ public class Refrigerant extends SatCurve {
 		this.rfgH = 0.0; 	
 	}
 
+	public Refrigerant() {
+		this.rfgName = "Empty";
+		this.rfgP = 0.0;
+		this.rfgT = 0.0; 
+		this.rfgH = 0.0; 	
+	}
+
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
 	
-
-	// -------------------------------------------------------
-	// 							JSON
-	// -------------------------------------------------------
-	//	Squiggly brackets {} act as containers  
-	//	Names and values are separated by a colon(:) 	--> put
-	//  Square brackets[] represents arrays.			--> add
-	//  {  "Planet": "Earth" , "Countries": [  { "Name": "India", "Capital": "Delhi"}, { "Name": "France", "Major": "Paris" } ]  }  
-	// -------------------------------------------------------
-
-	/**
-	 * Construct the JSON data
-	 * @return : JSONObject
-	 */
-	@SuppressWarnings("unchecked")
-	public JSONObject getJsonObject() {
-		JSONObject jsonObj = new JSONObject();  
-		jsonObj.put("rfgName", this.rfgName);
-		jsonObj.put("rfgT", this.rfgT);	
-		jsonObj.put("rfgP", this.rfgP);	
-		return jsonObj ;
-	}
-
-	/**
-	 * Set the JSON data, to the Class instance
-	 * @param jsonObj : JSON Object
-	 */
-	public void setJsonObject(JSONObject jsonObj) {
-		this.rfgName = (String) jsonObj.get("rfgName");
-		this.rfgT = ((Number) jsonObj.get("rfgT")).doubleValue();
-		this.rfgP = ((Number) jsonObj.get("rfgP")).doubleValue();
-	}
-
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------

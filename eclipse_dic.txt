@@ -22762,3 +22762,5 @@ Zurich
 zygote
 isobar
 isobaric
+enthalpie
+franklin
