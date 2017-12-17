@@ -26,7 +26,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import coolant.HeatTransferFluid;
+import coolant.Coolant;
 import refrigerant.Refrigerant;
 
 public class Pac {
@@ -49,20 +49,23 @@ public class Pac {
 	// --------------------------------------------------------------------
 	// Instance variables
 	// --------------------------------------------------------------------
-	private List<Circulator> circulatorSrcL = new ArrayList<Circulator>();
-	private List<Circulator> circulatorDistrL = new ArrayList<Circulator>();
-	private List<Compressor> compressorL = new ArrayList<Compressor>();
-	private List<Condenser> condenserL = new ArrayList<Condenser>();
-	private List<Dehydrator> dehydratorL = new ArrayList<Dehydrator>();
-	private List<Evaporator> evaporatorL = new ArrayList<Evaporator>();
-	private List<ExpansionValve> expansionValveL = new ArrayList<ExpansionValve>();
-	private List<HeatSrcDistrCircuit> circuitSrcL = new ArrayList<HeatSrcDistrCircuit>();
-	private List<HeatSrcDistrCircuit> circuitDistrL = new ArrayList<HeatSrcDistrCircuit>();
+	private Compressor compressor = new Compressor();
+	private Condenser condenser = new Condenser();
+	private Dehydrator dehydrator = new Dehydrator();
+	private ExpansionValve expansionValve = new ExpansionValve();
+	private Evaporator evaporator = new Evaporator();
+
+	private Circulator circulatorSrc = new Circulator();
+	private HeatSrcDistrCircuit heatSrcCircuit = new HeatSrcDistrCircuit();
 	
-	private HeatTransferFluid coolantHome = new HeatTransferFluid();
-	private HeatTransferFluid coolantYard = new HeatTransferFluid();
+	private Circulator circulatorDistr = new Circulator();
+	private HeatSrcDistrCircuit heatDistrCircuit = new HeatSrcDistrCircuit();
 
 	private Refrigerant rfg = new Refrigerant();
+	
+	private Coolant coolantDistr = new Coolant();
+	private Coolant coolantSrc = new Coolant();
+
 
 	private int[] id = new int[9];
 
@@ -78,10 +81,10 @@ public class Pac {
 		evaporatorL.add(new Evaporator());
 
 		circulatorSrcL.add(new Circulator());
-		circuitSrcL.add(new HeatSrcDistrCircuit());
+		heatSrcCircuitL.add(new HeatSrcDistrCircuit());
 
 		circulatorDistrL.add(new Circulator());
-		circuitDistrL.add(new HeatSrcDistrCircuit());
+		heatDistrCircuitL.add(new HeatSrcDistrCircuit());
 
 		id[_COMP_]=0;
 		id[_COND_]=0;
@@ -103,7 +106,7 @@ public class Pac {
 	 * Will simulate a complete PAC cycle (Gaz/Heat Source and Distribution)
 	 * 
 	 * @param GasInjected in :  COMPRESSOR, CONDENSER, EXPANSIONVALVE or EVAPORATOR
-	 * 				The : HeatTransferFluid will always be injected in the circulator !!
+	 * 				The : Coolant will always be injected in the circulator !!
 	 * @id : Corresponds to the item element index to simulate:
 	 * 			Example: In case we want to test with the compressor N°2 
 	 *          COMP corresponds to position 0 in the array
@@ -150,12 +153,12 @@ public class Pac {
 			break;
 		}
 		// Cycle Heat Source 
-		coolantYard=circulatorSrcL.get(id[_CRCLS_]).transfer(coolantYard);
-		coolantYard=circuitSrcL.get(id[_CIRTS_]).transfer(coolantYard);
+		coolantSrc=circulatorSrcL.get(id[_CRCLS_]).transfer(coolantSrc);
+		coolantSrc=heatSrcCircuitL.get(id[_CIRTS_]).transfer(coolantSrc);
 
 		// Cycle Heat Distribution
-		coolantHome =circulatorDistrL.get(id[_CRCLD_]).transfer(coolantHome);
-		coolantHome =circuitDistrL.get(id[_CIRTD_]).transfer(coolantHome);	
+		coolantDistr =circulatorDistrL.get(id[_CRCLD_]).transfer(coolantDistr);
+		coolantDistr =heatDistrCircuitL.get(id[_CIRTD_]).transfer(coolantDistr);	
 	}			
 
 	// -------------------------------------------------------
@@ -175,7 +178,7 @@ public class Pac {
 	public JSONObject getJsonObject() {
 		JSONObject jsonObj = new JSONObject();
 
-		JSONArray ObjCompressorL = new JSONArray();
+		JSONArray ObjCompressor = new JSONArray();
 		for(int i=0; i< compressorL.size();i++) {
 			JSONObject Obj = new JSONObject();  
 			Obj.put("Compressor", this.compressorL.get(i).getJsonObject());
@@ -183,7 +186,7 @@ public class Pac {
 		}
 		jsonObj.put("CompressorL", ObjCompressorL);
 
-		JSONArray ObjCondenserL = new JSONArray();
+		JSONArray ObjCondenser = new JSONArray();
 		for(int i=0; i< condenserL.size();i++) {
 			JSONObject Obj = new JSONObject();  
 			Obj.put("Condenser", this.condenserL.get(i).getJsonObject());
@@ -191,7 +194,7 @@ public class Pac {
 		}
 		jsonObj.put("CondenserL", ObjCondenserL);
 
-		JSONArray ObjDehydratorL = new JSONArray();
+		JSONArray ObjDehydrator = new JSONArray();
 		for(int i=0; i< dehydratorL.size();i++) {
 			JSONObject Obj = new JSONObject();  
 			Obj.put("Dehydrator", this.dehydratorL.get(i).getJsonObject());
@@ -199,7 +202,7 @@ public class Pac {
 		}
 		jsonObj.put("DehydratorL", ObjDehydratorL);
 
-		JSONArray ObjEvaporatorL = new JSONArray();
+		JSONArray ObjEvaporator = new JSONArray();
 		for(int i=0; i< evaporatorL.size();i++) {
 			JSONObject Obj = new JSONObject();  
 			Obj.put("Evaporator", this.evaporatorL.get(i).getJsonObject());
@@ -207,7 +210,7 @@ public class Pac {
 		}
 		jsonObj.put("EvaporatorL", ObjEvaporatorL);
 
-		JSONArray ObjExpansionValveL = new JSONArray();
+		JSONArray ObjExpansionValve = new JSONArray();
 		for(int i=0; i< expansionValveL.size();i++) {
 			JSONObject Obj = new JSONObject();  
 			Obj.put("ExpansionValve", this.expansionValveL.get(i).getJsonObject());
@@ -216,7 +219,7 @@ public class Pac {
 		jsonObj.put("ExpansionValveL", ObjExpansionValveL);
 
 
-		JSONArray ObjCirculatorSrcL = new JSONArray();
+		JSONArray ObjCirculatorSrc = new JSONArray();
 		for(int i=0; i< circulatorSrcL.size();i++) {
 			JSONObject Obj = new JSONObject();  
 			Obj.put("CirculatorSrc", this.circulatorSrcL.get(i).getJsonObject());
@@ -224,15 +227,15 @@ public class Pac {
 		}
 		jsonObj.put("CirculatorSrcL", ObjCirculatorSrcL);
 
-		JSONArray ObjCircuitSrcL = new JSONArray();
-		for(int i=0; i< circuitSrcL.size();i++) {
+		JSONArray ObjheatSrcCircuit = new JSONArray();
+		for(int i=0; i< heatSrcCircuitL.size();i++) {
 			JSONObject Obj = new JSONObject();  
-			Obj.put("CircuitSrc", this.circuitSrcL.get(i).getJsonObject());
-			ObjCircuitSrcL.add(Obj);
+			Obj.put("heatSrcCircuit", this.heatSrcCircuitL.get(i).getJsonObject());
+			ObjheatSrcCircuitL.add(Obj);
 		}
-		jsonObj.put("CircuitSrcL", ObjCircuitSrcL);
+		jsonObj.put("heatSrcCircuitL", ObjheatSrcCircuitL);
 
-		JSONArray ObjCirculatorDistrL = new JSONArray();
+		JSONArray ObjCirculatorDistr = new JSONArray();
 		for(int i=0; i< circulatorDistrL.size();i++) {
 			JSONObject Obj = new JSONObject();  
 			Obj.put("CirculatorDistr", this.circulatorDistrL.get(i).getJsonObject());
@@ -240,13 +243,13 @@ public class Pac {
 		}
 		jsonObj.put("CirculatorDistrL", ObjCirculatorDistrL);
 
-		JSONArray ObjCircuitDistrL = new JSONArray();
-		for(int i=0; i< circuitDistrL.size();i++) {
+		JSONArray ObjheatDistrCircuit = new JSONArray();
+		for(int i=0; i< heatDistrCircuitL.size();i++) {
 			JSONObject Obj = new JSONObject();  
-			Obj.put("CircuitDistr", this.circuitDistrL.get(i).getJsonObject());
-			ObjCircuitDistrL.add(Obj);
+			Obj.put("heatDistrCircuit", this.heatDistrCircuitL.get(i).getJsonObject());
+			ObjheatDistrCircuitL.add(Obj);
 		}
-		jsonObj.put("CircuitDistrL", ObjCircuitDistrL);
+		jsonObj.put("heatDistrCircuitL", ObjheatDistrCircuitL);
 
 		JSONObject Obj = new JSONObject();  
 		for (int i=0; i<id.length;i++) {
@@ -266,82 +269,82 @@ public class Pac {
 
 		logger.info("jsonObj {}",jsonObj);
 		JSONArray ObjL;
-		ObjL = (JSONArray) jsonObj.get("CompressorL");
+		Obj = (JSONArray) jsonObj.get("CompressorL");
 		compressorL.clear();
 		for(int i=0; i< ObjL.size();i++) {
-			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
+			JSONObject jsonObject = (JSONObject) ObjL.get(i);
 			compressorL.add(i, new Compressor());
 			compressorL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("Compressor")));
 		}
 
-		ObjL = (JSONArray) jsonObj.get("CondenserL");
+		Obj = (JSONArray) jsonObj.get("CondenserL");
 		condenserL.clear();
 		for(int i=0; i< ObjL.size();i++) {
-			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
+			JSONObject jsonObject = (JSONObject) ObjL.get(i);
 			condenserL.add(i, new Condenser());
 			condenserL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("Condenser")));
 		}
 
-		ObjL = (JSONArray) jsonObj.get("DehydratorL");
+		Obj = (JSONArray) jsonObj.get("DehydratorL");
 		dehydratorL.clear();
 		for(int i=0; i< ObjL.size();i++) {
-			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
+			JSONObject jsonObject = (JSONObject) ObjL.get(i);
 			dehydratorL.add(i, new Dehydrator());
 			dehydratorL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("Dehydrator")));
 		}
 
-		ObjL = (JSONArray) jsonObj.get("EvaporatorL");
+		Obj = (JSONArray) jsonObj.get("EvaporatorL");
 		evaporatorL.clear();
 		for(int i=0; i< ObjL.size();i++) {
-			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
+			JSONObject jsonObject = (JSONObject) ObjL.get(i);
 			evaporatorL.add(i, new Evaporator());
 			evaporatorL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("Evaporator")));
 		}
 
-		ObjL = (JSONArray) jsonObj.get("ExpansionValveL");
+		Obj = (JSONArray) jsonObj.get("ExpansionValveL");
 		expansionValveL.clear();
 		for(int i=0; i< ObjL.size();i++) {
-			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
+			JSONObject jsonObject = (JSONObject) ObjL.get(i);
 			expansionValveL.add(i, new ExpansionValve());
 			expansionValveL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("ExpansionValve")));
 		}
 
-		ObjL = (JSONArray) jsonObj.get("CirculatorSrcL");
+		Obj = (JSONArray) jsonObj.get("CirculatorSrcL");
 		circulatorSrcL.clear();
 		for(int i=0; i< ObjL.size();i++) {
-			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
+			JSONObject jsonObject = (JSONObject) ObjL.get(i);
 			circulatorSrcL.add(i, new Circulator());
 			circulatorSrcL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("CirculatorSrc")));
 		}
 
-		ObjL = (JSONArray) jsonObj.get("CircuitSrcL");
-		circuitSrcL.clear();
+		Obj = (JSONArray) jsonObj.get("heatSrcCircuitL");
+		heatSrcCircuitL.clear();
 		for(int i=0; i< ObjL.size();i++) {
-			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
-			circuitSrcL.add(i, new HeatSrcDistrCircuit());
-			circuitSrcL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("CircuitSrc")));
+			JSONObject jsonObject = (JSONObject) ObjL.get(i);
+			heatSrcCircuitL.add(i, new HeatSrcDistrCircuit());
+			heatSrcCircuitL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("heatSrcCircuit")));
 		}
 
 
-		ObjL = (JSONArray) jsonObj.get("CirculatorDistrL");
+		Obj = (JSONArray) jsonObj.get("CirculatorDistrL");
 		circulatorDistrL.clear();
 		for(int i=0; i< ObjL.size();i++) {
-			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
+			JSONObject jsonObject = (JSONObject) ObjL.get(i);
 			circulatorDistrL.add(i, new Circulator());
 			circulatorDistrL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("CirculatorDistr")));
 		}
 
-		ObjL = (JSONArray) jsonObj.get("CircuitDistrL");
-		circuitDistrL.clear();
+		Obj = (JSONArray) jsonObj.get("heatDistrCircuitL");
+		heatDistrCircuitL.clear();
 		for(int i=0; i< ObjL.size();i++) {
-			JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
-			circuitDistrL.add(i, new HeatSrcDistrCircuit());
-			circuitDistrL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("CircuitDistr")));
+			JSONObject jsonObject = (JSONObject) ObjL.get(i);
+			heatDistrCircuitL.add(i, new HeatSrcDistrCircuit());
+			heatDistrCircuitL.get(i).setJsonObject((JSONObject)(jsonObjectL.get("heatDistrCircuit")));
 		}
 
 		JSONObject Obj = (JSONObject) jsonObj.get("ItemID");
 		for(int i=0; i< ObjL.size();i++) {
-			//JSONObject jsonObjectL = (JSONObject) ObjL.get(i);
+			//JSONObject jsonObject = (JSONObject) ObjL.get(i);
 			id[i]= (int) ((Number) Obj.get(i)).doubleValue();
 		}
 
@@ -549,7 +552,7 @@ public class Pac {
 	}
 
 
-	public void selectCurrenteCircuitSrc(int i) {
+	public void selectCurrenteheatSrcCircuit(int i) {
 		id[_CIRTS_] = i;
 		logger.info("Choice Circuit Source N°{}",i);
 	}
@@ -559,7 +562,7 @@ public class Pac {
 		logger.info("Choice Circulator Distribution N°{}",i);
 	}
 
-	public void selectCurrenteCircuitDistr(int i) {
+	public void selectCurrenteheatDistrCircuit(int i) {
 		id[_CIRTD_] = i;
 		logger.info("Choice Circuit Distribution N°{}",i);
 	}
@@ -592,12 +595,12 @@ public class Pac {
 		return evaporatorL.get(id[_EVAP_]);
 	}
 
-	public HeatSrcDistrCircuit getCurrentCircuitSrc() {
-		return circuitSrcL.get(id[_CIRTS_]);
+	public HeatSrcDistrCircuit getCurrentheatSrcCircuit() {
+		return heatSrcCircuitL.get(id[_CIRTS_]);
 	}
 
-	public HeatSrcDistrCircuit getCurrentCircuitDistr() {
-		return circuitDistrL.get(id[_CIRTD_]);
+	public HeatSrcDistrCircuit getCurrentheatDistrCircuit() {
+		return heatDistrCircuitL.get(id[_CIRTD_]);
 	}
 
 	// ----------------------------------------------------------------------
@@ -606,12 +609,12 @@ public class Pac {
 		return rfg;
 	}
 
-	public HeatTransferFluid getCurrentFluidCaloSrc() {
-		return coolantYard;
+	public Coolant getCurrentFluidCaloSrc() {
+		return coolantSrc;
 	}
 
-	public HeatTransferFluid getCurrentFluidCaloDistr() {
-		return coolantHome;
+	public Coolant getCurrentFluidCaloDistr() {
+		return coolantDistr;
 	}
 
 	

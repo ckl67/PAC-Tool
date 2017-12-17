@@ -5,7 +5,7 @@ package testing.pac;
 import org.json.simple.JSONObject;
 import org.junit.Test;
 
-import coolant.HeatTransferFluid;
+import coolant.Coolant;
 import pac.HeatSrcDistrCircuit;
 
 public class JUnitHeatSrcDistrCircuit {
@@ -20,7 +20,7 @@ public class JUnitHeatSrcDistrCircuit {
 		vHeatCircuit.setName("Chauffage Maison");
 		System.out.println(vHeatCircuit.getName());
 
-		HeatTransferFluid vFluid = new HeatTransferFluid(); 
+		Coolant vFluid = new Coolant(); 
 
 		System.out.println("\n---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();

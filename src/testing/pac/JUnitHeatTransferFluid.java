@@ -5,7 +5,7 @@ package testing.pac;
 import org.json.simple.JSONObject;
 import org.junit.Test;
 
-import coolant.HeatTransferFluid;
+import coolant.Coolant;
 
 public class JUnitHeatTransferFluid {
 
@@ -13,7 +13,7 @@ public class JUnitHeatTransferFluid {
 	public void test() {
 		System.out.println("TEST HEATTRANSFER FLUID");
 
-		HeatTransferFluid vHeatTransferFluid = new HeatTransferFluid();
+		Coolant vHeatTransferFluid = new Coolant();
 		vHeatTransferFluid.setP(44);
 		vHeatTransferFluid.setT(55);
 

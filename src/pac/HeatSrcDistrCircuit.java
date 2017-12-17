@@ -21,7 +21,7 @@ package pac;
 
 import org.json.simple.JSONObject;
 
-import coolant.HeatTransferFluid;
+import coolant.Coolant;
 
 public class HeatSrcDistrCircuit {
 
@@ -46,10 +46,10 @@ public class HeatSrcDistrCircuit {
 
 	/**
 	 * Function Transfer
-	 * @param HeatTransferFluid
-	 * @return HeatTransferFluid
+	 * @param Coolant
+	 * @return Coolant
 	 */
-	public HeatTransferFluid transfer(HeatTransferFluid vFluid) {
+	public Coolant transfer(Coolant vFluid) {
 		vFluid.setT(  vFluid.getT() + deltaT );
 		vFluid.setP(  vFluid.getP() + deltaP );
 		return vFluid;

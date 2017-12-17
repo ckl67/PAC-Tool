@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import org.json.simple.JSONObject;
 import org.junit.Test;
 
-import coolant.HeatTransferFluid;
+import coolant.Coolant;
 import pac.Circulator;
 
 public class JUnitCirculator {
@@ -97,7 +97,7 @@ public class JUnitCirculator {
 		}
 
 		System.out.println("\n--->Transfer Function");
-		HeatTransferFluid vFluid = new HeatTransferFluid() ;
+		Coolant vFluid = new Coolant() ;
 		vFluid.setT(25);
 		System.out.println("    Input --> Output");
 		System.out.println("    " + vFluid.getT()+"°C-->"+vCirlculator.transfer(vFluid).getT()+"°C");		

@@ -20,7 +20,7 @@ package coolant;
 
 import org.json.simple.JSONObject;
 
-public class HeatTransferFluid {
+public class Coolant {
 
 	private String name;
 	private double T;	// Heat Transfer Fluid Temperature in °C
@@ -30,7 +30,7 @@ public class HeatTransferFluid {
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
-	public HeatTransferFluid() {
+	public Coolant() {
 		this.name = "Fluide caloporteur";
 		this.T  = 0; 		
 		this.P = 0;		

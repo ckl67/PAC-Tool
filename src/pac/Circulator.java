@@ -25,7 +25,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import coolant.HeatTransferFluid;
+import coolant.Coolant;
 
 public class Circulator {
 
@@ -79,10 +79,10 @@ public class Circulator {
 
 	/**
 	 * Simulate the circulator
-	 * @param HeatTransferFluid: vinFluid 
-	 * @return: HeatTransferFluid
+	 * @param Coolant: vinFluid 
+	 * @return: Coolant
 	 */
-	public HeatTransferFluid transfer(HeatTransferFluid vinFluid) {
+	public Coolant transfer(Coolant vinFluid) {
 		vinFluid.setT(vinFluid.getT()+ 0.0);
 		vinFluid.setP(vinFluid.getP()+ 0.0);
 		return vinFluid;
