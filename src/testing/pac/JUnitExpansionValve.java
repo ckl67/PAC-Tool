@@ -18,7 +18,7 @@ public class JUnitExpansionValve {
 		ExpansionValve vExpansionValve = new ExpansionValve();
 		System.out.println(vExpansionValve.getName());
 
-		Refrigerant vRefrigeranR22 =  new Refrigerant();
+		Refrigerant vRefrigeranR22 =  new Refrigerant("D:/Users/kluges1/workspace/pac-tool/ressources/R22/Saturation Table R22.txt");
 		vRefrigeranR22.setRfgP(25);
 		vRefrigeranR22.setRfgT(5);
 

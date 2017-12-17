@@ -14,7 +14,7 @@ public class JUnitDehydrator {
 	public void test() {
 		System.out.println("TEST DEHYDRATOR");
 		Dehydrator vDehydrator = new Dehydrator();
-		Refrigerant vGas = new Refrigerant();
+		Refrigerant vGas = new Refrigerant("D:/Users/kluges1/workspace/pac-tool/ressources/R22/Saturation Table R22.txt");
 
 		assertEquals("Dehydrator",vDehydrator.getName());
 		

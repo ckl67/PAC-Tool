@@ -30,14 +30,14 @@ public class SatCurve {
 	// 					INSTANCE VARIABLES
 	// -------------------------------------------------------
 
-	private String gasName;
+	private String gasFileName;
 	private List<List<Double>> gasSatTable;
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 	public SatCurve() {
-		gasName = "empty";
+		gasFileName = "empty";
 		gasSatTable = new ArrayList<List<Double>>();
 
 	}
@@ -46,6 +46,18 @@ public class SatCurve {
 	// 							METHOD
 	// -------------------------------------------------------
 
+	// -------------------------------------------------------
+	// 					GETTER AND SETTER
+	// -------------------------------------------------------
+
+	public String getGasFileNameSat() {
+		return gasFileName;
+	}
+
+	// -------------------------------------------------------
+	// 					     OTHERS
+	// -------------------------------------------------------
+	
 	/**
 	 * ===============================================================================================
 	 * Read Saturation data file containing, and will complete the 
@@ -58,12 +70,14 @@ public class SatCurve {
 	 * @return : Name of Gas declared in the File.
 	 * ===============================================================================================
 	 */
-	public String loadGasSaturationData(String fileNameGas) {
+	protected String loadGasSaturationData(String fileNameGas) {
 		String unityP="kPa";
+		String vgasName="Empty";
 
 		// Clear list by setting element to id = 0
 		gasSatTable.clear();
-		
+
+		gasFileName = fileNameGas;
 		File file = new File (fileNameGas);
 		logger.info("Read File: {}", fileNameGas);
 
@@ -79,8 +93,8 @@ public class SatCurve {
 			String first = sken.nextLine ();
 			if (first.startsWith("Name:") ) {
 				String[] val = first.split (":");
-				gasName = val [1];
-				logger.trace("Refrigerant = {}",gasName);
+				vgasName = val [1];
+				logger.trace("Refrigerant = {}",vgasName);
 			} else if (first.startsWith("Unity P:") ) {
 				String[] val = first.split (":");
 				unityP = val [1];
@@ -141,27 +155,10 @@ public class SatCurve {
 		}
 		// Close scanner to avoid memory leak
 		sken.close();
-		return(gasName);
+		return(vgasName);
 	}
 
-	// -------------------------------------------------------
-
-	public double getSatTableSize() {
-		return gasSatTable.size();
-	}
-
-	public double getTSat(int n) {
-		return gasSatTable.get(n).get(id_Temp);
-	}
-
-	public double getPSat_Liquid(int n) {
-		return gasSatTable.get(n).get(id_P_Liquid);
-	}
-
-	public double getPSat_Gas(int n) {
-		return gasSatTable.get(n).get(id_P_Gas);
-	}
-
+	
 	/**
 	 * ===============================================================================================
 	 * Convert Saturation Temperature(°C) to Pressure (bar) 
@@ -565,4 +562,21 @@ public class SatCurve {
 		return(outS);
 	}
 
+	// -------------------------------------------------------
+
+	public double getTSat(int n) {
+		return gasSatTable.get(n).get(id_Temp);
+	}
+
+	public double getPSat_Liquid(int n) {
+		return gasSatTable.get(n).get(id_P_Liquid);
+	}
+
+	public double getPSat_Gas(int n) {
+		return gasSatTable.get(n).get(id_P_Gas);
+	}
+
+	public int getSatTableSize() {
+		return gasSatTable.size();
+	}
 }

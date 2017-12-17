@@ -1,5 +1,6 @@
 package testing.refrigerant;
 
+import org.json.simple.JSONObject;
 import org.junit.Test;
 import refrigerant.Refrigerant;
 
@@ -11,14 +12,29 @@ public class JUnitRefrigant {
 		double P;
 		double H;
 
-		P = 2.0;
-		T = -40.0;
-
 		//Refrigerant refrigerant = new Refrigerant("D:/Users/kluges1/workspace/pac-tool/ressources/R407/R407C/Saturation Table R407C Dupont-Suva.txt");
 		//Refrigerant refrigerant = new Refrigerant("D:/Users/kluges1/workspace/pac-tool/ressources/R22/Saturation Table R22.txt");
-		Refrigerant refrigerant = new Refrigerant();
-		refrigerant.loadGasSaturationData("D:/Users/kluges1/workspace/pac-tool/ressources/R22/Saturation Table R22.txt");
+		Refrigerant refrigerant = new Refrigerant("D:/Users/kluges1/workspace/pac-tool/ressources/R22/Saturation Table R22.txt");
 		System.out.println(refrigerant.getRfgName());
+
+		System.out.println("\n---> Construct JSON data");
+		JSONObject jsonObj = new JSONObject();
+		jsonObj = refrigerant.getJsonObject();
+		System.out.println(jsonObj);
+
+		System.out.println("\n---> Modify the instance by loading new gas ");
+		refrigerant.loadRfgGasSaturationData("D:/Users/kluges1/workspace/pac-tool/ressources/R407/R407C/Saturation Table R407C Dupont-Suva.txt");
+		System.out.println("   Gaz Name ="+ refrigerant.getRfgName());
+	
+		System.out.println("\n---> Read JSON data");
+		System.out.println("---> Set the Class Instance with JSON data");
+		refrigerant.setJsonObject(jsonObj);
+		System.out.println(jsonObj);
+
+		System.out.println("\n");
+
+		P = 2.0;
+		T = -40.0;
 
 		//T=80;
 		System.out.println(	"T= " + T + "°C " +  

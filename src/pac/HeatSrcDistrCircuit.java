@@ -35,7 +35,7 @@ public class HeatSrcDistrCircuit {
 
 	// Constructor
 	public HeatSrcDistrCircuit() {
-		this.name = "Captage Sol";
+		this.name = "Captage Sol ou Distribution Maison";
 		this.deltaT  = 0; 	
 		this.deltaP  = 0; 	
 	}

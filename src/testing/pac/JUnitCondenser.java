@@ -33,7 +33,7 @@ public class JUnitCondenser {
 		System.out.println("---> Read afterwards ");
 		assertEquals("Condenseur",vCondenser.getName());
 
-		Refrigerant vGas = new Refrigerant();
+		Refrigerant vGas = new Refrigerant("D:/Users/kluges1/workspace/pac-tool/ressources/R22/Saturation Table R22.txt");
 		vGas.setRfgT(10);
 
 		System.out.println("--->Transfer Function");
