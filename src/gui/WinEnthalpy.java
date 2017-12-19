@@ -52,14 +52,15 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import computation.MeasurePoint;
+
 import computation.MeasureTable;
 import computation.ResultTable;
 import computation.Comp;
-import computation.MeasureChoiceStatus;
-import computation.MeasureObject;
 import enthalpy.Enthalpy;
 import log4j.Log4j2Config;
+import measurePoint.EloMeasurePointSelection;
+import measurePoint.EloMeasurePoint;
+import measurePoint.MeasurePoint;
 import pac.Pac;
 import javax.swing.event.ChangeEvent;
 import javax.swing.ImageIcon;
@@ -174,8 +175,8 @@ public class WinEnthalpy extends JFrame {
 	}
 
 	public void updateAllTextField() {
-		textPHP.setText(String.format("%.2f",measurePointL.get(MeasureObject._PK_ID).getValue()));
-		textPBP.setText(String.format("%.2f",measurePointL.get(MeasureObject._P0_ID).getValue()));
+		textPHP.setText(String.format("%.2f",measurePointL.get(EloMeasurePoint._PK_ID).getValue()));
+		textPBP.setText(String.format("%.2f",measurePointL.get(EloMeasurePoint._P0_ID).getValue()));
 
 	}
 
@@ -325,7 +326,7 @@ public class WinEnthalpy extends JFrame {
 
 					eDrawL.get(ElDrawIdToMoveOnP).setX1(hResult);
 					String name = eDrawL.get(ElDrawIdToMoveOnP).getEnsembleName(); // T1,T2,..
-					for (MeasureObject p : MeasureObject.values()) {
+					for (EloMeasurePoint p : EloMeasurePoint.values()) {
 						if (p.name() == name) {
 							int n = p.ordinal();  
 							//System.out.println(n);
@@ -419,13 +420,13 @@ public class WinEnthalpy extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				double PK = Double.parseDouble(textPHP.getText());
 
-				measurePointL.get(MeasureObject._PK_VAPOR_ID).setValue(PK);
-				measurePointL.get(MeasureObject._PK_LIQUID_ID).setValue(PK);
+				measurePointL.get(EloMeasurePoint._PK_VAPOR_ID).setValue(PK);
+				measurePointL.get(EloMeasurePoint._PK_LIQUID_ID).setValue(PK);
 
-				measurePointL.get(MeasureObject._PK_LIQUID_ID).setMeasureChoiceStatus(MeasureChoiceStatus.Chosen);
-				measurePointL.get(MeasureObject._PK_VAPOR_ID).setMeasureChoiceStatus(MeasureChoiceStatus.Chosen);
+				measurePointL.get(EloMeasurePoint._PK_LIQUID_ID).setMeasureChoiceStatus(EloMeasurePointSelection.Chosen);
+				measurePointL.get(EloMeasurePoint._PK_VAPOR_ID).setMeasureChoiceStatus(EloMeasurePointSelection.Chosen);
 
-				textPHP.setText(String.format("%.2f",measurePointL.get(MeasureObject._PK_VAPOR_ID).getValue()));
+				textPHP.setText(String.format("%.2f",measurePointL.get(EloMeasurePoint._PK_VAPOR_ID).getValue()));
 
 				logger.trace("Update the Measure Collection data ");
 				Comp.updateAllMeasurePoints(measurePointL,enthalpy,pac);
@@ -449,7 +450,7 @@ public class WinEnthalpy extends JFrame {
 			}
 		});
 		textPHP.setHorizontalAlignment(SwingConstants.RIGHT);
-		textPHP.setText(String.format("%.2f",measurePointL.get(MeasureObject._PK_VAPOR_ID).getValue()));
+		textPHP.setText(String.format("%.2f",measurePointL.get(EloMeasurePoint._PK_VAPOR_ID).getValue()));
 		panelHight_Hight.add(textPHP);
 		textPHP.setColumns(10);
 
@@ -462,10 +463,10 @@ public class WinEnthalpy extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				double P0 = Double.parseDouble(textPBP.getText());
 
-				measurePointL.get(MeasureObject._P0_ID).setValue(P0);
-				measurePointL.get(MeasureObject._P0_ID).setMeasureChoiceStatus(MeasureChoiceStatus.Chosen);
+				measurePointL.get(EloMeasurePoint._P0_ID).setValue(P0);
+				measurePointL.get(EloMeasurePoint._P0_ID).setMeasureChoiceStatus(EloMeasurePointSelection.Chosen);
 				
-				textPBP.setText(String.format("%.2f",measurePointL.get(MeasureObject._P0_ID).getValue()));
+				textPBP.setText(String.format("%.2f",measurePointL.get(EloMeasurePoint._P0_ID).getValue()));
 
 				logger.trace("Update the Measure Collection data ");
 				Comp.updateAllMeasurePoints(measurePointL,enthalpy,pac);
@@ -489,7 +490,7 @@ public class WinEnthalpy extends JFrame {
 			}
 		});
 		textPBP.setHorizontalAlignment(SwingConstants.RIGHT);
-		textPBP.setText(String.format("%.2f",measurePointL.get(MeasureObject._P0_ID).getValue()));
+		textPBP.setText(String.format("%.2f",measurePointL.get(EloMeasurePoint._P0_ID).getValue()));
 		panelHight_Hight.add(textPBP);
 		textPBP.setColumns(10);
 

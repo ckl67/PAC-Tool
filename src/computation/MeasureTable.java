@@ -26,6 +26,8 @@ import org.apache.logging.log4j.Logger;
 
 import gui.GuiConfig;
 import gui.WinMeasureTable;
+import measurePoint.EloMeasurePoint;
+import measurePoint.MeasurePoint;
 
 public class MeasureTable extends JTable {
 
@@ -51,7 +53,7 @@ public class MeasureTable extends JTable {
 
 	public void setAllTableValues() {
 
-		for (MeasureObject p : MeasureObject.values()) {
+		for (EloMeasurePoint p : EloMeasurePoint.values()) {
 			int n = p.ordinal(); 		// p = T1,T2,... n = 0 , 1, 
 			MeasurePoint m = measurePointL.get(n);  
 
@@ -78,7 +80,7 @@ public class MeasureTable extends JTable {
 		defaultTableModel.addColumn("H (Kj/kg)");
 
 		// Initialize
-		for (MeasureObject p : MeasureObject.values()) {
+		for (EloMeasurePoint p : EloMeasurePoint.values()) {
 			defaultTableModel.addRow( new Object[] {p,p.getDefinition(guiConfig.getLanguage()),"0.00","0.00","0.00"});
 		}
 		setModel(defaultTableModel);
@@ -86,7 +88,7 @@ public class MeasureTable extends JTable {
 	}
 	
 	public void changeLanguage(){
-		for (MeasureObject p : MeasureObject.values()) {
+		for (EloMeasurePoint p : EloMeasurePoint.values()) {
 			int n = p.ordinal(); 		// p = T1,T2,... n = 0 , 1, 
 			setValueAt(p.getDefinition(guiConfig.getLanguage()), n, 1);
 		}

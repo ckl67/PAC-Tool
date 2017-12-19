@@ -24,8 +24,10 @@ import java.awt.Toolkit;
 import javax.swing.table.TableColumn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import computation.MeasurePoint;
+
 import computation.MeasureTable;
+import measurePoint.MeasurePoint;
+
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 import javax.swing.JFrame;

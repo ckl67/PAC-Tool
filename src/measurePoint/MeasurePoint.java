@@ -16,31 +16,30 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-package computation;
+package measurePoint;
 
 import org.json.simple.JSONObject;
 
 public class MeasurePoint {
 
-	private MeasureObject measureObject;				// T1,T2,..
-	private double value;								// Pressure or Temperature or ..., Entered
-	private MeasureChoiceStatus measureChoiceStatus;	// MeasurePoint to be considered 
-	private double P;									// Pressure (can be different than P0 or PK)
-	private double T;									// Temperature
-	private double H;									// Value Enthalpy approximation or real=moved manually
-	private double P0PK;								// Value of P0 or PK Pressure
+	// -------------------------------------------------------
+	// 					CONSTANT
+	// -------------------------------------------------------
+	//private static final Logger logger = LogManager.getLogger(SatCurve.class.getName());
+
+	// -------------------------------------------------------
+	// 					INSTANCE VARIABLES
+	// -------------------------------------------------------
+
+	private double value;										// Pressure, Temperature or ..
+	private EloMeasurePointSelection eloMeasurePointSelection;	// MeasurePoint to be considered 
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public MeasurePoint(MeasureObject vmeasurePoint) {
-		this.measureObject = vmeasurePoint;
+	public MeasurePoint() {
 		this.value = 0.0;
-		this.measureChoiceStatus = MeasureChoiceStatus.NotChosen;
-		this.P = 0.0;
-		this.T = 0.0;
-		this.H = 0.0;
-		this.P0PK = 0.0;
+		this.eloMeasurePointSelection = EloMeasurePointSelection.NotChosen;
 	}
 
 	// -------------------------------------------------------
@@ -51,13 +50,8 @@ public class MeasurePoint {
 	 */
 	public void clearMeasure() {
 		this.value = 0;
-		this.measureChoiceStatus = MeasureChoiceStatus.NotChosen;
-		this.P = 0;
-		this.T = 0;
-		this.H = 0;
-		this.P0PK = 0;
+		this.eloMeasurePointSelection = EloMeasurePointSelection.NotChosen;
 	}
-
 
 	// -------------------------------------------------------
 	// 							JSON
@@ -75,12 +69,8 @@ public class MeasurePoint {
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
 		JSONObject jsonObj = new JSONObject();  
-		jsonObj.put("MeasureObject", this.measureObject);
 		jsonObj.put("Value", this.value);	
-		jsonObj.put("MeasureChoiceStatus", this.measureChoiceStatus);	
-		jsonObj.put("P", this.P);	
-		jsonObj.put("T", this.T);	
-		jsonObj.put("H", this.H);	
+		jsonObj.put("MeasureChoiceStatus", this.eloMeasurePointSelection);	
 		return jsonObj ;
 	}
 
@@ -89,22 +79,14 @@ public class MeasurePoint {
 	 * @param jsonObj : JSON Object
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
-		this.measureObject = (MeasureObject) jsonObj.get("MeasureObject");
 		this.value = ((Number) jsonObj.get("Value")).doubleValue();
-		this.measureChoiceStatus = (MeasureChoiceStatus) jsonObj.get("MeasureChoiceStatus");
-		this.P = ((Number) jsonObj.get("P")).intValue();
-		this.T = ((Number) jsonObj.get("T")).intValue();
-		this.H = ((Number) jsonObj.get("H")).intValue();
+		this.eloMeasurePointSelection = (EloMeasurePointSelection) jsonObj.get("MeasureChoiceStatus");
 	}
 
 
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
-
-	public MeasureObject getMeasureObject() {
-		return measureObject;
-	}
 
 	public double getValue() {
 		return value;
@@ -114,44 +96,12 @@ public class MeasurePoint {
 		this.value = value;
 	}
 
-	public MeasureChoiceStatus getMeasureChoiceStatus() {
-		return measureChoiceStatus;
+	public EloMeasurePointSelection selected() {
+		return eloMeasurePointSelection;
 	}
 
-	public void setMeasureChoiceStatus(MeasureChoiceStatus measureChoiceStatus) {
-		this.measureChoiceStatus = measureChoiceStatus;
-	}
-
-	public double getMP() {
-		return P;
-	}
-
-	public void setMP(double p) {
-		P = p;
-	}
-
-	public double getMT() {
-		return T;
-	}	
-
-	public void setMT(double t) {
-		T = t;
-	}
-	
-	public double getMH() {
-		return H;
-	}	
-
-	public void setMH(double h) {
-		H = h;
-	}
-
-	public double getMP0PK() {
-		return P0PK;
-	}
-
-	public void setMP0PK(double p0pk) {
-		P0PK = p0pk;
+	public void setMeasureChoiceStatus(EloMeasurePointSelection eloMeasurePointSelection) {
+		this.eloMeasurePointSelection = eloMeasurePointSelection;
 	}
 	
 }

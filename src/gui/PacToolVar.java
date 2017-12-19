@@ -32,12 +32,12 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 
-import computation.MeasureObject;
-import computation.MeasurePoint;
 import computation.MeasureTable;
 import computation.ResultTable;
 import enthalpy.Enthalpy;
 import log4j.Log4j2Config;
+import measurePoint.EloMeasurePoint;
+import measurePoint.MeasurePoint;
 import pac.Pac;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
@@ -158,7 +158,7 @@ public class PacToolVar {
 
 		
 		measurePointL = new ArrayList<MeasurePoint>(); 
-		for (MeasureObject p : MeasureObject.values())
+		for (EloMeasurePoint p : EloMeasurePoint.values())
 			measurePointL.add(new MeasurePoint(p));
 		lblLoading.setText("Loading...... Measure Point Elements List");
 		percent = 100*i++/iterations;

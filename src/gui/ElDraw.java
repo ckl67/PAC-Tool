@@ -22,11 +22,12 @@ package gui;
 import java.awt.Color;
 import java.util.List;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
 
-import computation.MeasureChoiceStatus;
-import computation.MeasureObject;
-import computation.MeasurePoint;
+import measurePoint.EloMeasurePointSelection;
+import measurePoint.EloMeasurePoint;
+import measurePoint.MeasurePoint;
+
+import org.apache.logging.log4j.LogManager;
 
 
 // ===================================================================================================================
@@ -132,7 +133,7 @@ public class ElDraw {
 	public static List<ElDraw> createElDrawFrom(List<MeasurePoint> measurePointL, List<ElDraw> eDrawL) {
 		boolean onshot = true;
 
-		for (MeasureObject p : MeasureObject.values()) {
+		for (EloMeasurePoint p : EloMeasurePoint.values()) {
 			int n = p.ordinal(); 		// p = T1,T2,... n = 0 , 1, 
 			MeasurePoint m = measurePointL.get(n);  
 
@@ -162,8 +163,8 @@ public class ElDraw {
 			//			Only for points ! 
 			//			If point is moved we set : _ChosenHreal
 			// ----------------------------------
-			if ( (m.getMeasureChoiceStatus().equals(MeasureChoiceStatus.ChosenHaprox)) || 
-					(m.getMeasureChoiceStatus().equals(MeasureChoiceStatus.ChosenP0PK))) {
+			if ( (m.getMeasureChoiceStatus().equals(EloMeasurePointSelection.ChosenHaprox)) || 
+					(m.getMeasureChoiceStatus().equals(EloMeasurePointSelection.ChosenP0PK))) {
 
 				/*
 

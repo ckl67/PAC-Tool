@@ -31,11 +31,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import computation.Comp;
-import computation.MeasurePoint;
 import computation.MeasureTable;
 import computation.ResultTable;
 import enthalpy.Enthalpy;
 import enthalpy.EnthalpyBkgdImg;
+import measurePoint.MeasurePoint;
 import pac.Pac;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;

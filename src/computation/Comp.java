@@ -48,6 +48,9 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import enthalpy.Enthalpy;
+import measurePoint.EloMeasurePointSelection;
+import measurePoint.EloMeasurePoint;
+import measurePoint.MeasurePoint;
 import pac.Compressor;
 import pac.Pac;
 
@@ -68,7 +71,7 @@ public class Comp {
 
 		//int nb = 0;
 		logger.info(" Input updateAllMeasurePoints()");
-		for (MeasureObject p : MeasureObject.values()) {
+		for (EloMeasurePoint p : EloMeasurePoint.values()) {
 			
 			//System.out.println(nb++);
 			int n = p.id(); 	// p = P1,P2,... --> n = 0 , 1, 
@@ -92,15 +95,15 @@ public class Comp {
 				|       X  (6)                               (7) (8)  (1)
 				|      XX                                     X
 				 */
-				if (m.getMeasureChoiceStatus() == MeasureChoiceStatus.Chosen ) {
+				if (m.getMeasureChoiceStatus() == EloMeasurePointSelection.Chosen ) {
 					m.setMT(m.getValue());
 					m.setMP( enthalpy.convT2P( m.getValue() ));
 					// if P0 > 0 then only H can be computed
-					if ( measurePointL.get(MeasureObject._P0_ID).getValue() > 0 ) {
-						m.setMP0PK( measurePointL.get(MeasureObject._P0_ID).getValue() );
+					if ( measurePointL.get(EloMeasurePoint._P0_ID).getValue() > 0 ) {
+						m.setMP0PK( measurePointL.get(EloMeasurePoint._P0_ID).getValue() );
 						double Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(m); 
 						m.setMH(Hmpiso0);
-						m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+						m.setMeasureChoiceStatus(EloMeasurePointSelection.ChosenHaprox);
 					}
 				}
 				break;
@@ -113,15 +116,15 @@ public class Comp {
 				|           | XXXX                      XX                   /
 				|           |XX                          XX                 /
 				 */
-				if (m.getMeasureChoiceStatus() == MeasureChoiceStatus.Chosen ) {
+				if (m.getMeasureChoiceStatus() == EloMeasurePointSelection.Chosen ) {
 					m.setMT( m.getValue() );
 					m.setMP( enthalpy.convT2P( m.getValue()) );
 					// if PK > 0 then only H can be computed
-					if ( measurePointL.get(MeasureObject._PK_ID).getValue() > 0 ) {
-						m.setMP0PK( measurePointL.get(MeasureObject._PK_ID).getValue() );
+					if ( measurePointL.get(EloMeasurePoint._PK_ID).getValue() > 0 ) {
+						m.setMP0PK( measurePointL.get(EloMeasurePoint._PK_ID).getValue() );
 						double Hmpiso1 = enthalpy.CompHmatchPSatWithP0PK(m); 
 						m.setMH(Hmpiso1);
-						m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+						m.setMeasureChoiceStatus(EloMeasurePointSelection.ChosenHaprox);
 					}
 				}
 				break;
@@ -134,16 +137,16 @@ public class Comp {
 				|           | XXXX                      XX                   /
 				|           |XX                          XX                 /
 				 */
-				if (m.getMeasureChoiceStatus() == MeasureChoiceStatus.Chosen ) {
+				if (m.getMeasureChoiceStatus() == EloMeasurePointSelection.Chosen ) {
 					m.setMT( m.getValue() );
 					m.setMP( enthalpy.convT2P( m.getValue() ) );
 					// if PK > 0 then only H can be computed
 					double Hsat = 0;
-					if ( measurePointL.get(MeasureObject._PK_ID).getValue() > 0 ) {
-						m.setMP0PK( measurePointL.get(MeasureObject._PK_ID).getValue()  );
+					if ( measurePointL.get(EloMeasurePoint._PK_ID).getValue() > 0 ) {
+						m.setMP0PK( measurePointL.get(EloMeasurePoint._PK_ID).getValue()  );
 						Hsat = enthalpy.matchP2HliquidSat( m.getMP());
 						m.setMH(Hsat);
-						m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+						m.setMeasureChoiceStatus(EloMeasurePointSelection.ChosenHaprox);
 					}
 
 					// Compute P6 = Output Temperature Regulator / Capillary
@@ -154,16 +157,16 @@ public class Comp {
 					|      XX                                     X
 					 */
 					// if P0 > 0 then only H can be computed for P6
-					if ( measurePointL.get(MeasureObject._P0_ID).getValue() > 0 ) {
-						MeasurePoint m6 = measurePointL.get(MeasureObject.P6.id());
-						double tmpP = measurePointL.get(MeasureObject._P0_ID).getValue(); 
+					if ( measurePointL.get(EloMeasurePoint._P0_ID).getValue() > 0 ) {
+						MeasurePoint m6 = measurePointL.get(EloMeasurePoint.P6.id());
+						double tmpP = measurePointL.get(EloMeasurePoint._P0_ID).getValue(); 
 						m6.setMP(tmpP);
 						m6.setMP0PK(tmpP);
 						double tmpT = enthalpy.convP2T(tmpP); 
 						m6.setValue(Math.round(tmpT*100)/100.0);
 						m6.setMT(tmpT);
 						m6.setMH(Hsat);
-						m6.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+						m6.setMeasureChoiceStatus(EloMeasurePointSelection.ChosenHaprox);
 					}
 				}
 				break;
@@ -189,15 +192,15 @@ public class Comp {
 				|       X  (6)                               (7) (8)  (1)
 				|      XX                                     X
 				 */
-				if (m.getMeasureChoiceStatus() == MeasureChoiceStatus.Chosen ) {
+				if (m.getMeasureChoiceStatus() == EloMeasurePointSelection.Chosen ) {
 					m.setMT(m.getValue());
 					m.setMP( enthalpy.convT2P( m.getValue() ));
 					// if P0 > 0 then only H can be computed
-					if ( measurePointL.get(MeasureObject._P0_ID).getValue() > 0 ) {
-						m.setMP0PK( measurePointL.get(MeasureObject._P0_ID).getValue()  );
+					if ( measurePointL.get(EloMeasurePoint._P0_ID).getValue() > 0 ) {
+						m.setMP0PK( measurePointL.get(EloMeasurePoint._P0_ID).getValue()  );
 						double Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(m); 
 						m.setMH(Hmpiso0);
-						m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+						m.setMeasureChoiceStatus(EloMeasurePointSelection.ChosenHaprox);
 					}
 
 					// Will Also Compute P1 
@@ -205,17 +208,17 @@ public class Comp {
 					// 	T1 is Over heated of T8 --> T1 = T8 + OH
 					double ohT = m.getValue() + Math.round(pac.getCurrentCompressor().getOverheated());
 					logger.info("Computation of T1 --> (T8={} + Compressor over head={}) = {}",m.getValue(),Math.round(pac.getCurrentCompressor().getOverheated()),ohT);
-					MeasurePoint m1 = measurePointL.get(MeasureObject.P1.id());
+					MeasurePoint m1 = measurePointL.get(EloMeasurePoint.P1.id());
 					m1.setValue(Math.round(ohT*100)/100.0);
 					m1.setMT(ohT);
 					m1.setMP( enthalpy.convT2P( m1.getMT()));
 
 					// if P0 > 0 then only H can be computed
-					if ( measurePointL.get(MeasureObject._P0_ID).getValue() > 0 ) {
-						m1.setMP0PK( measurePointL.get(MeasureObject._P0_ID).getValue()  );
+					if ( measurePointL.get(EloMeasurePoint._P0_ID).getValue() > 0 ) {
+						m1.setMP0PK( measurePointL.get(EloMeasurePoint._P0_ID).getValue()  );
 						double Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(m1); 
 						m1.setMH(Hmpiso0);
-						m1.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+						m1.setMeasureChoiceStatus(EloMeasurePointSelection.ChosenHaprox);
 					}
 				}
 				break;
@@ -229,7 +232,7 @@ public class Comp {
 				|           | XXXX                      XX                   /
 				|           |XX                          XX                 /
 				 */
-				if (m.getMeasureChoiceStatus() == MeasureChoiceStatus.Chosen ) {
+				if (m.getMeasureChoiceStatus() == EloMeasurePointSelection.Chosen ) {
 					// P must be > 0
 					if (m.getValue() > 0 ) {
 						m.setMP( m.getValue() );
@@ -237,7 +240,7 @@ public class Comp {
 						m.setMP0PK( m.getValue() );
 						double Hsat = enthalpy.matchP2HvaporSat( m.getMP());
 						m.setMH(Hsat);
-						m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+						m.setMeasureChoiceStatus(EloMeasurePointSelection.ChosenHaprox);
 					}					
 				}
 				break;
@@ -251,7 +254,7 @@ public class Comp {
 				|           | XXXX                      XX                   /
 				|           |XX                          XX                 /
 				 */
-				if (m.getMeasureChoiceStatus() == MeasureChoiceStatus.Chosen ) {
+				if (m.getMeasureChoiceStatus() == EloMeasurePointSelection.Chosen ) {
 					// P must be > 0
 					if (m.getValue() > 0 ) {
 						m.setMP( m.getValue() );
@@ -259,20 +262,20 @@ public class Comp {
 						m.setMP0PK( m.getValue() );
 						double Hsat = enthalpy.matchP2HliquidSat( m.getMP());
 						m.setMH(Hsat);
-						m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+						m.setMeasureChoiceStatus(EloMeasurePointSelection.ChosenHaprox);
 
 						// T5 is under cooling of T4 
 						double ucT = m.getMT() - Math.round(pac.getCurrentCompressor().getUnderCooling());
 						logger.info("Computation of T5 --> (T4={}  Under Colling ={}) = {}",m.getMT(),Math.round(pac.getCurrentCompressor().getUnderCooling()),ucT);
 
-						MeasurePoint m5 = measurePointL.get(MeasureObject.P5.id());
+						MeasurePoint m5 = measurePointL.get(EloMeasurePoint.P5.id());
 						m5.setMT(ucT);
 						m5.setValue(Math.round(ucT*100)/100.0);
 						m5.setMP( enthalpy.convT2P( m5.getMT()));
-						m5.setMP0PK( measurePointL.get(MeasureObject._PK_ID).getValue()  );
+						m5.setMP0PK( measurePointL.get(EloMeasurePoint._PK_ID).getValue()  );
 						double Hsatm5 = enthalpy.matchP2HliquidSat( m5.getMP());
 						m5.setMH(Hsatm5);
-						m5.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+						m5.setMeasureChoiceStatus(EloMeasurePointSelection.ChosenHaprox);
 
 						// Compute P6 = Output Temperature Regulator / Capillary
 						/*
@@ -282,16 +285,16 @@ public class Comp {
 						|      XX                                     X
 						 */
 						// if P0 > 0 then only H can be computed for P6
-						if ( measurePointL.get(MeasureObject._P0_ID).getValue() > 0 ) {
-							MeasurePoint m6 = measurePointL.get(MeasureObject.P6.id());
-							double tmpP = measurePointL.get(MeasureObject._P0_ID).getValue(); 
+						if ( measurePointL.get(EloMeasurePoint._P0_ID).getValue() > 0 ) {
+							MeasurePoint m6 = measurePointL.get(EloMeasurePoint.P6.id());
+							double tmpP = measurePointL.get(EloMeasurePoint._P0_ID).getValue(); 
 							m6.setMP(tmpP);
 							m6.setMP0PK(tmpP);
 							double tmpT = enthalpy.convP2T(tmpP); 
 							m6.setValue(Math.round(tmpT*100)/100.0);
 							m6.setMT(tmpT);
 							m6.setMH(Hsatm5);
-							m6.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+							m6.setMeasureChoiceStatus(EloMeasurePointSelection.ChosenHaprox);
 						}
 					}
 				}
@@ -311,7 +314,7 @@ public class Comp {
 					m.setMP0PK( m.getValue()  );
 					double Hsat = enthalpy.matchP2HvaporSat( m.getMP());
 					m.setMH(Hsat);
-					m.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+					m.setMeasureChoiceStatus(EloMeasurePointSelection.ChosenHaprox);
 					
 					// Will also compute P6 if P5 is present
 					/*
@@ -321,17 +324,17 @@ public class Comp {
 					|           |XX                          XX                 /
 					 */
 
-					MeasurePoint m5 = measurePointL.get(MeasureObject.P5.id());
+					MeasurePoint m5 = measurePointL.get(EloMeasurePoint.P5.id());
 					if ( m5.getMH() > 0 ) {
-						MeasurePoint m6 = measurePointL.get(MeasureObject.P6.id());
-						double tmpP = measurePointL.get(MeasureObject._P0_ID).getValue(); 
+						MeasurePoint m6 = measurePointL.get(EloMeasurePoint.P6.id());
+						double tmpP = measurePointL.get(EloMeasurePoint._P0_ID).getValue(); 
 						m6.setMP(tmpP);
 						m6.setMP0PK(tmpP);
 						double tmpT = enthalpy.convP2T(tmpP); 
 						m6.setValue(Math.round(tmpT*100)/100.0);
 						m6.setMT(tmpT);
 						m6.setMH(m5.getMH());
-						m6.setMeasureChoiceStatus(MeasureChoiceStatus.ChosenHaprox);
+						m6.setMeasureChoiceStatus(EloMeasurePointSelection.ChosenHaprox);
 					}
 						
 				}
@@ -341,15 +344,15 @@ public class Comp {
 				break;
 			}
 
-			if ( (m.getMeasureChoiceStatus().equals(MeasureChoiceStatus.ChosenHaprox)) || 
-					(m.getMeasureChoiceStatus().equals(MeasureChoiceStatus.ChosenP0PK))) {
+			if ( (m.getMeasureChoiceStatus().equals(EloMeasurePointSelection.ChosenHaprox)) || 
+					(m.getMeasureChoiceStatus().equals(EloMeasurePointSelection.ChosenP0PK))) {
 				logger.info(
 						"Point = {} Choice Status = {} value= {} T={} --> P={} ==> P0 or PK ={} H ={} ",
 						p, m.getMeasureChoiceStatus(),m.getValue(),m.getMT(),m.getMP(),m.getMP0PK(),m.getMH()						
 						);
 			}
 			
-		} // End for (MeasureObject p : MeasureObject.values()) {
+		} // End for (MeasurePointList p : MeasurePointList.values()) {
 		logger.info(" Output updateAllMeasurePoints()");
 
 	}
@@ -362,8 +365,8 @@ public class Comp {
 	public static double cop_carnot_froid(List<MeasurePoint> measurePointL) {
 		double result = 0;
 
-		double T0 = measurePointL.get(MeasureObject._P0_ID).getMT();
-		double TK = measurePointL.get(MeasureObject._PK_ID).getMT();
+		double T0 = measurePointL.get(EloMeasurePoint._P0_ID).getMT();
+		double TK = measurePointL.get(EloMeasurePoint._PK_ID).getMT();
 
 		if ((TK-T0) != 0.0) {
 			result = (T0+273)/(TK-T0);
@@ -378,8 +381,8 @@ public class Comp {
 	public static double cop_carnot_chaud(List<MeasurePoint> measurePointL) {
 		double result = 0;
 
-		double T0 = measurePointL.get(MeasureObject._P0_ID).getMT();
-		double TK = measurePointL.get(MeasureObject._PK_ID).getMT();
+		double T0 = measurePointL.get(EloMeasurePoint._P0_ID).getMT();
+		double TK = measurePointL.get(EloMeasurePoint._PK_ID).getMT();
 
 		if ((TK-T0) != 0.0) {
 			result = (TK+273)/(TK-T0);
@@ -393,11 +396,11 @@ public class Comp {
 	public static double cop(List<MeasurePoint> measurePointL, Pac pac) {
 		double COP = 0;
 
-		double travailCompresseur = measurePointL.get(MeasureObject.P2.id()).getMH() - 
-				measurePointL.get(MeasureObject.P1.id()).getMH();
+		double travailCompresseur = measurePointL.get(EloMeasurePoint.P2.id()).getMH() - 
+				measurePointL.get(EloMeasurePoint.P1.id()).getMH();
 
-		double puissanceCalorifique = measurePointL.get(MeasureObject.P2.id()).getMH() - 
-				measurePointL.get(MeasureObject.P1.id()).getMH();
+		double puissanceCalorifique = measurePointL.get(EloMeasurePoint.P2.id()).getMH() - 
+				measurePointL.get(EloMeasurePoint.P1.id()).getMH();
 
 		double rapportPcalSurTravComp = puissanceCalorifique/travailCompresseur;
 

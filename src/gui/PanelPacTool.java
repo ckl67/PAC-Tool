@@ -43,14 +43,15 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import computation.MeasurePoint;
+
 import computation.MeasureTable;
 import computation.ResultTable;
 import computation.Comp;
-import computation.MeasureChoiceStatus;
-import computation.MeasureObject;
 import enthalpy.Enthalpy;
 import log4j.Log4j2Config;
+import measurePoint.EloMeasurePointSelection;
+import measurePoint.EloMeasurePoint;
+import measurePoint.MeasurePoint;
 import pac.Pac;
 import javax.imageio.ImageIO;
 
@@ -324,13 +325,13 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 				double inValue = Double.valueOf(textField.getText());
 
 				// HP1 = HP2 = PK_GAS = PK_LIQUID
-				if (id == MeasureObject._PK_VAPOR_ID) {
-					measurePointL.get(MeasureObject._PK_LIQUID_ID).setValue(inValue);
-					measurePointL.get(MeasureObject._PK_LIQUID_ID).setMeasureChoiceStatus(MeasureChoiceStatus.Chosen);
+				if (id == EloMeasurePoint._PK_VAPOR_ID) {
+					measurePointL.get(EloMeasurePoint._PK_LIQUID_ID).setValue(inValue);
+					measurePointL.get(EloMeasurePoint._PK_LIQUID_ID).setMeasureChoiceStatus(EloMeasurePointSelection.Chosen);
 				}
-				if (id == MeasureObject._PK_LIQUID_ID) {
-					measurePointL.get(MeasureObject._PK_VAPOR_ID).setValue(inValue);
-					measurePointL.get(MeasureObject._PK_VAPOR_ID).setMeasureChoiceStatus(MeasureChoiceStatus.Chosen);
+				if (id == EloMeasurePoint._PK_LIQUID_ID) {
+					measurePointL.get(EloMeasurePoint._PK_VAPOR_ID).setValue(inValue);
+					measurePointL.get(EloMeasurePoint._PK_VAPOR_ID).setMeasureChoiceStatus(EloMeasurePointSelection.Chosen);
 				}
 
 				// Affect Value to measurePointL
@@ -338,7 +339,7 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 				// Indicate that the value has been chosen, 
 				// but there are some conditions to respect before 
 				// that the point can be validated 
-				measurePointL.get(id).setMeasureChoiceStatus(MeasureChoiceStatus.Chosen);
+				measurePointL.get(id).setMeasureChoiceStatus(EloMeasurePointSelection.Chosen);
 
 				logger.trace("New values added {}",String.format("%.2f", inValue));
 				logger.trace("Update the Measure Collection data ");
