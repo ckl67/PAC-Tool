@@ -1,6 +1,6 @@
 /*
  * - PAC-Tool - 
- * Tool for understanding basics and computation of PAC (Pompe à Chaleur)
+ * Tool for understanding basics and computation of PAC (Pompe ï¿½ Chaleur)
  * Copyright (C) 2016 christian.klugesherz@gmail.com
  *
  * This program is free software; you can redistribute it and/or modify
@@ -26,14 +26,14 @@ import org.apache.logging.log4j.Logger;
 
 import gui.GuiConfig;
 import gui.WinMeasureTable;
-import measurePoint.EloMeasurePoint;
-import measurePoint.MeasurePoint;
+import mpoints.EloMeasurePoint;
+import mpoints.MeasurePoint;
 
 public class MeasureTable extends JTable {
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LogManager.getLogger(WinMeasureTable.class.getName());
-
+ 
 	private List<MeasurePoint> measurePointL;
 	private GuiConfig guiConfig;
 
@@ -74,8 +74,8 @@ public class MeasureTable extends JTable {
 
 		DefaultTableModel defaultTableModel = new DefaultTableModel();
 		defaultTableModel.addColumn("Point");
-		defaultTableModel.addColumn("Définition");
-		defaultTableModel.addColumn("T (°C)");
+		defaultTableModel.addColumn("Dï¿½finition");
+		defaultTableModel.addColumn("T (ï¿½C)");
 		defaultTableModel.addColumn("P (bar)");
 		defaultTableModel.addColumn("H (Kj/kg)");
 

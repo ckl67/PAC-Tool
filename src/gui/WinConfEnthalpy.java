@@ -1,6 +1,6 @@
 /*
  * - PAC-Tool - 
- * Tool for understanding basics and computation of PAC (Pompe à Chaleur)
+ * Tool for understanding basics and computation of PAC (Pompe ï¿½ Chaleur)
  * Copyright (C) 2016 christian.klugesherz@gmail.com
  *
  * This program is free software; you can redistribute it and/or modify
@@ -35,7 +35,7 @@ import computation.MeasureTable;
 import computation.ResultTable;
 import enthalpy.Enthalpy;
 import enthalpy.EnthalpyBkgdImg;
-import measurePoint.MeasurePoint;
+import mpoints.MeasurePoint;
 import pac.Pac;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;

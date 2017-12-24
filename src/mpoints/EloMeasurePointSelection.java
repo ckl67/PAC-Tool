@@ -1,4 +1,4 @@
-package measurePoint;
+package mpoints;
 
 public enum EloMeasurePointSelection {
 	NotChosen,

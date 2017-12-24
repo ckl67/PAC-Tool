@@ -1,6 +1,6 @@
 /*
  * - PAC-Tool - 
- * Tool for understanding basics and computation of PAC (Pompe à Chaleur)
+ * Tool for understanding basics and computation of PAC (Pompe ï¿½ Chaleur)
  * Copyright (C) 2016 christian.klugesherz@gmail.com
  *
  * This program is free software; you can redistribute it and/or modify
@@ -26,7 +26,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import computation.ResultTable;
-import measurePoint.MeasurePoint;
+import mpoints.MeasurePoint;
 
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;

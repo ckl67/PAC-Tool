@@ -1,18 +1,18 @@
-package translation;
+ï»¿package translation;
 
 public enum TCompressor {
 
 	// Compressor
-	COMP_CAPACITY("Capacity: ", "Capacité: "),
+	COMP_CAPACITY("Capacity: ", "CapacitÃ©: "),
 	COMP_POWER("Power: ", "Puissance "),
 	COMP_CURRENT("Current: ", "Courant: "),
 	COMP_EER("EER: ", "COP Froid: "),
 	COMP_VOLTAGE("Voltage: ", "Tension: "),
-	COMP_MASSFLOW("Mass flow: ", "Débit Massique: "),
+	COMP_MASSFLOW("Mass flow: ", "DÃ©bit Massique: "),
 	COMP_EVAP("Evap: ", "T0. Evap.: "),
 	COMP_RG("RG: ", "T. Asp. Comp.: "),
 	COMP_COND("Cond: ", "TK. Cond.: "),
-	COMP_LIQ("Liq: ", "T. Détent.: "),
+	COMP_LIQ("Liq: ", "T. DÃ©tent.: "),
 	COMP_UNDERCOOLING("Under cooling: ", "S/Refroidissement: "),
 	COMP_OVERHEATED("Overheated: ", "Surchauffe: "),
 	;

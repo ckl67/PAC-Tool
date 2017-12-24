@@ -1,6 +1,6 @@
-/*
+ï»¿/*
  * - PAC-Tool - 
- * Tool for understanding basics and computation of PAC (Pompe à Chaleur)
+ * Tool for understanding basics and computation of PAC (Pompe Ã  Chaleur)
  * Copyright (C) 2016 christian.klugesherz@gmail.com
  *
  * This program is free software; you can redistribute it and/or modify
@@ -25,8 +25,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import gui.GuiConfig;
-import measurePoint.EloMeasurePoint;
-import measurePoint.MeasurePoint;
+import mpoints.EloMeasureResult;
+import mpoints.EloMeasurePoint;
+import mpoints.MeasurePoint;
 
 public class ResultTable extends JTable {
 
@@ -52,7 +53,7 @@ public class ResultTable extends JTable {
 	// -------------------------------------------------------
 
 	public void setAllTableValues() {
-		for (ResultObject p : ResultObject.values()) {
+		for (EloMeasureResult p : EloMeasureResult.values()) {
 
 			double result = 0;
 			switch (p) {
@@ -107,20 +108,20 @@ public class ResultTable extends JTable {
 
 		DefaultTableModel defaultTableModel = new DefaultTableModel();
 		defaultTableModel.addColumn("Compute");
-		defaultTableModel.addColumn("Définition");
+		defaultTableModel.addColumn("DÃ©finition");
 		defaultTableModel.addColumn("Valeur");
-		defaultTableModel.addColumn("T (°C)");
+		defaultTableModel.addColumn("T (Â°C)");
 
 
 		// Initialize
-		for (ResultObject p : ResultObject.values()) {
+		for (EloMeasureResult p : EloMeasureResult.values()) {
 			defaultTableModel.addRow( new Object[] {p.getDisplayTxt(),p.getDefinition(guiConfig.getLanguage()),"0.00",p.getUnity()});				
 		}
 		setModel(defaultTableModel);
 	}
 
 	public void changeLanguage(){
-		for (ResultObject p : ResultObject.values()) {
+		for (EloMeasureResult p : EloMeasureResult.values()) {
 			int n = p.ordinal(); 		// p = T1,T2,... n = 0 , 1, 
 			setValueAt(p.getDefinition(guiConfig.getLanguage()), n, 1);
 		}

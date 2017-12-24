@@ -1,6 +1,6 @@
 /*
  * - PAC-Tool - 
- * Tool for understanding basics and computation of PAC (Pompe à Chaleur)
+ * Tool for understanding basics and computation of PAC (Pompe ï¿½ Chaleur)
  * Copyright (C) 2016 christian.klugesherz@gmail.com
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,9 +58,9 @@ import computation.ResultTable;
 import computation.Comp;
 import enthalpy.Enthalpy;
 import log4j.Log4j2Config;
-import measurePoint.EloMeasurePointSelection;
-import measurePoint.EloMeasurePoint;
-import measurePoint.MeasurePoint;
+import mpoints.EloMeasurePointSelection;
+import mpoints.EloMeasurePoint;
+import mpoints.MeasurePoint;
 import pac.Pac;
 import javax.swing.event.ChangeEvent;
 import javax.swing.ImageIcon;
@@ -298,7 +298,7 @@ public class WinEnthalpy extends JFrame {
 				lblPressureCoord.setText(String.format("P=%.2f bar",pResult));
 
 				double tRresult = enthalpy.convP2T(pResult);
-				lblTempCoord.setText(String.format("T=%.2f °C",tRresult));	
+				lblTempCoord.setText(String.format("T=%.2f ï¿½C",tRresult));	
 
 				try {
 					if (WinPressTemp.panelTempPressDrawArea.isVisible()) {

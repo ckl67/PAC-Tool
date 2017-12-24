@@ -37,8 +37,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="5" language="java" name="measurePoint.MeasurePoint" project="pac-tool" 
-    file="/pac-tool/src/measurePoint/MeasurePoint.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="5" language="java" name="mpoints.MeasurePoint" project="pac-tool" 
+    file="/pac-tool/src/mpoints/MeasurePoint.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="253" y="237"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -46,8 +46,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <enumeration id="6" language="java" name="measurePoint.EloMeasurePoint" project="pac-tool" 
-    file="/pac-tool/src/measurePoint/EloMeasurePoint.java" binary="false" corner="BOTTOM_RIGHT">    
+  <enumeration id="6" language="java" name="mpoints.EloMeasurePoint" project="pac-tool" 
+    file="/pac-tool/src/mpoints/EloMeasurePoint.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="-215" y="117"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -55,17 +55,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <enumeration id="7" language="java" name="measurePoint.EloMeasurePointGroup" project="pac-tool" 
-    file="/pac-tool/src/measurePoint/EloMeasurePointGroup.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="-202" y="548"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="true" protected="true" private="true" static="true"/>    
-    </display>  
-  </enumeration>  
-  <enumeration id="8" language="java" name="measurePoint.EloMeasurePointSelection" project="pac-tool" 
-    file="/pac-tool/src/measurePoint/EloMeasurePointSelection.java" binary="false" corner="BOTTOM_RIGHT">    
+  <enumeration id="7" language="java" name="mpoints.EloMeasurePointSelection" project="pac-tool" 
+    file="/pac-tool/src/mpoints/EloMeasurePointSelection.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="-240" y="-316"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -73,18 +64,6 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </enumeration>  
-  <association id="9">    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="10" name="groupHpBp">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="11" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    
