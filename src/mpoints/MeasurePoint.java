@@ -101,7 +101,7 @@ public class MeasurePoint {
 					PSat psat = refrigerant.getPSatFromT(value); 
 					this.P = psat.getPGas();
 					// if P0 > 0 then only H can be computed
-					if ( measurePointL.get(EloMeasurePoint._P0_ID).getValue() > 0 ) {
+					if ( lMeasurePoints.get(EloMeasurePoint._P0_ID).getValue() > 0 ) {
 						m.setMP0PK( measurePointL.get(EloMeasurePoint._P0_ID).getValue() );
 						double Hmpiso0 = enthalpy.CompHmatchPSatWithP0PK(m); 
 						m.setMH(Hmpiso0);
@@ -113,7 +113,6 @@ public class MeasurePoint {
 				break;
 			}
 
-			}
 		}	
 	}
 
