@@ -38,6 +38,12 @@ public enum EloMeasurePoint {
 	;
 
 	// --------------------------------------------------------------------
+	// CONSTANTS
+	// --------------------------------------------------------------------
+	public static int _PR0id = 6;	// = P7 --> index for P0 = Pression reference 0
+	public static int _PRKid = 2;	// = P3 --> index for PK = Pression reference K
+	
+	// --------------------------------------------------------------------
 	// DEFINITION OF VARIABLES USED IN ENUMERATION
 	// --------------------------------------------------------------------
 

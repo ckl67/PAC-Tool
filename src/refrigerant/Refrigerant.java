@@ -22,8 +22,11 @@ public class Refrigerant extends SatCurve {
 		this.rfgH = 0.0; 	
 	}
 
+	/*
+	 * Will load default Refrigerant R22
+	 */
 	public Refrigerant() {
-		this.rfgName = "Empty";
+		this.rfgName = loadGasSaturationData("./ressources/R22/Saturation Table R22.txt");
 		this.rfgP = 0.0;
 		this.rfgT = 0.0; 
 		this.rfgH = 0.0; 	

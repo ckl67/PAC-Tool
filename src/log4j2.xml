@@ -19,7 +19,7 @@
 			<AppenderRef ref="Console" />
 		</Root>
 
-		<Logger name="enthalpy.Enthalpy" level="info" additivity="false">
+		<Logger name="mpoints" level="trace" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
 
