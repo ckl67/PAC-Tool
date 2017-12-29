@@ -29,7 +29,9 @@ import coolant.Coolant;
 
 public class Circulator {
 
-	private static final Logger logger = LogManager.getLogger(Circulator.class.getName());
+	//private static final Logger logger = LogManager.getLogger(Circulator.class.getName());
+	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
+	
 
 	// --------------------------------------------------------------------
 	// Instance variables

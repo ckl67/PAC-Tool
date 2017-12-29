@@ -35,7 +35,9 @@ import org.apache.logging.log4j.core.layout.PatternLayout;
 
 public class Log4j2Config {
 
-	private static final Logger logger = LogManager.getLogger(Log4j2Config.class.getName());
+	//private static final Logger logger = LogManager.getLogger(Log4j2Config.class.getName());
+	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
+
 	private String logPath;
 
 	// -------------------------------------------------------

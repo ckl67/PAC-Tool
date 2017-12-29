@@ -59,7 +59,8 @@ public class Comp {
 	// -------------------------------------------------------
 	// 		"Comp" Class is like "Math" Static Functions Class
 	// -------------------------------------------------------
-	private static final Logger logger = LogManager.getLogger(Comp.class.getName());
+	//private static final Logger logger = LogManager.getLogger(Comp.class.getName());
+	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
 	// -------------------------------------------------------
 	// 							METHOD

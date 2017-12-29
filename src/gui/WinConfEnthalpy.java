@@ -55,7 +55,9 @@ import java.awt.Font;
 
 public class WinConfEnthalpy extends JFrame {
 
-	private static final Logger logger = LogManager.getLogger(WinConfEnthalpy.class.getName());
+	//private static final Logger logger = LogManager.getLogger(WinConfEnthalpy.class.getName());
+	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
+
 	private static final long serialVersionUID = 1L;
 
 	/* 	----------------------------------------

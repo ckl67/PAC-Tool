@@ -29,7 +29,8 @@ import org.json.simple.JSONObject;
 
 public class EnthalpyBkgdImg {
 	
-	private static final Logger logger = LogManager.getLogger(Enthalpy.class.getName());
+	//private static final Logger logger = LogManager.getLogger(Enthalpy.class.getName());
+	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 	
 	// Enthalpy image file (.png)
 	private String enthalpyImageFile;		

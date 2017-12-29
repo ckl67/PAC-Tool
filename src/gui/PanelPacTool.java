@@ -60,7 +60,8 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger logger = LogManager.getLogger(PanelPacTool.class.getName());
+	//private static final Logger logger = LogManager.getLogger(PanelPacTool.class.getName());
+	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
 	// --------------------------------------------------------------------
 	// Objective is to display the coordinate for the points to match

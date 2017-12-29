@@ -44,7 +44,9 @@ import translation.TCirculator;
 
 public class WinCirculatorDistr extends JFrame {
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = LogManager.getLogger(WinCirculatorDistr.class.getName());
+	//private static final Logger logger = LogManager.getLogger(WinCirculatorDistr.class.getName());
+	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
+
 
 	// -------------------------------------------------------
 	// 					INSTANCE VARIABLES

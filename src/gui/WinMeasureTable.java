@@ -44,7 +44,9 @@ import javax.swing.ImageIcon;
 public class WinMeasureTable extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = LogManager.getLogger(WinMeasureTable.class.getName());
+	//private static final Logger logger = LogManager.getLogger(WinMeasureTable.class.getName());
+	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
+
 
 	private MeasureTable table;
 

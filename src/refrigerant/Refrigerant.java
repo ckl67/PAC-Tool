@@ -4,6 +4,11 @@ import org.json.simple.JSONObject;
 
 public class Refrigerant extends SatCurve {
 
+	// -------------------------------------------------------
+	// 					CONSTANT
+	// -------------------------------------------------------
+	//private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
+	
 	// --------------------------------------------------------------------
 	// Instance variables
 	// --------------------------------------------------------------------

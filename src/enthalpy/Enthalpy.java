@@ -28,7 +28,9 @@ import org.apache.logging.log4j.Logger;
 
 public class Enthalpy {
 
-	private static final Logger logger = LogManager.getLogger(Enthalpy.class.getName());
+	//private static final Logger logger = LogManager.getLogger(Enthalpy.class.getName());
+	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
+
 
 	/* (http://asciiflow.com/)
 

@@ -18,12 +18,12 @@
  */
 package mpoints;
 
-import java.util.ArrayList;
-
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import pac.Pac;
+import refrigerant.HSat;
 import refrigerant.PSat;
 import refrigerant.Refrigerant;
 
@@ -32,7 +32,8 @@ public class MeasurePoint {
 	// -------------------------------------------------------
 	// 					CONSTANT
 	// -------------------------------------------------------
-	private static final Logger logger = LogManager.getLogger(MeasurePoint.class.getName());
+	//private static final Logger logger = LogManager.getLogger(MeasurePoint.class.getName());
+	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
 	// -------------------------------------------------------
 	// 					INSTANCE VARIABLES
@@ -43,7 +44,7 @@ public class MeasurePoint {
 	private double T;									// Temperature
 	private double H;									// Value Enthalpy approximation or real=moved manually
 	private EloMeasurePointSelection mPObjectSelection;	// Measure Point to be considered Selected, Not Selected, in reference to the section picture 
-	private EloMeasurePointCompleted mPobjetCompleted;	// Measure Point to be considered computation completed  
+	//private EloMeasurePointCompleted mPobjetCompleted;	// Measure Point to be considered computation completed  
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -59,7 +60,7 @@ public class MeasurePoint {
 		this.T = 0.0;
 		this.H = 0.0;
 		this.mPObjectSelection = EloMeasurePointSelection.NotSelected;
-		this.mPobjetCompleted = EloMeasurePointCompleted.NotComputed;
+		//this.mPobjetCompleted = EloMeasurePointCompleted.NotComputed;
 	}
 
 	// -------------------------------------------------------
@@ -74,11 +75,15 @@ public class MeasurePoint {
 		this.T = 0;
 		this.H = 0;
 		this.mPObjectSelection = EloMeasurePointSelection.NotSelected;
-		this.mPobjetCompleted = EloMeasurePointCompleted.NotComputed;
+		//this.mPobjetCompleted = EloMeasurePointCompleted.NotComputed;
 	}
 
-	public void setValue(double value,Refrigerant refrigerant, Pac pac, ArrayList<MeasurePoint> lMeasurePoints ) {
-		logger.trace("setValue --> value={}, refrigerant={}, pac={}, lMeasurePoints={} ",value,refrigerant,pac,lMeasurePoints );
+	public void setValue(double value,Pac pac, List<MeasurePoint> lMeasurePoints ) {
+		logger.trace("{} setValue --> value={}", this.mPObject,  value );
+		Refrigerant refrigerant = pac.getRefrigerant(); 
+		
+		PSat psat;
+		HSat hSat;
 		
 		this.value = value;
 		this.mPObjectSelection = EloMeasurePointSelection.Selected;
@@ -99,27 +104,44 @@ public class MeasurePoint {
 				|       X  (6)                               (7) (8)  (1)
 				|      XX                                     X
 				 */
+				this.mPObjectSelection = EloMeasurePointSelection.Selected;
 				this.T= value;
-				PSat psat = refrigerant.getPSatFromT(value); 
-				this.P = psat.getPGas();
+				psat = refrigerant.getPSatFromT(value); 
+				this.P = psat.getPLiquid();
 
 				// if PR0 > 0 then only H can be computed, and consider
-				// that the computation is completed 
 				if (getMP_P0PK(lMeasurePoints) > 0.0) {
-					double happrox = 0;
-					//enthalpy.CompHmatchPSatWithP0PK(m); 
-					this.H = happrox;
+					hSat = refrigerant.getHSatFromT(T);
+					this.H = hSat.getHLiquid();
 				}
 				break;
+			case P2 :
+				// HP gas temperature at the end of compression (Compressor top Bell)
+				//  Value Entered = Temperature
+				/*
+				|                  XXXX           XXXXX         (PK)
+				|        (5)+-----(4)-----------------(3)--------------------+ (2)
+				|           | XXXX                      XX                   /
+				|           |XX                          XX                 /
+				 */
+				this.mPObjectSelection = EloMeasurePointSelection.Selected;
+				this.T= value;
+				psat = refrigerant.getPSatFromT(value); 
+				this.P = psat.getPLiquid();
+				// if PK > 0 then only H can be computed
+				if (getMP_P0PK(lMeasurePoints) > 0.0) {
+					hSat = refrigerant.getHSatFromT(T);
+					this.H = hSat.getHLiquid();
+				}
+				break;
+
+
 			default:
 				break;
 			}
 
 		}	
 	}
-
-
-
 
 
 	// -------------------------------------------------------
@@ -144,7 +166,7 @@ public class MeasurePoint {
 		jsonObj.put("T", this.T);	
 		jsonObj.put("H", this.H);
 		jsonObj.put("MeasurePointSelection", this.mPObjectSelection);	
-		jsonObj.put("MeasurePointCompleted", this.mPobjetCompleted);	
+		//jsonObj.put("MeasurePointCompleted", this.mPobjetCompleted);	
 		return jsonObj ;
 	}
 
@@ -159,7 +181,7 @@ public class MeasurePoint {
 		this.T = ((Number) jsonObj.get("T")).intValue();
 		this.H = ((Number) jsonObj.get("H")).intValue();
 		this.mPObjectSelection = (EloMeasurePointSelection) jsonObj.get("MeasurePointSelection");
-		this.mPobjetCompleted = (EloMeasurePointCompleted) jsonObj.get("MeasurePointCompleted");
+		//this.mPobjetCompleted = (EloMeasurePointCompleted) jsonObj.get("MeasurePointCompleted");
 	}
 
 
@@ -203,7 +225,7 @@ public class MeasurePoint {
 	// Example: P1 belongs to GROUP_BP
 	// So the function will return PR0, but only if PR0 has been computed
 	// if not -1;
-	public double getMP_P0PK( ArrayList<MeasurePoint> lMeasurePoints) {
+	public double getMP_P0PK( List<MeasurePoint> lMeasurePoints) {
 		double out = -1.0;
 
 		double PR0,PRK = 0;
@@ -212,14 +234,14 @@ public class MeasurePoint {
 		int idPRK = EloMeasurePoint._PRKid;
 
 		// Check of PR0 has still be computed through the lMeasurePoints
-		if (lMeasurePoints.get(idPR0).mPobjetCompleted.equals(EloMeasurePointCompleted.Computed))
+		if (lMeasurePoints.get(idPR0).getMP_P() > 0 )
 			PR0 = lMeasurePoints.get(idPR0).getMP_P();
 		else
 			PR0 = -1.0;
 
 
 		// Check of PRK has still be computed through the lMeasurePoints
-		if (lMeasurePoints.get(idPRK).mPobjetCompleted.equals(EloMeasurePointCompleted.Computed))
+		if (lMeasurePoints.get(idPRK).getMP_P()>0)
 			PRK = lMeasurePoints.get(idPRK).getMP_P();
 		else
 			PRK = -1.0;

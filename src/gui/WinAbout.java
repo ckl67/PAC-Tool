@@ -40,7 +40,8 @@ import javax.swing.UIManager;
 public class WinAbout extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = LogManager.getLogger(WinAbout.class.getName());
+	//private static final Logger logger = LogManager.getLogger(WinAbout.class.getName());
+	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
 	// -------------------------------------------------------
 	// 					INSTANCE VARIABLES

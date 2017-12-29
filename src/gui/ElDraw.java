@@ -36,7 +36,9 @@ import org.apache.logging.log4j.LogManager;
 
 public class ElDraw {
 
-	private static final Logger logger = LogManager.getLogger(ElDraw.class.getName());
+	//private static final Logger logger = LogManager.getLogger(ElDraw.class.getName());
+	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
+
 
 	private ElDrawObject 	elDrawObj;  	// type of draw : Line, Point,..
 	private String 			ensembleName;	// Several ElDraw objects can belong to same ensemble

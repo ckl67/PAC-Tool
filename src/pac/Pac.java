@@ -27,7 +27,8 @@ import refrigerant.Refrigerant;
 
 public class Pac {
 
-	private static final Logger logger = LogManager.getLogger(Pac.class.getName());
+	//private static final Logger logger = LogManager.getLogger(Pac.class.getName());
+	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
 	// --------------------------------------------------------------------
 	// Instance variables
