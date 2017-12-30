@@ -58,7 +58,7 @@ public class SatCurve {
 	// -------------------------------------------------------
 	// 					     OTHERS
 	// -------------------------------------------------------
-	
+
 	/**
 	 * ===============================================================================================
 	 * Read Saturation data file containing, and will complete the 
@@ -159,7 +159,7 @@ public class SatCurve {
 		return(vgasName);
 	}
 
-	
+
 	/**
 	 * ===============================================================================================
 	 * Convert Saturation Temperature(°C) to Pressure (bar) 
@@ -426,7 +426,7 @@ public class SatCurve {
 		return hOut;	
 	}
 
-	
+
 	/**
 	 * 
 	 * @param H
@@ -443,11 +443,16 @@ public class SatCurve {
 	 * 
 	 * 
 	 */
-	public double getTSatFromH(double vH) {
+	public double getTSatFromHLiquid(double vH) {
 		double outT=0;
-		double min = Double.MAX_VALUE;
+		double min;
 		int id=0;
 
+		// Check H Limit
+		if (vH > gasSatTable.get(gasSatTable.size()-1).get(id_H_Liquid))
+			return 0.0;
+		
+		min = Double.MAX_VALUE;
 		for(int n = 0; n < gasSatTable.size(); n++){
 			double diff = Math.abs(gasSatTable.get(n).get(id_H_Liquid) - vH);
 			if (diff < min) {
@@ -455,12 +460,11 @@ public class SatCurve {
 				id = n;
 			}
 		}
-		
+
 		if (id == gasSatTable.size()-1) {
 			id = id-1;
 		} 
 
-		
 		double x,y0,y1,x0,x1;
 		x  = vH;
 		x0 = gasSatTable.get(id).get(id_H_Liquid);
@@ -469,14 +473,13 @@ public class SatCurve {
 			logger.error("(getTSatFromH )");
 			logger.error("  2 same valeurs will cause and issue and must be removed ");
 		}
-
 		y0 = gasSatTable.get(id).get(id_Temp);
 		y1 = gasSatTable.get(id+1).get(id_Temp);
 		outT = (x-x0)*(y1-y0)/(x1-x0)+ y0;
-		
+
 		return outT;
 	}
-	
+
 	// -----------------------------------------------------------------------------------------
 	// 										Isobaric 
 	// -----------------------------------------------------------------------------------------
@@ -494,7 +497,7 @@ public class SatCurve {
 		return outP;
 	}
 
-		
+
 	/**
 	 * Get Temperature of Isobaric
 	 * @param refP
@@ -510,8 +513,8 @@ public class SatCurve {
 		double satTGas = this.getTSatFromP(refP).getTGas();
 
 		if (H< satHLiquid) 
-			outT = this.g;
-		
+			outT = 0;
+
 		else if (H> satHGas)
 			outT = 0.0;
 		else {
@@ -532,7 +535,7 @@ public class SatCurve {
 
 	public double getIsobaricH(double refP, double T) {
 		double outH = 0;
-		
+
 		return outH;
 	}
 

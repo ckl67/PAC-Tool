@@ -26,9 +26,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.3880136"
-     inkscape:cx="433.89876"
-     inkscape:cy="272.39519"
+     inkscape:zoom="0.98147383"
+     inkscape:cx="589.3505"
+     inkscape:cy="427.19189"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="false"
@@ -45,7 +45,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -80,10 +80,10 @@
          sodipodi:role="line"
          id="tspan4184"
          x="351.51086"
-         y="351.05099">getPSatFromH (H=160) --&gt; 2</tspan></text>
+         y="351.05099">getPSatFromHLiquid (H=160) --&gt; 2 bar</tspan></text>
     <path
-       style="fill:none;fill-rule:evenodd;stroke:#000080;stroke-width:0.99751818px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 632.3951,445.78524 -0.50448,132.33278"
+       style="fill:none;fill-rule:evenodd;stroke:#000080;stroke-width:1.7740587px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 684.25988,151.08215 -0.48866,432.11644"
        id="path4205-5"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
@@ -116,32 +116,32 @@
          id="tspan4188-8"
          x="307.71085"
          y="394.64728"
-         style="fill:#000080;fill-opacity:1">getTSatFromH (H=150) --&gt; -40</tspan></text>
+         style="fill:#000080;fill-opacity:1">getTSatFromHLiquid (H=150) --&gt; -40°C</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:15.11916924px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000080;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="693.12653"
-       y="403.09549"
+       x="886.00787"
+       y="257.01971"
        id="text4186-3-7"
        sodipodi:linespacing="125%"
        transform="scale(0.93006948,1.0751885)"><tspan
          sodipodi:role="line"
          id="tspan4188-8-3"
-         x="693.12653"
-         y="403.09549"
-         style="fill:#000080;fill-opacity:1">getTSatFromH (H=380) --&gt; -50</tspan></text>
+         x="886.00787"
+         y="257.01971"
+         style="fill:#000080;fill-opacity:1">getTSatFromHGas (H=450) --&gt; T=18°C</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:17.24179077px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#008000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="707.87195"
-       y="350.72476"
+       x="850.54388"
+       y="361.4353"
        id="text4182-5"
        sodipodi:linespacing="125%"
        transform="scale(0.92914939,1.0762532)"><tspan
          sodipodi:role="line"
          id="tspan4184-8"
-         x="707.87195"
-         y="350.72476">getPSatFromH (H=405) --&gt; 2</tspan></text>
+         x="850.54388"
+         y="361.4353">getPSatFromHGas (H=405) --&gt; 2 bar</tspan></text>
     <ellipse
        style="opacity:0.98000004;fill:#000080;fill-opacity:1;stroke:#000080;stroke-width:2;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:6, 2;stroke-dashoffset:0;stroke-opacity:1"
        id="path4236"
@@ -152,8 +152,8 @@
     <ellipse
        style="opacity:0.98000004;fill:#000080;fill-opacity:1;stroke:#000080;stroke-width:2;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:6, 2;stroke-dashoffset:0;stroke-opacity:1"
        id="path4236-7"
-       cx="629.83014"
-       cy="464.28223"
+       cx="683.8642"
+       cy="288.49146"
        rx="4.5456862"
        ry="5.5558391" />
     <ellipse
@@ -168,6 +168,51 @@
        id="path4236-7-4-9"
        cx="649.02301"
        cy="395.59186"
+       rx="4.5456862"
+       ry="5.5558391" />
+    <ellipse
+       style="opacity:0.98000004;fill:#000080;fill-opacity:1;stroke:#000080;stroke-width:2;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:6, 2;stroke-dashoffset:0;stroke-opacity:1"
+       id="path4236-7-6"
+       cx="684.43134"
+       cy="160.52673"
+       rx="4.5456862"
+       ry="5.5558391" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:15.11916924px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000080;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="874.65369"
+       y="134.70265"
+       id="text4186-3-7-0"
+       sodipodi:linespacing="125%"
+       transform="scale(0.93006948,1.0751885)"><tspan
+         sodipodi:role="line"
+         id="tspan4188-8-3-0"
+         x="874.65369"
+         y="134.70265"
+         style="fill:#000080;fill-opacity:1">getTSatFromH (H=450) --&gt; T = 80°C</tspan></text>
+    <path
+       style="fill:#008000;fill-rule:evenodd;stroke:#008000;stroke-width:1.7740587px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 650.09387,154.84108 -0.48866,432.11644"
+       id="path4205-5-0"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:17.24179077px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#008000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="675.75702"
+       y="115.7452"
+       id="text4182-5-3"
+       sodipodi:linespacing="125%"
+       transform="scale(0.92914939,1.0762532)"><tspan
+         sodipodi:role="line"
+         id="tspan4184-8-8"
+         x="675.75702"
+         y="115.7452">getPSatFromHGas (H=405) --&gt; 40 bar</tspan></text>
+    <ellipse
+       style="opacity:0.98000004;fill:#008000;fill-opacity:1;stroke:#008000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:6, 2;stroke-dashoffset:0;stroke-opacity:1"
+       id="path4236-7-4-1"
+       cx="649.02393"
+       cy="152.12761"
        rx="4.5456862"
        ry="5.5558391" />
   </g>
