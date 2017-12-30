@@ -64,7 +64,7 @@ public class SatCurve {
 	 * Read Saturation data file containing, and will complete the 
 	 * gasSatTable Table
 	 *   # Temp.   Press       Press     Density  Density          Enthalpy           Entropy  Entropy
-	 *	 #  �C      kPa         kPa       kg/m3    kg/m3     kJ/kg   kJ/kg  kJ/kg    kJ/kg K  kJ/kg K
+	 *	 #  °C      kPa         kPa       kg/m3    kg/m3     kJ/kg   kJ/kg  kJ/kg    kJ/kg K  kJ/kg K
 	 *	 #        liquid        gas      liquid     gas      Liquid  latent  gas      liquid    gas
 	 * 
 	 * @param  : File Name
@@ -162,13 +162,13 @@ public class SatCurve {
 	
 	/**
 	 * ===============================================================================================
-	 * Convert Saturation Temperature(�C) to Pressure (bar) 
-	 * @param temp: temperature (�C)
+	 * Convert Saturation Temperature(°C) to Pressure (bar) 
+	 * @param temp: temperature (°C)
 	 * @return : Pressure (bar absolute) --> (pGas,pLiquid)
 	 * 
 	 * gasSatTable Table
 	 *   # Temp.   Press       Press     Density  Density          Enthalpy           Entropy  Entropy
-	 *	 #  �C      kPa         kPa       kg/m3    kg/m3     kJ/kg   kJ/kg  kJ/kg    kJ/kg K  kJ/kg K
+	 *	 #  °C      kPa         kPa       kg/m3    kg/m3     kJ/kg   kJ/kg  kJ/kg    kJ/kg K  kJ/kg K
 	 *	 #        liquid        gas      liquid     gas      Liquid  latent  gas      liquid    gas
 	 *
 	 * ===============================================================================================
@@ -222,13 +222,13 @@ public class SatCurve {
 
 	/**
 	 * ===============================================================================================
-	 * Convert Saturation Pressure (bar) to Temperature(�C)
+	 * Convert Saturation Pressure (bar) to Temperature(°C)
 	 * @param P : Pression (bar)
 	 * @return T : Temperature --> (TGas,TLiquid)
 	 * 
 	 * gasSatTable Table
 	 *   # Temp.   Press       Press     Density  Density          Enthalpy           Entropy  Entropy
-	 *	 #  �C      kPa         kPa       kg/m3    kg/m3     kJ/kg   kJ/kg  kJ/kg    kJ/kg K  kJ/kg K
+	 *	 #  °C      kPa         kPa       kg/m3    kg/m3     kJ/kg   kJ/kg  kJ/kg    kJ/kg K  kJ/kg K
 	 *	 #        liquid        gas      liquid     gas      Liquid  latent  gas      liquid    gas
 	 *	 #   
 	 *	 #  11		800,04		665,98	
@@ -298,13 +298,13 @@ public class SatCurve {
 
 	/**
 	 * ===============================================================================================
-	 * Convert Saturation Temperature(�C) to Enthalpy  (kJ/kg)
-	 * @param temp: temperature (�C)
+	 * Convert Saturation Temperature(°C) to Enthalpy  (kJ/kg)
+	 * @param temp: temperature (°C)
 	 * @return : Enthalpy (kJ/kg) --> (HGas,HLiquid)
 	 * 
 	 * gasSatTable Table
 	 *   # Temp.   Press       Press     Density  Density          Enthalpy           Entropy  Entropy
-	 *	 #  �C      kPa         kPa       kg/m3    kg/m3     kJ/kg   kJ/kg  kJ/kg    kJ/kg K  kJ/kg K
+	 *	 #  °C      kPa         kPa       kg/m3    kg/m3     kJ/kg   kJ/kg  kJ/kg    kJ/kg K  kJ/kg K
 	 *	 #        liquid        gas      liquid     gas      Liquid  latent  gas      liquid    gas
 	 *
 	 * ===============================================================================================
@@ -358,7 +358,7 @@ public class SatCurve {
 	 * 
 	 * gasSatTable Table
 	 *   # Temp.   Press       Press     Density  Density          Enthalpy           Entropy  Entropy
-	 *	 #  �C      kPa         kPa       kg/m3    kg/m3     kJ/kg   kJ/kg  kJ/kg    kJ/kg K  kJ/kg K
+	 *	 #  °C      kPa         kPa       kg/m3    kg/m3     kJ/kg   kJ/kg  kJ/kg    kJ/kg K  kJ/kg K
 	 *	 #        liquid        gas      liquid     gas      Liquid  latent  gas      liquid    gas
 	 *
 	 *  -28		201,5			149,8	1336,3	6,599		162,2	234,9	397,2	0,8554	1,8278
@@ -426,7 +426,59 @@ public class SatCurve {
 		return hOut;	
 	}
 
+	
+	/**
+	 * 
+	 * @param H
+	 * @return
+	 * 
+	 * 
+	 * 	 * gasSatTable Table
+	 *   # Temp.   Press       Press     Density  Density          Enthalpy           Entropy  Entropy
+	 *	 #  °C      kPa         kPa       kg/m3    kg/m3     kJ/kg   kJ/kg  kJ/kg    kJ/kg K  kJ/kg K
+	 *	 #        liquid        gas      liquid     gas      Liquid  latent  gas      liquid    gas
+	 *
+	 *  -28		201,5			149,8	1336,3	6,599		162,2	234,9	397,2	0,8554	1,8278
+	 * 	-21		266,3			202,6	1311,1	8,775		171		230,5	401,5	0,8907	1,8176
+	 * 
+	 * 
+	 */
+	public double getTSatFromH(double vH) {
+		double outT=0;
+		double min = Double.MAX_VALUE;
+		int id=0;
+
+		for(int n = 0; n < gasSatTable.size(); n++){
+			double diff = Math.abs(gasSatTable.get(n).get(id_H_Liquid) - vH);
+			if (diff < min) {
+				min = diff;
+				id = n;
+			}
+		}
+		
+		if (id == gasSatTable.size()-1) {
+			id = id-1;
+		} 
+
+		
+		double x,y0,y1,x0,x1;
+		x  = vH;
+		x0 = gasSatTable.get(id).get(id_H_Liquid);
+		x1 = gasSatTable.get(id+1).get(id_H_Liquid);
+		if (x1==x0) {
+			logger.error("(getTSatFromH )");
+			logger.error("  2 same valeurs will cause and issue and must be removed ");
+		}
+
+		y0 = gasSatTable.get(id).get(id_Temp);
+		y1 = gasSatTable.get(id+1).get(id_Temp);
+		outT = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+		
+		return outT;
+	}
+	
 	// -----------------------------------------------------------------------------------------
+	// 										Isobaric 
 	// -----------------------------------------------------------------------------------------
 
 	/**
@@ -458,7 +510,8 @@ public class SatCurve {
 		double satTGas = this.getTSatFromP(refP).getTGas();
 
 		if (H< satHLiquid) 
-			outT = 0.0;
+			outT = this.g;
+		
 		else if (H> satHGas)
 			outT = 0.0;
 		else {
