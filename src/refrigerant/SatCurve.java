@@ -361,9 +361,8 @@ public class SatCurve {
 	 *	 #  °C      kPa         kPa       kg/m3    kg/m3     kJ/kg   kJ/kg  kJ/kg    kJ/kg K  kJ/kg K
 	 *	 #        liquid        gas      liquid     gas      Liquid  latent  gas      liquid    gas
 	 *
-	 *  -28		201,5			149,8	1336,3	6,599		162,2	234,9	397,2	0,8554	1,8278
-	 * 	-21		266,3			202,6	1311,1	8,775		171		230,5	401,5	0,8907	1,8176
-
+	 *  	-28		201,5			149,8	1336,3	6,599		162,2	234,9	397,2	0,8554	1,8278
+	 * 		-21		266,3			202,6	1311,1	8,775		171		230,5	401,5	0,8907	1,8176
 	 * ===============================================================================================
 	 */
 	public HSat getHSatFromP(double pressure){
@@ -426,9 +425,8 @@ public class SatCurve {
 		return hOut;	
 	}
 
-
 	/**
-	 * 
+	 * getTSatFromHLiquid
 	 * @param H
 	 * @return
 	 * 
@@ -437,10 +435,8 @@ public class SatCurve {
 	 *   # Temp.   Press       Press     Density  Density          Enthalpy           Entropy  Entropy
 	 *	 #  °C      kPa         kPa       kg/m3    kg/m3     kJ/kg   kJ/kg  kJ/kg    kJ/kg K  kJ/kg K
 	 *	 #        liquid        gas      liquid     gas      Liquid  latent  gas      liquid    gas
-	 *
-	 *  -28		201,5			149,8	1336,3	6,599		162,2	234,9	397,2	0,8554	1,8278
-	 * 	-21		266,3			202,6	1311,1	8,775		171		230,5	401,5	0,8907	1,8176
-	 * 
+	 *  	-28		201,5			149,8	1336,3	6,599		162,2	234,9	397,2	0,8554	1,8278
+	 * 		-21		266,3			202,6	1311,1	8,775		171		230,5	401,5	0,8907	1,8176
 	 * 
 	 */
 	public double getTSatFromHLiquid(double vH) {
@@ -449,8 +445,10 @@ public class SatCurve {
 		int id=0;
 
 		// Check H Limit
-		if (vH > gasSatTable.get(gasSatTable.size()-1).get(id_H_Liquid))
+		if (vH > gasSatTable.get(gasSatTable.size()-1).get(id_H_Liquid)) {
+			logger.error("(getTSatFromHLiquid):: Out of range ");
 			return 0.0;
+		}
 		
 		min = Double.MAX_VALUE;
 		for(int n = 0; n < gasSatTable.size(); n++){
@@ -513,8 +511,7 @@ public class SatCurve {
 		double satTGas = this.getTSatFromP(refP).getTGas();
 
 		if (H< satHLiquid) 
-			outT = 0;
-
+			outT = getTSatFromHLiquid(H);
 		else if (H> satHGas)
 			outT = 0.0;
 		else {
@@ -533,10 +530,30 @@ public class SatCurve {
 		return outT;
 	}
 
-	public double getIsobaricH(double refP, double T) {
-		double outH = 0;
+	public HIsobaric getIsobaricH(double refP, double T) {
+		double precis = 1;
+		HIsobaric outHIsobaric = new HIsobaric();
 
-		return outH;
+		double satHLiquid = this.getHSatFromP(refP).getHLiquid();
+		double satHGas = this.getHSatFromP(refP).getHGas();
+
+		double satTLiquid = this.getTSatFromP(refP).getTLiquid();
+		double satTGas = this.getTSatFromP(refP).getTGas();
+
+		if (T< satTLiquid-precis) {
+			outHIsobaric.setZone(0);
+			outHIsobaric.setH(getHSatFromT(T).getHLiquid());
+		} 
+		else if (T> satTGas+precis) {
+			outHIsobaric.setZone(0);
+			outHIsobaric.setH(getHSatFromT(T).getHGas());
+		}	
+		else {
+			outHIsobaric.setZone(1);
+			outHIsobaric.setHSat(getHSatFromT(T));
+		}
+		
+		return outHIsobaric;
 	}
 
 
