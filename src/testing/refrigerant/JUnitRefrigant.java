@@ -53,54 +53,14 @@ public class JUnitRefrigant {
 		System.out.println("getTSatFromHLiquid(H)");
 		H = 150;
 		System.out.println(	"H= " + H + "(kJ/kg)" +  
-				" --> T Saturation = " + refrigerant.getTSatFromHLiquid(H) + "°C"
+				" --> T Saturation = " + refrigerant.getTSatLiquidFromH(H) + "°C"
 				);
 
 		H = 380;
 		System.out.println(	"H= " + H + "(kJ/kg)" +  
-				" --> T Saturation = " + refrigerant.getTSatFromHLiquid(H) + "°C"
+				" --> T Saturation = " + refrigerant.getTSatLiquidFromH(H) + "°C"
 				);
 		
-		// getIsobaricT(P, H)
-		System.out.println("getIsobaricT(P,H)");
-		P = 1;
-		H = 125; System.out.println(	"P= " + P +  "  H= " + H + "(kJ/kg)" + " --> T Saturation = " + refrigerant.getIsobaricT(P,H) + "°C"	);
-		H = 145; System.out.println(	"P= " + P +  "  H= " + H + "(kJ/kg)" + " --> T Saturation = " + refrigerant.getIsobaricT(P,H) + "°C"	);
-		H = 200; System.out.println(	"P= " + P +  "  H= " + H + "(kJ/kg)" + " --> T Saturation = " + refrigerant.getIsobaricT(P,H) + "°C"	);
-		H = 380; System.out.println(	"P= " + P +  "  H= " + H + "(kJ/kg)" + " --> T Saturation = " + refrigerant.getIsobaricT(P,H) + "°C"	);
-		H = 445; System.out.println(	"P= " + P +  "  H= " + H + "(kJ/kg)" + " --> T Saturation = " + refrigerant.getIsobaricT(P,H) + "°C"	);
-
-		// getIsobaricH(P, T)
-		System.out.println("getIsobaricH(P,T)");
-		P = 1;
-		T = -50; System.out.println(	"P= " + P +  "  T= " + T + "(°C)" + " --> H (Zone) = " + refrigerant.getIsobaricH(P,T).getZone() + " [ " + refrigerant.getIsobaricH(P,T).getHSat().getHLiquid() + ";" + refrigerant.getIsobaricH(P,T).getHSat().getHGas() + " ] ou si Zone = 0 --> " + refrigerant.getIsobaricH(P,T).getH() + "(kJ/kg)"	);
-		T = -42; System.out.println(	"P= " + P +  "  T= " + T + "(°C)" + " --> H (Zone) = " + refrigerant.getIsobaricH(P,T).getZone() + " [ " + refrigerant.getIsobaricH(P,T).getHSat().getHLiquid() + ";" + refrigerant.getIsobaricH(P,T).getHSat().getHGas() + " ] ou si Zone = 0 --> " + refrigerant.getIsobaricH(P,T).getH() + "(kJ/kg)"	);
-		T = -30; System.out.println(	"P= " + P +  "  T= " + T + "(°C)" + " --> H (Zone) = " + refrigerant.getIsobaricH(P,T).getZone() + " [ " + refrigerant.getIsobaricH(P,T).getHSat().getHLiquid() + ";" + refrigerant.getIsobaricH(P,T).getHSat().getHGas() + " ] ou si Zone = 0 --> " + refrigerant.getIsobaricH(P,T).getH() + "(kJ/kg)"	);
-
-		
-		System.out.println("\n\n ISOBAR");
-		H = 100.0;
-		for(int n=0;n<15;n++) {
-			H = H +30.0;
-
-			System.out.println(	"P = " +P + "(bar) " +
-					"H= " +H + "(kJ/kg) " +
-					" --> Isobar P =  " + refrigerant.getIsobaricP(P, H) + "(bar)" +
-					" --> Isobar T =  " + refrigerant.getIsobaricT(P, H) + "(°C)" +
-					" --> Isobar P State = "     + refrigerant.getIsobaricState(P, H) 	
-					);
-		}
-
-		System.out.println("\n\n ISOTHERM");
-		H = 100.0;
-		for(int n=0;n<15;n++) {
-			H = H +30.0;
-			System.out.println(	"T = " +T + "(°C) " +
-					"H= " +H + "(kJ/kg) " +
-					" --> IsoTherme P =  " + refrigerant.getIsoThermalP(T, H, 1.0, -0.001) + "(bar)" +
-					" --> IsoTherme  State = "     + refrigerant.getIsoThermalState(T, H) 	
-					);
-		}
 
 		System.out.println("\n---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();

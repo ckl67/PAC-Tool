@@ -1,5 +1,7 @@
 package refrigerant;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
 public class Refrigerant extends SatCurve {
@@ -7,8 +9,8 @@ public class Refrigerant extends SatCurve {
 	// -------------------------------------------------------
 	// 					CONSTANT
 	// -------------------------------------------------------
-	//private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
-	
+	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
+
 	// --------------------------------------------------------------------
 	// Instance variables
 	// --------------------------------------------------------------------
@@ -17,6 +19,9 @@ public class Refrigerant extends SatCurve {
 	private double rfgT;
 	private double rfgH;
 	
+	private double coefIsotherm;
+	private double expIsotherm;
+
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
@@ -25,6 +30,9 @@ public class Refrigerant extends SatCurve {
 		this.rfgP = 0.0;
 		this.rfgT = 0.0; 
 		this.rfgH = 0.0; 	
+		
+		this.coefIsotherm = 1;
+		this.expIsotherm = 1;
 	}
 
 	/*
@@ -40,7 +48,64 @@ public class Refrigerant extends SatCurve {
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
+
 	
+	// -----------------------------------------------------------------------------------------
+	// 										Isobaric 
+	// -----------------------------------------------------------------------------------------
+
+	/**
+	 * Get Pressure of Isobaric 
+	 * No sense because == refP, but for the principle
+	 * @param refP
+	 * @param H
+	 * @return
+	 */
+	public double getIsobaricP(double refP, double H) {
+		// Whatever H
+		double outP=refP;			
+		return outP;
+	}
+
+	/**
+	 * Get State of Isobaric 
+	 * @param refP
+	 * @param H
+	 * @return
+	 */
+	public String getIsobaricState(double refP, double H) {
+		String outState="Empty";
+
+		double satHLiquid = this.getHSatFromP(refP).getHLiquid();
+		double satHGas = this.getHSatFromP(refP).getHGas();
+
+		if (H< satHLiquid) 
+			outState = "Liquid";
+		else if (H> satHGas)
+			outState = "Gas";
+		else
+			outState = "Liquid+Gas";
+
+		return outState;
+	}
+
+	// -----------------------------------------------------------------------------------------
+	// 										IsoTherm 
+	// -----------------------------------------------------------------------------------------
+
+
+
+	public double getP_IsothermFromH(double H) {
+		double outP = 0;
+		return outP;
+	}
+
+	public double getHGasInterIsobarIsotherm(double PRef, double T) {
+		double outH = 0;
+
+		return outH;
+	}
+
 	// -------------------------------------------------------
 	// 							JSON
 	// -------------------------------------------------------
@@ -58,6 +123,8 @@ public class Refrigerant extends SatCurve {
 	public JSONObject getJsonObject() {
 		JSONObject jsonObj = new JSONObject();  
 		jsonObj.put("RefrigerantGasFileName", this.getGasFileNameSat());
+		jsonObj.put("CoefIsotherm", this.coefIsotherm);
+		jsonObj.put("ExpIsotherm", this.expIsotherm);
 		return jsonObj ;
 	}
 
@@ -73,6 +140,8 @@ public class Refrigerant extends SatCurve {
 		this.rfgP = 0.0;
 		this.rfgT = 0.0; 
 		this.rfgH = 0.0; 	
+		this.coefIsotherm = ((Number) jsonObj.get("CoefIsotherm")).doubleValue(); 	
+		this.expIsotherm = ((Number) jsonObj.get("ExpIsotherm")).doubleValue(); 	
 		
 	}
 
@@ -106,6 +175,22 @@ public class Refrigerant extends SatCurve {
 
 	public void setRfgT(double T) {
 		this.rfgT = T;
+	}
+
+	public double getCoefIsotherm() {
+		return coefIsotherm;
+	}
+
+	public void setCoefIsotherm(double coefIsotherm) {
+		this.coefIsotherm = coefIsotherm;
+	}
+
+	public double getExpIsotherm() {
+		return expIsotherm;
+	}
+
+	public void setExpIsotherm(double expIsotherm) {
+		this.expIsotherm = expIsotherm;
 	}
 
 }
