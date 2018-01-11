@@ -118,17 +118,26 @@ public class Refrigerant extends SatCurve {
 				outP = P;
 		}
 		else if (H> satHGas) {
-			//
-			// PIsotherm(H,T,P)=  -( 1/c * (H-Ha) )^n + Pa;  
-			// with 
-			//    c = coefIsotherm ;  n = expIsotherm
-			//    This value depend of P !!!
+			/*
+			 	PIsotherm(H,T,P)=  -( 1/c * (H-Ha) )^4 + Pa;  
+				with 	
+	         		c = (H0-Ha)/ (Pa-P0 )^(1/4); 
+	               		Pa et Ha : f(T isotherm)
+	        			P0 = P0_Ref
+	        			H0(T) = H0_Delta * (T-T0_Ref)/T0_Delta + H0_Ref
+			 */        
 			double Pa = satPGas;
 			double Ha = satHGas;
-			double n = 0;
-			double c = 0;
-			nnn
+			double H0 = this.getIsoTherm_H0_Delta() * 
+					(T- this.getIsoTherm_T0_Ref())/this.getIsoTherm_T0_Delta() + 
+					this.getIsoTherm_H0_Ref();
+			double P0 = this.getIsoTherm_P0_Ref();
+			double n = 4;
+			double c = (H0-Ha)/Math.pow(Pa-P0,1/n);
 			outP = -Math.pow((H-Ha)/c,n) + Pa;
+			if (outP < 0) 
+				outP = 0;
+
 		}
 		else {
 			// satHLiquid < H < satHGas
@@ -151,18 +160,23 @@ public class Refrigerant extends SatCurve {
 	public double getHGasInterIsobarIsotherm(double PRef, double T) {
 		double outH = 0;
 
+		/*
+	 	Hinter = c * (Pa-PRef)^(1/n) + Ha
+		with 	
+     		c = (H0-Ha)/ (Pa-P0 )^(1/4); 
+           		Pa et Ha : f(T isotherm)
+    			P0 = P0_Ref
+    			H0(T) = H0_Delta * (T-T0_Ref)/T0_Delta + H0_Ref
+	 */        
+		
 		double Pa = this.getPSatFromT(T).getPGas();
 		double Ha = this.getHSatFromT(T).getHGas();
-		double n = 0;
-		double c = 0;
-		if (Pa < 10) {
-			n = 2;
-			c = 1;
-		}
-		else {
-			n = 4;
-			c = 1/(Pa/10);
-		}
+		double H0 = this.getIsoTherm_H0_Delta() * 
+				(T- this.getIsoTherm_T0_Ref())/this.getIsoTherm_T0_Delta() + 
+				this.getIsoTherm_H0_Ref();
+		double P0 = this.getIsoTherm_P0_Ref();
+		double n = 4;
+		double c = (H0-Ha)/Math.pow(Pa-P0,1/n);
 
 		outH = c*Math.pow(Pa-PRef,(1/n)) + Ha;
 		return outH;

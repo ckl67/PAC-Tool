@@ -81,18 +81,20 @@ public class JUnitRefrigant {
 		// getPIsotherm(double H, double T, double P)
 		System.out.println("getPIsotherm( H,  T, P)");
 		T = 30;
-		H = 400.0;
 		P = 2;
+		H = 430.0;
 		for(int n=0;n<15;n++) {
-			H = H +4.0;
+			H = H +1.0;
 					
-			System.out.println(	"P = " +P + "(bar) " +
-					"H= " +H + "(kJ/kg) " +
-					" --> Isotherm P =  " + refrigerant.getPIsotherm( H,T,P) 	
+			System.out.println(	"P/T = " +P + "/" + T +
+					" H= " +H + "(kJ/kg) " +
+					" --> Isotherm P =  " + refrigerant.getPIsotherm( H,T,P) + " = " + + refrigerant.getPIsotherm( H,T)	
 					);
 		}
 	
-		
+		// getHGasInterIsobarIsotherm(PRef,T)
+		System.out.println("getHGasInterIsobarIsotherm");
+		System.out.println("P=2 T=30 --> HInter = " +  refrigerant.getHGasInterIsobarIsotherm(2.0, 30.0));
 		
 		System.out.println("\n---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();

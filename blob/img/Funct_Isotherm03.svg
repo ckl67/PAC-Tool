@@ -27,8 +27,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="492.64545"
-     inkscape:cy="376.20086"
+     inkscape:cx="556.50336"
+     inkscape:cy="371.08337"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="false"
@@ -121,5 +121,22 @@
        y="148.10449"
        inkscape:export-xdpi="125"
        inkscape:export-ydpi="125" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 718.92857,393.73734 0,197.14286"
+       id="path4143"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:13.70142937px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="942.38654"
+       y="302.35593"
+       id="text4145"
+       sodipodi:linespacing="125%"
+       transform="scale(0.82108224,1.2179048)"><tspan
+         sodipodi:role="line"
+         id="tspan4147"
+         x="942.38654"
+         y="302.35593">HInter = 444</tspan></text>
   </g>
 </svg>
