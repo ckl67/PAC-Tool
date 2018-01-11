@@ -24,20 +24,20 @@ public class JUnitMeasurePoint {
         	lMeasurePoints.add(new MeasurePoint(p));
 		}
 
-		// PR0
-        MeasurePoint mpPR0 = lMeasurePoints.get(EloMeasurePoint._PR0id);
-        mpPR0.setP(5.0);
-		System.out.println("PR0 - P = " + mpPR0.getMP_P());
-
-        // Entre P1
         MeasurePoint mp1 = lMeasurePoints.get(EloMeasurePoint.P1.id());
-        mp1.setValue(-40, pac, lMeasurePoints);
-		System.out.println("P1 - P = " + mp1.getMP_P());
-		System.out.println("P1 - T = " + mp1.getMP_T());
-		System.out.println("P1 - H = " + mp1.getMP_H());
-		System.out.println("P1 - P0PK = " + mp1.getMP_P0PK(lMeasurePoints));
-
-       // System.exit(0);
+        MeasurePoint mp2 = lMeasurePoints.get(EloMeasurePoint.P2.id());
+        MeasurePoint mp3 = lMeasurePoints.get(EloMeasurePoint.P3.id());
+        MeasurePoint mp4 = lMeasurePoints.get(EloMeasurePoint.P4.id());
+        MeasurePoint mp5 = lMeasurePoints.get(EloMeasurePoint.P5.id());
+        MeasurePoint mp6 = lMeasurePoints.get(EloMeasurePoint.P6.id());
+        MeasurePoint mp7 = lMeasurePoints.get(EloMeasurePoint.P7.id());
+        MeasurePoint mp8 = lMeasurePoints.get(EloMeasurePoint.P8.id());
+        
+        mp1.getmPObjectSelection();
+        mp3.setValue(35, pac, lMeasurePoints);
+        
+        mp7.setValue(-10, pac, lMeasurePoints);
+        mp2.setValue(69, pac, lMeasurePoints);
         
         // Read the list
         for (int i = 0; i < lMeasurePoints.size(); i++) {
@@ -48,10 +48,11 @@ public class JUnitMeasurePoint {
 	        System.out.println(mp.getMPObject().getDefinition(TLanguage.FRENCH));
 	        System.out.println("    Group " + mp.getMPObject().getGroup());
 	        System.out.println("    Val = " + mp.getValue());
-	        System.out.println("    Selected = " + mp.getMP_ChoiceStatus());
+	        System.out.println("    Selected = " + mp.getmPObjectSelection());
 			System.out.println("    P = " + mp.getMP_P());
 			System.out.println("    T = " + mp.getMP_T());
 			System.out.println("    H = " + mp.getMP_H());
+			System.out.println("    PO/PK = " + mp.getMP_P0PK(lMeasurePoints));
 	        System.out.println("\n");   
 		}
 		        

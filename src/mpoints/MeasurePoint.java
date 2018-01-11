@@ -23,8 +23,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import pac.Pac;
-import refrigerant.HSat;
-import refrigerant.PSat;
 import refrigerant.Refrigerant;
 
 public class MeasurePoint {
@@ -32,7 +30,6 @@ public class MeasurePoint {
 	// -------------------------------------------------------
 	// 					CONSTANT
 	// -------------------------------------------------------
-	//private static final Logger logger = LogManager.getLogger(MeasurePoint.class.getName());
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
 	// -------------------------------------------------------
@@ -44,7 +41,6 @@ public class MeasurePoint {
 	private double T;									// Temperature
 	private double H;									// Value Enthalpy approximation or real=moved manually
 	private EloMeasurePointSelection mPObjectSelection;	// Measure Point to be considered Selected, Not Selected, in reference to the section picture 
-	//private EloMeasurePointCompleted mPobjetCompleted;	// Measure Point to be considered computation completed  
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -78,13 +74,61 @@ public class MeasurePoint {
 		//this.mPobjetCompleted = EloMeasurePointCompleted.NotComputed;
 	}
 
+	// Will return PR0 or PRK depending of the current object. 
+	// The information will be read from Group of EloMeasurePoint
+	// Example: P1 belongs to GROUP_BP
+	// So the function will return PR0, but only if PR0 has been computed
+	// if not -1;
+	public double getMP_P0PK( List<MeasurePoint> lMeasurePoints) {
+		double out = -1.0;
+
+		double PR0,PRK = 0;
+
+		int idPR0 = EloMeasurePoint._PR0id;
+		int idPRK = EloMeasurePoint._PRKid;
+
+		// Check of PR0 has already be computed through the lMeasurePoints
+		if (lMeasurePoints.get(idPR0).getMP_P() > 0 )
+			PR0 = lMeasurePoints.get(idPR0).getMP_P();
+		else
+			PR0 = -1.0;
+
+
+		// Check of PRK has already be computed through the lMeasurePoints
+		if (lMeasurePoints.get(idPRK).getMP_P()>0)
+			PRK = lMeasurePoints.get(idPRK).getMP_P();
+		else
+			PRK = -1.0;
+
+		switch (this.mPObject) {
+
+		case P1: case P6: case P7: case P8:
+			out = PR0;
+			logger.trace("(getMP_P0PK):: PR0 = {}",out);
+			break;
+		case P2 : case P3 : case P4 : case P5 :
+			out = PRK;
+			logger.trace("(getMP_P0PK):: PRK = {}",out);
+			break;
+		default:
+			logger.trace("getMP_P0PK):: PR0/PRK = {}",out);
+			out = -1.0;
+			break;
+		}
+		return out;
+	}
+
+	private void setValue(double value) {
+		this.value = value;
+	}
+
 	public void setValue(double value,Pac pac, List<MeasurePoint> lMeasurePoints ) {
-		logger.trace("{} setValue --> value={}", this.mPObject,  value );
+		double PR0;
+		double PRK;
+
+		logger.trace("(setValue):: {} --> value={}", this.mPObject,  value );
 		Refrigerant refrigerant = pac.getRefrigerant(); 
-		
-		PSat psat;
-		HSat hSat;
-		
+
 		this.value = value;
 		this.mPObjectSelection = EloMeasurePointSelection.Selected;
 
@@ -94,7 +138,7 @@ public class MeasurePoint {
 
 			case P1 :
 				//  BP gas temperature after internal overheating and before compression
-				// 	Should never happen as P1_T = P8_T + overheating, 
+				// 	Should not be possible to mesure as P1_T = P8_T + overheating, 
 				// 	but here, the user has chosen to enter P1
 				//  Value Entered = Temperature
 				/*
@@ -104,15 +148,14 @@ public class MeasurePoint {
 				|       X  (6)                               (7) (8)  (1)
 				|      XX                                     X
 				 */
-				this.mPObjectSelection = EloMeasurePointSelection.Selected;
-				this.T= value;
-				psat = refrigerant.getPSatFromT(value); 
-				this.P = psat.getPLiquid();
-
-				// if PR0 > 0 then only H can be computed, and consider
-				if (getMP_P0PK(lMeasurePoints) > 0.0) {
-					hSat = refrigerant.getHSatFromT(T);
-					this.H = hSat.getHLiquid();
+				if (lMeasurePoints.get(p.id()).getmPObjectSelection() == EloMeasurePointSelection.Selected ) {
+					this.T= value;
+					// if PR0 > 0 then only H can be computed, and consider
+					PR0 = this.getMP_P0PK(lMeasurePoints); 
+					if ( PR0 > 0.0) {
+						this.P = PR0; 
+						this.H = refrigerant.getHGasInterIsobarIsotherm(PR0, T);
+					}
 				}
 				break;
 			case P2 :
@@ -124,18 +167,204 @@ public class MeasurePoint {
 				|           | XXXX                      XX                   /
 				|           |XX                          XX                 /
 				 */
-				this.mPObjectSelection = EloMeasurePointSelection.Selected;
-				this.T= value;
-				psat = refrigerant.getPSatFromT(value); 
-				this.P = psat.getPLiquid();
-				// if PK > 0 then only H can be computed
-				if (getMP_P0PK(lMeasurePoints) > 0.0) {
-					hSat = refrigerant.getHSatFromT(T);
-					this.H = hSat.getHLiquid();
+				if (lMeasurePoints.get(p.id()).getmPObjectSelection() == EloMeasurePointSelection.Selected ) {
+					this.T= value;
+					// if PRK > 0 then only H can be computed
+					PRK = this.getMP_P0PK(lMeasurePoints); 
+					if (PRK > 0.0) {
+						this.P = PRK; 
+						this.H = refrigerant.getHGasInterIsobarIsotherm(PRK, T);
+					}
+				}
+				break;
+			case P3 : 
+				// Initial condensation pressure (HP Manifold measurement)
+				//  Value Entered = Pressure
+				/*
+				|                  XXXX           XXXXX         (PK)
+				|        (5)+-----(4)-----------------(3)--------------------+ (2)
+				|           | XXXX                      XX                   /
+				|           |XX                          XX                 /
+				 */
+				// P must be > 0
+				if (lMeasurePoints.get(p.id()).getmPObjectSelection() == EloMeasurePointSelection.Selected ) {
+					if (value > 0 ) {
+						this.P = value;
+						this.T = refrigerant.getTSatFromP(P).getTGas();
+						this.H = refrigerant.getHSatFromP(P).getHGas();
+						logger.trace("    {} --> P={} T={} H={}", this.mPObject,this.P,this.T,this.H);
+					} else {
+						this.mPObjectSelection = EloMeasurePointSelection.NotSelected;
+					}
+				}
+				break;
+			case P4 :
+				// Condensation end pressure (HP Manifold measurement)	
+				//  Value Entered = Pressure
+				/*
+				|                  XXXX           XXXXX         (PK)
+				|        (5)+-----(4)-----------------(3)--------------------+ (2)
+				|           | XXXX                      XX                   /
+				|           |XX                          XX                 /
+				 */
+				// P must be > 0
+				if (lMeasurePoints.get(p.id()).getmPObjectSelection() == EloMeasurePointSelection.Selected ) {
+					if (value > 0 ) {
+						this.P = value;
+						this.T = refrigerant.getTSatFromP(P).getTLiquid();
+						this.H = refrigerant.getHSatFromP(P).getHLiquid();
+
+						// Compute P5: HP gas temperature after cooling
+						//  Value Entered = Temperature
+						/*
+						|                  XXXX           XXXXX         (PK)
+						|        (5)+-----(4)-----------------(3)--------------------+ (2)
+						|           | XXXX                      XX                   /
+						|           |XX                          XX                 /
+						 */
+
+						// PRK = P
+						// T5 is under cooling of T4 
+						double ucT = T - Math.round(pac.getCompressor().getUnderCooling());
+						logger.info("Computation of T5 --> (T4={} - Under Colling ={}) = {}",
+								T,
+								Math.round(pac.getCompressor().getUnderCooling()),
+								ucT);
+
+						MeasurePoint m5 = lMeasurePoints.get(EloMeasurePoint.P5.id());
+						m5.setValue(Math.round(ucT*100)/100.0);
+						m5.setMP_T(ucT);
+						m5.setMP_P(value);
+						m5.setMP_H(refrigerant.getHSatFromT(ucT).getHLiquid());
+
+						// Compute P6 = Output Temperature Regulator / Capillary
+						//  Value Entered = Temperature
+						/*
+						|        XX |             (P0)               X         /
+						|       XX  +---------------------------------+---+---+
+						|       X  (6)                               (7) (8)  (1)
+						|      XX                                     X
+						 */
+						// if PR0 > 0 then only H can be computed, and considered
+						PR0 = this.getMP_P0PK(lMeasurePoints); 
+						if ( PR0 > 0.0) {
+							MeasurePoint m6 = lMeasurePoints.get(EloMeasurePoint.P6.id());
+							m6.setValue(Math.round(ucT*100)/100.0);
+							m6.setMP_T(ucT);
+							m6.setMP_P(PR0);
+							m6.setMP_H(refrigerant.getHSatFromT(ucT).getHLiquid());
+						}				
+					} else {
+						this.mPObjectSelection = EloMeasurePointSelection.NotSelected;
+					}
+				}
+			case P5 :
+				// HP gas temperature after cooling
+				//  Value Entered = Temperature
+				/*
+				|                  XXXX           XXXXX         (PK)
+				|        (5)+-----(4)-----------------(3)--------------------+ (2)
+				|           | XXXX                      XX                   /
+				|           |XX                          XX                 /
+				 */
+				if (lMeasurePoints.get(p.id()).getmPObjectSelection() == EloMeasurePointSelection.Selected ) {
+
+					this.T= value;
+					// if PRK > 0 then only H can be computed
+					PRK = this.getMP_P0PK(lMeasurePoints); 
+					if (PRK > 0.0) {
+						this.P = PRK; 
+						this.H = refrigerant.getHSatFromT(value).getHLiquid();
+
+						// Compute P6 = Output Temperature Regulator / Capillary
+						//  Value Entered = Temperature
+						/*
+						|        XX |             (P0)               X         /
+						|       XX  +---------------------------------+---+---+
+						|       X  (6)                               (7) (8)  (1)
+						|      XX                                     X
+						 */
+						// if PR0 > 0 then only H can be computed, and considered
+						PR0 = this.getMP_P0PK(lMeasurePoints); 
+						if ( PR0 > 0.0) {
+							MeasurePoint m6 = lMeasurePoints.get(EloMeasurePoint.P6.id());
+							m6.setValue(Math.round(value*100)/100.0);
+							m6.setMP_T(value);
+							m6.setMP_P(PR0);
+							m6.setMP_H(refrigerant.getHSatFromT(value).getHLiquid());
+						}				
+					}
 				}
 				break;
 
+			case P6 :
+				// Output Temperature Regulator / Capillary
+				//  Value Entered = Temperature
+				/*
+				|         X |                               XX          /
+				|        XX |             (P0)               X         /
+				|       XX  +---------------------------------+---+---+
+				|       X  (6)                               (7) (8)  (1)
+				|      XX                                     X
+				 */
+				if (lMeasurePoints.get(p.id()).getmPObjectSelection() == EloMeasurePointSelection.Selected ) {
 
+				}
+				break;
+
+			case P7 :	
+				// Evaporation Pressure (BP Manifold Measurement)
+				// Valuer entered Pressure
+				/*
+				|        XX |             (P0)               X         /
+				|       XX  +---------------------------------+---+---+
+				|       X  (6)                               (7) (8)  (1)
+				|      XX                                     X
+				 */
+				// P must be > 0
+				if (lMeasurePoints.get(p.id()).getmPObjectSelection() == EloMeasurePointSelection.Selected ) {
+					if (value > 0 ) {
+						this.P = value;
+						this.T = refrigerant.getTSatFromP(P).getTGas();
+						this.H = refrigerant.getHSatFromP(P).getHGas();
+					}
+				}
+				break;
+			case P8 :	
+				// HP gas temperature after external heating
+				//  Value Entered = Temperature
+				/*
+				|         X |                               XX          /
+				|        XX |             (P0)               X         /
+				|       XX  +---------------------------------+---+---+
+				|       X  (6)                               (7) (8)  (1)
+				|      XX                                     X
+				 */
+				if (lMeasurePoints.get(p.id()).getmPObjectSelection() == EloMeasurePointSelection.Selected ) {
+
+					this.T= value;
+					// if PR0 > 0 then only H can be computed, and consider
+					PR0 = this.getMP_P0PK(lMeasurePoints); 
+					if ( PR0 > 0.0) {
+						this.P = PR0; 
+						this.H = refrigerant.getHGasInterIsobarIsotherm(PR0, T);
+					}
+
+					// Will Also Compute P1 
+					// 	=>	BP gas temperature after internal overheating and before compression
+					// 	T1 is Over heated of T8 --> T1 = T8 + OH
+					double ohT =this.T + Math.round(pac.getCompressor().getOverheated());
+					logger.info("Computation of T1 --> (T8={} + Compressor over head={}) = {}",
+							this.toString(),
+							Math.round(pac.getCompressor().getOverheated()),
+							ohT);
+					MeasurePoint m1 = lMeasurePoints.get(EloMeasurePoint.P1.id());
+					m1.setValue(Math.round(ohT*100)/100.0);
+					m1.setMP_T(ohT);
+					m1.setMP_P(PR0); 
+					m1.setMP_H(refrigerant.getHGasInterIsobarIsotherm(PR0, ohT));
+				}
+				break;
 			default:
 				break;
 			}
@@ -208,70 +437,25 @@ public class MeasurePoint {
 		return H;
 	}	
 
-	public void setP(double p) {
+	public void setMP_P(double p) {
 		P = p;
 	}
 
-	public void setT(double t) {
+	public void setMP_T(double t) {
 		T = t;
 	}
 
-	public void setH(double h) {
+	public void setMP_H(double h) {
 		H = h;
 	}
 
-	// Will return PR0 or PRK depending of the current object. 
-	// The information will be read from Group of EloMeasurePoint
-	// Example: P1 belongs to GROUP_BP
-	// So the function will return PR0, but only if PR0 has been computed
-	// if not -1;
-	public double getMP_P0PK( List<MeasurePoint> lMeasurePoints) {
-		double out = -1.0;
-
-		double PR0,PRK = 0;
-
-		int idPR0 = EloMeasurePoint._PR0id;
-		int idPRK = EloMeasurePoint._PRKid;
-
-		// Check of PR0 has still be computed through the lMeasurePoints
-		if (lMeasurePoints.get(idPR0).getMP_P() > 0 )
-			PR0 = lMeasurePoints.get(idPR0).getMP_P();
-		else
-			PR0 = -1.0;
-
-
-		// Check of PRK has still be computed through the lMeasurePoints
-		if (lMeasurePoints.get(idPRK).getMP_P()>0)
-			PRK = lMeasurePoints.get(idPRK).getMP_P();
-		else
-			PRK = -1.0;
-
-		switch (this.mPObject) {
-
-		case P1: case P6: case P7: case P8:
-			out = PR0;
-			logger.trace("PR0 = {}",out);
-			break;
-		case P2 : case P3 : case P4 : case P5 :
-			out = PRK;
-			logger.trace("PRK = {}",out);
-			break;
-		default:
-			logger.trace("PR0/PRK = {}",out);
-			out = -1.0;
-			break;
-		}
-
-		return out;
+	public EloMeasurePoint getmPObject() {
+		return mPObject;
 	}
 
-
-	public EloMeasurePointSelection getMP_ChoiceStatus() {
+	public EloMeasurePointSelection getmPObjectSelection() {
 		return mPObjectSelection;
 	}
 
-	public void setMP_ChoiceStatus(EloMeasurePointSelection mPObjectSelection) {
-		this.mPObjectSelection = mPObjectSelection;
-	}
 
 }
