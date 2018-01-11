@@ -33,12 +33,25 @@ public class SatCurve {
 
 	private String gasFileName;
 	private List<List<Double>> gasSatTable;
+	private double IsoTherm_P0_Ref;
+	private double IsoTherm_T0_Ref;
+	private double IsoTherm_T0_Delta;
+	private double IsoTherm_H0_Ref;
+	private double IsoTherm_H0_Delta;
+	
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 	public SatCurve() {
 		gasFileName = "empty";
+		// Default value based on R22
+		IsoTherm_P0_Ref = 0.5; 
+		IsoTherm_T0_Ref = -40;
+		IsoTherm_T0_Delta = 10;
+		IsoTherm_H0_Ref = 390;
+		IsoTherm_H0_Delta = 8;
+
 		gasSatTable = new ArrayList<List<Double>>();
 	}
 
@@ -46,26 +59,25 @@ public class SatCurve {
 	// 							METHOD
 	// -------------------------------------------------------
 
-	// -------------------------------------------------------
-	// 					GETTER AND SETTER
-	// -------------------------------------------------------
-
-	public String getGasFileNameSat() {
-		return gasFileName;
-	}
-
-	// -------------------------------------------------------
-	// 					     OTHERS
-	// -------------------------------------------------------
-
 	/**
+	 * 
 	 * ===============================================================================================
 	 * Read Saturation data file containing, and will complete the 
 	 * gasSatTable Table
-	 *   # Temp.   Press       Press     Density  Density          Enthalpy           Entropy  Entropy
-	 *	 #  °C      kPa         kPa       kg/m3    kg/m3     kJ/kg   kJ/kg  kJ/kg    kJ/kg K  kJ/kg K
-	 *	 #        liquid        gas      liquid     gas      Liquid  latent  gas      liquid    gas
-	 * 
+	  	#	Name:
+		#	Unity P:kPa or bar  
+		#	--> Must be present !!!
+		#   IsoTherm_P0_Ref
+		#   IsoTherm_T0_Ref
+		#   IsoTherm_T0_Delta
+		#   IsoTherm_H0_Ref
+		#   IsoTherm_H0_Delta
+		# Saturation Table
+		# http://www.linde-gas.ro/ro/index.html
+		# Temp.   Press       Press     Density  Density          Enthalpy           Entropy  Entropy
+		#  °C      kPa         kPa       kg/m3    kg/m3     kJ/kg   kJ/kg  kJ/kg    kJ/kg K  kJ/kg K
+		#        liquid        gas      liquid     gas      Liquid  latent  gas      liquid    gas
+
 	 * @param  : File Name
 	 * @return : Name of Gas declared in the File.
 	 * ===============================================================================================
@@ -99,7 +111,26 @@ public class SatCurve {
 				String[] val = first.split (":");
 				unityP = val [1];
 				logger.trace("Unity of Pressure = {}",unityP);
-
+			} else if (first.startsWith("IsoTherm_P0_Ref:") ) {
+				String[] val = first.split (":");
+				IsoTherm_P0_Ref = Double.parseDouble(val [1].replace(",", "."));
+				logger.trace("IsoTherm_P0_Ref = {}",IsoTherm_P0_Ref);
+			} else if (first.startsWith("IsoTherm_T0_Ref:") ) {
+				String[] val = first.split (":");
+				IsoTherm_T0_Ref = Double.parseDouble(val [1].replace(",", "."));
+				logger.trace("IsoTherm_T0_Ref = {}",IsoTherm_T0_Ref);
+			} else if (first.startsWith("IsoTherm_T0_Delta:") ) {
+				String[] val = first.split (":");
+				IsoTherm_T0_Delta = Double.parseDouble(val[1].replace(",", "."));
+				logger.trace("IsoTherm_T0_Delta = {}",IsoTherm_T0_Delta);			
+			} else if (first.startsWith("IsoTherm_H0_Ref:") ) {
+				String[] val = first.split (":");
+				IsoTherm_H0_Ref = Double.parseDouble(val[1].replace(",", "."));
+				logger.trace("IsoTherm_H0_Ref = {}",IsoTherm_H0_Ref);
+			} else if (first.startsWith("IsoTherm_H0_Delta:") ) {
+				String[] val = first.split (":");
+				IsoTherm_H0_Delta = Double.parseDouble(val[1].replace(",", "."));
+				logger.trace("IsoTherm_H0_Delta = {}",IsoTherm_H0_Delta);
 			} else if (!first.startsWith("#") ) {
 				String[] val = first.split ("\t");
 
@@ -424,6 +455,7 @@ public class SatCurve {
 		return hOut;	
 	}
 
+
 	/**
 	 * getTSatFromHLiquid
 	 * @param H
@@ -445,7 +477,7 @@ public class SatCurve {
 
 		// Check H Limit
 		if (vH > gasSatTable.get(gasSatTable.size()-1).get(id_H_Liquid)) {
-			logger.error("(getTSatFromHLiquid):: Out of range ");
+			logger.error("(getTSatFromHLiquid):: H is too great and is in the Gas zone !! --> Not allowed ");
 			return 0.0;
 		}
 		
@@ -477,22 +509,33 @@ public class SatCurve {
 		return outT;
 	}
 
-
+	// -------------------------------------------------------
+	// 					GETTER AND SETTER
 	// -------------------------------------------------------
 
-	public double getTSat(int n) {
-		return gasSatTable.get(n).get(id_Temp);
+	public String getGasFileNameSat() {
+		return gasFileName;
 	}
 
-	public double getPSat_Liquid(int n) {
-		return gasSatTable.get(n).get(id_P_Liquid);
+	public double getIsoTherm_P0_Ref() {
+		return IsoTherm_P0_Ref;
 	}
 
-	public double getPSat_Gas(int n) {
-		return gasSatTable.get(n).get(id_P_Gas);
+	public double getIsoTherm_T0_Ref() {
+		return IsoTherm_T0_Ref;
 	}
 
-	public int getSatTableSize() {
-		return gasSatTable.size();
+	public double getIsoTherm_T0_Delta() {
+		return IsoTherm_T0_Delta;
 	}
+
+	public double getIsoTherm_H0_Ref() {
+		return IsoTherm_H0_Ref;
+	}
+
+	public double getIsoTherm_H0_Delta() {
+		return IsoTherm_H0_Delta;
+	}
+
+	
 }

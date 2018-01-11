@@ -18,9 +18,9 @@ public class Refrigerant extends SatCurve {
 	private double rfgP;
 	private double rfgT;
 	private double rfgH;
-	
-	private double coefIsotherm;
-	private double expIsotherm;
+
+	//private double coefIsotherm;
+	//private double expIsotherm;
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -30,9 +30,9 @@ public class Refrigerant extends SatCurve {
 		this.rfgP = 0.0;
 		this.rfgT = 0.0; 
 		this.rfgH = 0.0; 	
-		
-		this.coefIsotherm = 1;
-		this.expIsotherm = 1;
+
+		//this.coefIsotherm = 1;
+		//this.expIsotherm = 2;
 	}
 
 	/*
@@ -49,7 +49,7 @@ public class Refrigerant extends SatCurve {
 	// 							METHOD
 	// -------------------------------------------------------
 
-	
+
 	// -----------------------------------------------------------------------------------------
 	// 										Isobaric 
 	// -----------------------------------------------------------------------------------------
@@ -93,16 +93,78 @@ public class Refrigerant extends SatCurve {
 	// 										IsoTherm 
 	// -----------------------------------------------------------------------------------------
 
+	public double getPIsotherm(double H, double T) {
+		return getPIsotherm(H, T, this.getPSatFromT(T).getPLiquid());
+
+	}
 
 
-	public double getP_IsothermFromH(double H) {
+	public double getPIsotherm(double H, double T, double P) {
 		double outP = 0;
+
+		double satHLiquid = this.getHSatFromT(T).getHLiquid();
+		double satHGas = this.getHSatFromT(T).getHGas();
+
+		double satPLiquid  = this.getPSatFromT(T).getPLiquid();
+		double satPGas = this.getPSatFromT(T).getPGas();
+
+		//logger.info("  (getPIsotherm):: satHLiquid={} satHGas={}",satHLiquid,satHGas);
+		//logger.info("  (getPIsotherm):: satPLiquid={} satPGas={}",satPLiquid,satPGas);
+
+		if (H< satHLiquid) { 
+			if (P <satPLiquid )
+				outP = satPLiquid;
+			else
+				outP = P;
+		}
+		else if (H> satHGas) {
+			//
+			// PIsotherm(H,T,P)=  -( 1/c * (H-Ha) )^n + Pa;  
+			// with 
+			//    c = coefIsotherm ;  n = expIsotherm
+			//    This value depend of P !!!
+			double Pa = satPGas;
+			double Ha = satHGas;
+			double n = 0;
+			double c = 0;
+			nnn
+			outP = -Math.pow((H-Ha)/c,n) + Pa;
+		}
+		else {
+			// satHLiquid < H < satHGas
+			double x,y0,y1,x0,x1;
+			x  = H;
+			x0 = satHLiquid;
+			x1 = satHGas;
+			if (x1==x0) {
+				logger.error("(getPIsotherm):: 2 same value will cause and issue and must be removed ");
+			}
+			y0 = satPLiquid;
+			y1 = satPGas;
+			outP = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+		}
+
+
 		return outP;
 	}
 
 	public double getHGasInterIsobarIsotherm(double PRef, double T) {
 		double outH = 0;
 
+		double Pa = this.getPSatFromT(T).getPGas();
+		double Ha = this.getHSatFromT(T).getHGas();
+		double n = 0;
+		double c = 0;
+		if (Pa < 10) {
+			n = 2;
+			c = 1;
+		}
+		else {
+			n = 4;
+			c = 1/(Pa/10);
+		}
+
+		outH = c*Math.pow(Pa-PRef,(1/n)) + Ha;
 		return outH;
 	}
 
@@ -123,8 +185,8 @@ public class Refrigerant extends SatCurve {
 	public JSONObject getJsonObject() {
 		JSONObject jsonObj = new JSONObject();  
 		jsonObj.put("RefrigerantGasFileName", this.getGasFileNameSat());
-		jsonObj.put("CoefIsotherm", this.coefIsotherm);
-		jsonObj.put("ExpIsotherm", this.expIsotherm);
+		//jsonObj.put("CoefIsotherm", this.coefIsotherm);
+		//jsonObj.put("ExpIsotherm", this.expIsotherm);
 		return jsonObj ;
 	}
 
@@ -140,9 +202,9 @@ public class Refrigerant extends SatCurve {
 		this.rfgP = 0.0;
 		this.rfgT = 0.0; 
 		this.rfgH = 0.0; 	
-		this.coefIsotherm = ((Number) jsonObj.get("CoefIsotherm")).doubleValue(); 	
-		this.expIsotherm = ((Number) jsonObj.get("ExpIsotherm")).doubleValue(); 	
-		
+		//this.coefIsotherm = ((Number) jsonObj.get("CoefIsotherm")).doubleValue(); 	
+		//this.expIsotherm = ((Number) jsonObj.get("ExpIsotherm")).doubleValue(); 	
+
 	}
 
 	// -------------------------------------------------------
@@ -175,22 +237,6 @@ public class Refrigerant extends SatCurve {
 
 	public void setRfgT(double T) {
 		this.rfgT = T;
-	}
-
-	public double getCoefIsotherm() {
-		return coefIsotherm;
-	}
-
-	public void setCoefIsotherm(double coefIsotherm) {
-		this.coefIsotherm = coefIsotherm;
-	}
-
-	public double getExpIsotherm() {
-		return expIsotherm;
-	}
-
-	public void setExpIsotherm(double expIsotherm) {
-		this.expIsotherm = expIsotherm;
 	}
 
 }

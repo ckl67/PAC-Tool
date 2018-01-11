@@ -16,6 +16,8 @@ public class JUnitRefrigant {
 		//Refrigerant refrigerant = new Refrigerant("./ressources/R22/Saturation Table R22.txt");
 		System.out.println(refrigerant.getRfgName());
 
+		System.out.println(refrigerant.getIsoTherm_H0_Ref());
+
 		P = 2.0;
 		T = -40.0;
 		H = 150;
@@ -49,19 +51,49 @@ public class JUnitRefrigant {
 				" --> H Saturation(gas)= "     + refrigerant.getHSatFromP(P).getHGas()    + "(kJ/kg)" 
 				);
 
-		// getTSatFromHLiquid()
-		System.out.println("getTSatFromHLiquid(H)");
+		// getTSatLiquidFromH()
+		System.out.println("getTSatLiquidFromH(H)");
 		H = 150;
 		System.out.println(	"H= " + H + "(kJ/kg)" +  
 				" --> T Saturation = " + refrigerant.getTSatLiquidFromH(H) + "°C"
 				);
 
+		
 		H = 380;
+		// Will return error !
 		System.out.println(	"H= " + H + "(kJ/kg)" +  
 				" --> T Saturation = " + refrigerant.getTSatLiquidFromH(H) + "°C"
 				);
 		
+		System.out.println("\n\n ISOBAR");
+		H = 100.0;
+		for(int n=0;n<15;n++) {
+			H = H +30.0;
 
+			System.out.println(	"P = " +P + "(bar) " +
+					"H= " +H + "(kJ/kg) " +
+					" --> Isobar P =  " + refrigerant.getIsobaricP(P, H) + "(bar)" +
+					" --> Isobar P State = "     + refrigerant.getIsobaricState(P, H) 	
+					);
+		}
+
+		
+		// getPIsotherm(double H, double T, double P)
+		System.out.println("getPIsotherm( H,  T, P)");
+		T = 30;
+		H = 400.0;
+		P = 2;
+		for(int n=0;n<15;n++) {
+			H = H +4.0;
+					
+			System.out.println(	"P = " +P + "(bar) " +
+					"H= " +H + "(kJ/kg) " +
+					" --> Isotherm P =  " + refrigerant.getPIsotherm( H,T,P) 	
+					);
+		}
+	
+		
+		
 		System.out.println("\n---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();
 		jsonObj = refrigerant.getJsonObject();
