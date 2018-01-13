@@ -14,7 +14,9 @@ public enum EloMeasureResult {
 	T8_T7("T8-T7",TMeasureResult.DEF_ROBJ_T8_T7,"°C"),
 	H2_H1("H2-H1",TMeasureResult.DEF_ROBJ_H2_H1,"kJ/Kg"),
 	H2_H5("H2-H5",TMeasureResult.DEF_ROBJ_H2_H5,"kJ/Kg"),
-	COPCOLD("COP",TMeasureResult.DEF_COPCOLD," "),
+	COPCOLD("COP COLD",TMeasureResult.DEF_COPCOLD," "),
+	COPHOT("COP HOT",TMeasureResult.DEF_COPHOT," "),
+	COP("COP",TMeasureResult.DEF_COP," "),
 	;
 	
 	// --------------------------------------------------------------------
@@ -34,6 +36,13 @@ public enum EloMeasureResult {
 		unity = vunity;
 	}
 	
+	// -------------------------------------------------------
+	// 					GETTER AND SETTER
+	// -------------------------------------------------------
+
+	public int id() {
+		return this.ordinal();
+	}
 
 	public String getDisplayTxt() {
 		return displayTxt;

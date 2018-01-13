@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import testing.measurePoint.JUnitMeasurePoint;
 import testing.pac.JUnitPac;
+import testing.translation.JUnitTranslation;
 
 
 public class JunitPacTool {

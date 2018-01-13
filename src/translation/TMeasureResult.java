@@ -14,6 +14,8 @@ public enum TMeasureResult {
 	DEF_ROBJ_H2_H1("Work of the H2-H1 Compressor","Travail du Compresseur H2-H1"),
 	DEF_ROBJ_H2_H5("Calorific Power","Puissance Calorifique"),
 	DEF_COPCOLD("COP Cold","COP froid"),
+	DEF_COPHOT("COP Hot","COP Chaud"),
+	DEF_COP("COP","COP"),
 
 	;	
 	// --------------------------------------------------------------------

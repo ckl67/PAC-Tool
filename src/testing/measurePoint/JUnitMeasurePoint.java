@@ -5,7 +5,9 @@ import java.util.List;
 import org.json.simple.JSONObject;
 import org.junit.Test;
 import mpoints.EloMeasurePoint;
+import mpoints.EloMeasureResult;
 import mpoints.MeasurePoint;
+import mpoints.MeasureResult;
 import pac.Pac;
 import translation.TLanguage;
 
@@ -34,9 +36,9 @@ public class JUnitMeasurePoint {
         MeasurePoint mp8 = lMeasurePoints.get(EloMeasurePoint.P8.id());
         
         mp1.getmPObjectSelection();
-        mp3.setValue(35, pac, lMeasurePoints);
+        mp3.setValue(15, pac, lMeasurePoints);
         
-        mp7.setValue(-10, pac, lMeasurePoints);
+        mp7.setValue(4, pac, lMeasurePoints);
         mp2.setValue(69, pac, lMeasurePoints);
         
         // Read the list
@@ -56,6 +58,18 @@ public class JUnitMeasurePoint {
 	        System.out.println("\n");   
 		}
 		        
+        List<MeasureResult> lMeasureResults;
+		lMeasureResults = new ArrayList<MeasureResult>(); 
+		
+		// Create the List of measure points
+		for (EloMeasureResult p : EloMeasureResult.values()) {
+        	lMeasureResults.add(new MeasureResult(p,lMeasurePoints,pac));
+		}
+
+		double vmrT1_T8 = lMeasureResults.get(EloMeasureResult.T1_T8.id()).getValue();
+        System.out.println(vmrT1_T8);   
+		
+	
 		// JSON
         System.out.println("\n---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();
