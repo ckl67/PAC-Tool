@@ -1,6 +1,6 @@
 /*
  * - PAC-Tool - 
- * Tool for understanding basics and computation of PAC (Pompe à Chaleur)
+ * Tool for understanding basics and computation of PAC (Pompe Ã  Chaleur)
  * Copyright (C) 2016 christian.klugesherz@gmail.com
  *
  * This program is free software; you can redistribute it and/or modify
@@ -500,12 +500,12 @@ public class WinCompressor extends JFrame {
 			public void actionPerformed(ActionEvent ev) {
 				if (checkoxFaren.isSelected()) {
 					guiConfig.setUnitCompFaren(true);
-					lblTemp_unity1.setText("°F");
-					lblTemp_unity2.setText("°F");
-					lblTemp_unity3.setText("°F");
-					lblTemp_unity4.setText("°F");
-					lblTemp_unity5.setText("°F");
-					lblTemp_unity6.setText("°F");
+					lblTemp_unity1.setText("Â°F");
+					lblTemp_unity2.setText("Â°F");
+					lblTemp_unity3.setText("Â°F");
+					lblTemp_unity4.setText("Â°F");
+					lblTemp_unity5.setText("Â°F");
+					lblTemp_unity6.setText("Â°F");
 
 					double tcond = Misc.degre2farenheit(Double.valueOf( textFieldCompCond.getText()));
 					double tliq = Misc.degre2farenheit(Double.valueOf( textFieldCompLiq.getText()));
@@ -524,12 +524,12 @@ public class WinCompressor extends JFrame {
 					textFieldCompSousRefroid.setText(String.valueOf(tmp));
 				} else {
 					guiConfig.setUnitCompFaren(false);
-					lblTemp_unity1.setText("°C");
-					lblTemp_unity2.setText("°C");
-					lblTemp_unity3.setText("°C");
-					lblTemp_unity4.setText("°C");
-					lblTemp_unity5.setText("°C");
-					lblTemp_unity6.setText("°C");
+					lblTemp_unity1.setText("Â°C");
+					lblTemp_unity2.setText("Â°C");
+					lblTemp_unity3.setText("Â°C");
+					lblTemp_unity4.setText("Â°C");
+					lblTemp_unity5.setText("Â°C");
+					lblTemp_unity6.setText("Â°C");
 
 					double tcond = Misc.farenheit2degre(Double.valueOf( textFieldCompCond.getText()));
 					double tliq = Misc.farenheit2degre(Double.valueOf( textFieldCompLiq.getText()));

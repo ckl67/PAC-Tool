@@ -517,6 +517,22 @@ public class SatCurve {
 		return gasFileName;
 	}
 
+	public int getSatTableSize() {
+		return(gasSatTable.size());
+	}
+	
+	public double getTSat(int n) {
+		return gasSatTable.get(n).get(id_Temp);
+	}
+
+	public double getPSat_Liquid(int n) {
+		return gasSatTable.get(n).get(id_P_Liquid);
+	}
+
+	public double getPSat_Gas(int n) {
+		return gasSatTable.get(n).get(id_P_Gas);
+	}
+
 	public double getIsoTherm_P0_Ref() {
 		return IsoTherm_P0_Ref;
 	}

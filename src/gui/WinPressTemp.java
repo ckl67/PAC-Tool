@@ -1,6 +1,6 @@
 /*
  * - PAC-Tool - 
- * Tool for understanding basics and computation of PAC (Pompe à Chaleur)
+ * Tool for understanding basics and computation of PAC (Pompe Ã  Chaleur)
  * Copyright (C) 2016 christian.klugesherz@gmail.com
  *
  * This program is free software; you can redistribute it and/or modify
@@ -318,10 +318,10 @@ public class WinPressTemp extends JFrame {
 				lblTempPressGas.setForeground(Color.GRAY);
 			}
 			
-			s = "T: %.2f°C --> P:%.2fbar(gas)";
+			s = "T: %.2fÂ°C --> P:%.2fbar(gas)";
 			lblTempPressGas.setText(String.format(s, temp,rfg.getPSatFromT(temp).getPGas() ));
 
-			s = "T: %.2f°C --> P:%.2fbar(liq)";
+			s = "T: %.2fÂ°C --> P:%.2fbar(liq)";
 			lblTempPressLiquid.setText(String.format(s, temp,rfg.getPSatFromT(temp).getPLiquid() ));
 			//lblTempPressLiquid.setText(String.format(s,press ,rfg.getTSatFromP(press) ));
 			

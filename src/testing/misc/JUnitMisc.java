@@ -1,4 +1,4 @@
-package testing;
+package testing.misc;
 
 //import static org.junit.Assert.*;
 
@@ -16,7 +16,7 @@ public class JUnitMisc {
 		
 		System.out.println("MISC !");
 
-		System.out.println("Dergé --> Farenheit : " + 10 + "-->" + Misc.degre2farenheit(10));
+		System.out.println("DergÃ© --> Farenheit : " + 10 + "-->" + Misc.degre2farenheit(10));
 		System.out.println("BTU   --> Watt:" + 1 +"-->" + Misc.btuhr2watt(1) );
 
 		System.out.println("Number of . in "+ "12.23.45 = " + Misc.nbCharInString("12.23.45", '.'));

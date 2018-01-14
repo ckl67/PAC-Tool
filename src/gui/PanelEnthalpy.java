@@ -1,6 +1,6 @@
 /*
  * - PAC-Tool - 
- * Tool for understanding basics and computation of PAC (Pompe à Chaleur)
+ * Tool for understanding basics and computation of PAC (Pompe Ã  Chaleur)
  * Copyright (C) 2016 christian.klugesherz@gmail.com
  *
  * This program is free software; you can redistribute it and/or modify
@@ -48,7 +48,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import enthalpy.Enthalpy;
-import enthalpy.EnthalpyBkgdImg;
 
 // ===================================================================================================================
 // ===================================================================================================================
@@ -465,7 +464,7 @@ public class PanelEnthalpy extends JPanel {
 
 			g2.draw( new Line2D.Double(xHmin-2,log10_y,xHmin+2,log10_y));
 		}
-		g2.drawString("T(°C)", (float)(10 + xHmin - metrics.getStringBounds("T(°C)",g2).getWidth()/2), (float)(Math.log10(yposmax+gridUnitY)));
+		g2.drawString("T(ï¿½C)", (float)(10 + xHmin - metrics.getStringBounds("T(ï¿½C)",g2).getWidth()/2), (float)(Math.log10(yposmax+gridUnitY)));
 
 		// -----------------------------------
 		// Curve

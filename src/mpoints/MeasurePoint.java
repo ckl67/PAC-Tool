@@ -102,14 +102,14 @@ public class MeasurePoint {
 
 		case P1: case P6: case P7: case P8:
 			out = PR0;
-			logger.trace("(getMP_P0PK):: PR0 = {}",out);
+			logger.trace("   (getMP_P0PK):: PR0 = {}",out);
 			break;
 		case P2 : case P3 : case P4 : case P5 :
 			out = PRK;
-			logger.trace("(getMP_P0PK):: PRK = {}",out);
+			logger.trace("   (getMP_P0PK):: PRK = {}",out);
 			break;
 		default:
-			logger.trace("getMP_P0PK):: PR0/PRK = {}",out);
+			logger.trace("   (getMP_P0PK):: PR0/PRK = {}",out);
 			out = -1.0;
 			break;
 		}
@@ -220,7 +220,7 @@ public class MeasurePoint {
 				// PRK = P
 				// T5 is under cooling of T4 
 				double ucT = T - Math.round(pac.getCompressor().getUnderCooling());
-				logger.info("    Computation of T5 --> (T4={} - Under Colling ={}) = {}",
+				logger.trace("    Computation of T5 --> (T4={} - Under Colling ={}) = {}",
 						T,
 						Math.round(pac.getCompressor().getUnderCooling()),
 						ucT);
@@ -241,9 +241,9 @@ public class MeasurePoint {
 						|      XX                                     X
 				 */
 				// if PR0 > 0 then only H can be computed, and considered
-				PR0 = this.getMP_P0PK(lMeasurePoints); 
+				MeasurePoint m6 = lMeasurePoints.get(EloMeasurePoint.P6.id());
+				PR0 = m6.getMP_P0PK(lMeasurePoints); 
 				if ( PR0 > 0.0) {
-					MeasurePoint m6 = lMeasurePoints.get(EloMeasurePoint.P6.id());
 					m6.setValue(Math.round(ucT*100)/100.0);
 					m6.setMP_T(ucT);
 					m6.setMP_P(PR0);
@@ -253,6 +253,7 @@ public class MeasurePoint {
 			} else {
 				this.mPObjectSelection = EloMeasurePointSelection.NotSelected;
 			}
+			break;
 		case P5 :
 			// HP gas temperature after cooling
 			//  Value Entered = Temperature
@@ -280,9 +281,9 @@ public class MeasurePoint {
 						|      XX                                     X
 				 */
 				// if PR0 > 0 then only H can be computed, and considered
-				PR0 = this.getMP_P0PK(lMeasurePoints); 
+				MeasurePoint m6 = lMeasurePoints.get(EloMeasurePoint.P6.id());
+				PR0 = m6.getMP_P0PK(lMeasurePoints); 
 				if ( PR0 > 0.0) {
-					MeasurePoint m6 = lMeasurePoints.get(EloMeasurePoint.P6.id());
 					m6.setValue(Math.round(value*100)/100.0);
 					m6.setMP_T(value);
 					m6.setMP_P(PR0);
@@ -345,10 +346,11 @@ public class MeasurePoint {
 			// 	=>	BP gas temperature after internal overheating and before compression
 			// 	T1 is Over heated of T8 --> T1 = T8 + OH
 			double ohT =this.T + Math.round(pac.getCompressor().getOverheated());
-			logger.info("Computation of T1 --> (T8={} + Compressor over head={}) = {}",
-					this.toString(),
+			logger.trace("    Computation of T1 --> (T8={} + Compressor over head={}) = {}",
+					T,
 					Math.round(pac.getCompressor().getOverheated()),
 					ohT);
+
 			MeasurePoint m1 = lMeasurePoints.get(EloMeasurePoint.P1.id());
 			m1.setValue(Math.round(ohT*100)/100.0);
 			m1.setMP_T(ohT);

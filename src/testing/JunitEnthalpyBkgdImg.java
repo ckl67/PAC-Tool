@@ -3,7 +3,7 @@ package testing;
 import org.json.simple.JSONObject;
 import org.junit.Test;
 
-import enthalpy.EnthalpyBkgdImg;
+import gui.EnthalpyBkgdImg;
 
 public class JunitEnthalpyBkgdImg {
 

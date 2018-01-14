@@ -112,7 +112,7 @@ public class MeasureResult {
 			break;
 
 		} 
-		logger.info("(MeasureResult):: {}= {} {}",this.mRObject.getDisplayTxt(),this.value,this.mRObject.getUnity());
+		logger.trace("(MeasureResult):: {}= {} {}",this.mRObject.getDisplayTxt(),this.value,this.mRObject.getUnity());
 
 		
 	}
@@ -165,15 +165,28 @@ public class MeasureResult {
 	 */
 	private double cop(List<MeasurePoint> measurePointL, Pac pac) {
 		double COP = 0;
-
+		logger.trace("(cop)::");
 		double travailCompresseur = measurePointL.get(EloMeasurePoint.P2.id()).getMP_H() - 
 				measurePointL.get(EloMeasurePoint.P1.id()).getMP_H();
+		logger.trace("    travailCompresseur: {} = delta d’enthalpie entre les points 2-->({}) et 1-->({})",
+				travailCompresseur,
+				measurePointL.get(EloMeasurePoint.P2.id()).getMP_H(),
+				measurePointL.get(EloMeasurePoint.P1.id()).getMP_H()
+				);
 
 		double puissanceCalorifique = measurePointL.get(EloMeasurePoint.P2.id()).getMP_H() - 
-				measurePointL.get(EloMeasurePoint.P1.id()).getMP_H();
+				measurePointL.get(EloMeasurePoint.P5.id()).getMP_H();
+		logger.trace("    puissanceCalorifique: {} = delta d’enthalpie entre les points 2-->({}) et 5-->({})",
+				puissanceCalorifique,
+				measurePointL.get(EloMeasurePoint.P2.id()).getMP_H(),
+				measurePointL.get(EloMeasurePoint.P5.id()).getMP_H()
+				);
 
 		double rapportPcalSurTravComp = puissanceCalorifique/travailCompresseur;
-
+		logger.trace("    Rapport entre puissance calorifique et travail compresseur = {}",
+				rapportPcalSurTravComp
+				);
+		
 		Compressor compressor = pac.getCompressor();
 		double cosPhi = Math.round(
 				Misc.cosphi(
@@ -181,17 +194,42 @@ public class MeasureResult {
 						compressor.getVoltage(), 
 						compressor.getCurrent())
 				);
+		logger.trace("    cos phi = {}",
+				cosPhi
+				);
 
 		double puissanceAbsorbee = compressor.getCurrentMeasure() * 
 				compressor.getVoltageMeasure();
+		logger.trace("    puissance Absorbée = {}",
+				puissanceAbsorbee
+				);
 
 		double puissanceUtile = puissanceAbsorbee * cosPhi;
+		logger.trace("    puissance Utile = {}",
+				puissanceUtile
+				);
+		
 
 		double puissanceDispoArbreMoteur = puissanceUtile * compressor.getPowerShaftPercent()/100.0;
+		logger.trace("    rendement d'un moteur électrique monophasé en % = {}",
+				compressor.getPowerShaftPercent()
+				);
+		logger.trace("    puissance disponible sur l'arbre moteur = {}",
+				puissanceDispoArbreMoteur
+				);
 
+		
 		double puissanceCalorifiqueVrai =  puissanceDispoArbreMoteur * rapportPcalSurTravComp;
+		logger.trace("    puissance calorifique = {}",
+				puissanceCalorifiqueVrai
+				);
 
 		COP = puissanceCalorifiqueVrai / puissanceAbsorbee;
+		logger.trace("     COP = {} --> puissanceCalorifiqueVrai({}) / puissanceAbsorbee({})",
+				COP,
+				puissanceCalorifiqueVrai,
+				puissanceAbsorbee
+				);
 
 		return COP;		
 	}
