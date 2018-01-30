@@ -16,7 +16,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-package gui;
+package gui.pac;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,7 +25,6 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.TitledBorder;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.JTextField;
@@ -37,17 +36,17 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.Font;
 import java.awt.Toolkit;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import computation.Misc;
+import gui.GuiConfig;
 import pac.Compressor;
 import pac.Pac;
 import translation.TCompressor;
+import translation.TLanguage;
 
 public class WinCompressor extends JFrame {
 	private static final long serialVersionUID = 1L;
-	//private static final Logger logger = LogManager.getLogger(WinCompressor.class.getName());
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
 	// -------------------------------------------------------
@@ -71,11 +70,9 @@ public class WinCompressor extends JFrame {
 	private JTextField textFieldCompDeltaH0;
 	private JTextField textFieldCompVoltage;
 	private JTextField textFieldCompCosPhi;
-	private JTextField textFieldCompName;
 	private JCheckBox checkoxFaren;
 	private JCheckBox checkoxBTU;
 	private JCheckBox checkoxPound;
-	private JComboBox<String> comboBoxComp;
 	private JLabel lblCapacity;
 	private JLabel lblPower;
 	private JLabel lblCurrent1;
@@ -96,6 +93,14 @@ public class WinCompressor extends JFrame {
 	private JPanel panelMeasure;
 	private JPanel panel_m1;
 	private TitledBorder panel_m1Border;
+	private JButton button_1;
+	private JLabel lblFieldCompName2;
+	private JLabel lblFieldCompName1;
+	private JLabel lblCurrent2;
+	private JLabel lblVoltage2;
+	private JPanel panel_pc1;
+	private JPanel panel_pc2;
+	private JTabbedPane tabbedPane;
 
 	// -------------------------------------------------------
 	// 				TEST THE APPLICATION STANDALONE 
@@ -103,10 +108,18 @@ public class WinCompressor extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {				
-					WinCompressor frame = new WinCompressor(new Pac(), new GuiConfig() );
-					frame.setVisible(true);
-
+				try {
+					Pac pac = new Pac();
+					GuiConfig guiConfig = new GuiConfig();
+					WinCompressor winCompFrame = new WinCompressor(pac, guiConfig );
+					// First fillCompressorTextField then applyConfig 
+					winCompFrame.fillCompressorTextField();
+					winCompFrame.applyConfig();
+					winCompFrame.setVisible(true);
+					
+					guiConfig.setLanguage(TLanguage.FRENCH);
+					winCompFrame.applyConfig();
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -125,42 +138,12 @@ public class WinCompressor extends JFrame {
 	public WinCompressor(Pac vpac, GuiConfig vguiConfig) {
 		pac = vpac;
 		guiConfig =vguiConfig;
-
 		initialize();
 	}
 
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
-
-	/**
-	 * Apply the WinPac GUI configuration to GUI Compressor.
-	 * @param guiConfig
-	 */
-	public void applyConfig() {
-
-		logger.info("applyConfig : NB Compressor={}", pac.getNbOfCompressorNb());
-		// Remove all Compressor items in ComboBox (except the first)
-	//	int tmpcnt = comboBoxComp.getItemCount();
-	//	for(int i=1;i<tmpcnt;i++) {
-	//		comboBoxComp.removeItemAt(i);
-	//	}
-
-		// Set the Compressor Check Box (Fahrenheit/Pound/BTU) before to affect the data to text field, 
-		// no actions will be performed by this settings 
-		checkoxFaren.setSelected(guiConfig.getUnitCompFaren());
-		checkoxBTU.setSelected(guiConfig.getUnitCompBTU()); 		
-		checkoxPound.setSelected(guiConfig.getUnitCompPound()); 		
-
-		// Fill Compressor ComboBox
-	//	for(int i=1;i<pac.getNbOfCompressorNb();i++) {
-	//		comboBoxComp.insertItemAt(pac.getCompressorNb(i).getName(),i);
-	//	}
-		comboBoxComp.setSelectedIndex(0);
-		pac.selectCurrentCompressor(0);
-		fillCompressorTextField(pac.getCurrentCompressor());
-
-	}
 
 	/**
 	 * Fill Compressor Text field 
@@ -170,35 +153,14 @@ public class WinCompressor extends JFrame {
 	 * without data in the textfield !!
 	 * 
 	 */
-	private void fillCompressorTextField(Compressor compressor) {
+	private void fillCompressorTextField() {
 
+		Compressor compressor = pac.getCompressor();
+		
 		logger.info("(fillCompressorTextField) Compressor Name {}",compressor.getName());
-		boolean weclickf = false;
-		boolean weclickb = false;
-		boolean weclickp = false;
 
-		// If button Fahrenheit is pressed, we will simulate a non-selection  
-		// By default MUST NOT BE selected
-		if (checkoxFaren.isSelected()) {
-			checkoxFaren.doClick();
-			weclickf = true;
-		}
-
-		// If button BTU is pressed, we will simulate a non-selection  
-		// By default MUST NOT BE selected
-		if (checkoxBTU.isSelected()) {
-			checkoxBTU.doClick();
-			weclickb = true;
-		}
-
-		// If button Pound is pressed, we will simulate a non-selection  
-		// By default MUST NOT BE selected
-		if (checkoxPound.isSelected()) {
-			checkoxPound.doClick();
-			weclickp = true;
-		}
-
-		textFieldCompName.setText(compressor.getName());
+		lblFieldCompName1.setText(compressor.getName());
+		lblFieldCompName2.setText(compressor.getName());
 
 		textFieldCompEvap.setText(String.valueOf(compressor.getEvap()));
 		textFieldCompRG.setText(String.valueOf(compressor.getRG()));
@@ -220,26 +182,51 @@ public class WinCompressor extends JFrame {
 		textFieldCompVoltageMeasure.setText(String.valueOf(compressor.getVoltageMeasure()));
 		textCompPowerShaftPercent.setText(String.valueOf(compressor.getPowerShaftPercent()));
 
-		// If needed we go back to the Check box selection
-		if (weclickf) {
-			checkoxFaren.doClick();
-		}
-		if (weclickb) {
-			checkoxBTU.doClick();
-		}
-		if (weclickp) {
-			checkoxPound.doClick();
-		}
 	}
 
+	/**
+	 * Apply the WinPac GUI configuration to GUI Compressor.
+	 * @param guiConfig
+	 */
+	public void applyConfig() {
+
+		logger.trace("(applyConfig):: checkoxFaren={}  checkoxFaren={}  checkoxFaren={}",
+				guiConfig.getUnitCompFaren(),
+				guiConfig.getUnitCompBTU(),
+				guiConfig.getUnitCompPound());
+		
+		// If button Fahrenheit is pressed, we will simulate a non-selection  
+		// By default MUST NOT BE selected
+		if (guiConfig.getUnitCompFaren()) {
+			checkoxFaren.doClick();
+		}
+
+		// If button BTU is pressed, we will simulate a non-selection  
+		// By default MUST NOT BE selected
+		if (guiConfig.getUnitCompBTU()) {
+			checkoxBTU.doClick();
+		}
+
+		// If button Pound is pressed, we will simulate a non-selection  
+		// By default MUST NOT BE selected
+		if (guiConfig.getUnitCompPound()) {
+			checkoxPound.doClick();
+		}
+		
+		changeLanguage();
+		
+	}	
+	
 	/**
 	 * Will save the information from Panel TextField to PAC variable
 	 * Data will ALWAYS be stored in International System : SI Format
 	 * @param paci
 	 */
-	private void UpdateTextField2Compressor( Compressor compressor) {
+	private void saveTextField2Compressor( ) {
 
-		logger.info("(UpdateTextField2Compressor) Compressor Name {}",compressor.getName());
+		Compressor compressor = pac.getCompressor();
+
+		logger.info("(saveTextField2Compressor) Compressor Name {}",compressor.getName());
 		boolean weclickf = false;
 		boolean weclickb = false;
 		boolean weclickp = false;
@@ -263,8 +250,6 @@ public class WinCompressor extends JFrame {
 		}
 
 		// AT that stage all information are in SI !
-		compressor.setName(textFieldCompName.getText());
-
 		compressor.setEvap(Double.valueOf(textFieldCompEvap.getText()));
 		compressor.setRG(Double.valueOf(textFieldCompRG.getText()));
 		compressor.setCond(Double.valueOf(textFieldCompCond.getText()));
@@ -291,12 +276,51 @@ public class WinCompressor extends JFrame {
 		}
 	}
 
+	/*
+	 * Change the Langage 
+	 */
+	private void changeLanguage(){
+		lblEer.setText(TCompressor.COMP_EER.getLangue(guiConfig.getLanguage()));
+		lblEvap.setText(TCompressor.COMP_EVAP.getLangue(guiConfig.getLanguage()));
+		lblRG.setText(TCompressor.COMP_RG.getLangue(guiConfig.getLanguage()));
+		lblSurchauffe.setText(TCompressor.COMP_OVERHEATED.getLangue(guiConfig.getLanguage()));
+		lblCond.setText(TCompressor.COMP_COND.getLangue(guiConfig.getLanguage()));
+		lblLiq.setText(TCompressor.COMP_LIQ.getLangue(guiConfig.getLanguage()));
+		lblSousRefroid.setText(TCompressor.COMP_UNDERCOOLING.getLangue(guiConfig.getLanguage()));
+		lblCapacity.setText(TCompressor.COMP_CAPACITY.getLangue(guiConfig.getLanguage()));
+		lblPower.setText(TCompressor.COMP_POWER.getLangue(guiConfig.getLanguage()));
+		lblCurrent1.setText(TCompressor.COMP_CURRENT.getLangue(guiConfig.getLanguage()));
+		lblCurrent2.setText(TCompressor.COMP_CURRENT.getLangue(guiConfig.getLanguage()));
+		lblVoltage1.setText(TCompressor.COMP_VOLTAGE.getLangue(guiConfig.getLanguage()));
+		lblVoltage2.setText(TCompressor.COMP_VOLTAGE.getLangue(guiConfig.getLanguage()));
+		lblMassflow.setText(TCompressor.COMP_MASSFLOW.getLangue(guiConfig.getLanguage()));
+		lblPowerOnMotorShaft.setText(TCompressor.COMP_POWER_MOTOR_SHAFT.getLangue(guiConfig.getLanguage()));
+		
+		TitledBorder panel_pc1Border = (TitledBorder) panel_pc1.getBorder();
+		panel_pc1Border.setTitle(TCompressor.COMP_DATA_PERFORMANCE_TITLE1.getLangue(guiConfig.getLanguage()));
 
+		TitledBorder panel_pc2Border = (TitledBorder) panel_pc2.getBorder();
+		panel_pc2Border.setTitle(TCompressor.COMP_DATA_PERFORMANCE_TITLE2.getLangue(guiConfig.getLanguage()));
+
+		TitledBorder panel_m1Border = (TitledBorder) panel_m1.getBorder();
+		panel_m1Border.setTitle(TCompressor.COMP_DATA_MEASURE_TITLE1.getLangue(guiConfig.getLanguage()));
+		
+		tabbedPane.setTitleAt(0, TCompressor.COMP_TITLE1.getLangue(guiConfig.getLanguage()));
+		tabbedPane.setTitleAt(1, TCompressor.COMP_TITLE2.getLangue(guiConfig.getLanguage()));
+
+		
+	}
+
+	
 	// -------------------------------------------------------
 	// 				 GENERATED BY WIN BUILDER
 	// -------------------------------------------------------
 
-	public void initialize() {
+	/**
+	 * Will initialize the GUI compressor window values with the default compressor value
+	 * 
+	 */
+	private void initialize() {
 
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -304,36 +328,38 @@ public class WinCompressor extends JFrame {
 			logger.info(e);
 		}
 
-		setTitle("Compressor");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(WinAbout.class.getResource("/gui/images/PAC-Tool_16.png")));
-		setBounds(100, 100, 442, 545);
-		setResizable(false);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		getContentPane().setLayout(null);
+		this.setTitle(TCompressor.COMP_WIN_TITLE.getLangue(guiConfig.getLanguage()));
+
+		this.setTitle("Compressor");
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage(WinCompressor.class.getResource("/gui/images/PAC-Tool_16.png")));
+		this.setBounds(100, 100, 445, 549);
+		this.setResizable(false);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.getContentPane().setLayout(null);
 
 		// ===============================================================================================================
 		//													TABBED PANE
 		// ===============================================================================================================
 
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(0, 0, 437, 517);
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setBounds(0, 0, 439, 522);
 		getContentPane().add(tabbedPane);
 
 		// ===============================================================================================================
 		//									                 PANEL COMPRESSOR
 		// ===============================================================================================================
 		JPanel panelCompressor = new JPanel();
-		tabbedPane.addTab("Compresseur", null, panelCompressor, null);
+		tabbedPane.addTab("Compressor", null, panelCompressor, null);
 		panelCompressor.setLayout(null);
 
 
 		// ================================================================
 		// 					  	Performance Panel
 		// ================================================================
-		JPanel panel_pc1 = new JPanel();
-		panel_pc1.setBounds(10, 74, 420, 161);
+		panel_pc1 = new JPanel();
+		panel_pc1.setBounds(9, 45, 412, 161);
 		panelCompressor.add(panel_pc1);
-		panel_pc1.setBorder(new TitledBorder(null, "Donn\u00E9es Performance Constructeur (Temp\u00E9rature)", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_pc1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Data Performance (Temperature)", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panel_pc1.setLayout(null);
 
 
@@ -553,10 +579,10 @@ public class WinCompressor extends JFrame {
 		// ================================================================
 		// 					   	Performance 2 Panel
 		// ================================================================
-		JPanel panel_pc2 = new JPanel();
-		panel_pc2.setBounds(10, 246, 420, 234);
+		panel_pc2 = new JPanel();
+		panel_pc2.setBounds(9, 217, 412, 234);
 		panelCompressor.add(panel_pc2);
-		panel_pc2.setBorder(new TitledBorder(null, "Donn\u00E9es Performance Constructeur (Autres)", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_pc2.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Data Performance (Others)", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panel_pc2.setLayout(null);
 
 
@@ -680,7 +706,7 @@ public class WinCompressor extends JFrame {
 		textFieldCompEER.setBounds(82, 125, 62, 20);
 		panel_pc2.add(textFieldCompEER);
 
-		JLabel lblEER_unity = new JLabel("");
+		JLabel lblEER_unity = new JLabel("None");
 		lblEER_unity.setBounds(154, 125, 73, 22);
 		panel_pc2.add(lblEER_unity);
 
@@ -858,98 +884,32 @@ public class WinCompressor extends JFrame {
 		panel_pc2.add(lblCosphi);
 
 		textFieldCompCosPhi = new JTextField();
+		textFieldCompCosPhi.setBounds(82, 204, 62, 20);
+		panel_pc2.add(textFieldCompCosPhi);
 		textFieldCompCosPhi.setToolTipText("Cosinus(Phi)");
 		textFieldCompCosPhi.setText("0.0");
 		textFieldCompCosPhi.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldCompCosPhi.setEditable(false);
 		textFieldCompCosPhi.setColumns(10);
 		textFieldCompCosPhi.setBackground(Color.PINK);
-		textFieldCompCosPhi.setBounds(82, 205, 62, 20);
-		panel_pc2.add(textFieldCompCosPhi);
 
-		// ---------------------------------------------------------------
-		// Combo box Compressor
-		// ---------------------------------------------------------------
-		comboBoxComp = new JComboBox<String>();
-		comboBoxComp.setBounds(243, 11, 131, 20);
-		panelCompressor.add(comboBoxComp);
-
-		// ---------------------------------------------------------------
-		// Compressor Save
-		// ---------------------------------------------------------------
-		JButton btnSaveCompressor = new JButton("Sauv.");
-		btnSaveCompressor.setBounds(277, 40, 68, 23);
-		panelCompressor.add(btnSaveCompressor);
-		btnSaveCompressor.addActionListener(new ActionListener() {
+		button_1 = new JButton("Sauv.");
+		button_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int ComboId = comboBoxComp.getSelectedIndex();
-				if ( ComboId >= 0 ) {
-					logger.info("Save Compressor {}", ComboId );
-					pac.selectCurrentCompressor(ComboId);
-					UpdateTextField2Compressor(pac.getCurrentCompressor());
-					String tmp = textFieldCompName.getText();
-					//Impossible to rename an item, so we will create a new one, and delete the old
-					comboBoxComp.insertItemAt(tmp, ComboId);
-					comboBoxComp.removeItemAt(ComboId+1);
-				}
+				logger.info("Save Compressor {}");
+				saveTextField2Compressor();
+
 			}
 		});
-		btnSaveCompressor.setFont(new Font("Tahoma", Font.PLAIN, 9));
-
-		// ---------------------------------------------------------------
-		// Delete Compressor 
-		// ---------------------------------------------------------------
-		JButton btnDeleteCompressor = new JButton("Suppr.");
-		btnDeleteCompressor.setBounds(355, 40, 68, 23);
-		panelCompressor.add(btnDeleteCompressor);
-		btnDeleteCompressor.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				int ComboId = comboBoxComp.getSelectedIndex();
-				if ( ComboId > 0 ) {
-					pac.removeCompressor(ComboId);
-					comboBoxComp.removeItemAt(ComboId);
-					comboBoxComp.setSelectedIndex(ComboId-1);
-					panel_m1Border.setTitle("Measure: " + pac.getCompressorNb(ComboId-1).getName());
-				} else {
-					JOptionPane.showMessageDialog(getContentPane(), "This entry cannot be deleted");
-				}
-			}
-		});
-		btnDeleteCompressor.setFont(new Font("Tahoma", Font.PLAIN, 9));
-
-		// ---------------------------------------------------------------
-		// New Compressor
-		// ---------------------------------------------------------------
-		JButton btnNewCompressor = new JButton("Nouv.");
-		btnNewCompressor.setBounds(199, 40, 68, 23);
-		panelCompressor.add(btnNewCompressor);
-		btnNewCompressor.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				int ComboId = comboBoxComp.getSelectedIndex();
-				ComboId++;
-				pac.addNewCompressor(ComboId);
-				comboBoxComp.insertItemAt("Empty", ComboId);
-				comboBoxComp.setSelectedIndex(ComboId);
-				textFieldCompName.setText("Empty");
-				pac.getCompressorNb(ComboId).setName("Empty");
-				panel_m1Border.setTitle("Measure: " + pac.getCompressorNb(ComboId).getName());
-			}
-		});
-		btnNewCompressor.setFont(new Font("Tahoma", Font.PLAIN, 9));
-
-		// ---------------------------------------------------------------
-		// Compressor Name
-		// ---------------------------------------------------------------
-		textFieldCompName = new JTextField();
-		textFieldCompName.setBounds(10, 11, 167, 52);
-		panelCompressor.add(textFieldCompName);
-		textFieldCompName.setToolTipText("Name can be modified");
-		textFieldCompName.setForeground(new Color(0, 0, 128));
-		textFieldCompName.setBorder(null);
-		textFieldCompName.setBackground(UIManager.getColor("DesktopPane.background"));
-		textFieldCompName.setHorizontalAlignment(SwingConstants.CENTER);
-		textFieldCompName.setFont(new Font("Tahoma", Font.BOLD, 16));
-		textFieldCompName.setColumns(10);
+		button_1.setBounds(353, 462, 68, 23);
+		panelCompressor.add(button_1);
+		button_1.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		
+		lblFieldCompName1 = new JLabel("ZR40K3-PFG");
+		lblFieldCompName1.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblFieldCompName1.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblFieldCompName1.setBounds(9, 11, 412, 23);
+		panelCompressor.add(lblFieldCompName1);
 
 		// ===============================================================================================================
 		//									                 PANEL MEASURE
@@ -960,94 +920,77 @@ public class WinCompressor extends JFrame {
 		panelMeasure.setLayout(null);
 
 		panel_m1 = new JPanel();
-		
-		panel_m1Border = new TitledBorder(null, "Measure" + pac.getCompressorNb(0).getName(), TitledBorder.LEADING, TitledBorder.TOP, null, null);
-	    panel_m1.setBorder(panel_m1Border);
-		panel_m1.setBounds(10, 5, 412, 107);
+
+		panel_m1Border = new TitledBorder(null, "Measure", TitledBorder.LEADING, TitledBorder.TOP, null, null);
+		panel_m1.setBorder(panel_m1Border);
+		panel_m1.setBounds(12, 45, 412, 107);
 		panelMeasure.add(panel_m1);
 		panel_m1.setLayout(null);
 
-		JLabel lblCurrent2 = new JLabel("Current :");
-		lblCurrent2.setBounds(72, 17, 73, 14);
+		lblCurrent2 = new JLabel("Current :");
+		lblCurrent2.setBounds(72, 17, 121, 14);
 		panel_m1.add(lblCurrent2);
 		lblCurrent2.setHorizontalAlignment(SwingConstants.RIGHT);
 
 		textFieldCompCurrentMeasure = new JTextField();
-		textFieldCompCurrentMeasure.setBounds(166, 14, 62, 20);
+		textFieldCompCurrentMeasure.setBounds(218, 15, 62, 20);
 		panel_m1.add(textFieldCompCurrentMeasure);
 		textFieldCompCurrentMeasure.setToolTipText("Courant absorb\u00E9");
 		textFieldCompCurrentMeasure.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldCompCurrentMeasure.setColumns(10);
 
 		JLabel lblCurrent_unity2 = new JLabel("A");
-		lblCurrent_unity2.setBounds(240, 17, 26, 14);
+		lblCurrent_unity2.setBounds(292, 18, 26, 14);
 		panel_m1.add(lblCurrent_unity2);
 
-		JLabel lblVoltage2 = new JLabel("Voltage :");
-		lblVoltage2.setBounds(72, 45, 73, 14);
+		lblVoltage2 = new JLabel("Voltage :");
+		lblVoltage2.setBounds(72, 45, 121, 14);
 		panel_m1.add(lblVoltage2);
 		lblVoltage2.setHorizontalAlignment(SwingConstants.RIGHT);
 
 		textFieldCompVoltageMeasure = new JTextField();
-		textFieldCompVoltageMeasure.setBounds(166, 42, 62, 20);
+		textFieldCompVoltageMeasure.setBounds(218, 43, 62, 20);
 		panel_m1.add(textFieldCompVoltageMeasure);
 		textFieldCompVoltageMeasure.setToolTipText("Tension");
 		textFieldCompVoltageMeasure.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldCompVoltageMeasure.setColumns(10);
 
 		JLabel lblVoltage_unity2 = new JLabel("V");
-		lblVoltage_unity2.setBounds(240, 45, 46, 14);
+		lblVoltage_unity2.setBounds(292, 46, 46, 14);
 		panel_m1.add(lblVoltage_unity2);
 
 		lblPowerOnMotorShaft = new JLabel("Power on motor shaft:");
-		lblPowerOnMotorShaft.setBounds(20, 73, 125, 14);
+		lblPowerOnMotorShaft.setBounds(20, 73, 173, 14);
 		panel_m1.add(lblPowerOnMotorShaft);
 		lblPowerOnMotorShaft.setHorizontalAlignment(SwingConstants.RIGHT);
 
 		textCompPowerShaftPercent = new JTextField();
-		textCompPowerShaftPercent.setBounds(166, 70, 62, 20);
+		textCompPowerShaftPercent.setBounds(218, 71, 62, 20);
 		panel_m1.add(textCompPowerShaftPercent);
 		textCompPowerShaftPercent.setToolTipText("Puissance disponible sur arbre moteur");
 		textCompPowerShaftPercent.setHorizontalAlignment(SwingConstants.RIGHT);
 		textCompPowerShaftPercent.setColumns(10);
 
 		labelPercentage = new JLabel("%");
-		labelPercentage.setBounds(240, 73, 37, 14);
+		labelPercentage.setBounds(292, 74, 37, 14);
 		panel_m1.add(labelPercentage);
 
 		JButton button = new JButton("Sauv.");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int ComboId = comboBoxComp.getSelectedIndex();
-				if ( ComboId >= 0 ) {
-					logger.info("Save Compressor {}", ComboId );
-					pac.selectCurrentCompressor(ComboId);
-					UpdateTextField2Compressor(pac.getCurrentCompressor());
-					String tmp = textFieldCompName.getText();
-					//Impossible to rename an item, so we will create a new one, and delete the old
-					comboBoxComp.insertItemAt(tmp, ComboId);
-					comboBoxComp.removeItemAt(ComboId+1);
-				}
+				logger.info("Save Compressor {}");
+				saveTextField2Compressor();
 			}
 		});
 		button.setFont(new Font("Tahoma", Font.PLAIN, 9));
-		button.setBounds(354, 123, 68, 23);
+		button.setBounds(356, 163, 68, 23);
 		panelMeasure.add(button);
+		
+		lblFieldCompName2 = new JLabel("ZR40K3-PFG");
+		lblFieldCompName2.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblFieldCompName2.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblFieldCompName2.setBounds(12, 11, 412, 23);
+		panelMeasure.add(lblFieldCompName2);
 
-		// Must be filled at the end
-		comboBoxComp.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				int ComboId = comboBoxComp.getSelectedIndex();
-				fillCompressorTextField(pac.getCompressorNb(ComboId));
-				pac.selectCurrentCompressor(ComboId);
-				panel_m1Border.setTitle("Measure: " + pac.getCompressorNb(ComboId).getName());
-			}
-		});
-		comboBoxComp.addItem(pac.getCompressorNb(0).getName());
-
-	}
-
-	void changeLanguage(){
-		lblEer.setText(TCompressor.COMP_EER.getLangue(guiConfig.getLanguage()));
 	}
 }

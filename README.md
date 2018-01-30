@@ -7,7 +7,7 @@ Outil qui permet de vérifier les données constructeur (COP) et de calculer le 
 
 # Chaîne de Développement
 La chaîne d'outil pour le développement est la suivante:  
-*Je donne ci-dessous l'ordre dans lequel je conseille de procéder à l'installation de la chaîne de développement.*
+*Je donne ci-dessous l'ordre dans lequel je vous conseille de procéder pour l'installation de la chaîne de développement.*
 
 # GitHub
 Service Web d'hébergement et de gestion de développement de logiciels se trouve [ici](https://github.com/ckl67/PAC-Tool)  
@@ -16,13 +16,13 @@ Projet sous: PAC-Tool
 ## Création Compte GitHub
 Si vous souhaitez participer au développement du projet  
 La première chose va consister à créer un compte sur [GitHub](https://github.com/) afin que je puisse vous ajouter au projet.    
-Une fois cette opération faite, il faudra me contacter afin que je vous autorise à participer au projet.
+Une fois cette opération faite, il faudra me contacter à travers <christian.klugesherz@gmail.com> afin que je vous autorise à participer au projet.
 
 # Java
 Installation de [Java](http://www.oracle.com/technetwork/java/javase/downloads/index.html)  
 Choisir:   
 * Java Platform, Standard Edition
-* Version minimale: jre8u111
+* Version minimale: Java SE 8u161/ 8u162
 * Utiliser JDK
 
 # SourceTree
@@ -35,7 +35,7 @@ Par la suite, L'outil va
 * télécharger automatiquement la version embarquée de Git
 * télécharger la version embarquée de Mercudial
 
-Afin de créer l'espace de travail sur votre PC, et obtenir une copie du dépôt (PAC-TOOL) Git existant *(= Clone)*  
+Afin de créer l'espace de travail sur votre PC, et obtenir une copie du dépôt (PAC-TOOL)  *(= Clone)*  
 * Pour la configuration du **clone**, il faudra choisir le répertoire : <u>\Users\<votre compte windows>\workspace</u>
 
 # Eclipse: Environnement de développement intégré
@@ -44,6 +44,11 @@ Afin de créer l'espace de travail sur votre PC, et obtenir une copie du dépôt
 * Choisir: Eclipse Installer
 * Lors de l'installation choisir: Eclipse IDE for Java Developers
 * Une fois installer, faire pointer sur le répertoire : <u>\Users\<votre compte windows>\workspace</u>
+
+## Attention !
+Dans le cas ou Java est mis à jour, il est possible que Eclipse ne démarre plus. En fait le chemin de Java JRE a changé, et Eclipse ne pas peut pas connaître le nouveau répertoire.  
+Pour corriger cela, il suffit d'éditer le fichier "eclipse.ini"  
+Ce fichier se trouve sous: ....\eclipse\java-oxygen\eclipse
 
 ## Add-ons intégrés à Eclipse (IDE)
 ### WindowBuilder
@@ -77,12 +82,14 @@ log4j doit être téléchargé sur le site [officiel](https://logging.apache.org
 
 ### JSON
 Afin de pouvoir travailler avec du JSON, nous utilisons le fichier jar: json-simple  
+Il n'y a rien à faire ici. Les .jar files font déjà partis du projets.
 Cette opération est nécessaire que dans le cas d'une mise à jour de json-simple Pour plus d'explication voir [ici](https://www.tutorialspoint.com/json/json_java_example.htm)
+
+# Éditeur HTML WYSIWYG
+[Bluegriffon](http://bluegriffon.org/index.html) est un excellent éditeur HTML WYSIWYG libre
 
 # Éditeur Markdown
 Markdown est un langage de balisage. Son but est d'offrir une syntaxe facile à lire et à écrire. Il y a un éditeur qui est intégrée à Eclipse, mais je préfère l'édituer [Markdown Monster](https://markdownmonster.west-wind.com/) 
-
-
 
 # Fuite mémoire
 Afin de trouver les fuites mémoires, il est conseillé d'activer les paramètres de vérification code au niveau Eclipse [voir ici](https://developers.redhat.com/blog/2014/08/14/find-fix-memory-leaks-java-application/)
@@ -93,15 +100,15 @@ Un outil très intéressant est: [visualvm](https://visualvm.github.io/download.
 Une introduction à l'outil peut se trouver [ici](https://developers.redhat.com/blog/2014/08/14/find-fix-memory-leaks-java-application/)
 
 # Gestion de versions Git - Facultatif  
-[Git](https://git-scm.com/download/win) est intégré à Eclipse, mais je préfère utiliser SourceTree.
+[Git](https://git-scm.com/download/win) est intégré à Eclipse, mais je préfère utiliser SourceTree.  
 Git est donc intégré à SourceTree, mais afin de pouvoir créer une animation montrant l'évolution du développement, Git est nécessaire en local sous Windows
 
 # ffmpeg - Facultatif  
-[ffmpeg](https://ffmpeg.zeranoe.com/builds) est convertisseur vidéo gratuit, et est nécessaire pour Gource
+[ffmpeg](https://ffmpeg.zeranoe.com/builds) est convertisseur vidéo gratuit, et est nécessaire pour Gource  
 Après installation modifier variable d'environnement pour pointer sur ffmpeg
 
 # Gource - Facultatif  
-[Gource](http://gource.io/) Outil d'animation du projet : 
+[Gource](http://gource.io/) Outil d'animation du projet :  
 Attention, durant la génération de la vidéo, la fenêtre doit restée ouverte *([voir ici](https://github.com/acaudwell/Gource/wiki/Video))*
 
 # Conversion Jar vers .Exec

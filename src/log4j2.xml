@@ -27,6 +27,10 @@
 			<AppenderRef ref="Console" />
 		</Logger>
 
+		<Logger name="gui" level="trace" additivity="false">
+			<AppenderRef ref="Console" />
+		</Logger>
+
 	</Loggers>
 
 </Configuration>

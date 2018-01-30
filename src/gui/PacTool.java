@@ -27,7 +27,6 @@ import log4j.Log4j2Config;
 
 public class PacTool {
 	
-	//private static final Logger logger = LogManager.getLogger(PacTool.class.getName());
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
 	// -------------------------------------------------------

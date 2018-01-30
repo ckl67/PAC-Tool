@@ -16,10 +16,13 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-package gui;
+package gui.pac;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import gui.GuiConfig;
+import gui.helpaboutdef.WinAbout;
+
 import java.awt.EventQueue;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -40,11 +43,12 @@ import javax.swing.JButton;
 import pac.Circulator;
 import pac.Pac;
 import translation.TCirculator;
+import translation.TLanguage;
+import javax.swing.ImageIcon;
 
 
 public class WinCirculatorSrc extends JFrame {
 	private static final long serialVersionUID = 1L;
-	//private static final Logger logger = LogManager.getLogger(WinCirculatorSrc.class.getName());
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
 
@@ -57,7 +61,6 @@ public class WinCirculatorSrc extends JFrame {
 	// Win Builder
 	private JTextField textFieldCirculatorSrcVoltage;
 	private JTextField textFieldCirculatorSrcName;
-	private JComboBox<String> comboBoxCirculatorSrc;
 	private JLabel lblVoltage;
 	private JTextField textFieldFeatureCurrent;
 	private JTextField textFieldFeaturePower;
@@ -65,15 +68,34 @@ public class WinCirculatorSrc extends JFrame {
 	private JComboBox<String> comboBoxFeature;
 
 	private JLabel lblPower;
+	private JLabel lblRotatePerMinutes;
+	private JLabel lblCurrent;
+	private JPanel panel1;
+	private JPanel panel2;
+	private JButton btnAutoRenameFeature;
+	private JButton btnFeatureNew;
+	private JButton btnFeatureSave;
+	private JButton btnFeatureDelete;
+	private JButton btnSaveCirculatorSrc;
+	private JPanel panelCirculator;
+	private JTabbedPane tabbedPane;
 	// -------------------------------------------------------
 	// 				TEST THE APPLICATION STANDALONE 
 	// -------------------------------------------------------
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {				
-					WinCirculatorSrc frame = new WinCirculatorSrc(new Pac(), new GuiConfig() );
-					frame.setVisible(true);
+				try {
+					Pac pac = new Pac();
+					GuiConfig guiConfig = new GuiConfig();
+					WinCirculatorSrc WinCirculatorSrcFrame = new WinCirculatorSrc(pac, guiConfig );
+					// First fillCompressorTextField then applyConfig 
+					WinCirculatorSrcFrame.fillCirculatorSrcTexField();
+					WinCirculatorSrcFrame.applyConfig();
+					WinCirculatorSrcFrame.setVisible(true);		
+					
+					guiConfig.setLanguage(TLanguage.FRENCH);
+					WinCirculatorSrcFrame.applyConfig();
 
 				} catch (Exception e) {
 					logger.error(e);
@@ -101,38 +123,22 @@ public class WinCirculatorSrc extends JFrame {
 	// -------------------------------------------------------
 
 	/**
-	 * Apply the WinPac GUI configuration to GUI CirculatorSrc.
-	 * @param guiConfig
-	 */
-	public void applyConfig(GuiConfig vguiConfig) {
-
-		logger.info("applyConfig : NB CirculatorSrc={}", pac.getNbOfCirculatorSrcNb());
-		// Remove all CirculatorSrc items in ComboBox (except the first)
-//		int tmpcnt = comboBoxCirculatorSrc.getItemCount();
-//		for(int i=1;i<tmpcnt;i++) {
-//			comboBoxCirculatorSrc.removeItemAt(i);
-//		}
-
-		// Fill CirculatorSrc ComboBox
-//		for(int i=1;i<pac.getNbOfCirculatorSrcNb();i++) {
-//			comboBoxCirculatorSrc.insertItemAt(pac.getCirculatorSrcNb(i).getName(),i);
-//		}
-		comboBoxCirculatorSrc.setSelectedIndex(0);
-		pac.selectCurrentCirculatorSrc(0);
-		fillCirculatorSrcTexField(pac.getCurrentCirculatorSrc());
-	}
-
-
-	/**
 	 * fillCirculatorSrcTexField
 	 * 		Fill CirculatorSrc GUI Text field 
 	 * 		The data are read from the circulatorSrc variable, where the information is stored
 	 * 		The data are always stored in SI format !
 	 * 	@param circulatorSrc
 	 */
-	private void fillCirculatorSrcTexField(Circulator circulatorSrc) {
+	private void fillCirculatorSrcTexField() {
+		Circulator circulatorSrc;
+		circulatorSrc = pac.getCirculatorSrc();
+		
+		logger.info("(fillCirculatorSrcTexField) Circulator Name {}",circulatorSrc.getName());
+
 		textFieldCirculatorSrcName.setText(circulatorSrc.getName());
 		textFieldCirculatorSrcVoltage.setText(String.valueOf(circulatorSrc.getVoltage()));
+		
+		fillCirculatorSrcFeature(circulatorSrc);
 	}
 
 	/**
@@ -145,6 +151,14 @@ public class WinCirculatorSrc extends JFrame {
 		textFieldFeaturePower.setText(String.valueOf(circulatorSrc.getActiveFeaturePower()));
 		textFieldFeatureRotatePerMinutes.setText(String.valueOf(circulatorSrc.getActiveFeatureRotatePerMinutes()));
 	}
+	
+	/**
+	 * Apply the WinPac GUI configuration to GUI CirculatorSrc.
+	 * @param guiConfig
+	 */
+	public void applyConfig() {
+		changeLanguage();
+	}
 
 
 	/**
@@ -152,18 +166,43 @@ public class WinCirculatorSrc extends JFrame {
 	 * Data will ALWAYS be stored in International System : SI Format
 	 * @param paci
 	 */
-	private void UpdateTextField2CirculatorSrc( Circulator circulatorSrc) {
+	private void saveTextField2CirculatorSrc( Circulator circulatorSrc) {
 		// AT that stage all information are in SI !
 		circulatorSrc.setName(textFieldCirculatorSrcName.getText());
 		circulatorSrc.setVoltage(Double.valueOf(textFieldCirculatorSrcVoltage.getText()));
 	}
 
-	private void UpdateTextField2CirculatorSrcFeature( Circulator circulatorSrc) {
+	private void saveTextField2CirculatorSrcFeature( Circulator circulatorSrc) {
 		circulatorSrc.setActiveFeatureCurrent(Double.valueOf(textFieldFeatureCurrent.getText()));
 		circulatorSrc.setActiveFeaturePower(Integer.valueOf(textFieldFeaturePower.getText()));
 		circulatorSrc.setActiveFeatureRotatePerMinutes(Integer.valueOf(textFieldFeatureRotatePerMinutes.getText()));
 	}
 
+	private void changeLanguage(){
+		
+		this.setTitle(TCirculator.CIRCUL_TITLE_SOURCE.getLangue(guiConfig.getLanguage()));
+
+		lblVoltage.setText(TCirculator.CIRCUL_VOLTAGE.getLangue(guiConfig.getLanguage()));
+		lblRotatePerMinutes.setText(TCirculator.CIRCUL_ROTATE_PER_MINUTES.getLangue(guiConfig.getLanguage()));
+		lblPower.setText(TCirculator.CIRCUL_POWER.getLangue(guiConfig.getLanguage()));
+		lblCurrent.setText(TCirculator.CIRCUL_CURRENT.getLangue(guiConfig.getLanguage()));
+		
+		TitledBorder panel1_Border = (TitledBorder) panel1.getBorder();
+		panel1_Border.setTitle(TCirculator.CIRCUL_MANUFACTURER_DATA.getLangue(guiConfig.getLanguage()));
+
+		TitledBorder panel2_Border = (TitledBorder) panel2.getBorder();
+		panel2_Border.setTitle(TCirculator.CIRCUL_FEATURES.getLangue(guiConfig.getLanguage()));
+		
+		btnAutoRenameFeature.setText(TCirculator.CIRCUL_RENAME_LIST.getLangue(guiConfig.getLanguage()));
+		btnFeatureNew.setText(TCirculator.CIRCUL_NEW.getLangue(guiConfig.getLanguage()));
+		btnFeatureSave.setText(TCirculator.CIRCUL_SAVE.getLangue(guiConfig.getLanguage()));
+		btnSaveCirculatorSrc.setText(TCirculator.CIRCUL_SAVE.getLangue(guiConfig.getLanguage()));
+		btnFeatureDelete.setText(TCirculator.CIRCUL_DELETE.getLangue(guiConfig.getLanguage()));
+		
+		tabbedPane.setTitleAt(0, TCirculator.CIRCUL_TITLE.getLangue(guiConfig.getLanguage()));
+		
+
+	}
 
 
 	// -------------------------------------------------------
@@ -181,7 +220,7 @@ public class WinCirculatorSrc extends JFrame {
 
 		setTitle("Circulator Source");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(WinAbout.class.getResource("/gui/images/PAC-Tool_16.png")));
-		setBounds(100, 100, 437, 431);
+		setBounds(100, 100, 437, 428);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
@@ -190,14 +229,14 @@ public class WinCirculatorSrc extends JFrame {
 		//													TABBED PANE
 		// ===============================================================================================================
 
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(0, 0, 431, 401);
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setBounds(0, 0, 431, 399);
 		getContentPane().add(tabbedPane);
 
 		// ===============================================================================================================
 		//									                 PANEL COMPRESSOR
 		// ===============================================================================================================
-		JPanel panelCirculator = new JPanel();
+		panelCirculator = new JPanel();
 		tabbedPane.addTab("Circulator", null, panelCirculator, null);
 		panelCirculator.setLayout(null);
 
@@ -209,8 +248,8 @@ public class WinCirculatorSrc extends JFrame {
 		// ================================================================
 		// 					  	 Panel
 		// ================================================================
-		JPanel panel1 = new JPanel();
-		panel1.setBounds(10, 88, 410, 71);
+		panel1 = new JPanel();
+		panel1.setBounds(6, 36, 279, 93);
 		panelCirculator.add(panel1);
 		panel1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Donn\u00E9es Constructeur", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panel1.setLayout(null);
@@ -235,127 +274,35 @@ public class WinCirculatorSrc extends JFrame {
 		panel1.add(lblUnityVoltage);
 
 		// ---------------------------------------------------------------
-		// CirculatorSrc Name
-		// ---------------------------------------------------------------
-		textFieldCirculatorSrcName = new JTextField();
-		textFieldCirculatorSrcName.setBounds(10, 11, 167, 52);
-		panelCirculator.add(textFieldCirculatorSrcName);
-		textFieldCirculatorSrcName.setToolTipText("Name can be modified");
-		textFieldCirculatorSrcName.setForeground(new Color(0, 0, 128));
-		textFieldCirculatorSrcName.setBorder(null);
-		textFieldCirculatorSrcName.setBackground(UIManager.getColor("DesktopPane.background"));
-		textFieldCirculatorSrcName.setHorizontalAlignment(SwingConstants.CENTER);
-		textFieldCirculatorSrcName.setFont(new Font("Tahoma", Font.BOLD, 16));
-		textFieldCirculatorSrcName.setColumns(10);
-
-		// ---------------------------------------------------------------
 		// CirculatorSrc Save
 		// ---------------------------------------------------------------
-		JButton btnSaveCirculatorSrc = new JButton("Sauv.");
-		btnSaveCirculatorSrc.setBounds(265, 48, 68, 23);
+		btnSaveCirculatorSrc = new JButton("Sauv.");
+		btnSaveCirculatorSrc.setBounds(345, 343, 68, 23);
 		panelCirculator.add(btnSaveCirculatorSrc);
 		btnSaveCirculatorSrc.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int ComboId = comboBoxCirculatorSrc.getSelectedIndex();
-				if ( ComboId >= 0 ) {
-					logger.info("Save CirculatorSrc {}", ComboId );
-					pac.selectCurrentCirculatorSrc(ComboId);
-					UpdateTextField2CirculatorSrc(pac.getCurrentCirculatorSrc());
-					UpdateTextField2CirculatorSrcFeature(pac.getCurrentCirculatorSrc());
-					String tmp = textFieldCirculatorSrcName.getText();
-					//Impossible to rename an item, so we will create a new one, and delete the old
-					comboBoxCirculatorSrc.insertItemAt(tmp, ComboId);
-					comboBoxCirculatorSrc.removeItemAt(ComboId+1);
-				}
+					saveTextField2CirculatorSrc(pac.getCirculatorSrc());
+					saveTextField2CirculatorSrcFeature(pac.getCirculatorSrc());
 			}
 		});
 		btnSaveCirculatorSrc.setFont(new Font("Tahoma", Font.PLAIN, 9));
 
-		// ---------------------------------------------------------------
-		// Delete CirculatorSrc 
-		// ---------------------------------------------------------------
-		JButton btnDeleteCirculatorSrc = new JButton("Suppr.");
-		btnDeleteCirculatorSrc.setBounds(340, 48, 68, 23);
-		panelCirculator.add(btnDeleteCirculatorSrc);
-		btnDeleteCirculatorSrc.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				int ComboId = comboBoxCirculatorSrc.getSelectedIndex();
-				if ( ComboId > 0 ) {
-					logger.trace("pac.removeCirculatorSrc {}", ComboId);
-					pac.removeCirculatorSrc(ComboId);
-					comboBoxCirculatorSrc.removeItemAt(ComboId);
-					comboBoxCirculatorSrc.setSelectedIndex(ComboId-1);
-				} else {
-					JOptionPane.showMessageDialog(getContentPane(), "This entry cannot be deleted");
-				}
-			}
-		});
-		btnDeleteCirculatorSrc.setFont(new Font("Tahoma", Font.PLAIN, 9));
-
-		// ---------------------------------------------------------------
-		// New CirculatorSrc
-		// ---------------------------------------------------------------
-		JButton btnNewCirculatorSrc = new JButton("Nouv.");
-		btnNewCirculatorSrc.setBounds(187, 48, 68, 23);
-		panelCirculator.add(btnNewCirculatorSrc);
-		btnNewCirculatorSrc.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				int ComboId = comboBoxCirculatorSrc.getSelectedIndex();
-				ComboId++;
-				pac.addNewCirculatorSrc(ComboId);
-				pac.selectCurrentCirculatorSrc(ComboId);
-
-				Circulator circulatorSrc = pac.getCirculatorSrcNb(ComboId);
-				circulatorSrc.setName("Empty");
-
-				// For a new item we have to reset the feature list
-				if (comboBoxFeature != null) {
-					// Normally Do not use comboBoxFeature.removeItemAt(..) 
-					// because it will move the combo Box, and launch the function behind
-					// But here we must either that it will remove the arrow ???
-					//int tmpcnt = comboBoxFeature.getItemCount();
-					//for(int i=0;i<tmpcnt;i++) {
-					//	comboBoxFeature.removeItemAt(i);
-					//}
-					
-					comboBoxFeature.addItem("Feature: 0");
-					comboBoxFeature.setSelectedIndex(0);
-				}
-				
-				comboBoxCirculatorSrc.insertItemAt("Empty", ComboId);
-				comboBoxCirculatorSrc.setSelectedIndex(ComboId);
-				textFieldCirculatorSrcName.setText("Empty");
-
-			}
-		});
-		btnNewCirculatorSrc.setFont(new Font("Tahoma", Font.PLAIN, 9));
-
-
 		// =================================================================================
 
-		JPanel panel2 = new JPanel();
+		panel2 = new JPanel();
 		panel2.setBorder(new TitledBorder(null, "Features", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel2.setBounds(10, 165, 410, 199);
+		panel2.setBounds(7, 136, 410, 199);
 		panelCirculator.add(panel2);
 		panel2.setLayout(null);
 
 		// -----------------------
 		// Feature Save
 		// -----------------------
-		JButton btnFeatureSave = new JButton("Sauv.");
+		btnFeatureSave = new JButton("Sauv.");
 		btnFeatureSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int ComboId = comboBoxCirculatorSrc.getSelectedIndex();
-				int featureId = comboBoxFeature.getSelectedIndex();
-
-				if ((ComboId>=0) && (featureId>=0)) {
-
-					logger.trace("Save featureId= {} For Circulateur Id={}",featureId,ComboId);
-
-					Circulator circulatorSrc = pac.getCirculatorSrcNb(ComboId);
-					circulatorSrc.selectActiveFeature(featureId);
-					UpdateTextField2CirculatorSrcFeature(circulatorSrc);
-				}
+					Circulator circulatorSrc = pac.getCirculatorSrc();
+					saveTextField2CirculatorSrcFeature(circulatorSrc);
 			}
 		});
 		btnFeatureSave.setFont(new Font("Tahoma", Font.PLAIN, 9));
@@ -365,16 +312,15 @@ public class WinCirculatorSrc extends JFrame {
 		// -----------------------
 		// Feature Delete
 		// -----------------------
-		JButton btnFeatureDelete = new JButton("Suppr.");
+		btnFeatureDelete = new JButton("Suppr.");
 		btnFeatureDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int ComboId = comboBoxCirculatorSrc.getSelectedIndex();
 				int featureId = comboBoxFeature.getSelectedIndex();
 
-				if ((ComboId>=0) && (featureId>0)) {
-					logger.trace("Delete featureId={} For Circulateur Id={}",featureId,ComboId);
+				if (featureId>0) {
+					logger.trace("Delete featureId={} ",featureId);
 
-					Circulator circulatorSrc = pac.getCirculatorSrcNb(ComboId);
+					Circulator circulatorSrc = pac.getCirculatorSrc();
 					circulatorSrc.selectActiveFeature(featureId);
 					circulatorSrc.clearActiveFeatures();
 
@@ -393,14 +339,13 @@ public class WinCirculatorSrc extends JFrame {
 		// -----------------------
 		// Feature New
 		// -----------------------
-		JButton btnFeatureNew = new JButton("Nouv.");
+		btnFeatureNew = new JButton("Nouv.");
 		btnFeatureNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int ComboId = comboBoxCirculatorSrc.getSelectedIndex();
 				int featureId = comboBoxFeature.getItemCount();
-				if ((ComboId>=0) && (featureId>=0)) {
-					logger.trace("New featureId={} For Circulateur Id={}",featureId,ComboId);
-					Circulator circulatorSrc = pac.getCirculatorSrcNb(ComboId);
+				if  (featureId>=0) {
+					logger.trace("New featureId={}",featureId);
+					Circulator circulatorSrc = pac.getCirculatorSrc();
 					circulatorSrc.selectActiveFeature(featureId);
 					circulatorSrc.addFeatures(0.0, 0, 0);
 					comboBoxFeature.insertItemAt("Feature :"+featureId, featureId);
@@ -412,7 +357,7 @@ public class WinCirculatorSrc extends JFrame {
 		btnFeatureNew.setBounds(179, 64, 68, 23);
 		panel2.add(btnFeatureNew);
 
-		JLabel lblRotatePerMinutes = new JLabel("Rotate Per Minutes :");
+		lblRotatePerMinutes = new JLabel("Rotate Per Minutes :");
 		lblRotatePerMinutes.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblRotatePerMinutes.setBounds(22, 113, 113, 14);
 		panel2.add(lblRotatePerMinutes);
@@ -442,7 +387,7 @@ public class WinCirculatorSrc extends JFrame {
 		lblKw.setBounds(222, 141, 25, 14);
 		panel2.add(lblKw);
 
-		JLabel lblCurrent = new JLabel("Current :");
+		lblCurrent = new JLabel("Current :");
 		lblCurrent.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblCurrent.setBounds(83, 169, 52, 14);
 		panel2.add(lblCurrent);
@@ -457,53 +402,19 @@ public class WinCirculatorSrc extends JFrame {
 		lblA.setBounds(222, 169, 25, 14);
 		panel2.add(lblA);
 
-		// ---------------------------------------------------------------
-		// Combobox CirculatorSrc (Must be positioned At the end because will access to TextField)
-		// ---------------------------------------------------------------
-		comboBoxCirculatorSrc = new JComboBox<String>();
-		comboBoxCirculatorSrc.setBounds(252, 11, 131, 20);
-		panelCirculator.add(comboBoxCirculatorSrc);
-		comboBoxCirculatorSrc.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				int ComboId = comboBoxCirculatorSrc.getSelectedIndex();
-				pac.selectCurrentCirculatorSrc(ComboId);	
-
-				Circulator circulatorSrc = pac.getCurrentCirculatorSrc();
-
-				fillCirculatorSrcTexField(circulatorSrc);
-				int featureId = circulatorSrc.getActiveFeatureId();
-				logger.trace("comboBoxCirculatorSrc: featureId={} For Circulateur Id={}",featureId,ComboId);
-
-				
-				fillCirculatorSrcFeature(circulatorSrc);
-				if (comboBoxFeature != null) {
-					// Do not use comboBoxFeature.removeItemAt(..) because 
-					// it will move the combo Box, and launch the function behind 
-					comboBoxFeature.removeAllItems();
-
-					for(int i=0;i<pac.getCirculatorSrcNb(ComboId).getNbOfFeatures();i++) {
-						comboBoxFeature.addItem("Feature:"+i);
-					}
-					comboBoxFeature.setSelectedIndex(featureId);
-				}
-
-			}
-		});
-		comboBoxCirculatorSrc.addItem(pac.getCirculatorSrcNb(0).getName());
-
 		// -----------------------
 		// Combobox Feature (Must be positioned At the end because will access to TextField)
 		// -----------------------
 		comboBoxFeature = new JComboBox<String>();
+		comboBoxFeature.setEditable(true);
 		comboBoxFeature.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int ComboId = comboBoxCirculatorSrc.getSelectedIndex();
 				int featureId = comboBoxFeature.getSelectedIndex();
 
-				if ((ComboId>=0) && (featureId>=0)) {
-					logger.trace("comboBoxFeature move to featureId={} For Circulateur Id={}",featureId,ComboId);
+				if (featureId>=0) {
+					logger.trace("comboBoxFeature move to featureId={}",featureId);
 
-					Circulator circulatorSrc = pac.getCirculatorSrcNb(ComboId);
+					Circulator circulatorSrc = pac.getCirculatorSrc();
 					circulatorSrc.selectActiveFeature(featureId);
 					fillCirculatorSrcFeature(circulatorSrc);
 				}
@@ -511,22 +422,21 @@ public class WinCirculatorSrc extends JFrame {
 		});
 		comboBoxFeature.setBounds(239, 27, 131, 20);
 		// Fill Feature for Combobox 0
-		for(int i=0;i<pac.getCirculatorSrcNb(0).getNbOfFeatures();i++) {
+		for(int i=0;i<pac.getCirculatorSrc().getNbOfFeatures();i++) {
 			comboBoxFeature.addItem("Feature:"+i);
 		}
-		fillCirculatorSrcFeature(pac.getCirculatorSrcNb(0));
+		fillCirculatorSrcFeature(pac.getCirculatorSrc());
 		panel2.add(comboBoxFeature);
 
 		// -----------------------
 		// Button Feature Auto Rename (Must be at the end-end)
 		// -----------------------
-		JButton btnAutoRenameFeature = new JButton("Rename List");
+		btnAutoRenameFeature = new JButton("Rename List");
 		btnAutoRenameFeature.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int ComboId = comboBoxCirculatorSrc.getSelectedIndex();
 				int featureId = comboBoxFeature.getSelectedIndex();
 
-				if ((ComboId>=0) && (featureId>=0)) {
+				if (featureId>=0) {
 					
 					// Do not use comboBoxFeature.removeItemAt(..) because 
 					// it will move the combo Box, and launch the function behind 
@@ -537,7 +447,7 @@ public class WinCirculatorSrc extends JFrame {
 					//	comboBoxFeature.removeItemAt(0);
 					//}
 
-					for(int i=0;i<pac.getCirculatorSrcNb(ComboId).getNbOfFeatures();i++) {
+					for(int i=0;i<pac.getCirculatorSrc().getNbOfFeatures();i++) {
 						comboBoxFeature.addItem("Feature:"+i);
 					}
 					comboBoxFeature.setSelectedIndex(featureId);
@@ -547,10 +457,26 @@ public class WinCirculatorSrc extends JFrame {
 		btnAutoRenameFeature.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		btnAutoRenameFeature.setBounds(139, 26, 90, 23);
 		panel2.add(btnAutoRenameFeature);
+		
+				// ---------------------------------------------------------------
+				// CirculatorSrc Name
+				// ---------------------------------------------------------------
+				textFieldCirculatorSrcName = new JTextField();
+				textFieldCirculatorSrcName.setText("Circulator");
+				textFieldCirculatorSrcName.setBounds(249, 7, 167, 34);
+				panelCirculator.add(textFieldCirculatorSrcName);
+				textFieldCirculatorSrcName.setToolTipText("Name can be modified");
+				textFieldCirculatorSrcName.setForeground(new Color(0, 0, 0));
+				textFieldCirculatorSrcName.setBorder(null);
+				textFieldCirculatorSrcName.setBackground(UIManager.getColor("DesktopPane.background"));
+				textFieldCirculatorSrcName.setHorizontalAlignment(SwingConstants.RIGHT);
+				textFieldCirculatorSrcName.setFont(new Font("Tahoma", Font.BOLD, 14));
+				textFieldCirculatorSrcName.setColumns(10);
+				
+				JLabel lblNewLabel = new JLabel("");
+				lblNewLabel.setBounds(319, 45, 68, 76);
+				panelCirculator.add(lblNewLabel);
+				lblNewLabel.setIcon(new ImageIcon(WinCirculatorSrc.class.getResource("/gui/images/circulator_64.png")));
 
-	}
-
-	void changeLanguage(){
-		lblPower.setText(TCirculator.CIRCUL_POWER.getLangue(guiConfig.getLanguage()));
 	}
 }

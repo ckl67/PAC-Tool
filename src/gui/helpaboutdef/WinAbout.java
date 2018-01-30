@@ -16,7 +16,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-package gui;
+package gui.helpaboutdef;
 
 import javax.swing.JFrame;
 import javax.swing.JTextPane;
@@ -35,12 +35,12 @@ import java.net.URISyntaxException;
 import java.awt.Toolkit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import javax.swing.UIManager;
 
 public class WinAbout extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	//private static final Logger logger = LogManager.getLogger(WinAbout.class.getName());
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
 	// -------------------------------------------------------
@@ -52,25 +52,17 @@ public class WinAbout extends JFrame {
 	// 				TEST THE APPLICATION STANDALONE 
 	// -------------------------------------------------------
 	public static void main(String[] args) {
-		try {
-			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-
 					WinAbout frame = new WinAbout();
 					frame.setVisible(true);
-
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
 	}
-
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -79,6 +71,7 @@ public class WinAbout extends JFrame {
 	 * Create the application.
 	 */
 	public WinAbout() {
+		setResizable(false);
 		StringBuilder contentBuilder = new StringBuilder();
 
 		try {
@@ -86,7 +79,7 @@ public class WinAbout extends JFrame {
 			// A resource in a jar file is not a File, so you can't treat it as one.
 			// Use getResourceAsStream and use InputStreamReader instead of FileReader. 
 
-			InputStream i = WinDefinition.class.getResourceAsStream("/gui/html/About.html");
+			InputStream i = WinDefinition.class.getResourceAsStream("/gui/helpaboutdef/About.html");
 			BufferedReader in = new BufferedReader(new InputStreamReader(i));
 		    String str;
 		    while ((str = in.readLine()) != null) {
@@ -97,8 +90,6 @@ public class WinAbout extends JFrame {
 			logger.error("Ops! (WinDefinition)", e);
 		}
 		htmlcontent = contentBuilder.toString();
-
-		
 		initialize();
 	}
 
@@ -120,8 +111,8 @@ public class WinAbout extends JFrame {
 		}
 
 		setTitle("About");
-		setBounds(100, 1, 370, 166);
-		setResizable(false);
+		setBounds(100, 1, 312, 128);
+	//	setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(WinAbout.class.getResource("/gui/images/PAC-Tool_16.png")));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setBackground(Color.WHITE);
@@ -129,10 +120,9 @@ public class WinAbout extends JFrame {
 
 
 		JTextPane txtpnabout = new JTextPane();
-		txtpnabout.setEditable(false);
 		txtpnabout.setContentType("text/html");
 		txtpnabout.setText(htmlcontent);
-		txtpnabout.setBounds(84, 11, 275, 111);
+		txtpnabout.setBounds(93, 11, 203, 82);
 		txtpnabout.addHyperlinkListener(new HyperlinkListener() {
 			public void hyperlinkUpdate(HyperlinkEvent e) {
 				if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {

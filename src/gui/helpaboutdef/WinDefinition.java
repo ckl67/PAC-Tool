@@ -16,7 +16,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-package gui;
+package gui.helpaboutdef;
 
 import java.awt.EventQueue;
 import javax.swing.JEditorPane;
@@ -56,8 +56,11 @@ public class WinDefinition extends JFrame  {
 			public void run() {
 				try {
 
-					WinDefinition window = new WinDefinition();
-					window.setVisible(true);
+					WinDefinition window1 = new WinDefinition("Définition","/gui/helpaboutdef/Definitions.html");
+					window1.setVisible(true);
+
+					WinDefinition window2 = new WinDefinition("Abréviation","/gui/helpaboutdef/Abreviation.html");
+					window2.setVisible(true);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -73,7 +76,7 @@ public class WinDefinition extends JFrame  {
 	/**
 	 * Create the application.
 	 */
-	public WinDefinition() {
+	public WinDefinition(String vtitle, String vfile) {
 		StringBuilder contentBuilder = new StringBuilder();
 
 		try {
@@ -82,7 +85,7 @@ public class WinDefinition extends JFrame  {
 			// A resource in a jar file is not a File, so you can't treat it as one.
 			// Use getResourceAsStream and use InputStreamReader instead of FileReader. 
 
-			InputStream i = WinDefinition.class.getResourceAsStream("/gui/html/Abreviation.html");
+			InputStream i = WinDefinition.class.getResourceAsStream(vfile);
 			BufferedReader in = new BufferedReader(new InputStreamReader(i));
 		    String str;
 		    while ((str = in.readLine()) != null) {
@@ -94,7 +97,7 @@ public class WinDefinition extends JFrame  {
 		}
 		htmlcontent = contentBuilder.toString();
 		
-		initialize();
+		initialize(vtitle);
 	}
 
 	// -------------------------------------------------------
@@ -103,7 +106,7 @@ public class WinDefinition extends JFrame  {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(String vtitle) {
 		
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -115,7 +118,7 @@ public class WinDefinition extends JFrame  {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		setIconImage(Toolkit.getDefaultToolkit().getImage(WinDefinition.class.getResource("/gui/images/PAC-Tool_16.png")));
-		setTitle("Definitions");
+		setTitle(vtitle);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		getContentPane().add(scrollPane, BorderLayout.CENTER);

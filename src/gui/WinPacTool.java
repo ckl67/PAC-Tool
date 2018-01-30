@@ -44,6 +44,11 @@ import javax.swing.ImageIcon;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import enthalpy.Enthalpy;
+import gui.helpaboutdef.WinAbout;
+import gui.helpaboutdef.WinDefinition;
+import gui.pac.WinCirculatorDistr;
+import gui.pac.WinCirculatorSrc;
+import gui.pac.WinCompressor;
 import pac.Pac;
 import translation.TLanguage;
 

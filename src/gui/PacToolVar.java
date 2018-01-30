@@ -35,6 +35,11 @@ import javax.swing.JTextField;
 import computation.MeasureTable;
 import computation.ResultTable;
 import enthalpy.Enthalpy;
+import gui.helpaboutdef.WinAbout;
+import gui.helpaboutdef.WinDefinition;
+import gui.pac.WinCirculatorDistr;
+import gui.pac.WinCirculatorSrc;
+import gui.pac.WinCompressor;
 import log4j.Log4j2Config;
 import mpoints.EloMeasurePoint;
 import mpoints.MeasurePoint;
@@ -56,7 +61,6 @@ public class PacToolVar {
 	//  	All data are loaded once --> no problem of missing variables 
 			
 	private Pac pac;
-	private Enthalpy enthalpy;
 
 	private List<MeasurePoint> measurePointL;
 	private List<ElDraw> eDrawL;

@@ -8,7 +8,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.junit.Test;
 
-import enthalpy.Enthalpy;
 import gui.GuiConfig;
 
 public class JUnitPacToolConfig {
@@ -20,7 +19,8 @@ public class JUnitPacToolConfig {
 
 		Scanner sken = null;
 		try {
-			sken = new Scanner (new File ("D:/Users/kluges1/workspace/pac-tool/config/PAC-Tool-Test.cfg"));
+			// D:\Users\kluges1\workspace\pac-tool\config
+			sken = new Scanner (new File ("D:/Users/kluges1/workspace/pac-tool/config/PAC-Tool.cfg"));
 		} catch (FileNotFoundException e) {
 			System.err.println("Unable to read the file: fileName");
 		}
@@ -55,12 +55,6 @@ public class JUnitPacToolConfig {
 		System.out.println("   BTU=" +	guiConfig.getUnitCompBTU());
 		System.out.println("   Pound=" +	guiConfig.getUnitCompPound());
 		System.out.println("   Faren=" +	guiConfig.getUnitCompFaren());
-
-		// Enthalpy (containing also EnthalpyBkgdImg)
-		Enthalpy enthalpy = new Enthalpy();
-		JSONObject jsonObjEnthalpy = (JSONObject) jsonObj.get("Enthalpy");
-		System.out.println(jsonObjEnthalpy);
-		enthalpy.setJsonObject(jsonObjEnthalpy);
 
 	}
 

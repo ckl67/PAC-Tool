@@ -26,6 +26,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import computation.ResultTable;
+import gui.helpaboutdef.WinAbout;
 import mpoints.MeasurePoint;
 
 import javax.swing.JScrollPane;
