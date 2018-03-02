@@ -1,7 +1,0 @@
-package gui;
-
-public enum ElDrawObject {
-	PointPK_HP, 
-	PointP0_HP, 
-	LineP, 
-}

@@ -44,11 +44,11 @@ import javax.swing.ImageIcon;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import enthalpy.Enthalpy;
-import gui.helpaboutdef.WinAbout;
-import gui.helpaboutdef.WinDefinition;
-import gui.pac.WinCirculatorDistr;
-import gui.pac.WinCirculatorSrc;
-import gui.pac.WinCompressor;
+import gui.helpaboutdef.AboutWin;
+import gui.helpaboutdef.DefinitionWin;
+import gui.pac.CirculatorDistrWin;
+import gui.pac.CirculatorSrcWin;
+import gui.pac.CompressorWin;
 import pac.Pac;
 import translation.TLanguage;
 
@@ -67,19 +67,19 @@ public class WinPacTool extends JFrame {
 	private Pac pac;
 	private Enthalpy enthalpy;
 	private GuiConfig guiConfig;
-	private WinCompressor winCompressor;
-	private WinCirculatorDistr winCirculatorDistr;
-	private WinCirculatorSrc winCirculatorSrc;
+	private CompressorWin compressorWin;
+	private CirculatorDistrWin circulatorDistrWin;
+	private CirculatorSrcWin circulatorSrcWin;
 	
-	private WinEnthalpy winEnthalpy;
+	private EnthalpyWin enthalpyWin;
 	private WinConfEnthalpy winConfEnthalpy;
 	private WinPressTemp winPressTemp;
 
-	private WinMeasureTable winMeasureTable;
-	private WinResultTable winResultTable;
+	private MeasurePointTableWin measurePointTableWin;
+	private MeasureResultTableWin measureResultTableWin;
 
-	private WinAbout winAbout;
-	private WinDefinition winDefinition;
+	private AboutWin aboutWin;
+	private DefinitionWin definitionWin;
 	private WinLogger winLogger;
 
 	private PanelPacTool contentPanel;
@@ -97,15 +97,15 @@ public class WinPacTool extends JFrame {
 		pac = vpacToolVar.getPac();
 		enthalpy = vpacToolVar.getEnthalpy();
 		guiConfig = vpacToolVar.getGuiConfig();
-		winCompressor = vpacToolVar.getWinCompressor();
-		winCirculatorDistr =  vpacToolVar.getWinCirculatorDistr();
-		winCirculatorSrc = vpacToolVar.getWinCirculatorSrc();
-		winEnthalpy = vpacToolVar.getWinEnthalpy();
+		compressorWin = vpacToolVar.getWinCompressor();
+		circulatorDistrWin =  vpacToolVar.getWinCirculatorDistr();
+		circulatorSrcWin = vpacToolVar.getWinCirculatorSrc();
+		enthalpyWin = vpacToolVar.getWinEnthalpy();
 		winConfEnthalpy  = vpacToolVar.getWinConfEnthalpy();
-		winMeasureTable = vpacToolVar.getWinMeasureTable();
-		winResultTable = vpacToolVar.getWinResultTable();
-		winAbout = vpacToolVar.getWinAbout();
-		winDefinition = vpacToolVar.getWinDefinition();
+		measurePointTableWin = vpacToolVar.getWinMeasureTable();
+		measureResultTableWin = vpacToolVar.getWinResultTable();
+		aboutWin = vpacToolVar.getWinAbout();
+		definitionWin = vpacToolVar.getWinDefinition();
 		winPressTemp = vpacToolVar.getWinPressTemp();
 		winLogger = vpacToolVar.getWinLogger();
 
@@ -168,8 +168,8 @@ public class WinPacTool extends JFrame {
 					// Read the configuration from File
 					PacToolConfig.readConfigFile(pac, enthalpy, guiConfig, chooser.getSelectedFile().getAbsolutePath());
 
-					winCompressor.applyConfig();
-					winEnthalpy.applyConfig();
+					compressorWin.applyConfig();
+					enthalpyWin.applyConfig();
 					winConfEnthalpy.applyConfig();
 
 				}
@@ -254,8 +254,8 @@ public class WinPacTool extends JFrame {
 		mntmCompressor.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/compresseur-16.png")));
 		mntmCompressor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				logger.trace("JMenuItem: Open winCompressor");
-				winCompressor.setVisible(true);
+				logger.trace("JMenuItem: Open compressorWin");
+				compressorWin.setVisible(true);
 			}
 		});
 		mnPac.add(mntmCompressor);
@@ -264,7 +264,7 @@ public class WinPacTool extends JFrame {
 		mntmCirculatorScr.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				logger.trace("JMenuItem: Open Circulator Source");
-				winCirculatorSrc.setVisible(true);
+				circulatorSrcWin.setVisible(true);
 			}
 		});
 		mntmCirculatorScr.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/circulator_16.png")));
@@ -274,7 +274,7 @@ public class WinPacTool extends JFrame {
 		mntmCirculatorDistr.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				logger.trace("JMenuItem: Open Circulator Distribution");
-				winCirculatorDistr.setVisible(true);
+				circulatorDistrWin.setVisible(true);
 			}
 		});
 		mntmCirculatorDistr.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/circulator_16.png")));
@@ -287,8 +287,8 @@ public class WinPacTool extends JFrame {
 		mntmDiagram.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/Enthalpy-16.png")));
 		mntmDiagram.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				logger.trace("JMenuItem: Open winEnthalpy");
-				winEnthalpy.setVisible(true);
+				logger.trace("JMenuItem: Open enthalpyWin");
+				enthalpyWin.setVisible(true);
 			}
 		});
 		mnEnthalpy.add(mntmDiagram);
@@ -311,7 +311,7 @@ public class WinPacTool extends JFrame {
 		mntmTableMeasures.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				logger.trace("JMenuItem: Open WinMeasureTable");
-				winMeasureTable.setVisible(true);
+				measurePointTableWin.setVisible(true);
 			}
 		});
 		mnAllData.add(mntmTableMeasures);
@@ -320,7 +320,7 @@ public class WinPacTool extends JFrame {
 		mntmResults.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				logger.trace("JMenuItem: Open WinResultTable");
-				winResultTable.setVisible(true);			
+				measureResultTableWin.setVisible(true);			
 			}
 		});
 		mntmResults.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/table-16.png")));
@@ -350,11 +350,11 @@ public class WinPacTool extends JFrame {
 		mRationItemFrench.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				guiConfig.setLanguage(TLanguage.FRENCH);
-				winCompressor.changeLanguage();
-				winCirculatorSrc.changeLanguage();
-				winCirculatorDistr.changeLanguage();
-				winMeasureTable.getTable().changeLanguage();
-				winResultTable.getTable().changeLanguage();
+				compressorWin.changeLanguage();
+				circulatorSrcWin.changeLanguage();
+				circulatorDistrWin.changeLanguage();
+				measurePointTableWin.getTable().changeLanguage();
+				measureResultTableWin.getTable().changeLanguage();
 			}
 		});
 		buttonGroup.add(mRationItemFrench);
@@ -365,11 +365,11 @@ public class WinPacTool extends JFrame {
 		mRationItemEnglisch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				guiConfig.setLanguage(TLanguage.ENGLICH);
-				winCompressor.changeLanguage();
-				winCirculatorSrc.changeLanguage();
-				winCirculatorDistr.changeLanguage();
-				winMeasureTable.getTable().changeLanguage();
-				winResultTable.getTable().changeLanguage();
+				compressorWin.changeLanguage();
+				circulatorSrcWin.changeLanguage();
+				circulatorDistrWin.changeLanguage();
+				measurePointTableWin.getTable().changeLanguage();
+				measureResultTableWin.getTable().changeLanguage();
 			}
 		});
 		mRationItemEnglisch.setSelected(true);
@@ -385,8 +385,8 @@ public class WinPacTool extends JFrame {
 		mntmDefinitio.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/aide-index-16.png")));
 		mntmDefinitio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				logger.trace("JMenuItem: Open WinDefinition");
-				winDefinition.setVisible(true);
+				logger.trace("JMenuItem: Open DefinitionWin");
+				definitionWin.setVisible(true);
 
 			}
 		});
@@ -399,8 +399,8 @@ public class WinPacTool extends JFrame {
 		mntmAbout.setIcon(new ImageIcon(WinPacTool.class.getResource("/gui/images/About16.png")));
 		mntmAbout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				logger.trace("JMenuItem: Open WinAbout");
-				winAbout.setVisible(true);
+				logger.trace("JMenuItem: Open AboutWin");
+				aboutWin.setVisible(true);
 			}
 		});
 		mnHelp.add(mntmAbout);

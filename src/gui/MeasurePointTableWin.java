@@ -21,15 +21,19 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import computation.MeasureTable;
-import gui.helpaboutdef.WinAbout;
+import gui.helpaboutdef.AboutWin;
+import mpoints.EloMeasurePoint;
 import mpoints.MeasurePoint;
+import pac.Pac;
+import translation.TLanguage;
+import translation.TMeasurePoint;
 
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -38,18 +42,16 @@ import javax.swing.JMenuItem;
 import java.awt.event.ActionListener;
 import java.awt.print.PrinterException;
 import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 
-
-public class WinMeasureTable extends JFrame {
+public class MeasurePointTableWin extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	//private static final Logger logger = LogManager.getLogger(WinMeasureTable.class.getName());
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
-
-	private MeasureTable table;
+	private JTable table;
 
 	// -------------------------------------------------------
 	// 				TEST THE APPLICATION STANDALONE 
@@ -61,9 +63,43 @@ public class WinMeasureTable extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					WinMeasureTable window = new WinMeasureTable(
-							new MeasureTable(new ArrayList<MeasurePoint>(), new GuiConfig()));
-					window.setVisible(true);
+
+					// Create the List of measure points
+					List<MeasurePoint> lMeasurePoints;
+					lMeasurePoints = new ArrayList<MeasurePoint>(); 
+					for (EloMeasurePoint p : EloMeasurePoint.values()) {
+						lMeasurePoints.add(new MeasurePoint(p));
+					}
+
+					GuiConfig guiConfig = new GuiConfig();
+					guiConfig.setLanguage(TLanguage.FRENCH);
+
+					MeasurePointTableWin measurePointTableWin = new MeasurePointTableWin(lMeasurePoints, guiConfig); 
+					measurePointTableWin.setVisible(true);
+					
+					//Compute Points
+					//MeasurePoint mp1 = lMeasurePoints.get(EloMeasurePoint.P1.id());
+					MeasurePoint mp2 = lMeasurePoints.get(EloMeasurePoint.P2.id());
+					MeasurePoint mp3 = lMeasurePoints.get(EloMeasurePoint.P3.id());
+					MeasurePoint mp4 = lMeasurePoints.get(EloMeasurePoint.P4.id());
+					MeasurePoint mp5 = lMeasurePoints.get(EloMeasurePoint.P5.id());
+					MeasurePoint mp6 = lMeasurePoints.get(EloMeasurePoint.P6.id());
+					MeasurePoint mp7 = lMeasurePoints.get(EloMeasurePoint.P7.id());
+					MeasurePoint mp8 = lMeasurePoints.get(EloMeasurePoint.P8.id());
+
+					Pac pac = new Pac();
+					mp3.setValue(15, pac, lMeasurePoints);
+					mp7.setValue(4, pac, lMeasurePoints);
+					mp4.setValue(15, pac, lMeasurePoints);
+					//mp1.setValue(0, pac, lMeasurePoints);
+					mp2.setValue(69, pac, lMeasurePoints);
+					mp5.setValue(30, pac, lMeasurePoints);
+					mp6.setValue(-10, pac, lMeasurePoints);
+					mp8.setValue(-10, pac, lMeasurePoints);
+
+					measurePointTableWin.updateTableValues(lMeasurePoints, guiConfig);				
+					
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -71,13 +107,40 @@ public class WinMeasureTable extends JFrame {
 		});
 	}
 
+	/**
+	 * Update the window with the new measure points
+	 * @param lMeasurePoints
+	 * @param guiConfig
+	 */
+	public void updateTableValues(List<MeasurePoint> lMeasurePoints, GuiConfig guiConfig) {
+
+		for (int n = 0; n < lMeasurePoints.size(); n++) {
+
+			MeasurePoint m = lMeasurePoints.get(n);  
+
+			table.setValueAt( Math.round(m.getMP_T()*100)/100.0, n, 2);
+			table.setValueAt( Math.round(m.getMP_P()*100)/100.0, n, 3);
+			table.setValueAt( Math.round(m.getMP_H()*100)/100.0, n, 4);
+
+			logger.info(
+					"Point = {} Choice Status = {} value= {} T={} --> P={} ==> P0 or PK ={} H ={} ",
+					m.getMPObject().name(),
+					m.getMPObject().getDefinition(guiConfig.getLanguage()),
+					m.getValue(),
+					m.getMP_T(),
+					m.getMP_P(),
+					m.getMP_P0PK(lMeasurePoints),
+					m.getMP_H()						
+					);
+
+		}
+	}
+
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
-	public WinMeasureTable( MeasureTable vtable ) {
-		table = vtable;
-
+	public MeasurePointTableWin( List<MeasurePoint> lMeasurePoints, GuiConfig guiConfig ) {
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Throwable e) {
@@ -85,10 +148,33 @@ public class WinMeasureTable extends JFrame {
 		}
 
 		setTitle("Measure Table");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(WinAbout.class.getResource("/gui/images/PAC-Tool_16.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(AboutWin.class.getResource("/gui/images/PAC-Tool_16.png")));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(true);
-		setBounds(100, 100, 700, 169);
+		setBounds(100, 100, 700, 271);
+
+		// Construct table
+		DefaultTableModel defaultTableModel = new DefaultTableModel();
+		defaultTableModel.addColumn(TMeasurePoint.DEF_TAB_POINT.getLangue(guiConfig.getLanguage()));
+		defaultTableModel.addColumn(TMeasurePoint.DEF_TAB_DEFINITION.getLangue(guiConfig.getLanguage()));
+		defaultTableModel.addColumn("T (°C)");
+		defaultTableModel.addColumn("P (bar)");
+		defaultTableModel.addColumn("H (Kj/kg)");
+
+		for (int i = 0; i < lMeasurePoints.size(); i++) {
+
+			MeasurePoint m = lMeasurePoints.get(i);  
+			defaultTableModel.addRow( 
+					new Object[] {
+							" " + m.getMPObject().name(),
+							" " + m.getMPObject().getDefinition(guiConfig.getLanguage()),
+							m.getMP_T(),
+							m.getMP_P(),
+							m.getMP_H()
+					});
+		}
+		table = new JTable(defaultTableModel);
+
 
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.createVerticalScrollBar();
@@ -101,7 +187,7 @@ public class WinMeasureTable extends JFrame {
 		menuBar.add(mnFile);
 
 		JMenuItem mntmPrint = new JMenuItem("Print");
-		mntmPrint.setIcon(new ImageIcon(WinMeasureTable.class.getResource("/gui/images/imprimante-16.png")));
+		mntmPrint.setIcon(new ImageIcon(MeasurePointTableWin.class.getResource("/gui/images/imprimante-16.png")));
 		mntmPrint.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
@@ -126,7 +212,6 @@ public class WinMeasureTable extends JFrame {
 		scrollPane.setColumnHeaderView(table);
 		scrollPane.setViewportView(table);
 
-
 		setJTableColumnsWidth( 700, 5, 65, 10, 10, 10);
 
 	}
@@ -148,8 +233,4 @@ public class WinMeasureTable extends JFrame {
 		}
 	}
 
-	public MeasureTable getTable() {
-		return table;
-	}
-	
 }

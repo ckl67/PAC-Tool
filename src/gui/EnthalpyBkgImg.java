@@ -18,22 +18,16 @@
  */
 package gui;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
-public class EnthalpyBkgdImg {
+public class EnthalpyBkgImg {
 	
-	//private static final Logger logger = LogManager.getLogger(Enthalpy.class.getName());
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 	
-	// Enthalpy image file (.png)
-	private String enthalpyImageFile;		
+	// Refrigerant image file (.png)
+	private String imgRfgFile;		
 
 	// Reference points chosen on the Curve
 	private int refCurveH1x; 
@@ -52,10 +46,10 @@ public class EnthalpyBkgdImg {
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
-	public EnthalpyBkgdImg() {
+	public EnthalpyBkgImg(String fileImgBg) {
 		
 		// Image
-		this.enthalpyImageFile = "./ressources/R22/R22 couleur A4.png";
+		this.imgRfgFile = fileImgBg; // = "./ressources/R22/R22 couleur A4.png";
 
 		// Reference points chosen on the Curve
 		this.refCurveH1x = 140; 
@@ -92,7 +86,7 @@ public class EnthalpyBkgdImg {
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
 		JSONObject jsonObj = new JSONObject();  
-		jsonObj.put("EnthalpyImageFile", this.enthalpyImageFile);
+		jsonObj.put("RefrigerantImageFile", this.imgRfgFile);
 		jsonObj.put("RefCurveH1x", this.refCurveH1x);	
 		jsonObj.put("RefCurveH2x", this.refCurveH2x);	
 		jsonObj.put("RefCurveP1y", this.refCurveP1y);	
@@ -109,7 +103,7 @@ public class EnthalpyBkgdImg {
 	 * @param jsonObj : JSON Object
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
-		this.enthalpyImageFile = (String) jsonObj.get("EnthalpyImageFile");
+		this.imgRfgFile = (String) jsonObj.get("RefrigerantImageFile");
 		
 		this.refCurveH1x = ((Number) jsonObj.get("RefCurveH1x")).intValue() ;
 		this.refCurveH2x = ((Number) jsonObj.get("RefCurveH2x")).intValue() ;
@@ -197,13 +191,14 @@ public class EnthalpyBkgdImg {
 		this.iBgP2y = iBgP2y;
 	}
 
-	public void setEnthalpyImageFile(String enthalpyImageFile) {
-		this.enthalpyImageFile = enthalpyImageFile;
-		logger.info("setEnthalpyImageFile :: enthalpyImageFile = {}", enthalpyImageFile);
+	public void setRefrigerantImageFile(String imgRfgFile) {
+		this.imgRfgFile = imgRfgFile;
+		logger.info("(EnthalpyBkgImg):: setRefrigerantImageFile :: imgRfgFile = {}", imgRfgFile);
 	}
 
-	public String getEnthalpyImageFile() {
-		return enthalpyImageFile;
+	public String getRefrigerantImageFile() {
+		logger.info("(EnthalpyBkgImg):: getRefrigerantImageFile :: imgRfgFile = {}", imgRfgFile);
+		return imgRfgFile;
 	}
 
 }

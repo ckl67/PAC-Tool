@@ -19,9 +19,6 @@ public class Refrigerant extends SatCurve {
 	private double rfgT;
 	private double rfgH;
 
-	//private double coefIsotherm;
-	//private double expIsotherm;
-
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
@@ -30,9 +27,6 @@ public class Refrigerant extends SatCurve {
 		this.rfgP = 0.0;
 		this.rfgT = 0.0; 
 		this.rfgH = 0.0; 	
-
-		//this.coefIsotherm = 1;
-		//this.expIsotherm = 2;
 	}
 
 	/*
@@ -49,6 +43,12 @@ public class Refrigerant extends SatCurve {
 	// 							METHOD
 	// -------------------------------------------------------
 
+	public void loadNewRefrigerant(String fileNameGas) {
+		this.rfgName = loadGasSaturationData(fileNameGas);
+		this.rfgP = 0.0;
+		this.rfgT = 0.0; 
+		this.rfgH = 0.0; 
+	}
 
 	// -----------------------------------------------------------------------------------------
 	// 										Isobaric 
@@ -108,8 +108,8 @@ public class Refrigerant extends SatCurve {
 		double satPLiquid  = this.getPSatFromT(T).getPLiquid();
 		double satPGas = this.getPSatFromT(T).getPGas();
 
-		//logger.info("  (getPIsotherm):: satHLiquid={} satHGas={}",satHLiquid,satHGas);
-		//logger.info("  (getPIsotherm):: satPLiquid={} satPGas={}",satPLiquid,satPGas);
+		//logger.trace("  (getPIsotherm):: satHLiquid={} satHGas={}",satHLiquid,satHGas);
+		//logger.trace("  (getPIsotherm):: satPLiquid={} satPGas={}",satPLiquid,satPGas);
 
 		if (H< satHLiquid) { 
 			if (P <satPLiquid )
@@ -199,8 +199,6 @@ public class Refrigerant extends SatCurve {
 	public JSONObject getJsonObject() {
 		JSONObject jsonObj = new JSONObject();  
 		jsonObj.put("RefrigerantGasFileName", this.getGasFileNameSat());
-		//jsonObj.put("CoefIsotherm", this.coefIsotherm);
-		//jsonObj.put("ExpIsotherm", this.expIsotherm);
 		return jsonObj ;
 	}
 
@@ -216,9 +214,6 @@ public class Refrigerant extends SatCurve {
 		this.rfgP = 0.0;
 		this.rfgT = 0.0; 
 		this.rfgH = 0.0; 	
-		//this.coefIsotherm = ((Number) jsonObj.get("CoefIsotherm")).doubleValue(); 	
-		//this.expIsotherm = ((Number) jsonObj.get("ExpIsotherm")).doubleValue(); 	
-
 	}
 
 	// -------------------------------------------------------

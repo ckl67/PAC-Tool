@@ -1,6 +1,6 @@
 /*
  * - PAC-Tool - 
- * Tool for understanding basics and computation of PAC (Pompe à Chaleur)
+ * Tool for understanding basics and computation of PAC (Pompe ï¿½ Chaleur)
  * Copyright (C) 2016 christian.klugesherz@gmail.com
  *
  * This program is free software; you can redistribute it and/or modify
@@ -20,7 +20,7 @@ package pac;
 
 import org.json.simple.JSONObject;
 
-import computation.Misc;
+import misc.Misc;
 import refrigerant.Refrigerant;
 
 public class Compressor {

@@ -38,14 +38,15 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.JButton;
-import computation.Misc;
+
 import gui.GuiConfig;
+import misc.Misc;
 import pac.Compressor;
 import pac.Pac;
 import translation.TCompressor;
 import translation.TLanguage;
 
-public class WinCompressor extends JFrame {
+public class CompressorWin extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
@@ -111,7 +112,7 @@ public class WinCompressor extends JFrame {
 				try {
 					Pac pac = new Pac();
 					GuiConfig guiConfig = new GuiConfig();
-					WinCompressor winCompFrame = new WinCompressor(pac, guiConfig );
+					CompressorWin winCompFrame = new CompressorWin(pac, guiConfig );
 					// First fillCompressorTextField then applyConfig 
 					winCompFrame.fillCompressorTextField();
 					winCompFrame.applyConfig();
@@ -135,7 +136,7 @@ public class WinCompressor extends JFrame {
 	 * @param pac --> PAC
 	 * @param vguiConfig --> Whole configuration of PAC TOOL GUI
 	 */
-	public WinCompressor(Pac vpac, GuiConfig vguiConfig) {
+	public CompressorWin(Pac vpac, GuiConfig vguiConfig) {
 		pac = vpac;
 		guiConfig =vguiConfig;
 		initialize();
@@ -331,7 +332,7 @@ public class WinCompressor extends JFrame {
 		this.setTitle(TCompressor.COMP_WIN_TITLE.getLangue(guiConfig.getLanguage()));
 
 		this.setTitle("Compressor");
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(WinCompressor.class.getResource("/gui/images/PAC-Tool_16.png")));
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage(CompressorWin.class.getResource("/gui/images/PAC-Tool_16.png")));
 		this.setBounds(100, 100, 445, 549);
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

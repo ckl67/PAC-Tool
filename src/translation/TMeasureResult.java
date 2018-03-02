@@ -16,6 +16,10 @@ public enum TMeasureResult {
 	DEF_COPCOLD("COP Cold","COP froid"),
 	DEF_COPHOT("COP Hot","COP Chaud"),
 	DEF_COP("COP","COP"),
+	DEF_TAB_RESULT( "Result", "Résultat"),
+	DEF_TAB_DEFINITION( "Definition", "Définition"),
+	DEF_TAB_VALUE( "Value", "Valeur"),
+
 
 	;	
 	// --------------------------------------------------------------------

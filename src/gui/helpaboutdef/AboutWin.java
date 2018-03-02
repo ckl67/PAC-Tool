@@ -38,7 +38,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.swing.UIManager;
 
-public class WinAbout extends JFrame {
+public class AboutWin extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
@@ -55,7 +55,7 @@ public class WinAbout extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					WinAbout frame = new WinAbout();
+					AboutWin frame = new AboutWin();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -70,7 +70,7 @@ public class WinAbout extends JFrame {
 	/**
 	 * Create the application.
 	 */
-	public WinAbout() {
+	public AboutWin() {
 		setResizable(false);
 		StringBuilder contentBuilder = new StringBuilder();
 
@@ -79,7 +79,7 @@ public class WinAbout extends JFrame {
 			// A resource in a jar file is not a File, so you can't treat it as one.
 			// Use getResourceAsStream and use InputStreamReader instead of FileReader. 
 
-			InputStream i = WinDefinition.class.getResourceAsStream("/gui/helpaboutdef/About.html");
+			InputStream i = DefinitionWin.class.getResourceAsStream("/gui/helpaboutdef/About.html");
 			BufferedReader in = new BufferedReader(new InputStreamReader(i));
 		    String str;
 		    while ((str = in.readLine()) != null) {
@@ -87,7 +87,7 @@ public class WinAbout extends JFrame {
 		    }
 		    in.close();
 		} catch (IOException e) {
-			logger.error("Ops! (WinDefinition)", e);
+			logger.error("Ops! (DefinitionWin)", e);
 		}
 		htmlcontent = contentBuilder.toString();
 		initialize();
@@ -113,7 +113,7 @@ public class WinAbout extends JFrame {
 		setTitle("About");
 		setBounds(100, 1, 312, 128);
 	//	setResizable(false);
-		setIconImage(Toolkit.getDefaultToolkit().getImage(WinAbout.class.getResource("/gui/images/PAC-Tool_16.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(AboutWin.class.getResource("/gui/images/PAC-Tool_16.png")));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setBackground(Color.WHITE);
 		getContentPane().setLayout(null);
@@ -141,7 +141,7 @@ public class WinAbout extends JFrame {
 
 		
 		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(WinAbout.class.getResource("/gui/images/PAC-Tool_64.png")));
+		lblNewLabel.setIcon(new ImageIcon(AboutWin.class.getResource("/gui/images/PAC-Tool_64.png")));
 		lblNewLabel.setBounds(10, 11, 64, 64);
 		getContentPane().add(lblNewLabel);
 	}

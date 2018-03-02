@@ -3,7 +3,7 @@ package testing;
 import org.json.simple.JSONObject;
 import org.junit.Test;
 
-import gui.EnthalpyBkgdImg;
+import gui.EnthalpyBkgImg;
 
 public class JunitEnthalpyBkgdImg {
 
@@ -11,7 +11,7 @@ public class JunitEnthalpyBkgdImg {
 	public void test() {
 		System.out.println("TEST ENTHALPYBKGDIMG");
 
-		EnthalpyBkgdImg vEnthalpyBkgdImg = new EnthalpyBkgdImg();
+		EnthalpyBkgImg vEnthalpyBkgdImg = new EnthalpyBkgImg();
 
 		//vEnthalpyBkgdImg.openEnthalpyImageFile();
 		

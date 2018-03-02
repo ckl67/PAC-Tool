@@ -30,8 +30,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98147383"
-     inkscape:cx="350.10961"
-     inkscape:cy="383.68224"
+     inkscape:cx="594.91674"
+     inkscape:cy="425.03683"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="false"
@@ -71,7 +71,8 @@
   <g
      inkscape:groupmode="layer"
      id="layer2"
-     inkscape:label="Calque 2">
+     inkscape:label="Calque 2"
+     style="display:inline">
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:17.24179077px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#008000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -83,10 +84,11 @@
          sodipodi:role="line"
          id="tspan4184"
          x="351.51086"
-         y="351.05099">getPSatLiquidFromH (H=160) --&gt; 2 bar</tspan></text>
+         y="351.05099"
+         style="font-size:14.99999997px">getPSatLiquidFromH (H=160) --&gt; 2 bar</tspan></text>
     <path
-       style="fill:none;fill-rule:evenodd;stroke:#000080;stroke-width:1.7740587px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 684.25988,151.08215 -0.48866,432.11644"
+       style="fill:none;fill-rule:evenodd;stroke:#000080;stroke-width:1.21149814px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 684.26198,151.08819 -0.49286,199.80066"
        id="path4205-5"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
@@ -108,7 +110,7 @@
          id="tspan4188-8"
          x="307.71085"
          y="394.64728"
-         style="fill:#000080;fill-opacity:1">getTSatLiquidFromH (H=150) --&gt; -40°C</tspan></text>
+         style="fill:#000080;fill-opacity:1;font-size:14.99999993px">getTSatFromH (H=150) --&gt; -40°C</tspan></text>
     <ellipse
        style="opacity:0.98000004;fill:#000080;fill-opacity:1;stroke:#000080;stroke-width:2;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:6, 2;stroke-dashoffset:0;stroke-opacity:1"
        id="path4236"
@@ -157,5 +159,178 @@
        cy="152.12761"
        rx="4.5456862"
        ry="5.5558391" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:15.11916924px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;display:inline;fill:#000080;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="894.5791"
+       y="287.12665"
+       id="text4186-3-0"
+       sodipodi:linespacing="125%"
+       transform="scale(0.93006948,1.0751885)"><tspan
+         sodipodi:role="line"
+         id="tspan4188-8-5"
+         x="894.5791"
+         y="287.12665"
+         style="fill:#000080;fill-opacity:1;font-size:15px">getTSatGasFromH (H=425,P~8) --&gt; 15°C</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:15.11916924px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;display:inline;fill:#000080;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="896.3714"
+       y="137.38213"
+       id="text4186-3-0-4"
+       sodipodi:linespacing="125%"
+       transform="scale(0.93006948,1.0751885)"><tspan
+         sodipodi:role="line"
+         id="tspan4188-8-5-7"
+         x="896.3714"
+         y="137.38213"
+         style="fill:#000080;fill-opacity:1;font-size:15px">getTSatGasFromH (H=425,P~40) --&gt; 75°C</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:11.25px;line-height:125%;font-family:sans-serif;text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="972.98779"
+       y="196.95815"
+       id="text4184"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="972.98779"
+         y="196.95815"
+         style="font-size:13.75px;text-align:end;text-anchor:end"
+         id="tspan4202">2 valeurs possibles</tspan><tspan
+         sodipodi:role="line"
+         x="972.98779"
+         y="214.14565"
+         style="font-size:13.75px;text-align:end;text-anchor:end"
+         id="tspan4339" /><tspan
+         sodipodi:role="line"
+         x="972.98779"
+         y="230.0872"
+         style="font-size:12.5px;text-align:end;text-anchor:end;fill:#ff0000"
+         id="tspan4321">Pour une pression donnée,</tspan><tspan
+         sodipodi:role="line"
+         x="976.96729"
+         y="245.7122"
+         style="font-size:12.5px;text-align:end;text-anchor:end;fill:#ff0000"
+         id="tspan4323">on va chercher la distance </tspan><tspan
+         sodipodi:role="line"
+         x="972.98779"
+         y="261.33722"
+         style="font-size:12.5px;text-align:end;text-anchor:end;fill:#ff0000"
+         id="tspan4325">minimale entre : Phaute et Pbasse</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.8751685px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 915.07359,183.72375 24.2069,-17.34286"
+       id="path4196"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.85775244px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 897.62649,259.1617 28.53481,29.44316"
+       id="path4198"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:17.24179077px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;display:inline;fill:#008000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="717.78503"
+       y="111.07847"
+       id="text4182-6"
+       sodipodi:linespacing="125%"
+       transform="scale(0.92914939,1.0762532)"><tspan
+         sodipodi:role="line"
+         id="tspan4184-2"
+         x="717.78503"
+         y="111.07847"
+         style="font-size:15px">getPSatGasFromH (H=400,P~40) --&gt; 40 bar</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:17.24179077px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;display:inline;fill:#000080;fill-opacity:1;stroke:#ff0000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+       x="905.29828"
+       y="370.47098"
+       id="text4182-6-1"
+       sodipodi:linespacing="125%"
+       transform="scale(0.92914939,1.0762532)"><tspan
+         sodipodi:role="line"
+         id="tspan4184-2-0"
+         x="905.29828"
+         y="370.47098"
+         style="font-size:15px;fill:#008000;stroke:none;stroke-opacity:1;fill-opacity:1">getPSatGasFromH (H=400,P~8) --&gt; 8 bar</tspan></text>
+    <path
+       style="display:inline;fill:none;fill-rule:evenodd;stroke:#000080;stroke-width:1.21149814px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 685.94989,416.98484 685.45703,616.7855"
+       id="path4205-5-07"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:15.11916924px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;display:inline;fill:#000080;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="480.9173"
+       y="197.77232"
+       id="text4186-3-0-1"
+       sodipodi:linespacing="125%"
+       transform="scale(0.93006948,1.0751885)"><tspan
+         sodipodi:role="line"
+         id="tspan4188-8-5-1"
+         x="480.9173"
+         y="197.77232"
+         style="font-size:15px;fill:#000080;fill-opacity:1">getT_SatCurve_FromH (H,P~) --&gt; ..°C</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:17.24179077px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;display:inline;fill:#008000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="494.08508"
+       y="223.73433"
+       id="text4182-5"
+       sodipodi:linespacing="125%"
+       transform="scale(0.92914939,1.0762532)"><tspan
+         sodipodi:role="line"
+         id="tspan4184-5"
+         x="494.08508"
+         y="223.73433"
+         style="font-size:15px">getP_SatCurve_FromH (H,P~) --&gt; .. bar</tspan></text>
+    <rect
+       style="opacity:0.07000002;fill:#ffffff;fill-opacity:1;stroke:#ff0000;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect4297"
+       width="47.887165"
+       height="34.641781"
+       x="247.58684"
+       y="238.73206" />
+    <rect
+       style="opacity:0.91100003;fill:none;fill-opacity:1;stroke:#d90028;stroke-width:5.94042492;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect4315"
+       width="331.93198"
+       height="86.382904"
+       x="289.98096"
+       y="180.25746" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:11.25px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="718.3075"
+       y="170.46738"
+       id="text4327"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4329"
+         x="718.3075"
+         y="170.46738">Phaute</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:11.25px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="719.32635"
+       y="281.52487"
+       id="text4331"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4333"
+         x="719.32635"
+         y="281.52487">PBasse</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:11.25px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="717.28857"
+       y="215.29791"
+       id="text4335"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4337"
+         x="717.28857"
+         y="215.29791">P donnée</tspan></text>
   </g>
 </svg>

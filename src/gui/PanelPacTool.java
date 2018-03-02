@@ -44,14 +44,14 @@ import javax.swing.SwingConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import computation.MeasureTable;
-import computation.ResultTable;
-import computation.Comp;
 import enthalpy.Enthalpy;
-import gui.pac.WinCirculatorDistr;
-import gui.pac.WinCirculatorSrc;
-import gui.pac.WinCompressor;
+import gui.pac.CirculatorDistrWin;
+import gui.pac.CirculatorSrcWin;
+import gui.pac.CompressorWin;
 import log4j.Log4j2Config;
+import misc.Comp;
+import misc.MeasureTable;
+import misc.ResultTable;
 import mpoints.EloMeasurePointSelection;
 import mpoints.EloMeasurePoint;
 import mpoints.MeasurePoint;
@@ -81,11 +81,11 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 	private Pac pac;
 	private MeasureTable measureTable;
 	private ResultTable resultTable;
-	private WinCompressor winCompressor;
-	private WinCirculatorDistr winCirculatorDistr;
-	private WinCirculatorSrc winCirculatorSrc;
+	private CompressorWin compressorWin;
+	private CirculatorDistrWin circulatorDistrWin;
+	private CirculatorSrcWin circulatorSrcWin;
 	private GuiConfig guiConfig;
-	private WinEnthalpy winEnthalpy;
+	private EnthalpyWin enthalpyWin;
 
 
 	private int bgImgWidth;
@@ -149,11 +149,11 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 		pac = vpacToolVar.getPac();
 		measureTable = vpacToolVar.getMeasureTable();
 		resultTable = vpacToolVar.getResultTable();
-		winCompressor = vpacToolVar.getWinCompressor();
-		winCirculatorSrc = vpacToolVar.getWinCirculatorSrc();
-		winCirculatorDistr = vpacToolVar.getWinCirculatorDistr();
+		compressorWin = vpacToolVar.getWinCompressor();
+		circulatorSrcWin = vpacToolVar.getWinCirculatorSrc();
+		circulatorDistrWin = vpacToolVar.getWinCirculatorDistr();
 		guiConfig = vpacToolVar.getGuiConfig();
-		winEnthalpy = vpacToolVar.getWinEnthalpy();
+		enthalpyWin = vpacToolVar.getWinEnthalpy();
 		
 		textFieldCOP = vpacToolVar.getPanelPacToolTextFieldCOP();
 		
@@ -267,9 +267,9 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 				logger.trace("Update ResultTable");
 				resultTable.setAllTableValues();
 			
-				logger.trace("Repaint and Complete winEnthalpy");
-				winEnthalpy.repaint();
-				winEnthalpy.updateAllTextField();
+				logger.trace("Repaint and Complete enthalpyWin");
+				enthalpyWin.repaint();
+				enthalpyWin.updateAllTextField();
 				
 				logger.trace("COP ={}", Comp.cop(measurePointL,pac));
 				textFieldCOP.setText(String.valueOf(Comp.cop(measurePointL,pac)));
@@ -296,9 +296,9 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 				eDrawL.clear();
 				eDrawL = ElDraw.createElDrawFrom(measurePointL,eDrawL);
 			
-				logger.trace("Repaint and Complete winEnthalpy");
-				winEnthalpy.repaint();
-				winEnthalpy.updateAllTextField();
+				logger.trace("Repaint and Complete enthalpyWin");
+				enthalpyWin.repaint();
+				enthalpyWin.updateAllTextField();
 				
 				logger.trace("COP ={}", Comp.cop(measurePointL,pac));
 				textFieldCOP.setText(String.valueOf(Comp.cop(measurePointL,pac)));
@@ -359,9 +359,9 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 				eDrawL.clear();
 				eDrawL = ElDraw.createElDrawFrom(measurePointL,eDrawL);
 
-				logger.trace("Repaint and Complete winEnthalpy");
-				winEnthalpy.repaint();
-				winEnthalpy.updateAllTextField();
+				logger.trace("Repaint and Complete enthalpyWin");
+				enthalpyWin.repaint();
+				enthalpyWin.updateAllTextField();
 
 				logger.trace("COP ={}", Comp.cop(measurePointL,pac));
 				textFieldCOP.setText(String.valueOf(Comp.cop(measurePointL,pac)));
@@ -478,15 +478,15 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 				switch (item) {
 				case "Compressor":
 					logger.trace("mousePressed choice: {} ",item);
-					winCompressor.setVisible(true);
+					compressorWin.setVisible(true);
 					break;
 				case "CirculatorSource":
 					logger.trace("mousePressed choice: {} ",item);
-					winCirculatorSrc.setVisible(true);
+					circulatorSrcWin.setVisible(true);
 					break;
 				case "CirculatorDistribution":
 					logger.trace("mousePressed choice: {} ",item);				
-					winCirculatorDistr.setVisible(true);
+					circulatorDistrWin.setVisible(true);
 					break;
 				default:
 					break;

@@ -39,19 +39,29 @@ public class SatCurve {
 	private double IsoTherm_H0_Ref;
 	private double IsoTherm_H0_Delta;
 	
+	private double xHmin;  			//  Enthalpy Minimum of the range of values displayed.
+	private double xHmax;    		//  Enthalpy Maximum of the range of value displayed.
+
+	private double yPmin;  			// Pressure Minimum of the range of Pressure value
+	private double yPmax;     		// Pressure Maximum of the range of Pressure value. 
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 	public SatCurve() {
-		gasFileName = "empty";
+		this.gasFileName = "empty";
 		// Default value based on R22
-		IsoTherm_P0_Ref = 0.5; 
-		IsoTherm_T0_Ref = -40;
-		IsoTherm_T0_Delta = 10;
-		IsoTherm_H0_Ref = 390;
-		IsoTherm_H0_Delta = 8;
+		this.IsoTherm_P0_Ref = 0.5; 
+		this.IsoTherm_T0_Ref = -40;
+		this.IsoTherm_T0_Delta = 10;
+		this.IsoTherm_H0_Ref = 390;
+		this.IsoTherm_H0_Delta = 8;
 
+		this.xHmin = 140;  				
+		this.xHmax = 520;    				
+		this.yPmin = 0.5;  
+		this.yPmax = 60;    
+		
 		gasSatTable = new ArrayList<List<Double>>();
 	}
 
@@ -457,7 +467,7 @@ public class SatCurve {
 
 
 	/**
-	 * getTSatFromHLiquid
+	 * getTSatFromH
 	 * @param H
 	 * @return
 	 * 
@@ -466,49 +476,227 @@ public class SatCurve {
 	 *   # Temp.   Press       Press     Density  Density          Enthalpy           Entropy  Entropy
 	 *	 #  °C      kPa         kPa       kg/m3    kg/m3     kJ/kg   kJ/kg  kJ/kg    kJ/kg K  kJ/kg K
 	 *	 #        liquid        gas      liquid     gas      Liquid  latent  gas      liquid    gas
-	 *  	-28		201,5			149,8	1336,3	6,599		162,2	234,9	397,2	0,8554	1,8278
-	 * 		-21		266,3			202,6	1311,1	8,775		171		230,5	401,5	0,8907	1,8176
+	 *  	-28		201,5		149,8	1336,3	6,599		162,2	234,9	397,2	0,8554	1,8278
+	 * 		-21		266,3		202,6	1311,1	8,775		171		230,5	401,5	0,8907	1,8176
+	 * 
+	 *		22		1081,8		917,6	1146,5	38,328	233,2	191,8	425,1	1,1153	1,7722
+	 *		23		1112		945,1	1142,3	39,512	234,8	190,7	425,5	1,1206	1,7713
+	 *				=====												=====																
+	 *		24		1142,7		973,3	1138,2	40,728	236,4	189,5	425,9	1,1259	1,7704
+ 	 *
+	 *		78		3935,2		3748,1	831,6	218,698	347,8	78,6	426,4	1,4573	1,6829
+	 * 		79		4010,5		3831,1	820,3	228,096	351		74,2	425,2	1,4663	1,6785
+	 * 				======												======
+	 *
 	 * 
 	 */
-	public double getTSatLiquidFromH(double vH) {
+	public double getT_SatCurve_FromH(double vH) {
+		return getT_SatCurve_FromH(vH,0);
+	}
+	
+	public double getT_SatCurve_FromH(double vH, double vP) {
 		double outT=0;
 		double min;
-		int id=0;
+		int id=0,idl=0,idh=0;
 
 		// Check H Limit
 		if (vH > gasSatTable.get(gasSatTable.size()-1).get(id_H_Liquid)) {
-			logger.error("(getTSatFromHLiquid):: H is too great and is in the Gas zone !! --> Not allowed ");
-			return 0.0;
+			// We work with id_H_Gas
+			
+			// Other principle to get on the value
+			for(int n = 0; n < gasSatTable.size(); n++){
+				if (gasSatTable.get(n).get(id_H_Gas) < vH) {
+					idl = n;
+				} else {
+					break;
+				}				
+			}
+
+			for(int n = gasSatTable.size()-1; n >= 0; n--){
+				if (gasSatTable.get(n).get(id_H_Gas) < vH) {
+					idh = n;
+				} else {
+					break;
+				}				
+			}
+
+			if ( Math.abs(gasSatTable.get(idh).get(id_P_Gas) - vP ) < Math.abs(gasSatTable.get(idl).get(id_P_Gas) - vP )  )
+				id = idh;
+			else
+				id = idl;
+			// End of Other principle to get on the value
+					
+				
+			if (id == gasSatTable.size()-1) {
+				id = id-1;
+			} 
+
+			
+			double x,y0,y1,x0,x1;
+			x  = vH;
+			x0 = gasSatTable.get(id).get(id_H_Gas);
+			x1 = gasSatTable.get(id+1).get(id_H_Gas);
+			if (x1==x0) {
+				logger.error("(getTSatFromH )");
+				logger.error("  2 same valeurs will cause and issue and must be removed ");
+			}
+			y0 = gasSatTable.get(id).get(id_Temp);
+			y1 = gasSatTable.get(id+1).get(id_Temp);
+			outT = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+
+			return outT;
+
+
+		} else {
+			// We work with id_H_Liquid
+		
+			min = Double.MAX_VALUE;
+			for(int n = 0; n < gasSatTable.size(); n++){
+				double diff = Math.abs(gasSatTable.get(n).get(id_H_Liquid) - vH);
+				if (diff < min) {
+					min = diff;
+					id = n;
+				}
+			}
+		
+			if (id == gasSatTable.size()-1) {
+				id = id-1;
+			} 
+
+			double x,y0,y1,x0,x1;
+			x  = vH;
+			x0 = gasSatTable.get(id).get(id_H_Liquid);
+			x1 = gasSatTable.get(id+1).get(id_H_Liquid);
+			if (x1==x0) {
+				logger.error("(getTSatFromH )");
+				logger.error("  2 same valeurs will cause and issue and must be removed ");
+			}
+			y0 = gasSatTable.get(id).get(id_Temp);
+			y1 = gasSatTable.get(id+1).get(id_Temp);
+			outT = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+
+			return outT;
+
+			
 		}
 		
-		min = Double.MAX_VALUE;
-		for(int n = 0; n < gasSatTable.size(); n++){
-			double diff = Math.abs(gasSatTable.get(n).get(id_H_Liquid) - vH);
-			if (diff < min) {
-				min = diff;
-				id = n;
-			}
-		}
-
-		if (id == gasSatTable.size()-1) {
-			id = id-1;
-		} 
-
-		double x,y0,y1,x0,x1;
-		x  = vH;
-		x0 = gasSatTable.get(id).get(id_H_Liquid);
-		x1 = gasSatTable.get(id+1).get(id_H_Liquid);
-		if (x1==x0) {
-			logger.error("(getTSatFromH )");
-			logger.error("  2 same valeurs will cause and issue and must be removed ");
-		}
-		y0 = gasSatTable.get(id).get(id_Temp);
-		y1 = gasSatTable.get(id+1).get(id_Temp);
-		outT = (x-x0)*(y1-y0)/(x1-x0)+ y0;
-
-		return outT;
 	}
 
+	/**
+	 * getPSatFromH
+	 * @param H
+	 * @return
+	 * 
+	 * 
+	 * 	 * gasSatTable Table
+	 *   # Temp.   Press       Press     Density  Density          Enthalpy           Entropy  Entropy
+	 *	 #  °C      kPa         kPa       kg/m3    kg/m3     kJ/kg   kJ/kg  kJ/kg    kJ/kg K  kJ/kg K
+	 *	 #        liquid        gas      liquid     gas      Liquid  latent  gas      liquid    gas
+	 *  	-28		201,5		149,8	1336,3	6,599		162,2	234,9	397,2	0,8554	1,8278
+	 * 		-21		266,3		202,6	1311,1	8,775		171		230,5	401,5	0,8907	1,8176
+	 * 
+	 * 		14		862,2		718,8	1178,8	29,914	220,8	200,5	421,3	1,0732	1,7794
+	 *		15		887,6		741,7	1174,8	30,87	222,3	199,5	421,8	1,0784	1,7785
+	 *				=====												=====																
+	 *
+	 *		78		3935,2		3748,1	831,6	218,698	347,8	78,6	426,4	1,4573	1,6829
+	 * 		79		4010,5		3831,1	820,3	228,096	351		74,2	425,2	1,4663	1,6785
+	 * 				======												======
+	 *
+	 * 
+	 */
+	public double getP_SatCurve_FromH(double vH) {
+		return getP_SatCurve_FromH(vH,0);
+	}
+	
+	public double getP_SatCurve_FromH(double vH, double vP) {
+		double outT=0;
+		double min;
+		int id=0,idl=0,idh=0;
+
+		// Check H Limit
+		if (vH > gasSatTable.get(gasSatTable.size()-1).get(id_H_Liquid)) {
+			// We work with id_H_Gas
+			
+			// Other principle to get on the value
+			for(int n = 0; n < gasSatTable.size(); n++){
+				if (gasSatTable.get(n).get(id_H_Gas) < vH) {
+					idl = n;
+				} else {
+					break;
+				}				
+			}
+
+			for(int n = gasSatTable.size()-1; n >= 0; n--){
+				if (gasSatTable.get(n).get(id_H_Gas) < vH) {
+					idh = n;
+				} else {
+					break;
+				}				
+			}
+
+			if ( Math.abs(gasSatTable.get(idh).get(id_P_Gas) - vP ) < Math.abs(gasSatTable.get(idl).get(id_P_Gas) - vP )  )
+				id = idh;
+			else
+				id = idl;
+			// End of Other principle to get on the value
+			
+			if (id == gasSatTable.size()-1) {
+				id = id-1;
+			} 
+
+			double x,y0,y1,x0,x1;
+			x  = vH;
+			x0 = gasSatTable.get(id).get(id_H_Gas);
+			x1 = gasSatTable.get(id+1).get(id_H_Gas);
+			if (x1==x0) {
+				logger.error("(getPSatFromH )");
+				logger.error("  2 same valeurs will cause and issue and must be removed ");
+			}
+			y0 = gasSatTable.get(id).get(id_P_Gas);
+			y1 = gasSatTable.get(id+1).get(id_P_Gas);
+			outT = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+
+			return outT;
+
+
+		} else {
+			// We work with id_H_Liquid
+		
+			min = Double.MAX_VALUE;
+			for(int n = 0; n < gasSatTable.size(); n++){
+				double diff = Math.abs(gasSatTable.get(n).get(id_H_Liquid) - vH);
+				if (diff < min) {
+					min = diff;
+					id = n;
+				}
+			}
+		
+			if (id == gasSatTable.size()-1) {
+				id = id-1;
+			} 
+
+			double x,y0,y1,x0,x1;
+			x  = vH;
+			x0 = gasSatTable.get(id).get(id_H_Liquid);
+			x1 = gasSatTable.get(id+1).get(id_H_Liquid);
+			if (x1==x0) {
+				logger.error("(getPSatFromH )");
+				logger.error("  2 same valeurs will cause and issue and must be removed ");
+			}
+			y0 = gasSatTable.get(id).get(id_P_Liquid);
+			y1 = gasSatTable.get(id+1).get(id_P_Liquid);
+			outT = (x-x0)*(y1-y0)/(x1-x0)+ y0;
+
+			return outT;
+
+			
+		}
+		
+	}
+
+	
+	
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
@@ -519,6 +707,14 @@ public class SatCurve {
 
 	public int getSatTableSize() {
 		return(gasSatTable.size());
+	}
+	
+	public double getHSat_Gas(int n) {
+		return gasSatTable.get(n).get(id_H_Gas);
+	}
+
+	public double getHSat_Liquid(int n) {
+		return gasSatTable.get(n).get(id_H_Liquid);
 	}
 	
 	public double getTSat(int n) {
@@ -551,6 +747,22 @@ public class SatCurve {
 
 	public double getIsoTherm_H0_Delta() {
 		return IsoTherm_H0_Delta;
+	}
+
+	public double getxHmin() {
+		return xHmin;
+	}
+
+	public double getxHmax() {
+		return xHmax;
+	}
+
+	public double getyPmin() {
+		return yPmin;
+	}
+
+	public double getyPmax() {
+		return yPmax;
 	}
 
 	

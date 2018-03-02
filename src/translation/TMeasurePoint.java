@@ -14,6 +14,8 @@ public enum TMeasurePoint {
 	DEF_MOBJ_P10( "Return Water Heating Temperature", "Température Retour Eau Chauffage"),
 	DEF_MOBJ_P11( "Departure Water Temperature Capture", "Température Départ Eau Captage"),
 	DEF_MOBJ_P12( "Return Water Temperature Capture", "Température Retour Eau Captage"),
+	DEF_TAB_POINT( "Point", "Point"),
+	DEF_TAB_DEFINITION( "Definition", "Définition"),
 	;
 	// --------------------------------------------------------------------
 	// DEFINITION OF VARIABLES USED IN ENUMERATION

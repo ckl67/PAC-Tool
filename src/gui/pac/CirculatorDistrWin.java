@@ -21,7 +21,7 @@ package gui.pac;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import gui.GuiConfig;
-import gui.helpaboutdef.WinAbout;
+import gui.helpaboutdef.AboutWin;
 
 import java.awt.EventQueue;
 import javax.swing.JPanel;
@@ -47,7 +47,7 @@ import translation.TLanguage;
 import javax.swing.ImageIcon;
 
 
-public class WinCirculatorSrc extends JFrame {
+public class CirculatorDistrWin extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
@@ -59,8 +59,8 @@ public class WinCirculatorSrc extends JFrame {
 	private GuiConfig guiConfig;
 
 	// Win Builder
-	private JTextField textFieldCirculatorSrcVoltage;
-	private JTextField textFieldCirculatorSrcName;
+	private JTextField textFieldCirculatorDistrVoltage;
+	private JTextField textFieldCirculatorDistrName;
 	private JLabel lblVoltage;
 	private JTextField textFieldFeatureCurrent;
 	private JTextField textFieldFeaturePower;
@@ -76,7 +76,7 @@ public class WinCirculatorSrc extends JFrame {
 	private JButton btnFeatureNew;
 	private JButton btnFeatureSave;
 	private JButton btnFeatureDelete;
-	private JButton btnSaveCirculatorSrc;
+	private JButton btnSaveCirculatorDistr;
 	private JPanel panelCirculator;
 	private JTabbedPane tabbedPane;
 	// -------------------------------------------------------
@@ -88,14 +88,14 @@ public class WinCirculatorSrc extends JFrame {
 				try {
 					Pac pac = new Pac();
 					GuiConfig guiConfig = new GuiConfig();
-					WinCirculatorSrc WinCirculatorSrcFrame = new WinCirculatorSrc(pac, guiConfig );
+					CirculatorDistrWin WinCirculatorDistrFrame = new CirculatorDistrWin(pac, guiConfig );
 					// First fillCompressorTextField then applyConfig 
-					WinCirculatorSrcFrame.fillCirculatorSrcTexField();
-					WinCirculatorSrcFrame.applyConfig();
-					WinCirculatorSrcFrame.setVisible(true);		
+					WinCirculatorDistrFrame.fillCirculatorDistrTexField();
+					WinCirculatorDistrFrame.applyConfig();
+					WinCirculatorDistrFrame.setVisible(true);		
 					
 					guiConfig.setLanguage(TLanguage.FRENCH);
-					WinCirculatorSrcFrame.applyConfig();
+					WinCirculatorDistrFrame.applyConfig();
 
 				} catch (Exception e) {
 					logger.error(e);
@@ -108,11 +108,11 @@ public class WinCirculatorSrc extends JFrame {
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 	/**
-	 * WinCirculatorSrc
+	 * CirculatorDistrWin
 	 * 	@param pac --> PAC
 	 * 	@param vguiConfig --> Whole configuration of PAC TOOL GUI
 	 */
-	public WinCirculatorSrc(Pac vpac, GuiConfig vguiConfig) {
+	public CirculatorDistrWin(Pac vpac, GuiConfig vguiConfig) {
 		pac = vpac;
 		guiConfig =vguiConfig;
 		initialize();
@@ -123,37 +123,37 @@ public class WinCirculatorSrc extends JFrame {
 	// -------------------------------------------------------
 
 	/**
-	 * fillCirculatorSrcTexField
-	 * 		Fill CirculatorSrc GUI Text field 
-	 * 		The data are read from the circulatorSrc variable, where the information is stored
+	 * fillCirculatorDistrTexField
+	 * 		Fill CirculatorDistr GUI Text field 
+	 * 		The data are read from the circulatorDistr variable, where the information is stored
 	 * 		The data are always stored in SI format !
-	 * 	@param circulatorSrc
+	 * 	@param circulatorDistr
 	 */
-	private void fillCirculatorSrcTexField() {
-		Circulator circulatorSrc;
-		circulatorSrc = pac.getCirculatorSrc();
+	private void fillCirculatorDistrTexField() {
+		Circulator circulatorDistr;
+		circulatorDistr = pac.getCirculatorDistr();
 		
-		logger.info("(fillCirculatorSrcTexField) Circulator Name {}",circulatorSrc.getName());
+		logger.info("(fillCirculatorDistrTexField) Circulator Name {}",circulatorDistr.getName());
 
-		textFieldCirculatorSrcName.setText(circulatorSrc.getName());
-		textFieldCirculatorSrcVoltage.setText(String.valueOf(circulatorSrc.getVoltage()));
+		textFieldCirculatorDistrName.setText(circulatorDistr.getName());
+		textFieldCirculatorDistrVoltage.setText(String.valueOf(circulatorDistr.getVoltage()));
 		
-		fillCirculatorSrcFeature(circulatorSrc);
+		fillCirculatorDistrFeature(circulatorDistr);
 	}
 
 	/**
-	 * fillCirculatorSrcFeature
+	 * fillCirculatorDistrFeature
 	 * 		Fill the Circulator (ACTIVE Feature) GUI text Feature
-	 * 	@param circulatorSrc
+	 * 	@param circulatorDistr
 	 */
-	private void fillCirculatorSrcFeature(Circulator circulatorSrc) {
-		textFieldFeatureCurrent.setText(String.valueOf(circulatorSrc.getActiveFeatureCurrent()));
-		textFieldFeaturePower.setText(String.valueOf(circulatorSrc.getActiveFeaturePower()));
-		textFieldFeatureRotatePerMinutes.setText(String.valueOf(circulatorSrc.getActiveFeatureRotatePerMinutes()));
+	private void fillCirculatorDistrFeature(Circulator circulatorDistr) {
+		textFieldFeatureCurrent.setText(String.valueOf(circulatorDistr.getActiveFeatureCurrent()));
+		textFieldFeaturePower.setText(String.valueOf(circulatorDistr.getActiveFeaturePower()));
+		textFieldFeatureRotatePerMinutes.setText(String.valueOf(circulatorDistr.getActiveFeatureRotatePerMinutes()));
 	}
 	
 	/**
-	 * Apply the WinPac GUI configuration to GUI CirculatorSrc.
+	 * Apply the WinPac GUI configuration to GUI CirculatorDistr.
 	 * @param guiConfig
 	 */
 	public void applyConfig() {
@@ -166,21 +166,21 @@ public class WinCirculatorSrc extends JFrame {
 	 * Data will ALWAYS be stored in International System : SI Format
 	 * @param paci
 	 */
-	private void saveTextField2CirculatorSrc( Circulator circulatorSrc) {
+	private void saveTextField2CirculatorDistr( Circulator circulatorDistr) {
 		// AT that stage all information are in SI !
-		circulatorSrc.setName(textFieldCirculatorSrcName.getText());
-		circulatorSrc.setVoltage(Double.valueOf(textFieldCirculatorSrcVoltage.getText()));
+		circulatorDistr.setName(textFieldCirculatorDistrName.getText());
+		circulatorDistr.setVoltage(Double.valueOf(textFieldCirculatorDistrVoltage.getText()));
 	}
 
-	private void saveTextField2CirculatorSrcFeature( Circulator circulatorSrc) {
-		circulatorSrc.setActiveFeatureCurrent(Double.valueOf(textFieldFeatureCurrent.getText()));
-		circulatorSrc.setActiveFeaturePower(Integer.valueOf(textFieldFeaturePower.getText()));
-		circulatorSrc.setActiveFeatureRotatePerMinutes(Integer.valueOf(textFieldFeatureRotatePerMinutes.getText()));
+	private void saveTextField2CirculatorDistrFeature( Circulator circulatorDistr) {
+		circulatorDistr.setActiveFeatureCurrent(Double.valueOf(textFieldFeatureCurrent.getText()));
+		circulatorDistr.setActiveFeaturePower(Integer.valueOf(textFieldFeaturePower.getText()));
+		circulatorDistr.setActiveFeatureRotatePerMinutes(Integer.valueOf(textFieldFeatureRotatePerMinutes.getText()));
 	}
 
 	private void changeLanguage(){
 		
-		this.setTitle(TCirculator.CIRCUL_TITLE_SOURCE.getLangue(guiConfig.getLanguage()));
+		this.setTitle(TCirculator.CIRCUL_TITLE_DISTRIBUTION.getLangue(guiConfig.getLanguage()));
 
 		lblVoltage.setText(TCirculator.CIRCUL_VOLTAGE.getLangue(guiConfig.getLanguage()));
 		lblRotatePerMinutes.setText(TCirculator.CIRCUL_ROTATE_PER_MINUTES.getLangue(guiConfig.getLanguage()));
@@ -196,7 +196,7 @@ public class WinCirculatorSrc extends JFrame {
 		btnAutoRenameFeature.setText(TCirculator.CIRCUL_RENAME_LIST.getLangue(guiConfig.getLanguage()));
 		btnFeatureNew.setText(TCirculator.CIRCUL_NEW.getLangue(guiConfig.getLanguage()));
 		btnFeatureSave.setText(TCirculator.CIRCUL_SAVE.getLangue(guiConfig.getLanguage()));
-		btnSaveCirculatorSrc.setText(TCirculator.CIRCUL_SAVE.getLangue(guiConfig.getLanguage()));
+		btnSaveCirculatorDistr.setText(TCirculator.CIRCUL_SAVE.getLangue(guiConfig.getLanguage()));
 		btnFeatureDelete.setText(TCirculator.CIRCUL_DELETE.getLangue(guiConfig.getLanguage()));
 		
 		tabbedPane.setTitleAt(0, TCirculator.CIRCUL_TITLE.getLangue(guiConfig.getLanguage()));
@@ -219,7 +219,7 @@ public class WinCirculatorSrc extends JFrame {
 		}
 
 		setTitle("Circulator Source");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(WinAbout.class.getResource("/gui/images/PAC-Tool_16.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(AboutWin.class.getResource("/gui/images/PAC-Tool_16.png")));
 		setBounds(100, 100, 437, 428);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -262,30 +262,30 @@ public class WinCirculatorSrc extends JFrame {
 		lblVoltage.setBounds(10, 28, 52, 14);
 		panel1.add(lblVoltage);
 
-		textFieldCirculatorSrcVoltage = new JTextField();
-		textFieldCirculatorSrcVoltage.setBounds(72, 25, 67, 20);
-		panel1.add(textFieldCirculatorSrcVoltage);
+		textFieldCirculatorDistrVoltage = new JTextField();
+		textFieldCirculatorDistrVoltage.setBounds(72, 25, 67, 20);
+		panel1.add(textFieldCirculatorDistrVoltage);
 
-		textFieldCirculatorSrcVoltage.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldCirculatorSrcVoltage.setColumns(10);
+		textFieldCirculatorDistrVoltage.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldCirculatorDistrVoltage.setColumns(10);
 
 		JLabel lblUnityVoltage = new JLabel("V");
 		lblUnityVoltage.setBounds(149, 28, 25, 14);
 		panel1.add(lblUnityVoltage);
 
 		// ---------------------------------------------------------------
-		// CirculatorSrc Save
+		// CirculatorDistr Save
 		// ---------------------------------------------------------------
-		btnSaveCirculatorSrc = new JButton("Sauv.");
-		btnSaveCirculatorSrc.setBounds(345, 343, 68, 23);
-		panelCirculator.add(btnSaveCirculatorSrc);
-		btnSaveCirculatorSrc.addActionListener(new ActionListener() {
+		btnSaveCirculatorDistr = new JButton("Sauv.");
+		btnSaveCirculatorDistr.setBounds(345, 343, 68, 23);
+		panelCirculator.add(btnSaveCirculatorDistr);
+		btnSaveCirculatorDistr.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-					saveTextField2CirculatorSrc(pac.getCirculatorSrc());
-					saveTextField2CirculatorSrcFeature(pac.getCirculatorSrc());
+					saveTextField2CirculatorDistr(pac.getCirculatorDistr());
+					saveTextField2CirculatorDistrFeature(pac.getCirculatorDistr());
 			}
 		});
-		btnSaveCirculatorSrc.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		btnSaveCirculatorDistr.setFont(new Font("Tahoma", Font.PLAIN, 9));
 
 		// =================================================================================
 
@@ -301,8 +301,8 @@ public class WinCirculatorSrc extends JFrame {
 		btnFeatureSave = new JButton("Sauv.");
 		btnFeatureSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-					Circulator circulatorSrc = pac.getCirculatorSrc();
-					saveTextField2CirculatorSrcFeature(circulatorSrc);
+					Circulator circulatorDistr = pac.getCirculatorDistr();
+					saveTextField2CirculatorDistrFeature(circulatorDistr);
 			}
 		});
 		btnFeatureSave.setFont(new Font("Tahoma", Font.PLAIN, 9));
@@ -320,9 +320,9 @@ public class WinCirculatorSrc extends JFrame {
 				if (featureId>0) {
 					logger.trace("Delete featureId={} ",featureId);
 
-					Circulator circulatorSrc = pac.getCirculatorSrc();
-					circulatorSrc.selectActiveFeature(featureId);
-					circulatorSrc.clearActiveFeatures();
+					Circulator circulatorDistr = pac.getCirculatorDistr();
+					circulatorDistr.selectActiveFeature(featureId);
+					circulatorDistr.clearActiveFeatures();
 
 					comboBoxFeature.removeItemAt(featureId);
 					comboBoxFeature.setSelectedIndex(featureId-1);
@@ -345,9 +345,9 @@ public class WinCirculatorSrc extends JFrame {
 				int featureId = comboBoxFeature.getItemCount();
 				if  (featureId>=0) {
 					logger.trace("New featureId={}",featureId);
-					Circulator circulatorSrc = pac.getCirculatorSrc();
-					circulatorSrc.selectActiveFeature(featureId);
-					circulatorSrc.addFeatures(0.0, 0, 0);
+					Circulator circulatorDistr = pac.getCirculatorDistr();
+					circulatorDistr.selectActiveFeature(featureId);
+					circulatorDistr.addFeatures(0.0, 0, 0);
 					comboBoxFeature.insertItemAt("Feature :"+featureId, featureId);
 					comboBoxFeature.setSelectedIndex(featureId);
 				}				
@@ -414,18 +414,18 @@ public class WinCirculatorSrc extends JFrame {
 				if (featureId>=0) {
 					logger.trace("comboBoxFeature move to featureId={}",featureId);
 
-					Circulator circulatorSrc = pac.getCirculatorSrc();
-					circulatorSrc.selectActiveFeature(featureId);
-					fillCirculatorSrcFeature(circulatorSrc);
+					Circulator circulatorDistr = pac.getCirculatorDistr();
+					circulatorDistr.selectActiveFeature(featureId);
+					fillCirculatorDistrFeature(circulatorDistr);
 				}
 			}
 		});
 		comboBoxFeature.setBounds(239, 27, 131, 20);
 		// Fill Feature for Combobox 0
-		for(int i=0;i<pac.getCirculatorSrc().getNbOfFeatures();i++) {
+		for(int i=0;i<pac.getCirculatorDistr().getNbOfFeatures();i++) {
 			comboBoxFeature.addItem("Feature:"+i);
 		}
-		fillCirculatorSrcFeature(pac.getCirculatorSrc());
+		fillCirculatorDistrFeature(pac.getCirculatorDistr());
 		panel2.add(comboBoxFeature);
 
 		// -----------------------
@@ -447,7 +447,7 @@ public class WinCirculatorSrc extends JFrame {
 					//	comboBoxFeature.removeItemAt(0);
 					//}
 
-					for(int i=0;i<pac.getCirculatorSrc().getNbOfFeatures();i++) {
+					for(int i=0;i<pac.getCirculatorDistr().getNbOfFeatures();i++) {
 						comboBoxFeature.addItem("Feature:"+i);
 					}
 					comboBoxFeature.setSelectedIndex(featureId);
@@ -459,24 +459,24 @@ public class WinCirculatorSrc extends JFrame {
 		panel2.add(btnAutoRenameFeature);
 		
 				// ---------------------------------------------------------------
-				// CirculatorSrc Name
+				// CirculatorDistr Name
 				// ---------------------------------------------------------------
-				textFieldCirculatorSrcName = new JTextField();
-				textFieldCirculatorSrcName.setText("Circulator");
-				textFieldCirculatorSrcName.setBounds(249, 7, 167, 34);
-				panelCirculator.add(textFieldCirculatorSrcName);
-				textFieldCirculatorSrcName.setToolTipText("Name can be modified");
-				textFieldCirculatorSrcName.setForeground(new Color(0, 0, 0));
-				textFieldCirculatorSrcName.setBorder(null);
-				textFieldCirculatorSrcName.setBackground(UIManager.getColor("DesktopPane.background"));
-				textFieldCirculatorSrcName.setHorizontalAlignment(SwingConstants.RIGHT);
-				textFieldCirculatorSrcName.setFont(new Font("Tahoma", Font.BOLD, 14));
-				textFieldCirculatorSrcName.setColumns(10);
+				textFieldCirculatorDistrName = new JTextField();
+				textFieldCirculatorDistrName.setText("Circulator");
+				textFieldCirculatorDistrName.setBounds(249, 7, 167, 34);
+				panelCirculator.add(textFieldCirculatorDistrName);
+				textFieldCirculatorDistrName.setToolTipText("Name can be modified");
+				textFieldCirculatorDistrName.setForeground(new Color(0, 0, 0));
+				textFieldCirculatorDistrName.setBorder(null);
+				textFieldCirculatorDistrName.setBackground(UIManager.getColor("DesktopPane.background"));
+				textFieldCirculatorDistrName.setHorizontalAlignment(SwingConstants.RIGHT);
+				textFieldCirculatorDistrName.setFont(new Font("Tahoma", Font.BOLD, 14));
+				textFieldCirculatorDistrName.setColumns(10);
 				
 				JLabel lblNewLabel = new JLabel("");
 				lblNewLabel.setBounds(319, 45, 68, 76);
 				panelCirculator.add(lblNewLabel);
-				lblNewLabel.setIcon(new ImageIcon(WinCirculatorSrc.class.getResource("/gui/images/circulator_64.png")));
+				lblNewLabel.setIcon(new ImageIcon(CirculatorDistrWin.class.getResource("/gui/images/circulator_64.png")));
 
 	}
 }

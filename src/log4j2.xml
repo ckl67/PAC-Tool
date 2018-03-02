@@ -19,11 +19,11 @@
 			<AppenderRef ref="Console" />
 		</Root>
 
-		<Logger name="refrigerant" level="info" additivity="false">
+		<Logger name="refrigerant" level="error" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
 
-		<Logger name="mpoints" level="trace" additivity="false">
+		<Logger name="mpoints" level="error" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
 

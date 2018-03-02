@@ -1,4 +1,4 @@
-package testing.measurePoint;
+package testing.mPoints;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import mpoints.MeasureResult;
 import pac.Pac;
 import translation.TLanguage;
 
-public class JUnitMeasurePoint {
+public class JUnitMeasurePointResult {
 
 	@Test
 	public void test() {
@@ -53,7 +53,7 @@ public class JUnitMeasurePoint {
 			System.out.println(mp.getMPObject().getDefinition(TLanguage.FRENCH));
 			System.out.println("    Group " + mp.getMPObject().getGroup());
 			System.out.println("    Val = " + mp.getValue());
-			System.out.println("    Selected = " + mp.getmPObjectSelection());
+			System.out.println("    Selected = " + mp.getMPObjectSelection());
 			System.out.println("    P = " + mp.getMP_P());
 			System.out.println("    T = " + mp.getMP_T());
 			System.out.println("    H = " + mp.getMP_H());
@@ -61,6 +61,7 @@ public class JUnitMeasurePoint {
 			System.out.println("\n");   
 		}
 
+		
 		List<MeasureResult> lMeasureResults;
 		lMeasureResults = new ArrayList<MeasureResult>(); 
 
@@ -69,12 +70,27 @@ public class JUnitMeasurePoint {
 			lMeasureResults.add(new MeasureResult(p,lMeasurePoints,pac));
 		}
 
+		for (int i = 0; i < lMeasureResults.size(); i++) {
+
+			MeasureResult mr = lMeasureResults.get(i);  
+			System.out.println(mr.getMRObject().name());
+			System.out.println(mr.getMRObject().getDefinition(TLanguage.FRENCH));
+			System.out.println("    Val = " + mr.getValue());
+			System.out.println(" ");   
+
+		}
+			
+		
 		// JSON
 		System.out.println("\n---> Construct JSON data");
 		JSONObject jsonObj = new JSONObject();
 		jsonObj = mp1.getJsonObject();
 		System.out.println(jsonObj);
 
+		MeasureResult rT1_T8 = new MeasureResult(EloMeasureResult.T1_T8,lMeasurePoints,pac);
+		System.out.println(rT1_T8.getMRObject().name() + " = " + rT1_T8.getValue());
+
+		
 	}
 
 }

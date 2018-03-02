@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import computation.Misc;
+import misc.Misc;
 
 public class JUnitMisc {
 

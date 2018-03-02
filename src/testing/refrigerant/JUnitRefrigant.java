@@ -12,8 +12,11 @@ public class JUnitRefrigant {
 		double P;
 		double H;
 
-		Refrigerant refrigerant = new Refrigerant("./ressources/R407/R407C/Saturation Table R407C Dupont-Suva.txt");
 		//Refrigerant refrigerant = new Refrigerant("./ressources/R22/Saturation Table R22.txt");
+		Refrigerant refrigerant = new Refrigerant("./ressources/R22/Saturation Table R22.txt");
+		
+		refrigerant.loadNewRefrigerant("./ressources/R407/R407C/Saturation Table R407C Dupont-Suva.txt");
+		
 		System.out.println(refrigerant.getRfgName());
 
 		System.out.println(refrigerant.getIsoTherm_H0_Ref());
@@ -51,18 +54,20 @@ public class JUnitRefrigant {
 				" --> H Saturation(gas)= "     + refrigerant.getHSatFromP(P).getHGas()    + "(kJ/kg)" 
 				);
 
-		// getTSatLiquidFromH()
-		System.out.println("getTSatLiquidFromH(H)");
+		// getT_SatCurve_FromH()
+		System.out.println("getT_SatCurve_FromH(H)");
 		H = 150;
-		System.out.println(	"H= " + H + "(kJ/kg)" +  
-				" --> T Saturation = " + refrigerant.getTSatLiquidFromH(H) + "°C"
+		P = 10;
+		System.out.println(	"H= " + H + "(kJ/kg)" +  "  P = " +P + "(bar) " +
+				" --> T Saturation = " + refrigerant.getT_SatCurve_FromH(H) + "°C"
 				);
 
 		
-		H = 380;
+		H = 425;
+		P = 10;
 		// Will return error !
-		System.out.println(	"H= " + H + "(kJ/kg)" +  
-				" --> T Saturation = " + refrigerant.getTSatLiquidFromH(H) + "°C"
+		System.out.println(	"H= " + H + "(kJ/kg)" +  "  P = " +P + "(bar) " +
+				" --> T Saturation = " + refrigerant.getT_SatCurve_FromH(H,P) + "°C"
 				);
 		
 		System.out.println("\n\n ISOBAR");

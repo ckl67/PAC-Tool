@@ -33,10 +33,10 @@ import java.io.InputStreamReader;
 
 import javax.swing.JScrollPane;
 
-public class WinDefinition extends JFrame  {
+public class DefinitionWin extends JFrame  {
 
 	private static final long serialVersionUID = 1L;
-	//private static final Logger logger = LogManager.getLogger(WinDefinition.class.getName());
+	//private static final Logger logger = LogManager.getLogger(DefinitionWin.class.getName());
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
 	// -------------------------------------------------------
@@ -56,10 +56,10 @@ public class WinDefinition extends JFrame  {
 			public void run() {
 				try {
 
-					WinDefinition window1 = new WinDefinition("Définition","/gui/helpaboutdef/Definitions.html");
+					DefinitionWin window1 = new DefinitionWin("Définition","/gui/helpaboutdef/Definitions.html");
 					window1.setVisible(true);
 
-					WinDefinition window2 = new WinDefinition("Abréviation","/gui/helpaboutdef/Abreviation.html");
+					DefinitionWin window2 = new DefinitionWin("Abréviation","/gui/helpaboutdef/Abreviation.html");
 					window2.setVisible(true);
 
 				} catch (Exception e) {
@@ -76,7 +76,7 @@ public class WinDefinition extends JFrame  {
 	/**
 	 * Create the application.
 	 */
-	public WinDefinition(String vtitle, String vfile) {
+	public DefinitionWin(String vtitle, String vfile) {
 		StringBuilder contentBuilder = new StringBuilder();
 
 		try {
@@ -85,7 +85,7 @@ public class WinDefinition extends JFrame  {
 			// A resource in a jar file is not a File, so you can't treat it as one.
 			// Use getResourceAsStream and use InputStreamReader instead of FileReader. 
 
-			InputStream i = WinDefinition.class.getResourceAsStream(vfile);
+			InputStream i = DefinitionWin.class.getResourceAsStream(vfile);
 			BufferedReader in = new BufferedReader(new InputStreamReader(i));
 		    String str;
 		    while ((str = in.readLine()) != null) {
@@ -93,7 +93,7 @@ public class WinDefinition extends JFrame  {
 		    }
 		    in.close();
 		} catch (IOException e) {
-			logger.error("Ops! (WinDefinition)", e);
+			logger.error("Ops! (DefinitionWin)", e);
 		}
 		htmlcontent = contentBuilder.toString();
 		
@@ -117,7 +117,7 @@ public class WinDefinition extends JFrame  {
 		setBounds(100, 100, 450, 300);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setIconImage(Toolkit.getDefaultToolkit().getImage(WinDefinition.class.getResource("/gui/images/PAC-Tool_16.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(DefinitionWin.class.getResource("/gui/images/PAC-Tool_16.png")));
 		setTitle(vtitle);
 		
 		JScrollPane scrollPane = new JScrollPane();

@@ -47,7 +47,7 @@ import javax.swing.JPanel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import enthalpy.Enthalpy;
+import refrigerant.Refrigerant;
 
 // ===================================================================================================================
 // ===================================================================================================================
@@ -55,20 +55,19 @@ import enthalpy.Enthalpy;
 // ===================================================================================================================
 // ===================================================================================================================
 
-public class PanelEnthalpy extends JPanel {
+public class EnthalpyPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;	
-	//private static final Logger logger = LogManager.getLogger(PanelEnthalpy.class.getName());
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
 	/* -----------------------------
 		      Instance Variables
 	 * ----------------------------*/
-	private Enthalpy enthalpy;				// Class Enthalpy with definition 
-	private EnthalpyBkgdImg enthalpyBkgdImg;// Class EnthalpyBkgdImg with location of Background image
+	private Refrigerant refrigerant;		// Class Refrigerant with definition 
+	private EnthalpyBkgImg enthalpyBkgImg;	// Class RefrigerantBkgdImg with location of Background image
 
-	private double xHmin;  					//  Enthalpy Minimum of the range of values displayed.
-	private double xHmax;    				//  Enthalpy Maximum of the range of value displayed.
+	private double xHmin;  					//  Refrigerant Minimum of the range of values displayed.
+	private double xHmax;    				//  Refrigerant Maximum of the range of value displayed.
 
 	private double yPmin;  					// Pressure Minimum of the range of Pressure value
 	private double yPmax;     				// Pressure Maximum of the range of Pressure value. 
@@ -76,7 +75,7 @@ public class PanelEnthalpy extends JPanel {
 	private double log10_yPmin; 			// Pressure Minimum of the range of values displayed. --> Math.log10(0.01) = -1
 	private double log10_yPmax;     		// Pressure Maximum of the range of value displayed. --> Math.log10(100) = 2
 
-	private BufferedImage bufBkgdImg;		// Enthalpy Image Background
+	private BufferedImage bufBkgdImg;		// Refrigerant Image Background
 
 	private float alphaBlurBkgdImg;			// Blur the Background image  
 
@@ -92,7 +91,7 @@ public class PanelEnthalpy extends JPanel {
 	private double marginy;
 	private double log10_marginy;
 
-	private double gridUnitX;				// Grid Enthalpy Step
+	private double gridUnitX;				// Grid Refrigerant Step
 	private double gridUnitY;				// Grid Pressure Step, will be modified following the progression 
 
 	private double curveFollowerX;			// Curve follower
@@ -104,21 +103,21 @@ public class PanelEnthalpy extends JPanel {
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public PanelEnthalpy(Enthalpy vEnthalpy, List<ElDraw> veDrawL) {
+	public EnthalpyPanel(Refrigerant vRefrigerant, EnthalpyBkgImg vimgRefrigerantBg, List<ElDraw> veDrawL) {
 		super();
 
-		logger.info("PanelEnthalpy");
+		logger.info("PanelRefrigerant");
 
-		this.enthalpy = vEnthalpy;
-		this.enthalpyBkgdImg = enthalpy.getEnthalpyBkgImage();
-		this.xHmin = enthalpy.getxHmin();  				
-		this.xHmax = enthalpy.getxHmax();    				
-		this.yPmin = enthalpy.getyPmin();  
-		this.yPmax = enthalpy.getyPmax();    
+		this.refrigerant = vRefrigerant;
+		this.enthalpyBkgImg = vimgRefrigerantBg;
+		this.xHmin = refrigerant.getxHmin();  				
+		this.xHmax = refrigerant.getxHmax();    				
+		this.yPmin = refrigerant.getyPmin();  
+		this.yPmax = refrigerant.getyPmax();    
 		this.log10_yPmin = Math.log10(yPmin);
 		this.log10_yPmax = Math.log10(yPmax);
 
-		this.bufBkgdImg = openEnthalpyImageFile();
+		this.bufBkgdImg = openRefrigerantImageFile();
 
 		this.alphaBlurBkgdImg=0.5f;
 
@@ -162,7 +161,7 @@ public class PanelEnthalpy extends JPanel {
 				/*
 				else {
 					if ((evt.getModifiers() & InputEvent.BUTTON1_MASK) != 0) {			
-						ElDraw edraw = new ElDraw("Test", ElDrawObject.PointLogP, Color.RED,getHoXm(xMouse),Math.log10(getPoYm(yMouse)));
+						ElDraw edraw = new ElDraw("Test", EloElDraw.PointLogP, Color.RED,getHoXm(xMouse),Math.log10(getPoYm(yMouse)));
 						eDrawL.add(edraw);
 					}
 				}
@@ -204,14 +203,14 @@ public class PanelEnthalpy extends JPanel {
 	// -------------------------------------------------------
 
 	/**
-	 * Load the EnthalpyImageFile
+	 * Load the RefrigerantImageFile
 	 */
-	public BufferedImage openEnthalpyImageFile() {
+	public BufferedImage openRefrigerantImageFile() {
 		BufferedImage image=null;
 		
 		try {
-			File file = new File(enthalpyBkgdImg.getEnthalpyImageFile());
-			logger.info("Read File: {}", enthalpyBkgdImg.getEnthalpyImageFile());
+			File file = new File(enthalpyBkgImg.getRefrigerantImageFile());
+			logger.info("Read File: {}", enthalpyBkgImg.getRefrigerantImageFile());
 
 			image = ImageIO.read(file);	
 		} catch (IOException e) {
@@ -242,18 +241,18 @@ public class PanelEnthalpy extends JPanel {
 	/**
 	 * Will return the nearest element id of elDraw
 	 * @param eDrawL
-	 * @param ElDrawObject
+	 * @param EloElDraw
 	 * @param H 
 	 * @param Log(P) 
 	 * @return
 	 */
-	public int getIdNearest(List<ElDraw> eDrawL, ElDrawObject elDrawObject, double pH, double pP) {
+	public int getIdNearest(List<ElDraw> eDrawL, EloElDraw eloElDraw, double pH, double pP) {
 		int id=-1;
 		double zoneH = 2;
 		double zoneP = 2;
 
 		for(int i=0;i<eDrawL.size();i++) {
-			if ( (eDrawL.get(i).getElDrawObj() == elDrawObject) && (eDrawL.get(i).isMovable()) ){
+			if ( (eDrawL.get(i).getElDrawObj() == eloElDraw) && (eDrawL.get(i).isMovable()) ){
 				double H = eDrawL.get(i).getX1();
 				double P = eDrawL.get(i).getY1();
 				//System.out.println("picked pP = " + pP );
@@ -277,7 +276,7 @@ public class PanelEnthalpy extends JPanel {
 	}
 
 	/**
-	 * Compute Enthalpy H / mouse coordinate
+	 * Compute Refrigerant H / mouse coordinate
 	 * @param x
 	 * @return H in double
 	 */
@@ -288,7 +287,7 @@ public class PanelEnthalpy extends JPanel {
 	}
 
 	/**
-	 * Compute mouse coordinate / Enthalpy H
+	 * Compute mouse coordinate / Refrigerant H
 	 * @param h
 	 * @return x position in integer
 	 */
@@ -357,8 +356,8 @@ public class PanelEnthalpy extends JPanel {
 
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alphaBlurBkgdImg));
 		g2.drawImage(bufBkgdImg, 
-				enthalpyBkgdImg.getRefCurveH1x(),enthalpyBkgdImg.getRefCurveP2yLog(),enthalpyBkgdImg.getRefCurveH2x(),-enthalpyBkgdImg.getRefCurveP1yLog(),
-				enthalpyBkgdImg.getiBgH1x(),enthalpyBkgdImg.getiBgP2y(),enthalpyBkgdImg.getiBgH2x(),enthalpyBkgdImg.getiBgP1y(),
+				enthalpyBkgImg.getRefCurveH1x(),enthalpyBkgImg.getRefCurveP2yLog(),enthalpyBkgImg.getRefCurveH2x(),-enthalpyBkgImg.getRefCurveP1yLog(),
+				enthalpyBkgImg.getiBgH1x(),enthalpyBkgImg.getiBgP2y(),enthalpyBkgImg.getiBgH2x(),enthalpyBkgImg.getiBgP1y(),
 				this);
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1));
 
@@ -373,7 +372,7 @@ public class PanelEnthalpy extends JPanel {
 		// Grid + Text
 		// -----------------------------------
 
-		// Enthalpy
+		// Refrigerant
 		fontReal = fontReal.deriveFont(Font.PLAIN, 12.0f);
 		g2.setFont(fontReal);
 		metrics = g.getFontMetrics(fontReal);		
@@ -441,8 +440,8 @@ public class PanelEnthalpy extends JPanel {
 		fontReal = fontReal.deriveFont(Font.BOLD, 16.0f);
 		g2.setFont(fontReal);
 		metrics = g.getFontMetrics(fontReal);		
-		g2.drawString(enthalpy.getNameRefrigerant(), 
-				(float)((xHmax-marginx - metrics.getStringBounds(enthalpy.getNameRefrigerant(),g2).getWidth())), 
+		g2.drawString(refrigerant.getRfgName(), 
+				(float)((xHmax-marginx - metrics.getStringBounds(refrigerant.getRfgName(),g2).getWidth())), 
 				(float)(log10_yPmax+log10_marginy/2));
 
 		// Temperature
@@ -450,7 +449,9 @@ public class PanelEnthalpy extends JPanel {
 		g2.setFont(fontReal);
 		metrics = g.getFontMetrics(fontReal);		
 		g2.setColor(Color.red);
-		for (int y = (int) enthalpy.convP2T(yPmin); y <= (int)enthalpy.convP2T(yPmax); y= (int)(y+gridUnitY)) {
+		for (int y = (int)refrigerant.getTSatFromP(yPmin).getTLiquid(); 
+				 y <= (int)refrigerant.getTSatFromP(yPmax).getTLiquid(); 
+				y= (int)(y+gridUnitY)) {
 			if (y < 60) 
 				gridUnitY = 10;
 			else
@@ -459,7 +460,7 @@ public class PanelEnthalpy extends JPanel {
 			String s = String.format("%d",y);
 
 			double xd = 10 + xHmin - metrics.getStringBounds(s,g2).getWidth()/2; 
-			double log10_y = Math.log10(enthalpy.convT2P(y)); 
+			double log10_y = Math.log10(refrigerant.getTSatFromP(y).getTLiquid()); 
 			g2.drawString(s, (float)(xd), (float)(log10_y));
 
 			g2.draw( new Line2D.Double(xHmin-2,log10_y,xHmin+2,log10_y));
@@ -471,9 +472,9 @@ public class PanelEnthalpy extends JPanel {
 		// -----------------------------------		
 		g2.setStroke(new BasicStroke((float) 0));
 		g2.setColor(Color.RED);
-		for(int i=1;i<enthalpy.getlistSatHlP().size();i++) {
-			g2.draw( new Line2D.Double(enthalpy.getSatHl(i-1),Math.log10(enthalpy.getSatP(i-1)),enthalpy.getSatHl(i),Math.log10(enthalpy.getSatP(i))));			 
-			g2.draw( new Line2D.Double(enthalpy.getSatHv(i-1),Math.log10(enthalpy.getSatP(i-1)),enthalpy.getSatHv(i),Math.log10(enthalpy.getSatP(i))));
+		for(int i=1;i<refrigerant.getSatTableSize();i++) {
+			g2.draw( new Line2D.Double(refrigerant.getHSat_Liquid(i-1),Math.log10(refrigerant.getPSat_Liquid(i-1)),refrigerant.getHSat_Liquid(i),Math.log10(refrigerant.getPSat_Liquid(i))));			 
+			g2.draw( new Line2D.Double(refrigerant.getHSat_Gas(i-1),Math.log10(refrigerant.getPSat_Gas(i-1)),refrigerant.getHSat_Gas(i),Math.log10(refrigerant.getPSat_Gas(i))));
 		}
 
 		// -----------------------------------
@@ -503,11 +504,11 @@ public class PanelEnthalpy extends JPanel {
 		for(int i=0;i<eDrawL.size();i++) {
 
 			switch (eDrawL.get(i).getElDrawObj()) {
-			case LineP: 
+			case LINE_HORZ: 
 				g2.setStroke(new BasicStroke((float)(2)));
 				g2.setPaint(Color.BLUE);
-				int linexmin = getXmoH(enthalpy.getxHmin());
-				int linexmax = getXmoH(enthalpy.getxHmax());
+				int linexmin = getXmoH(refrigerant.getxHmin());
+				int linexmax = getXmoH(refrigerant.getxHmax());
 				int liney = getYmoP(eDrawL.get(i).getY1());
 				g2.draw( new Line2D.Double(linexmin,liney,linexmax,liney));
 				break;
@@ -521,7 +522,7 @@ public class PanelEnthalpy extends JPanel {
 			int Rm = 5;
 
 			switch (eDrawL.get(i).getElDrawObj()) {
-			case PointPK_HP: case PointP0_HP:  
+			case POINT_TXT_ABV: case POINT_TXT_BLV:  
 				// Circle
 				int pointxm = getXmoH(eDrawL.get(i).getX1())-Rm;
 				int pointym = getYmoP(eDrawL.get(i).getY1())-Rm;
@@ -537,7 +538,7 @@ public class PanelEnthalpy extends JPanel {
 				g2.draw (new Ellipse2D.Double(pointxm, pointym, widthH, heightP));
 
 				// Road Sign
-				if (eDrawL.get(i).getElDrawObj() == ElDrawObject.PointPK_HP) {
+				if (eDrawL.get(i).getElDrawObj() == EloElDraw.POINT_TXT_ABV) {
 					// Road Sign above
 					g2.setColor(Color.BLUE);
 					g2.drawRoundRect(pointxm-5, pointym-20, 20, 15, 5, 5);
@@ -571,7 +572,7 @@ public class PanelEnthalpy extends JPanel {
 
 		// TO DOOOOOOOOOOOOOOOOOOOOOOOOO
 
-		//WinEnthalpy.updateAllTextField();
+		//WinRefrigerant.updateAllTextField();
 
 	}
 

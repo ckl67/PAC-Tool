@@ -21,14 +21,13 @@ package gui;
 
 import java.awt.Color;
 import java.util.List;
+
 import org.apache.logging.log4j.Logger;
 
-import mpoints.EloMeasurePointSelection;
 import mpoints.EloMeasurePoint;
 import mpoints.MeasurePoint;
 
 import org.apache.logging.log4j.LogManager;
-
 
 // ===================================================================================================================
 //										DEFINITION OF THE DRAW ELEMENTS
@@ -36,11 +35,10 @@ import org.apache.logging.log4j.LogManager;
 
 public class ElDraw {
 
-	//private static final Logger logger = LogManager.getLogger(ElDraw.class.getName());
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
 
-	private ElDrawObject 	elDrawObj;  	// type of draw : Line, Point,..
+	private EloElDraw 		elDrawObj;  	// type of draw : Line, Point,..
 	private String 			ensembleName;	// Several ElDraw objects can belong to same ensemble
 	private boolean 		movable;		// Can the point be moved
 	private Color 			color;			// Color
@@ -63,13 +61,13 @@ public class ElDraw {
 	 * @param vcolor
 	 * @param y
 	 */
-	public ElDraw( String vensembleName, ElDrawObject velDrawObj, boolean vmovale, Color vcolor , double xy) {
+	public ElDraw( String vensembleName, EloElDraw velDrawObj, boolean vmovale, Color vcolor , double xy) {
+		logger.info("(ElDraw):: Create={}", velDrawObj.name());
 		this.ensembleName = vensembleName;
 		this.elDrawObj = velDrawObj;
 		this.movable = vmovale;
 		this.color = vcolor;
-		if (velDrawObj.equals(ElDrawObject.LineP) ) {  
-
+		if (velDrawObj.equals(EloElDraw.LINE_HORZ) ) {  
 			// Line Horizontal
 			this.x1=0;	// Will be define during the drawing
 			this.y1=xy;
@@ -86,7 +84,7 @@ public class ElDraw {
 
 	/**
 	 * Point
-	 *  	ElDraw(T4,Line,Red,x1=2,y1=1)
+	 *  	ElDraw(T4,Point,Red,x1=2,y1=1)
 	 * 
 	 * @param vensembleName
 	 * @param velDrawObj
@@ -94,7 +92,8 @@ public class ElDraw {
 	 * @param x1
 	 * @param y1
 	 */
-	public ElDraw( String vensembleName, ElDrawObject velDrawObj, boolean vmovale, Color vcolor , double x1, double y1) {
+	public ElDraw( String vensembleName, EloElDraw velDrawObj, boolean vmovale, Color vcolor , double x1, double y1) {
+		logger.info("(ElDraw):: Create={}", velDrawObj.name());
 		this.ensembleName = vensembleName;
 		this.elDrawObj = velDrawObj;
 		this.movable = vmovale;
@@ -117,7 +116,8 @@ public class ElDraw {
 	 * @param x2
 	 * @param y2
 	 */
-	public ElDraw( String vensembleName, ElDrawObject velDrawObj,  boolean vmovale, Color vcolor , double x1, double y1, double x2, double y2) {
+	public ElDraw( String vensembleName, EloElDraw velDrawObj,  boolean vmovale, Color vcolor , double x1, double y1, double x2, double y2) {
+		logger.info("(ElDraw):: Create={}", velDrawObj.name());
 		this.ensembleName = vensembleName;
 		this.elDrawObj = velDrawObj;
 		this.movable = vmovale;	
@@ -129,120 +129,106 @@ public class ElDraw {
 	}
 
 	// -------------------------------------------------------
-	// 							METHOD
+	// 			METHOD -- FUNCTION STATIC !!
 	// -------------------------------------------------------
 
-	public static List<ElDraw> createElDrawFrom(List<MeasurePoint> measurePointL, List<ElDraw> eDrawL) {
-		boolean onshot = true;
+	/*
+	P
+	^
+	|
+	|
+	|                     XXXXXXXXXXXXX
+	|                  XXXX           XXXXX         (PK)
+	|        (5)+-----(4)-----------------(3)--------------------+ (2)
+	|           | XXXX                      XX                   /
+	|           |XX                          XX                 /
+	|           |X                            XX               /
+	|          X|                              XX             /
+	|         XX|                               X            /
+	|         X |                               XX          /
+	|        XX |             (P0)               X         /
+	|       XX  +---------------------------------+---+---+
+	|       X  (6)                               (7) (8)  (1)
+	|      XX                                     X
+	|      X                                      X
+	|
+	+------------------------------------------------------------------------> H
 
-		for (EloMeasurePoint p : EloMeasurePoint.values()) {
-			int n = p.ordinal(); 		// p = T1,T2,... n = 0 , 1, 
-			MeasurePoint m = measurePointL.get(n);  
+ */
+	public static List<ElDraw> createElDrawFrom(List<MeasurePoint> lMeasurePoints, List<ElDraw> leDraw) {
+		// boolean onshot = true;
 
-			// ----------------------------------
-			// Will now create the Draw Element: 
-			// 	Draw elements (ElDraw) must be 
-			//		* simple elements to be drawn quickly
-			//			g2.draw( new Line2D.Double(x1,y1,x2,y2);
-			//		* associable
-			//			Behind a same reference (= Measured Point) several simple draw elements
-			//			to draw or to delete
-			//			g2.drawString(s,x,y);
-			//			g2.draw( new Ellipse2D.Double(x1,y1);
-			//			g2.draw( new Line2D.Double(x1,y1,x2,y2);
-			//		* Movable
-			//			The element can be moved and receive a new value Hreal
-			//
-			//  Also
-			// 		Although P3 and P4 are existing Measured Object, only P3 will be retained to create PK
-			//  Conclusion
-			//  	eDrawL 
-			//			(P0,Line,get_x1,get_y1,get_x2,get_y2)
-			//			(P0,Text,get_x1,get_y1)
-			//			(P0,DottedLine,get_x1,get_y1,get_x2,get_y2
-			//			(P0,Point,get_x1,get_y1)
-			//		Move
-			//			Only for points ! 
-			//			If point is moved we set : _ChosenHreal
-			// ----------------------------------
-			if ( (m.getMeasureChoiceStatus().equals(EloMeasurePointSelection.ChosenHaprox)) || 
-					(m.getMeasureChoiceStatus().equals(EloMeasurePointSelection.ChosenP0PK))) {
+		for (EloEnthalpyElDraw p : EloEnthalpyElDraw.values()) {
+			MeasurePoint m;
+			switch (p) {
+			case P1:
+				m = lMeasurePoints.get(EloMeasurePoint.P1.id()); 
+				logger.info("Point={} H={} P={}", p.name(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
+				leDraw.add(new ElDraw(p.name(),	EloElDraw.POINT_TXT_BLV,true,Color.BLACK,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
+				break;
+			case P2:
+				m = lMeasurePoints.get(EloMeasurePoint.P2.id()); 
+				logger.info("Point={} H={} P={}", p.name(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
+				leDraw.add(new ElDraw(p.name(),	EloElDraw.POINT_TXT_ABV,true,Color.BLACK,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
+				break;
+			case P3:
+				m = lMeasurePoints.get(EloMeasurePoint.P3.id()); 
+				logger.info("Point={} H={} P={}", p.name(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
+				leDraw.add(new ElDraw(p.name(),	EloElDraw.POINT_TXT_ABV,false,Color.BLACK,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
+				break;
+			case P4:
+				m = lMeasurePoints.get(EloMeasurePoint.P4.id()); 
+				logger.info("Point={} H={} P={}", p.name(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
+				leDraw.add(new ElDraw(p.name(),	EloElDraw.POINT_TXT_ABV,false,Color.BLACK,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
+				break;
+			case P5:
+				m = lMeasurePoints.get(EloMeasurePoint.P4.id()); 
+				logger.info("Point={} H={} P={}", p.name(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
+				leDraw.add(new ElDraw(p.name(),	EloElDraw.POINT_TXT_ABV,true,Color.BLACK,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
+				break;
+			case P6:
+				m = lMeasurePoints.get(EloMeasurePoint.P6.id()); 
+				logger.info("Point={} H={} P={}", p.name(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
+				leDraw.add(new ElDraw(p.name(),	EloElDraw.POINT_TXT_BLV,true,Color.BLACK,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
+				break;
+			case P7:
+				m = lMeasurePoints.get(EloMeasurePoint.P7.id()); 
+				logger.info("Point={} H={} P={}", p.name(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
+				leDraw.add(new ElDraw(p.name(),	EloElDraw.POINT_TXT_BLV,false,Color.BLACK,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
+				break;
+			case P8:
+				m = lMeasurePoints.get(EloMeasurePoint.P8.id()); 
+				logger.info("Point={} H={} P={}", p.name(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
+				leDraw.add(new ElDraw(p.name(),	EloElDraw.POINT_TXT_BLV,true,Color.BLACK,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
+				break;
+			case P0:
+				m = lMeasurePoints.get(EloMeasurePoint.P7.id()); 
+				leDraw.add(new ElDraw(p.name(),	EloElDraw.LINE_HORZ,false,Color.BLACK,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
+			case PK:
+				m = lMeasurePoints.get(EloMeasurePoint.P3.id()); 
+				leDraw.add(new ElDraw(p.name(),	EloElDraw.LINE_HORZ,false,Color.BLACK,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 
-				/*
-
-				P
-				^
-				|
-				|
-				|                     XXXXXXXXXXXXX
-				|                  XXXX           XXXXX         (PK)
-				|        (5)+-----(4)-----------------(3)--------------------+ (2)
-				|           | XXXX                      XX                   /
-				|           |XX                          XX                 /
-				|           |X                            XX               /
-				|          X|                              XX             /
-				|         XX|                               X            /
-				|         X |                               XX          /
-				|        XX |             (P0)               X         /
-				|       XX  +---------------------------------+---+---+
-				|       X  (6)                               (7) (8)  (1)
-				|      XX                                     X
-				|      X                                      X
-				|
-				+------------------------------------------------------------------------> H
-
-				 */
-				switch (m.getMeasureObject()) {
-				case P1 : case P6 : case P8 :	// Points intersection with Pressure (P0)
-					logger.info("Point={} H={} P={}", m.getMeasureObject(),m.getMH(),m.getMP0PK());
-					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointP0_HP,true,Color.BLACK,m.getMH(),m.getMP0PK()));
-					break;
-				case P2 : case P5 :				// Points intersection with PK
-					logger.info("Point={} H={} P={}", m.getMeasureObject(),m.getMH(),m.getMP0PK());
-					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointPK_HP,true,Color.BLACK,m.getMH(),m.getMP0PK()));
-					break;
-				case P3 : case P4 : 			// Points PK intersection with Saturation Curve 
-					logger.info("Point={} H={} P={}", m.getMeasureObject(),m.getMH(),m.getMP0PK());
-					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointPK_HP,false,Color.BLACK,m.getMH(),m.getMP0PK()));
-					if (onshot) {
-						onshot = false;
-						logger.info("Line={} P={}", m.getMeasureObject(),m.getMP0PK());
-						eDrawL.add(new ElDraw("PK",ElDrawObject.LineP,false,Color.BLACK,m.getMP0PK()));											
-					}
-					break;			
-				case P7 :						// Point P0 intersection with Saturation Curve
-					logger.info("Point={} H={} P={}", m.getMeasureObject(),m.getMH(),m.getMP0PK());
-					eDrawL.add(new ElDraw(p.name(),ElDrawObject.PointP0_HP,false,Color.BLACK,m.getMH(),m.getMP0PK()));
-					logger.info("Line={} P={}", m.getMeasureObject(),m.getMP0PK());
-					eDrawL.add(new ElDraw("PK",ElDrawObject.LineP,false,Color.BLACK,m.getMP0PK()));											
-					break;			
-				default:
-					break;
-
-				}
+			default:
+				break;
 			}
-
 		}
-		return eDrawL;
 
+		return leDraw;
+		
 	}
-
+		
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
 
-	public void setX1(double x) {
-		this.x1 = x;
-	}
 
-	public ElDrawObject getElDrawObj() {
+	public EloElDraw getElDrawObj() {
 		return elDrawObj;
 	}
 
 	public String getEnsembleName() {
 		return ensembleName;
 	}
-
 
 	public double getX1() {
 		return x1;
@@ -271,5 +257,22 @@ public class ElDraw {
 	public void setMovable(boolean movable) {
 		this.movable = movable;
 	}
+	
+	public void setX1(double x1) {
+		this.x1 = x1;
+	}
+
+	public void setY1(double y1) {
+		this.y1 = y1;
+	}
+
+	public void setX2(double x2) {
+		this.x2 = x2;
+	}
+
+	public void setY2(double y2) {
+		this.y2 = y2;
+	}
+
 }
 

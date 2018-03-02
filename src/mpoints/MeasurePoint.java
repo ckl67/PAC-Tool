@@ -130,8 +130,6 @@ public class MeasurePoint {
 		this.value = value;
 		this.mPObjectSelection = EloMeasurePointSelection.Selected;
 
-		//for (int loop=1;loop< 2;loop++) {
-
 		switch (this.mPObject) {
 
 		case P1 :
@@ -362,7 +360,6 @@ public class MeasurePoint {
 			break;
 		}
 
-		//}	
 	}
 
 
@@ -442,11 +439,7 @@ public class MeasurePoint {
 		H = h;
 	}
 
-	public EloMeasurePoint getmPObject() {
-		return mPObject;
-	}
-
-	public EloMeasurePointSelection getmPObjectSelection() {
+	public EloMeasurePointSelection getMPObjectSelection() {
 		return mPObjectSelection;
 	}
 
