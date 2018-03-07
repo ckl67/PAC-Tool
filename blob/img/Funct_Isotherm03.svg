@@ -27,8 +27,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="556.50336"
-     inkscape:cy="371.08337"
+     inkscape:cx="586.55014"
+     inkscape:cy="350.29127"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="false"
@@ -88,10 +88,11 @@
          x="381.9519"
          y="356.6825">PRef =  2</tspan></text>
     <path
-       style="fill:#ffffff;fill-rule:evenodd;stroke:#ff0000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:9.69999981;stroke-dasharray:none"
-       d="M 722.25907,448.11979 C 717.45714,390.94677 719.88734,314.12802 695.49003,257.20096"
+       style="fill:#ffffff;fill-rule:evenodd;stroke:#ff0000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:9.69999981;stroke-dasharray:none;stroke-opacity:1"
+       d="m 725.7946,504.68833 c -4.80193,-57.17302 3.68919,-210.25828 -30.30457,-247.48737"
        id="path4255"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:17.24179077px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#008000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -138,5 +139,67 @@
          id="tspan4147"
          x="942.38654"
          y="302.35593">HInter = 444</tspan></text>
+    <circle
+       style="display:inline;opacity:0.98000004;fill:#ff0000;fill-opacity:1;stroke:#000080;stroke-width:3.54330707;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path4314-5-2-8-4"
+       cx="695.54919"
+       cy="258.28381"
+       r="5.5558391" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:11.25px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="734.94513"
+       y="271.4158"
+       id="text4150-8"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4152-0"
+         x="734.94513"
+         y="271.4158"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:15px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#000000">Ha,Pa</tspan></text>
+    <circle
+       style="display:inline;opacity:0.98000004;fill:#ff0000;fill-opacity:1;stroke:#000080;stroke-width:3.54330707;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path4314-5-2-8"
+       cx="725.3631"
+       cy="505.77121"
+       r="5.5558391" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:11.25px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="764.75897"
+       y="518.90314"
+       id="text4150"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4152"
+         x="764.75897"
+         y="518.90314"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:15px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#000000">H0,P0</tspan></text>
+    <rect
+       style="display:inline;opacity:0.98000004;fill:#2b0000;fill-opacity:1;stroke:#0c0000;stroke-width:0.69696438;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect4169-4"
+       width="171.28891"
+       height="35.404934"
+       x="388.64127"
+       y="264.24915" />
+    <rect
+       style="display:inline;opacity:0.98000004;fill:#ffffff;fill-opacity:1;stroke:#0c0000;stroke-width:0.69696438;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect4169"
+       width="171.28891"
+       height="35.404934"
+       x="381.85553"
+       y="257.82062" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:11.25px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="463.57141"
+       y="279.09448"
+       id="text4174"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4176"
+         x="463.57141"
+         y="279.09448"
+         style="fill:#ff0000;font-size:13.75px">Attention Pa &gt; PRef !!</tspan></text>
   </g>
 </svg>

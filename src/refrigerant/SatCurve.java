@@ -745,6 +745,11 @@ public class SatCurve {
 		return IsoTherm_H0_Ref;
 	}
 
+	public double getIsoTherm_H0_T(double T) {
+		//  H0(T) = H0_Delta * (T-T0_Ref)/T0_Delta + H0_Ref
+		return IsoTherm_H0_Delta * (T-IsoTherm_T0_Ref)/IsoTherm_T0_Delta + IsoTherm_H0_Ref ;
+}
+
 	public double getIsoTherm_H0_Delta() {
 		return IsoTherm_H0_Delta;
 	}

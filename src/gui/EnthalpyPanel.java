@@ -98,18 +98,21 @@ public class EnthalpyPanel extends JPanel {
 
 	private double curveFollowerY;	
 
-	private List<ElDraw> eDrawL;			// Draw elements: lines/points/...
+	private List<EnthalpyElDraw> lEnthalpyElDraw;			// Draw elements: lines/points/...
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public EnthalpyPanel(Refrigerant vRefrigerant, EnthalpyBkgImg vimgRefrigerantBg, List<ElDraw> veDrawL) {
+	public EnthalpyPanel(Refrigerant vRefrigerant, EnthalpyBkgImg vimgRefrigerantBg, List<EnthalpyElDraw> vlEnthalpyElDraw) {
 		super();
 
-		logger.info("PanelRefrigerant");
+		logger.info("EnthalpyPanel");
 
 		this.refrigerant = vRefrigerant;
 		this.enthalpyBkgImg = vimgRefrigerantBg;
+		this.lEnthalpyElDraw = vlEnthalpyElDraw;
+
+
 		this.xHmin = refrigerant.getxHmin();  				
 		this.xHmax = refrigerant.getxHmax();    				
 		this.yPmin = refrigerant.getyPmin();  
@@ -124,9 +127,9 @@ public class EnthalpyPanel extends JPanel {
 		this.offset = new Point(0,0);		
 		this.mvoYf = 100.0;				 
 		this.dragStart = new Point(0,0);	
-		this.zoom = 1;					
-		this.zoomx=1;
-		this.zoomy=1;					
+		this.zoom 	= 1;					
+		this.zoomx 	= 1;
+		this.zoomy	= 1;					
 
 		this.marginx = 20;
 		this.marginy = 3;
@@ -137,8 +140,6 @@ public class EnthalpyPanel extends JPanel {
 
 		this.curveFollowerX=0;
 		this.curveFollowerY=0;
-
-		this.eDrawL = veDrawL;
 
 		// ----------------------
 		// Inherit from Jpanel
@@ -207,7 +208,7 @@ public class EnthalpyPanel extends JPanel {
 	 */
 	public BufferedImage openRefrigerantImageFile() {
 		BufferedImage image=null;
-		
+
 		try {
 			File file = new File(enthalpyBkgImg.getRefrigerantImageFile());
 			logger.info("Read File: {}", enthalpyBkgImg.getRefrigerantImageFile());
@@ -219,12 +220,12 @@ public class EnthalpyPanel extends JPanel {
 		}
 		return image;
 	}
-	
+
 	/** 
 	 * Clean the screen + Clear the list of the draw elements
 	 */
 	public void clean() {
-		eDrawL.clear();
+		lEnthalpyElDraw.clear();
 		repaint();
 	}
 
@@ -239,28 +240,32 @@ public class EnthalpyPanel extends JPanel {
 	}
 
 	/**
-	 * Will return the nearest element id of elDraw
-	 * @param eDrawL
-	 * @param EloElDraw
+	 * Will return the nearest element id of EnthalpyElDraw
+	 * @param EnthalpyElDraw
+	 * @param EloEnthalpyElDraw
 	 * @param H 
 	 * @param Log(P) 
 	 * @return
 	 */
-	public int getIdNearest(List<ElDraw> eDrawL, EloElDraw eloElDraw, double pH, double pP) {
+	public int getIdNearest(List<EnthalpyElDraw> lEnthalpyElDraw, EloEnthalpyElDraw enthElDrawObject, double pH, double pP) {
 		int id=-1;
 		double zoneH = 2;
 		double zoneP = 2;
 
-		for(int i=0;i<eDrawL.size();i++) {
-			if ( (eDrawL.get(i).getElDrawObj() == eloElDraw) && (eDrawL.get(i).isMovable()) ){
-				double H = eDrawL.get(i).getX1();
-				double P = eDrawL.get(i).getY1();
-				//System.out.println("picked pP = " + pP );
-				//System.out.println("Point P  = " + P );
-				//System.out.println("Zoom  = " + zoom );
+		for(int i=0;i<lEnthalpyElDraw.size();i++) {
+			if ( (lEnthalpyElDraw.get(i).getEnthElDrawObject() == enthElDrawObject) && (lEnthalpyElDraw.get(i).isMovable()) ){
 
-				if ( ( pH < H+zoneH/zoom) && ( pH > H-zoneH/zoom) && (pP < P+zoneP/zoom) && ( pP > P-zoneP/zoom) ) {
-					id = i;
+				for(int j=0;j<lEnthalpyElDraw.get(i).getlElDraw().size();j++) {
+
+					double H = lEnthalpyElDraw.get(i).getlElDraw().get(j).getX1();
+					double P = lEnthalpyElDraw.get(i).getlElDraw().get(j).getY1();
+
+					logger.trace("(getIdNearest):: picked pP={}  Point P={}  Zoom={}", pP, P, zoom);
+
+					if ( ( pH < H+zoneH/zoom) && ( pH > H-zoneH/zoom) && (pP < P+zoneP/zoom) && ( pP > P-zoneP/zoom) ) {
+						id = i;
+						logger.trace("(getIdNearest):: id={}",id);
+					}
 				}
 			}
 		}
@@ -354,12 +359,12 @@ public class EnthalpyPanel extends JPanel {
 		// Background	--> Panel
 		// -----------------------------------		
 
-		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alphaBlurBkgdImg));
-		g2.drawImage(bufBkgdImg, 
-				enthalpyBkgImg.getRefCurveH1x(),enthalpyBkgImg.getRefCurveP2yLog(),enthalpyBkgImg.getRefCurveH2x(),-enthalpyBkgImg.getRefCurveP1yLog(),
-				enthalpyBkgImg.getiBgH1x(),enthalpyBkgImg.getiBgP2y(),enthalpyBkgImg.getiBgH2x(),enthalpyBkgImg.getiBgP1y(),
-				this);
-		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1));
+		//g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alphaBlurBkgdImg));
+		//g2.drawImage(bufBkgdImg, 
+		//		enthalpyBkgImg.getRefCurveH1x(),enthalpyBkgImg.getRefCurveP2yLog(),enthalpyBkgImg.getRefCurveH2x(),-enthalpyBkgImg.getRefCurveP1yLog(),
+		//		enthalpyBkgImg.getiBgH1x(),enthalpyBkgImg.getiBgP2y(),enthalpyBkgImg.getiBgH2x(),enthalpyBkgImg.getiBgP1y(),
+		//		this);
+		//g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1));
 
 		// -----------------------------------
 		// Base font + Scaled font 
@@ -450,7 +455,7 @@ public class EnthalpyPanel extends JPanel {
 		metrics = g.getFontMetrics(fontReal);		
 		g2.setColor(Color.red);
 		for (int y = (int)refrigerant.getTSatFromP(yPmin).getTLiquid(); 
-				 y <= (int)refrigerant.getTSatFromP(yPmax).getTLiquid(); 
+				y <= (int)refrigerant.getTSatFromP(yPmax).getTLiquid(); 
 				y= (int)(y+gridUnitY)) {
 			if (y < 60) 
 				gridUnitY = 10;
@@ -501,72 +506,95 @@ public class EnthalpyPanel extends JPanel {
 		// -----------------------------------
 		// Draw All Elements
 		// -----------------------------------
-		for(int i=0;i<eDrawL.size();i++) {
+		for(int k=0;k<lEnthalpyElDraw.size();k++) {
 
-			switch (eDrawL.get(i).getElDrawObj()) {
-			case LINE_HORZ: 
-				g2.setStroke(new BasicStroke((float)(2)));
-				g2.setPaint(Color.BLUE);
-				int linexmin = getXmoH(refrigerant.getxHmin());
-				int linexmax = getXmoH(refrigerant.getxHmax());
-				int liney = getYmoP(eDrawL.get(i).getY1());
-				g2.draw( new Line2D.Double(linexmin,liney,linexmax,liney));
-				break;
-			default:
-				break;
+			List<ElDraw> lElDraw = lEnthalpyElDraw.get(k).getlElDraw();
+
+			for(int j=0;j<lElDraw.size();j++) {
+
+				switch (lElDraw.get(j).getElDrawObj()) {
+				case LINE_HORZ: 
+					g2.setStroke(new BasicStroke((float)(2)));
+					g2.setPaint(Color.BLUE);
+					int linexmin = getXmoH(refrigerant.getxHmin());
+					int linexmax = getXmoH(refrigerant.getxHmax());
+					int liney = getYmoP(lElDraw.get(j).getY1());
+					g2.draw( new Line2D.Double(linexmin,liney,linexmax,liney));
+					break;
+
+				case LINE:
+					g2.setStroke(new BasicStroke((float)(0.5)));
+					g2.setPaint(Color.GREEN);
+					g2.draw( new Line2D.Double(
+							getXmoH(lElDraw.get(j).getX1()),
+							getYmoP(lElDraw.get(j).getY1()),
+							getXmoH(lElDraw.get(j).getX2()),
+							getYmoP(lElDraw.get(j).getY2())
+							)
+						);
+					//logger.trace("H1={} P1={}     H2={} P2={}  ",lElDraw.get(j).getX1(),lElDraw.get(j).getY1(),lElDraw.get(j).getX2(),lElDraw.get(j).getY2());
+					break;
+				default:
+					break;
+				}
 			}
 		}
 
 
-		for(int i=0;i<eDrawL.size();i++) {
+		for(int k=0;k<lEnthalpyElDraw.size();k++) {
 			int Rm = 5;
 
-			switch (eDrawL.get(i).getElDrawObj()) {
-			case POINT_TXT_ABV: case POINT_TXT_BLV:  
-				// Circle
-				int pointxm = getXmoH(eDrawL.get(i).getX1())-Rm;
-				int pointym = getYmoP(eDrawL.get(i).getY1())-Rm;
-				int widthH = (2*Rm);
-				int heightP = (2*Rm);
+			List<ElDraw> lElDraw = lEnthalpyElDraw.get(k).getlElDraw();
 
-				if (eDrawL.get(i).isMovable())
-					g2.setColor(Color.GREEN);
-				else
-					g2.setColor(Color.RED);
+			for(int j=0;j<lElDraw.size();j++) {
 
-				g2.setStroke(new BasicStroke((float)(2)));
-				g2.draw (new Ellipse2D.Double(pointxm, pointym, widthH, heightP));
+				switch (lElDraw.get(j).getElDrawObj()) {
+				case POINT:  
+					// Circle
+					int pointxm = getXmoH(lElDraw.get(j).getX1())-Rm;
+					int pointym = getYmoP(lElDraw.get(j).getY1())-Rm;
+					int widthH = (2*Rm);
+					int heightP = (2*Rm);
 
-				// Road Sign
-				if (eDrawL.get(i).getElDrawObj() == EloElDraw.POINT_TXT_ABV) {
-					// Road Sign above
-					g2.setColor(Color.BLUE);
-					g2.drawRoundRect(pointxm-5, pointym-20, 20, 15, 5, 5);
-					g2.setColor(Color.WHITE);
-					g2.fillRoundRect(pointxm-5, pointym-20, 20, 15, 5, 5);
+					if (lEnthalpyElDraw.get(k).isMovable())
+						g2.setColor(Color.GREEN);
+					else
+						g2.setColor(Color.RED);
 
-					font = new Font("Courier", Font.PLAIN, 10);
-					g2.setFont(font);
-					g2.setColor(Color.BLUE);  
-					String s = String.format("%s",eDrawL.get(i).getEnsembleName());
-					g2.drawString(s, pointxm, pointym-10);
-				} else {
-					// Road Sign below
-					g2.setColor(Color.BLUE);
-					g2.drawRoundRect(pointxm-5, pointym+20, 20, 15, 5, 5);
-					g2.setColor(Color.WHITE);
-					g2.fillRoundRect(pointxm-5, pointym+20, 20, 15, 5, 5);
+					g2.setStroke(new BasicStroke((float)(2)));
+					g2.draw (new Ellipse2D.Double(pointxm, pointym, widthH, heightP));
 
-					font = new Font("Courier", Font.PLAIN, 10);
-					g2.setFont(font);
-					g2.setColor(Color.BLUE);  
-					String s = String.format("%s",eDrawL.get(i).getEnsembleName());
-					g2.drawString(s, pointxm, pointym+30);
+					// Road Sign
+					if (lEnthalpyElDraw.get(k).isTextDisplayPositionAbove()) {
+						// Road Sign above
+						g2.setColor(Color.BLUE);
+						g2.drawRoundRect(pointxm-5, pointym-20, 20, 15, 5, 5);
+						g2.setColor(Color.WHITE);
+						g2.fillRoundRect(pointxm-5, pointym-20, 20, 15, 5, 5);
+
+						font = new Font("Courier", Font.PLAIN, 10);
+						g2.setFont(font);
+						g2.setColor(Color.BLUE);  
+						String s = String.format("%s",lEnthalpyElDraw.get(k).getTextDisplay());
+						g2.drawString(s, pointxm, pointym-10);
+					} else {
+						// Road Sign below
+						g2.setColor(Color.BLUE);
+						g2.drawRoundRect(pointxm-5, pointym+20, 20, 15, 5, 5);
+						g2.setColor(Color.WHITE);
+						g2.fillRoundRect(pointxm-5, pointym+20, 20, 15, 5, 5);
+
+						font = new Font("Courier", Font.PLAIN, 10);
+						g2.setFont(font);
+						g2.setColor(Color.BLUE);  
+						String s = String.format("%s",lEnthalpyElDraw.get(k).getTextDisplay());
+						g2.drawString(s, pointxm, pointym+30);
+					}
+
+					break;
+				default:
+					break;
 				}
-
-				break;
-			default:
-				break;
 			}
 		}
 
@@ -615,5 +643,5 @@ public class EnthalpyPanel extends JPanel {
 	public void setBufBkgdImg(BufferedImage bufBkgdImg) {
 		this.bufBkgdImg = bufBkgdImg;
 	}
-	
+
 }

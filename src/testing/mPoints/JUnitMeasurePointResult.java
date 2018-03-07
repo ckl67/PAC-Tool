@@ -43,7 +43,7 @@ public class JUnitMeasurePointResult {
 		mp2.setValue(69, pac, lMeasurePoints);
 		mp5.setValue(30, pac, lMeasurePoints);
 		mp6.setValue(-10, pac, lMeasurePoints);
-		mp8.setValue(-10, pac, lMeasurePoints);
+		mp8.setValue(0, pac, lMeasurePoints);
 		// Read the list
 		for (int i = 0; i < lMeasurePoints.size(); i++) {
 

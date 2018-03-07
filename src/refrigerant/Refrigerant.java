@@ -178,7 +178,19 @@ public class Refrigerant extends SatCurve {
 		double n = 4;
 		double c = (H0-Ha)/Math.pow(Pa-P0,1/n);
 
-		outH = c*Math.pow(Pa-PRef,(1/n)) + Ha;
+		if (Pa > PRef) {
+			outH = c*Math.pow(Pa-PRef,(1/n)) + Ha;
+			logger.trace("(getHGasInterIsobarIsotherm):: PRef={} T={}",PRef,T);
+			logger.trace("     Pa={} Ha={} H0={} P0={} c={} PRef={} n={}",Pa,Ha,H0,P0,c,PRef,n);
+			logger.trace("      ---> outH={}",outH);
+		} else {
+			outH = 0;
+			logger.error("(getHGasInterIsobarIsotherm):: PRef={} T={}",PRef,T);
+			logger.error("    Error: condition not respected !! Pa>PRef !!  -->  PRef={}  Pa={}",PRef,Pa);
+			logger.error("     Pa={} Ha={} H0={} P0={} c={} PRef={} n={}",Pa,Ha,H0,P0,c,PRef,n);
+			logger.error("      ---> outH={}",outH);
+		}
+		
 		return outH;
 	}
 

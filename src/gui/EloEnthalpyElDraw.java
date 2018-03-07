@@ -45,17 +45,38 @@ package gui;
  */
 
 public enum EloEnthalpyElDraw {
-	P1,
-	P2,
-	P3,
-	P4,
-	P5,
-	P6,
-	P7,
-	P8,
-	P0,
-	PK
+	P1("P1"),
+	P2("P2"),
+	P3("P3"),
+	P4("P4"),
+	P5("P5"),
+	P6("P6"),
+	P7("P7"),
+	P8("P8"),
+	LINE_P0("P0"),
+	LINE_PK("PK"),
+	ISOTHERM("Isotherm"),
+	ISOBAR("Isobar"),
 	;
 	
+	// --------------------------------------------------------------------
+	// DEFINITION OF VARIABLES USED IN ENUMERATION
+	// --------------------------------------------------------------------
+	private String text;
+	
+	// -------------------------------------------------------
+	// 					CONSTRUCTOR
+	// -------------------------------------------------------
+	EloEnthalpyElDraw(String vtext){
+		setText(vtext);
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
 	
 }
