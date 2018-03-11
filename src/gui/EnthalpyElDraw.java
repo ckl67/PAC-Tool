@@ -53,19 +53,17 @@ public class EnthalpyElDraw {
 	|
 	+------------------------------------------------------------------------> H
 
- */
+	 */
 
+	/**
+	 * 
+	 * @param venthElDrawObject
+	 * @param lMeasurePoints
+	 * 
+	 * 		EnthalpyElDraw enthalpyElDraw_P1 = new EnthalpyElDraw(EloEnthalpyElDraw.P1,lMeasurePoints);
+	 */
 	public EnthalpyElDraw(EloEnthalpyElDraw venthElDrawObject, List<MeasurePoint> lMeasurePoints ) {
-		Funct_EnthalpyElDraw(venthElDrawObject, lMeasurePoints, null, 0.0 );	
-	}
-
-	public EnthalpyElDraw(EloEnthalpyElDraw venthElDrawObject, List<MeasurePoint> lMeasurePoints, Pac vPac ) {
-		Funct_EnthalpyElDraw(venthElDrawObject, lMeasurePoints, vPac, 0.0 );	
-	}
-
-	public EnthalpyElDraw(EloEnthalpyElDraw venthElDrawObject, List<MeasurePoint> lMeasurePoints, Pac vPac, double isoThermT ) {
-		Funct_EnthalpyElDraw(venthElDrawObject, lMeasurePoints, vPac, isoThermT );	
-		
+		Funct_EnthalpyElDraw(venthElDrawObject, lMeasurePoints);	
 	}
 
 	// -------------------------------------------------------
@@ -74,22 +72,20 @@ public class EnthalpyElDraw {
 
 	private void Funct_EnthalpyElDraw(
 			EloEnthalpyElDraw venthElDrawObject, 
-			List<MeasurePoint> lMeasurePoints, 
-			Pac vPac,
-			double isoThermT ) {
+			List<MeasurePoint> lMeasurePoints ) {
 		MeasurePoint m;
 
 		enthElDrawObject = venthElDrawObject;
-		
+
 		switch (enthElDrawObject) {
 
 		case P1:
 			// Get the Mesure Point information of the element to draw
 			m = lMeasurePoints.get(EloMeasurePoint.P1.id()); 
 			logger.info("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
-			
+
 			lElDraw = new ArrayList<ElDraw>(); 
-			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.BLACK,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
+			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.GREEN,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 			movable = true;
 			textDisplay = enthElDrawObject.getText();
 			textDisplayPositionAbove = false;
@@ -98,9 +94,9 @@ public class EnthalpyElDraw {
 			// Get the Mesure Point information of the element to draw
 			m = lMeasurePoints.get(EloMeasurePoint.P2.id()); 
 			logger.info("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
-			
+
 			lElDraw = new ArrayList<ElDraw>(); 
-			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.BLACK,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
+			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.GREEN,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 			movable = true;
 			textDisplay = enthElDrawObject.getText();
 			textDisplayPositionAbove = true;
@@ -110,7 +106,7 @@ public class EnthalpyElDraw {
 			m = lMeasurePoints.get(EloMeasurePoint.P3.id()); 
 			logger.info("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
 			lElDraw = new ArrayList<ElDraw>(); 
-			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.BLACK,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
+			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.RED,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 			movable = false;
 			textDisplay = enthElDrawObject.getText();
 			textDisplayPositionAbove = true;
@@ -120,17 +116,17 @@ public class EnthalpyElDraw {
 			m = lMeasurePoints.get(EloMeasurePoint.P4.id()); 
 			logger.info("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
 			lElDraw = new ArrayList<ElDraw>(); 
-			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.BLACK,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
+			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.RED,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 			movable = false;
 			textDisplay = enthElDrawObject.getText();
 			textDisplayPositionAbove = true;
 			break;
 		case P5:
 			// Get the Mesure Point information of the element to draw
-			m = lMeasurePoints.get(EloMeasurePoint.P4.id()); 
+			m = lMeasurePoints.get(EloMeasurePoint.P5.id()); 
 			logger.info("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
 			lElDraw = new ArrayList<ElDraw>(); 
-			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.BLACK,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
+			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.GREEN,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 			movable = true;
 			textDisplay = enthElDrawObject.getText();
 			textDisplayPositionAbove = true;
@@ -140,7 +136,7 @@ public class EnthalpyElDraw {
 			m = lMeasurePoints.get(EloMeasurePoint.P6.id()); 
 			logger.info("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
 			lElDraw = new ArrayList<ElDraw>(); 
-			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.BLACK,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
+			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.GREEN,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 			movable = true;
 			textDisplay = venthElDrawObject.getText();
 			textDisplayPositionAbove = false;
@@ -150,7 +146,7 @@ public class EnthalpyElDraw {
 			m = lMeasurePoints.get(EloMeasurePoint.P7.id()); 
 			logger.info("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
 			lElDraw = new ArrayList<ElDraw>(); 
-			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.BLACK,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
+			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.RED,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 			movable = false;
 			textDisplay = venthElDrawObject.getText();
 			textDisplayPositionAbove = false;
@@ -160,7 +156,7 @@ public class EnthalpyElDraw {
 			m = lMeasurePoints.get(EloMeasurePoint.P8.id()); 
 			logger.info("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
 			lElDraw = new ArrayList<ElDraw>(); 
-			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.BLACK,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
+			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.GREEN,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 			movable = true;
 			textDisplay = venthElDrawObject.getText();
 			textDisplayPositionAbove = false;
@@ -183,49 +179,72 @@ public class EnthalpyElDraw {
 			textDisplay = venthElDrawObject.getText();
 			textDisplayPositionAbove = false;
 			break;
+		default:
+			lElDraw = new ArrayList<ElDraw>(); 
+			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.BLACK,0.0,0.0));
+			movable = false;
+			textDisplay = "Error";
+			textDisplayPositionAbove = false;
+			break;
+		}
+	}
+
+
+	/**
+	 * EnthalpyElDraw isoThDw = new EnthalpyElDraw(EloEnthalpyElDraw.ISOTHERM,lMeasurePoints);
+	 * isoThDw.set(ISOTHERM,lMeasurePoints,pac,isoThermT)
+	 * 
+	 * @param venthElDrawObject
+	 * @param lMeasurePoints
+	 * @param vPac
+	 * @param isoThermT
+	 */
+	public void set(EloEnthalpyElDraw venthElDrawObject, List<MeasurePoint> lMeasurePoints, Pac vPac, double isoThermT ) {
+		lElDraw.clear();
+		switch (enthElDrawObject) {
 		case ISOTHERM:
 			logger.trace("{}", enthElDrawObject.getText());
 
 			Refrigerant refrigerant = vPac.getRefrigerant();
 			/*
-						+
-						|
-						|
-						|
-						|           XXXXX
-						|       XXXX     XXXX
-						|   XXXX            XXX
-			PSatLiq     | XX                  XX     PSatGas
-			HSatLiq    ++--------------------------+ HSatGas
-						XX                      X  +-+
-					   XX                       X    +--+
-					   X                        X       |
-					  X                        XX       +--+
-					  X                       XX           |
-					  X                      XX            +--+
-					  X                      X                +
-											XX
-												X                HO_T
+				+
+				|
+				|
+				|
+				|           XXXXX
+				|       XXXX     XXXX
+				|   XXXX            XX
+	PSatLiq     | XX                  XX     PSatGas
+	HSatLiq    ++--------------------------+ HSatGas
+				XX                      X  +-+
+			   XX                       X    +--+
+			   X                        X       |
+			  X                        XX       +--+
+			  X                       XX           |
+			  X                      XX            +--+
+			  X                      X                +
+									XX
+										X                HO_T
 
-			*/
+			 */
 			double PSatLiq = refrigerant.getPSatFromT(isoThermT).getPLiquid();
 			double HSatLiq = refrigerant.getHSatFromT(isoThermT).getHLiquid();
-			
+
 			double PSatGas = refrigerant.getPSatFromT(isoThermT).getPGas();
 			double HSatGas = refrigerant.getHSatFromT(isoThermT).getHGas();
-			
+
 			double H0_T = refrigerant.getIsoTherm_H0_T(isoThermT);
-			
+
 			lElDraw = new ArrayList<ElDraw>(); 
-			lElDraw.add(new ElDraw(EloElDraw.LINE,Color.RED,HSatLiq,PSatLiq,HSatGas,PSatGas));
-			
+			lElDraw.add(new ElDraw(EloElDraw.LINE_DASHED,Color.RED,HSatLiq,PSatLiq,HSatGas,PSatGas));
+
 			for(int h=0;h<(int)(H0_T-HSatGas);h++) {
 				double x1,x2,y1,y2;
 				x1 = HSatGas + h;
 				x2 = HSatGas + h + 1;
 				y1 = refrigerant.getPIsotherm(x1, isoThermT); 
 				y2 = refrigerant.getPIsotherm(x2, isoThermT);
-				lElDraw.add(new ElDraw(EloElDraw.LINE,Color.RED,x1,y1,x2,y2));	
+				lElDraw.add(new ElDraw(EloElDraw.LINE_DASHED,Color.RED,x1,y1,x2,y2));	
 				logger.trace("   x1={} y1={}  x2={} y2={}", x1,y1,x2,y2);
 
 			}
@@ -234,12 +253,7 @@ public class EnthalpyElDraw {
 			textDisplayPositionAbove = false;
 			break;
 		default:
-			lElDraw = new ArrayList<ElDraw>(); 
-			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.BLACK,0.0,0.0));
-			movable = false;
-			textDisplay = "Error";
-			textDisplayPositionAbove = false;
-			
+
 			break;
 		}
 	}
@@ -288,6 +302,6 @@ public class EnthalpyElDraw {
 		this.textDisplayPositionAbove = textDisplayPositionAbove;
 	}
 
-	
+
 
 }

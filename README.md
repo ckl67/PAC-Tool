@@ -147,7 +147,9 @@ Charger la configuration qui se trouve sous: ..\workspace\pac-tool\inno
 	
 # wxMaxima - Facultatif  
 [wxMaxima](http://andrejv.github.io/wxmaxima/index.html) est un outil de calcul symbolique.  
-Très utile pour la simplification des expressions mathématiques.
+Très utile pour la simplification des expressions mathématiques.  
+Tutoriel sur Maxima se trouve
+[ici](https://raw.githubusercontent.com/ckl67/PAC-Tool/master/blob/img/Maxima/tutoriel_maxima.pdf) 
 
 # Autres
 

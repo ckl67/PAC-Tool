@@ -162,6 +162,8 @@ public class EnthalpyWin extends JFrame {
 					mp6.setValue(-10, pac, lMeasurePoints);
 					mp8.setValue(0, pac, lMeasurePoints);
 
+					mp1.setValue(10, pac, lMeasurePoints);
+
 
 					// Create the List of Results
 					List<MeasureResult> lMeasureResults;
@@ -174,13 +176,14 @@ public class EnthalpyWin extends JFrame {
 					List<EnthalpyElDraw> lEnthalpyElDraw;
 					lEnthalpyElDraw = new ArrayList<EnthalpyElDraw>(); 
 					
-					//EnthalpyElDraw enthalpyElDraw_P1 = new EnthalpyElDraw(EloEnthalpyElDraw.P1,lMeasurePoints);
 
-					double isoThermT = 15.0;
 					for (EloEnthalpyElDraw p : EloEnthalpyElDraw.values()) {
-						lEnthalpyElDraw.add(new EnthalpyElDraw(p,lMeasurePoints,pac,isoThermT));
+						lEnthalpyElDraw.add(new EnthalpyElDraw(p,lMeasurePoints));
 					}
-
+					double isoThermT = 10.0;
+					lEnthalpyElDraw.get(EloEnthalpyElDraw.ISOTHERM.ordinal()).set(EloEnthalpyElDraw.ISOTHERM, lMeasurePoints, pac, isoThermT);
+					
+					
 					// Create Background Image
 					// EnthalpyBkgImg enthalpyBkgImg = new EnthalpyBkgImg("./ressources/R407/R407C/R407C couleur A4.png");
 					EnthalpyBkgImg enthalpyBkgImg = new EnthalpyBkgImg("./ressources/R22/R22 couleur A4.png");

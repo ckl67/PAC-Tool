@@ -475,7 +475,7 @@ public class EnthalpyPanel extends JPanel {
 		// -----------------------------------
 		// Curve
 		// -----------------------------------		
-		g2.setStroke(new BasicStroke((float) 0));
+		g2.setStroke(new BasicStroke((float) 0.01));
 		g2.setColor(Color.RED);
 		for(int i=1;i<refrigerant.getSatTableSize();i++) {
 			g2.draw( new Line2D.Double(refrigerant.getHSat_Liquid(i-1),Math.log10(refrigerant.getPSat_Liquid(i-1)),refrigerant.getHSat_Liquid(i),Math.log10(refrigerant.getPSat_Liquid(i))));			 
@@ -515,7 +515,9 @@ public class EnthalpyPanel extends JPanel {
 				switch (lElDraw.get(j).getElDrawObj()) {
 				case LINE_HORZ: 
 					g2.setStroke(new BasicStroke((float)(2)));
-					g2.setPaint(Color.BLUE);
+					g2.setPaint(lElDraw.get(j).getColor());
+
+					//g2.setPaint(Color.BLUE);
 					int linexmin = getXmoH(refrigerant.getxHmin());
 					int linexmax = getXmoH(refrigerant.getxHmax());
 					int liney = getYmoP(lElDraw.get(j).getY1());
@@ -523,8 +525,30 @@ public class EnthalpyPanel extends JPanel {
 					break;
 
 				case LINE:
-					g2.setStroke(new BasicStroke((float)(0.5)));
-					g2.setPaint(Color.GREEN);
+					g2.setStroke(new BasicStroke(0.5f));
+					g2.setPaint(lElDraw.get(j).getColor());
+					g2.draw( new Line2D.Double(
+							getXmoH(lElDraw.get(j).getX1()),
+							getYmoP(lElDraw.get(j).getY1()),
+							getXmoH(lElDraw.get(j).getX2()),
+							getYmoP(lElDraw.get(j).getY2())
+							)
+						);
+					//logger.trace("H1={} P1={}     H2={} P2={}  ",lElDraw.get(j).getX1(),lElDraw.get(j).getY1(),lElDraw.get(j).getX2(),lElDraw.get(j).getY2());
+					break;
+					
+				case LINE_DASHED:
+					    g2.setStroke(
+					    		new BasicStroke(
+					    				0.2f,							// Width
+					    				BasicStroke.CAP_BUTT,			// End cap
+					    				BasicStroke.JOIN_MITER,			// Join style
+					    				10.0f,							// Miter limit
+					    				new float[] {16.0f,20.0f},		// Dash pattern
+					    				0.0f							// Dash phase
+					    				)
+					    		);
+					g2.setPaint(lElDraw.get(j).getColor());
 					g2.draw( new Line2D.Double(
 							getXmoH(lElDraw.get(j).getX1()),
 							getYmoP(lElDraw.get(j).getY1()),
@@ -556,10 +580,7 @@ public class EnthalpyPanel extends JPanel {
 					int widthH = (2*Rm);
 					int heightP = (2*Rm);
 
-					if (lEnthalpyElDraw.get(k).isMovable())
-						g2.setColor(Color.GREEN);
-					else
-						g2.setColor(Color.RED);
+						g2.setColor(lElDraw.get(j).getColor());
 
 					g2.setStroke(new BasicStroke((float)(2)));
 					g2.draw (new Ellipse2D.Double(pointxm, pointym, widthH, heightP));
