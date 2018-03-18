@@ -172,13 +172,17 @@ public class EnthalpyWin extends JFrame {
 						lMeasureResults.add(new MeasureResult(p,lMeasurePoints,pac));
 					}
 
-					// Create the list of Element Enthalpy Draw
+					// Create an Empty list of Element Enthalpy Draw
+					// add set the correct value based on the information computed in lMeasurePoints
 					List<EnthalpyElDraw> lEnthalpyElDraw;
 					lEnthalpyElDraw = new ArrayList<EnthalpyElDraw>(); 
 					
 
 					for (EloEnthalpyElDraw p : EloEnthalpyElDraw.values()) {
-						lEnthalpyElDraw.add(new EnthalpyElDraw(p,lMeasurePoints));
+						// Empty Draw element
+						lEnthalpyElDraw.add(new EnthalpyElDraw(p));
+						// Compute the Draw element based on lMeasurePoints
+						lEnthalpyElDraw.get(p.ordinal()).set(p, lMeasurePoints);
 					}
 					double isoThermT = 10.0;
 					lEnthalpyElDraw.get(EloEnthalpyElDraw.ISOTHERM.ordinal()).set(EloEnthalpyElDraw.ISOTHERM, lMeasurePoints, pac, isoThermT);
@@ -244,11 +248,6 @@ public class EnthalpyWin extends JFrame {
 		enthalpyPanel.setBufBkgdImg(enthalpyPanel.openRefrigerantImageFile());
 
 		Refrigerant refrigerant = pac.getRefrigerant();
-
-		enthalpyPanel.setxHmin(refrigerant.getxHmin());
-		enthalpyPanel.setxHmax(refrigerant.getxHmax());
-		enthalpyPanel.setyPmin(refrigerant.getyPmin());
-		enthalpyPanel.setyPmax(refrigerant.getyPmax());
 	}
 
 	public JTextField getPanelPacToolTextFieldCOP() {
@@ -376,7 +375,7 @@ public class EnthalpyWin extends JFrame {
 				double hResult = enthalpyPanel.getHoXm(evt.getX());
 				lblRefrigerantCoord.setText(String.format("H=%.2f kJ/kg",hResult));
 
-				double pResult = enthalpyPanel.getPoYm(evt.getY());
+				double pResult = enthalpyPanel.getP_LogP(enthalpyPanel.getLogPoYm(evt.getY()));
 				lblPressureCoord.setText(String.format("P=%.2f bar",pResult));
 
 				// CORRECTION LIQUID OR GAS !!
@@ -394,8 +393,8 @@ public class EnthalpyWin extends JFrame {
 				if (rdbtnSaturation.isSelected()) {
 					double pSat = refrigerant.getP_SatCurve_FromH(hResult,pResult);
 					double tSat = refrigerant.getT_SatCurve_FromH(hResult,pResult);
-					enthalpyPanel.setCurveFollowerX(hResult);
-					enthalpyPanel.setCurveFollowerY(pSat);
+					enthalpyPanel.setCurveFollowerH(hResult);
+					enthalpyPanel.setCurveFollowerP(pSat);
 					if (pSat > 0 )
 						lblFollower.setText(String.format("PSat=%.2f / Tsat=%.2f",pSat,tSat));
 					else
@@ -422,7 +421,7 @@ public class EnthalpyWin extends JFrame {
 
 					}
 				}
-				repaint();
+				//repaint();
 			}
 		});
 

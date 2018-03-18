@@ -754,19 +754,19 @@ public class SatCurve {
 		return IsoTherm_H0_Delta;
 	}
 
-	public double getxHmin() {
+	public double getHmin() {
 		return xHmin;
 	}
 
-	public double getxHmax() {
+	public double getHmax() {
 		return xHmax;
 	}
 
-	public double getyPmin() {
+	public double getPmin() {
 		return yPmin;
 	}
 
-	public double getyPmax() {
+	public double getPmax() {
 		return yPmax;
 	}
 

@@ -24,6 +24,7 @@ public class EnthalpyElDraw {
 	private EloEnthalpyElDraw 	enthElDrawObject;			// Name of the element
 	private List<ElDraw> 		lElDraw;					// Ensemble of simple draw element
 	private boolean 			movable;					// Can the element be moved
+	private boolean 			visible;					// Is the element visible
 	private String				textDisplay;				// Text to display 
 	private boolean 			textDisplayPositionAbove;	// Text Display position: Above or Below
 
@@ -31,53 +32,97 @@ public class EnthalpyElDraw {
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
-	/*
-	P
-	^
-	|
-	|
-	|                     XXXXXXXXXXXXX
-	|                  XXXX           XXXXX         (PK)
-	|        (5)+-----(4)-----------------(3)--------------------+ (2)
-	|           | XXXX                      XX                   /
-	|           |XX                          XX                 /
-	|           |X                            XX               /
-	|          X|                              XX             /
-	|         XX|                               X            /
-	|         X |                               XX          /
-	|        XX |             (P0)               X         /
-	|       XX  +---------------------------------+---+---+
-	|       X  (6)                               (7) (8)  (1)
-	|      XX                                     X
-	|      X                                      X
-	|
-	+------------------------------------------------------------------------> H
-
-	 */
-
 	/**
 	 * 
 	 * @param venthElDrawObject
-	 * @param lMeasurePoints
 	 * 
-	 * 		EnthalpyElDraw enthalpyElDraw_P1 = new EnthalpyElDraw(EloEnthalpyElDraw.P1,lMeasurePoints);
+	 *   Will create the "Empty" Draw element
+	 *    
+	 * 		EnthalpyElDraw enthalpyElDraw_P1 = new EnthalpyElDraw(EloEnthalpyElDraw.P1);
 	 */
-	public EnthalpyElDraw(EloEnthalpyElDraw venthElDrawObject, List<MeasurePoint> lMeasurePoints ) {
-		Funct_EnthalpyElDraw(venthElDrawObject, lMeasurePoints);	
+	public EnthalpyElDraw(EloEnthalpyElDraw venthElDrawObject) {
+		enthElDrawObject = venthElDrawObject;
+		lElDraw = new ArrayList<ElDraw>(); 
+		lElDraw.add(new ElDraw(EloElDraw.POINT,Color.BLACK,0.0,0.0));
+		movable = false;
+		visible = false;
+		textDisplay = "Error";
+		textDisplayPositionAbove = false;		
 	}
 
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
 
+	// 
+	//	    P
+	//		^
+	//		|
+	//		|
+	//		|                     XXXXXXXXXXXXX
+	//		|                  XXXX           XXXXX         (PK)
+	//		|        (5)+-----(4)-----------------(3)--------------------+ (2)
+	//		|           | XXXX                      XX                   /
+	//		|           |XX                          XX                 /
+	//		|           |X                            XX               /
+	//		|          X|                              XX             /
+	//		|         XX|                               X            /
+	//		|         X |                               XX          /
+	//		|        XX |             (P0)               X         /
+	//		|       XX  +---------------------------------+---+---+
+	//		|       X  (6)                               (7) (8)  (1)
+	//		|      XX                                     X
+	//		|      X                                      X
+	//		|
+	//		+------------------------------------------------------------------------> H
+	//		 
+
+	/**
+	 * EnthalpyElDraw eD = new EnthalpyElDraw(ISOTHERM);
+	 * eD.set(ISOTHERM,lMeasurePoints,pac,15)
+	 * 
+	 * @param venthElDrawObject
+	 * @param lMeasurePoints
+	 * @param vPac
+	 * @param isoThermT
+	 */
+	public void set(EloEnthalpyElDraw venthElDrawObject, List<MeasurePoint> lMeasurePoints, Pac vPac, double isoThermT ) {
+		lElDraw.clear();
+		Funct_EnthalpyElDraw(venthElDrawObject, lMeasurePoints,vPac,isoThermT);	
+	}
+
+
+	/**
+	 * EnthalpyElDraw eD = new EnthalpyElDraw(P1);
+	 * eD.set(P1,lMeasurePoints)
+	 * 
+	 * @param venthElDrawObject
+	 * @param lMeasurePoints
+	 */
+	public void set(EloEnthalpyElDraw venthElDrawObject, List<MeasurePoint> lMeasurePoints) {
+		lElDraw.clear();
+		
+		// Funct_EnthalpyElDraw can be called except for ISOTHERM
+		if (venthElDrawObject != EloEnthalpyElDraw.ISOTHERM) {
+			Funct_EnthalpyElDraw(venthElDrawObject, lMeasurePoints,null,0);
+		}
+	}
+
+	/**
+	 * 
+	 * @param venthElDrawObject
+	 * @param lMeasurePoints
+	 * @param vPac
+	 * @param isoThermT
+	 */
 	private void Funct_EnthalpyElDraw(
 			EloEnthalpyElDraw venthElDrawObject, 
-			List<MeasurePoint> lMeasurePoints ) {
+			List<MeasurePoint> lMeasurePoints, 
+			Pac vPac,
+			double isoThermT ) {
+
 		MeasurePoint m;
-
-		enthElDrawObject = venthElDrawObject;
-
-		switch (enthElDrawObject) {
+		switch (venthElDrawObject) {
 
 		case P1:
 			// Get the Mesure Point information of the element to draw
@@ -87,6 +132,7 @@ public class EnthalpyElDraw {
 			lElDraw = new ArrayList<ElDraw>(); 
 			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.GREEN,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 			movable = true;
+			visible = true;
 			textDisplay = enthElDrawObject.getText();
 			textDisplayPositionAbove = false;
 			break;
@@ -98,6 +144,7 @@ public class EnthalpyElDraw {
 			lElDraw = new ArrayList<ElDraw>(); 
 			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.GREEN,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 			movable = true;
+			visible = true;
 			textDisplay = enthElDrawObject.getText();
 			textDisplayPositionAbove = true;
 			break;
@@ -108,6 +155,7 @@ public class EnthalpyElDraw {
 			lElDraw = new ArrayList<ElDraw>(); 
 			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.RED,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 			movable = false;
+			visible = true;
 			textDisplay = enthElDrawObject.getText();
 			textDisplayPositionAbove = true;
 			break;
@@ -118,6 +166,7 @@ public class EnthalpyElDraw {
 			lElDraw = new ArrayList<ElDraw>(); 
 			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.RED,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 			movable = false;
+			visible = true;
 			textDisplay = enthElDrawObject.getText();
 			textDisplayPositionAbove = true;
 			break;
@@ -128,6 +177,7 @@ public class EnthalpyElDraw {
 			lElDraw = new ArrayList<ElDraw>(); 
 			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.GREEN,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 			movable = true;
+			visible = true;
 			textDisplay = enthElDrawObject.getText();
 			textDisplayPositionAbove = true;
 			break;
@@ -138,6 +188,7 @@ public class EnthalpyElDraw {
 			lElDraw = new ArrayList<ElDraw>(); 
 			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.GREEN,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 			movable = true;
+			visible = true;
 			textDisplay = venthElDrawObject.getText();
 			textDisplayPositionAbove = false;
 			break;
@@ -148,6 +199,7 @@ public class EnthalpyElDraw {
 			lElDraw = new ArrayList<ElDraw>(); 
 			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.RED,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 			movable = false;
+			visible = true;
 			textDisplay = venthElDrawObject.getText();
 			textDisplayPositionAbove = false;
 			break;
@@ -158,6 +210,7 @@ public class EnthalpyElDraw {
 			lElDraw = new ArrayList<ElDraw>(); 
 			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.GREEN,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 			movable = true;
+			visible = true;
 			textDisplay = venthElDrawObject.getText();
 			textDisplayPositionAbove = false;
 			break;
@@ -167,6 +220,7 @@ public class EnthalpyElDraw {
 			lElDraw = new ArrayList<ElDraw>(); 
 			lElDraw.add(new ElDraw(EloElDraw.LINE_HORZ,Color.BLACK,m.getMP_P0PK(lMeasurePoints)));
 			movable = false;
+			visible = true;
 			textDisplay = venthElDrawObject.getText();
 			textDisplayPositionAbove = false;
 			break;
@@ -176,32 +230,10 @@ public class EnthalpyElDraw {
 			lElDraw = new ArrayList<ElDraw>(); 
 			lElDraw.add(new ElDraw(EloElDraw.LINE_HORZ,Color.BLACK,m.getMP_P0PK(lMeasurePoints)));
 			movable = false;
+			visible = true;
 			textDisplay = venthElDrawObject.getText();
 			textDisplayPositionAbove = false;
 			break;
-		default:
-			lElDraw = new ArrayList<ElDraw>(); 
-			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.BLACK,0.0,0.0));
-			movable = false;
-			textDisplay = "Error";
-			textDisplayPositionAbove = false;
-			break;
-		}
-	}
-
-
-	/**
-	 * EnthalpyElDraw isoThDw = new EnthalpyElDraw(EloEnthalpyElDraw.ISOTHERM,lMeasurePoints);
-	 * isoThDw.set(ISOTHERM,lMeasurePoints,pac,isoThermT)
-	 * 
-	 * @param venthElDrawObject
-	 * @param lMeasurePoints
-	 * @param vPac
-	 * @param isoThermT
-	 */
-	public void set(EloEnthalpyElDraw venthElDrawObject, List<MeasurePoint> lMeasurePoints, Pac vPac, double isoThermT ) {
-		lElDraw.clear();
-		switch (enthElDrawObject) {
 		case ISOTHERM:
 			logger.trace("{}", enthElDrawObject.getText());
 
@@ -249,11 +281,17 @@ public class EnthalpyElDraw {
 
 			}
 			movable = false;
+			visible = true;
 			textDisplay = null;
 			textDisplayPositionAbove = false;
 			break;
 		default:
-
+			lElDraw = new ArrayList<ElDraw>(); 
+			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.BLACK,0.0,0.0));
+			movable = false;
+			visible = false;
+			textDisplay = "Error";
+			textDisplayPositionAbove = false;
 			break;
 		}
 	}
@@ -300,6 +338,14 @@ public class EnthalpyElDraw {
 
 	public void setTextDisplayPositionAbove(boolean textDisplayPositionAbove) {
 		this.textDisplayPositionAbove = textDisplayPositionAbove;
+	}
+
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 
 
