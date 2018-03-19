@@ -23,7 +23,7 @@
 			<AppenderRef ref="Console" />
 		</Logger>
 
-		<Logger name="mpoints" level="trace" additivity="false">
+		<Logger name="mpoints" level="error" additivity="false">
 			<AppenderRef ref="Console" />
 		</Logger>
 

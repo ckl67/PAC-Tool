@@ -28,14 +28,11 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.InputEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
@@ -68,19 +65,17 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 	private Point offset;					// Supplementary Offset
 	private Point dragStart;				// Start point for Offset computation
 
-	private double fHzoom;					// Zoom factor relative to the figure to display
-	private double fPzoom;					// and the panel width
-
 	private int xMargin;					// Supplementary margin on both sides of the display relative to the scale used !!
 	private int yMargin;
 
-	private double gridUnitH;				// Grid Refrigerant Step
-	private double gridUnitP;				// Grid Pressure Step, will be modified following the progression 
+	private double Hzoom;					// Zoom factor H
+	private double Pzoom;					// Zoom factor P
 
-	private double curveFollowerH;			// Curve follower
-	private double curveFollowerP;	
+	private double HgridUnit;				// Grid H unity
+	private double PgridUnit;				// Grid P unity
 
-	private double mvoYf;					// Move Y factor: Move the mouse of 50 pixels, will corresponds to 0.5 
+	private double HcurveFollower;			// Curve follower
+	private double PcurveFollower;	
 
 	private List<EnthalpyElDraw> lEnthalpyElDraw;			// Draw elements: lines/points/...
 
@@ -92,7 +87,7 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 
 		this.refrigerant = vRefrigerant;
 
-		logger.info(" Hmin={} Hmax={} Pmin={} Pmax={} ",refrigerant.getHmin(), refrigerant.getHmax(), refrigerant.getPmin(),refrigerant.getPmax() );
+		logger.trace("(EnthalpyPanel):: Gas={} Hmin={} Hmax={} Pmin={} Pmax={} ",refrigerant.getRfgName(),refrigerant.getHmin(), refrigerant.getHmax(), refrigerant.getPmin(),refrigerant.getPmax() );
 
 		this.enthalpyBkgImg = vimgRefrigerantBg;
 		this.bufBkgdImg = openRefrigerantImageFile();
@@ -101,17 +96,17 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 		this.offset = new Point(0,0);		
 		this.dragStart = new Point(0,0);	
 
-		this.fHzoom = 1.0;
-		this.fPzoom	= 1.0;					
+		this.Hzoom = 1.0;
+		this.Pzoom	= 1.0;					
 
 		this.xMargin = 50;
 		this.yMargin = 50;
 
-		this.gridUnitH = 20;	
-		this.gridUnitP = 1;	 
+		this.HgridUnit = 20;	
+		this.PgridUnit = 1;	 
 
-		this.curveFollowerH=0.0;
-		this.curveFollowerP=0.0;
+		this.HcurveFollower=0.0;
+		this.PcurveFollower=0.0;
 
 		this.lEnthalpyElDraw = vlEnthalpyElDraw;
 
@@ -151,8 +146,8 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 	 */
 	public double getHoXm(int xm) {
 		double h=0;
-		double Hmin = refrigerant.getHmin()*fHzoom;
-		double Hmax = refrigerant.getHmax()*fHzoom;
+		double Hmin = refrigerant.getHmin()*Hzoom;
+		double Hmax = refrigerant.getHmax()*Hzoom;
 		int xmin = xMargin;
 		int xmax = this.getWidth() - xMargin;
 		if ((xm>=xmin) || (xm<=xmax))
@@ -168,8 +163,8 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 	 * @return xm position in integer
 	 */
 	public int getXmoH(double h) {
-		double Hmin = refrigerant.getHmin()*fHzoom;
-		double Hmax = refrigerant.getHmax()*fHzoom;
+		double Hmin = refrigerant.getHmin()*Hzoom;
+		double Hmax = refrigerant.getHmax()*Hzoom;
 		double xd;
 		int x;
 		int xmin = (int) (xMargin);
@@ -187,8 +182,8 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 	 */
 	public double getPoYm(int ym) {
 		double p=0;
-		double Pmin = refrigerant.getPmin()*fPzoom;
-		double Pmax = refrigerant.getPmax()*fPzoom;
+		double Pmin = refrigerant.getPmin()*Pzoom;
+		double Pmax = refrigerant.getPmax()*Pzoom;
 		int ymin = (int)0;
 		int ymax = this.getHeight() - 2*yMargin;
 		int y    = -ym + this.getHeight() - yMargin + offset.y ;
@@ -208,8 +203,8 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 	 */
 	public double getLogPoYm(int ym) {
 		double p=0;
-		double logPmin = getLogP_P(refrigerant.getPmin())*fPzoom;
-		double logPmax = getLogP_P(refrigerant.getPmax())*fPzoom;
+		double logPmin = getLogP_P(refrigerant.getPmin())*Pzoom;
+		double logPmax = getLogP_P(refrigerant.getPmax())*Pzoom;
 		int ymin = (int)0;
 		int ymax = this.getHeight() - 2*yMargin;
 		int y    = -ym + this.getHeight() - yMargin + offset.y ;
@@ -229,8 +224,8 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 	 * @return ym position in integer
 	 */
 	public int getYmoP(double p) {
-		double Pmin = refrigerant.getPmin()*fPzoom;
-		double Pmax = refrigerant.getPmax()*fPzoom;
+		double Pmin = refrigerant.getPmin()*Pzoom;
+		double Pmax = refrigerant.getPmax()*Pzoom;
 		int ymin = 0;
 		int ymax = this.getHeight() - 2*yMargin;
 		double yd;
@@ -241,15 +236,14 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 		return(ym);
 	}
 
-
 	/**
 	 * Compute mouse coordinate / LogP = Log(Pressure)
 	 * @param logP
 	 * @return ym position in integer
 	 */
 	public int getYmoLogP(double logP) {
-		double logPmin = getLogP_P(refrigerant.getPmin())*fPzoom;
-		double logPmax = getLogP_P(refrigerant.getPmax())*fPzoom;
+		double logPmin = getLogP_P(refrigerant.getPmin())*Pzoom;
+		double logPmax = getLogP_P(refrigerant.getPmax())*Pzoom;
 		int ymin = 0;
 		int ymax = this.getHeight() - 2*yMargin;
 		double yd;
@@ -268,8 +262,8 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 	 */
 	public int getYmoLog(double P) {
 		double logP = getLogP_P(P);
-		double logPmin = getLogP_P(refrigerant.getPmin())*fPzoom;
-		double logPmax = getLogP_P(refrigerant.getPmax())*fPzoom;
+		double logPmin = getLogP_P(refrigerant.getPmin())*Pzoom;
+		double logPmax = getLogP_P(refrigerant.getPmax())*Pzoom;
 		int ymin = 0;
 		int ymax = this.getHeight() - 2*yMargin;
 		double yd;
@@ -279,6 +273,10 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 		ym = (int)(yd);
 		return(ym);
 	}
+
+	// -------------------------------------------------------
+	// 					MOUSE
+	// -------------------------------------------------------
 
 	@Override
 	public void mouseDragged(MouseEvent evt) {
@@ -306,20 +304,47 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent evt) {
 		// Zoom
-		fHzoom += evt.getPreciseWheelRotation() * .03;
-		fPzoom += evt.getPreciseWheelRotation() * .03;
+		Hzoom += evt.getPreciseWheelRotation() * .04;
+		Pzoom += evt.getPreciseWheelRotation() * .04;
 
-		if (fHzoom < 0) fHzoom = 0.0;
-		if (fPzoom < 0) fPzoom = 0.0;
+		if (Hzoom < 0) Hzoom = 0.0;
+		if (Pzoom < 0) Pzoom = 0.0;
 
-		//gridUnitH = (int)( gridUnitH*fHzoom/10.0 )*10;
-		//if (gridUnitH<1) gridUnitH = 1;
-		logger.info(" fHzoom={}  gridUnitH ={} ",fHzoom, gridUnitH );
-		logger.info(" fPzoom={}  gridUnitP ={} ",fPzoom, gridUnitP );
+		logger.info(" Hzoom={}  HgridUnit ={} ",Hzoom, HgridUnit );
+		logger.info(" Pzoom={}  PgridUnit ={} ",Pzoom, PgridUnit );
 
 		repaint();
 	}
 
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
 
 	// -------------------------------------------------------
 	// 						PAINT 
@@ -339,64 +364,291 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 		Font font;
 		FontMetrics metrics;
 		String s;
-		
+		int xd,yd;
+
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+		// -----------------------------------
+		// Font
+		// -----------------------------------
 		font = new Font(null, Font.BOLD, 18);
 		metrics= g.getFontMetrics(font);
 		g2.setFont(font);
+
+		// -----------------------------------
+		// GAS name
+		// -----------------------------------
 		g2.setColor(Color.BLUE);	
 		s = String.format("%s",refrigerant.getRfgName());
-		g2.drawString(s, this.getWidth() - 4*xMargin, yMargin/2);
+		xd = (int) (this.getWidth() - xMargin - metrics.getStringBounds(s,g2).getWidth());
+		yd = yMargin/2;
+		g2.drawString(s, xd, yd);
 
-		
 		// -----------------------------------
-		// Grid + Text
+		// Font
 		// -----------------------------------
 		font = new Font(null, Font.PLAIN, 10);
 		metrics= g.getFontMetrics(font);
 		g2.setFont(font);
 
-		g2.setColor(Color.lightGray);	
-
-		for (double h =  Hmin; h <= Hmax; h=(h+gridUnitH)) {
+		// -----------------------------------
+		// Grid H
+		// -----------------------------------
+		for (double h =  Hmin; h <= Hmax; h=(h+HgridUnit)) {
+			g2.setColor(Color.lightGray);	
 			g2.draw( new Line2D.Double(getXmoH(h),getYmoLog(Pmin),getXmoH(h),getYmoLog(Pmax)));
-			
-			s = String.format("%d",(int)h);
-			int xd = (int) (getXmoH(h) - metrics.getStringBounds(s,g2).getWidth()/2); 
-			g2.drawString(s, xd, this.getHeight() - yMargin/2);
 
+			g2.setColor(Color.black);	
+			s = String.format("%4d",(int)h);
+			xd = (int) (getXmoH(h) - metrics.getStringBounds(s,g2).getWidth()/2); 
+			yd = getYmoLog(Pmin) + yMargin/2;
+			g2.drawString(s, xd, yd);
 		}
 
+		g2.setColor(Color.black);	
+		s = String.format("%s","H(kJ/kg)");
+		xd = (int) (getXmoH(Hmax)  + metrics.getStringBounds(s,g2).getWidth()/2); 
+		yd = getYmoLog(Pmin)+ yMargin/2;
+		g2.drawString(s, xd, yd);
+
+
+		// -----------------------------------
+		// Grid P
+		// -----------------------------------
 		double p;
-		for (double pl = Pmin; pl < Pmax; pl= (pl+gridUnitP)) {
+		for (double pl = Pmin; pl < Pmax; pl= (pl+PgridUnit)) {
 			if (pl>=1)
 				p = (int)pl;
 			else
 				p = pl;
 
 			// Check that the difference between 2 ym horizontal lines are > 2
-			if ( getYmoLog(p) -  getYmoLog(p+gridUnitP) >= 2) 
+			if ( getYmoLog(p) -  getYmoLog(p+PgridUnit) >= 2) 
 			{
 				// logger.info("(paintComponent):: p={} log(p)={} ym={}",p,getLogP_P(p),getYmoLog(p));
 
 				if (p>=1)
-					s = String.format("%.0f",p);
+					s = String.format("%4.0f",p);
 				else
-					s = String.format("%.1f",p);
-				int xd = (int) (xMargin/2 - metrics.getStringBounds(s,g2).getWidth()/2); 
-				int yd = (int) (getYmoLog(p) - 2 + metrics.getStringBounds(s,g2).getHeight()/2);
-				
+					s = String.format("%4.1f",p);
+
+				xd = (int) (getXmoH(Hmin) - xMargin/2 - metrics.getStringBounds(s,g2).getWidth()/2); 
+				yd = (int) (getYmoLog(p) - 2 + metrics.getStringBounds(s,g2).getHeight()/2);
+
 				if (p<10) {	
-					g2.draw( new Line2D.Double(getXmoH(Hmin),getYmoLog(p),getXmoH(Hmax),getYmoLog(p)));
+					g2.setColor(Color.lightGray);	
+					g2.draw( new Line2D.Double(getXmoH(Hmin)-4,getYmoLog(p),getXmoH(Hmax),getYmoLog(p)));
+
+					g2.setColor(Color.black);	
 					g2.drawString(s, xd, yd);
 				} else {
 					if (p%10 == 0) {
-						g2.draw( new Line2D.Double(getXmoH(Hmin),getYmoLog(p),getXmoH(Hmax),getYmoLog(p)));
+						g2.setColor(Color.lightGray);	
+						g2.draw( new Line2D.Double(getXmoH(Hmin)-4,getYmoLog(p),getXmoH(Hmax),getYmoLog(p)));
+
+						g2.setColor(Color.black);	
 						g2.drawString(s, xd, yd);
 					}
 				}
 			}
 		}
 
+		g2.setColor(Color.black);	
+		s = String.format("%s","P(bar)");
+		xd = (int) (getXmoH(Hmin) - xMargin/2 - metrics.getStringBounds(s,g2).getWidth()/2); 
+		yd = (int) (getYmoLog(Pmax) - yMargin/2 + metrics.getStringBounds(s,g2).getHeight()/2);
+		g2.drawString(s, xd, yd);
+
+
+		// -----------------------------------
+		// Grid T Liquid
+		// -----------------------------------
+		g2.setColor(Color.orange);	
+
+		double TminL = (int)(refrigerant.getTSatFromP(Pmin).getTLiquid())/10*10;
+		double TmaxL = refrigerant.getTSatFromP(Pmax).getTLiquid();
+
+
+		//logger.info("(paintComponent):: TminL={} TmaxL={} ",TminL,TmaxL);
+
+		for (double tl = TminL; tl < TmaxL; tl= (tl+10*PgridUnit)) {
+
+			double pl = refrigerant.getPSatFromT(tl).getPLiquid();
+			g2.draw( new Line2D.Double(getXmoH(Hmin)-4,getYmoLog(pl),getXmoH(Hmin)+4,getYmoLog(pl)));
+
+			String sl = String.format("%4.0f",tl);
+			xd = (int) (getXmoH(Hmin) + xMargin/2 - metrics.getStringBounds(s,g2).getWidth()/2); 
+			yd = (int) (getYmoLog(pl) - 2 + metrics.getStringBounds(s,g2).getHeight()/2);
+			g2.drawString(sl, xd, yd);
+			//logger.info("(paintComponent):: pl={} t={} s={} ",pl,tl,sl);
+		}
+
+		s = String.format("%s","T(°C)");
+		xd = (int) (getXmoH(Hmin) + xMargin/2 - metrics.getStringBounds(s,g2).getWidth()/2); 
+		yd = (int) (getYmoLog(Pmax) - yMargin/2 + metrics.getStringBounds(s,g2).getHeight()/2);
+		g2.drawString(s, xd, yd);
+
+		// -----------------------------------
+		// Grid T Gas
+		// -----------------------------------
+		double TminG = (int)(refrigerant.getTSatFromP(Pmin).getTGas())/10*10;
+		double TmaxG = refrigerant.getTSatFromP(Pmax).getTGas();
+
+		for (double tg = TminG; tg < TmaxG; tg= (tg+10*PgridUnit)) {
+
+			double pg = refrigerant.getPSatFromT(tg).getPGas();
+			g2.draw( new Line2D.Double(getXmoH(Hmax)-4,getYmoLog(pg),getXmoH(Hmax)+4,getYmoLog(pg)));
+
+			String sg = String.format("%4.0f",tg);
+			xd = (int) (getXmoH(Hmax) + xMargin/2 - metrics.getStringBounds(s,g2).getWidth()/2); 
+			yd = (int) (getYmoLog(pg) - 2 + metrics.getStringBounds(s,g2).getHeight()/2);
+			g2.drawString(sg, xd, yd);
+		}
+
+		s = String.format("%s","T(°C)");
+		xd = (int) (getXmoH(Hmax) + xMargin/2 - metrics.getStringBounds(s,g2).getWidth()/2); 
+		yd = (int) (getYmoLog(Pmax) - yMargin/2 + metrics.getStringBounds(s,g2).getHeight()/2);
+		g2.drawString(s, xd, yd);
+
+
+		// -----------------------------------
+		// Curve
+		// -----------------------------------		
+		g2.setStroke(new BasicStroke((float) 1));
+		g2.setColor(Color.RED);
+		for(int i=1;i<refrigerant.getSatTableSize();i++) {
+			
+			g2.draw( new Line2D.Double(
+					getXmoH(refrigerant.getHSat_Liquid(i-1)),
+					getYmoLog(refrigerant.getPSat_Liquid(i-1)),
+					getXmoH(refrigerant.getHSat_Liquid(i)),
+					getYmoLog(refrigerant.getPSat_Liquid(i))
+					));		
+			
+			g2.draw( new Line2D.Double(
+					getXmoH(refrigerant.getHSat_Gas(i-1)),
+					getYmoLog(refrigerant.getPSat_Gas(i-1)),
+					getXmoH(refrigerant.getHSat_Gas(i)),
+					getYmoLog(refrigerant.getPSat_Gas(i))
+					));
+		}
+		
+		
+		// -----------------------------------
+		// Draw All Elements
+		// -----------------------------------
+		for(int k=0;k<lEnthalpyElDraw.size();k++) {
+
+			List<ElDraw> lElDraw = lEnthalpyElDraw.get(k).getlElDraw();
+
+			for(int j=0;j<lElDraw.size();j++) {
+
+				switch (lElDraw.get(j).getElDrawObj()) {
+				case LINE_HORZ: 
+					g2.setStroke(new BasicStroke((float)(2)));
+					g2.setPaint(lElDraw.get(j).getColor());
+
+					//g2.setPaint(Color.BLUE);
+					int linexmin = getXmoH(refrigerant.getHmin());
+					int linexmax = getXmoH(refrigerant.getHmax());
+					int liney = getYmoLog(lElDraw.get(j).getY1());
+					g2.draw( new Line2D.Double(linexmin,liney,linexmax,liney));
+					break;
+
+				case LINE:
+					g2.setStroke(new BasicStroke(0.5f));
+					g2.setPaint(lElDraw.get(j).getColor());
+					g2.draw( new Line2D.Double(
+							getXmoH(lElDraw.get(j).getX1()),
+							getYmoLog(lElDraw.get(j).getY1()),
+							getXmoH(lElDraw.get(j).getX2()),
+							getYmoLog(lElDraw.get(j).getY2())
+							)
+							);
+					//logger.trace("H1={} P1={}     H2={} P2={}  ",lElDraw.get(j).getX1(),lElDraw.get(j).getY1(),lElDraw.get(j).getX2(),lElDraw.get(j).getY2());
+					break;
+
+				case LINE_DASHED:
+					g2.setStroke(
+							new BasicStroke(
+									0.2f,							// Width
+									BasicStroke.CAP_BUTT,			// End cap
+									BasicStroke.JOIN_MITER,			// Join style
+									10.0f,							// Miter limit
+									new float[] {16.0f,20.0f},		// Dash pattern
+									0.0f							// Dash phase
+									)
+							);
+					g2.setPaint(lElDraw.get(j).getColor());
+					g2.draw( new Line2D.Double(
+							getXmoH(lElDraw.get(j).getX1()),
+							getYmoLog(lElDraw.get(j).getY1()),
+							getXmoH(lElDraw.get(j).getX2()),
+							getYmoLog(lElDraw.get(j).getY2())
+							)
+							);
+					//logger.trace("H1={} P1={}     H2={} P2={}  ",lElDraw.get(j).getX1(),lElDraw.get(j).getY1(),lElDraw.get(j).getX2(),lElDraw.get(j).getY2());
+					break;
+				default:
+					break;
+				}
+			}
+		}
+
+
+		for(int k=0;k<lEnthalpyElDraw.size();k++) {
+			int Rm = 5;
+
+			List<ElDraw> lElDraw = lEnthalpyElDraw.get(k).getlElDraw();
+
+			for(int j=0;j<lElDraw.size();j++) {
+
+				switch (lElDraw.get(j).getElDrawObj()) {
+				case POINT:  
+					// Circle
+					int pointxm = getXmoH(lElDraw.get(j).getX1())-Rm;
+					int pointym = getYmoLog(lElDraw.get(j).getY1())-Rm;
+					int widthH = (2*Rm);
+					int heightP = (2*Rm);
+
+					g2.setColor(lElDraw.get(j).getColor());
+
+					g2.setStroke(new BasicStroke((float)(2)));
+					g2.draw (new Ellipse2D.Double(pointxm, pointym, widthH, heightP));
+
+					// Road Sign
+					if (lEnthalpyElDraw.get(k).isTextDisplayPositionAbove()) {
+						// Road Sign above
+						g2.setColor(Color.BLUE);
+						g2.drawRoundRect(pointxm-5, pointym-20, 20, 15, 5, 5);
+						g2.setColor(Color.WHITE);
+						g2.fillRoundRect(pointxm-5, pointym-20, 20, 15, 5, 5);
+
+						font = new Font("Courier", Font.PLAIN, 10);
+						g2.setFont(font);
+						g2.setColor(Color.BLUE);  
+						s = String.format("%s",lEnthalpyElDraw.get(k).getTextDisplay());
+						g2.drawString(s, pointxm, pointym-10);
+					} else {
+						// Road Sign below
+						g2.setColor(Color.BLUE);
+						g2.drawRoundRect(pointxm-5, pointym+20, 20, 15, 5, 5);
+						g2.setColor(Color.WHITE);
+						g2.fillRoundRect(pointxm-5, pointym+20, 20, 15, 5, 5);
+
+						font = new Font("Courier", Font.PLAIN, 10);
+						g2.setFont(font);
+						g2.setColor(Color.BLUE);  
+						s = String.format("%s",lEnthalpyElDraw.get(k).getTextDisplay());
+						g2.drawString(s, pointxm, pointym+30);
+					}
+
+					break;
+				default:
+					break;
+				}
+			}
+		}
 
 	}
 
@@ -430,12 +682,12 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 	 * Center the Image
 	 */
 	public void centerImg() {
-		fHzoom =  1.0;
-		fPzoom =  1.0;
+		Hzoom =  1.0;
+		Pzoom =  1.0;
 		offset.x = 0;
 		offset.y= 0;
-		this.gridUnitH = 20;	
-		this.gridUnitP = 1;	 
+		this.HgridUnit = 20;	
+		this.PgridUnit = 1;	 
 
 		repaint();
 	}
@@ -463,7 +715,7 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 
 					//logger.trace("(getIdNearest):: picked pP={}  Point P={}  Zoom={}", pP, P, zoom);
 
-					if ( ( pH < H+zoneH/fHzoom) && ( pH > H-zoneH/fHzoom) && (pP < P+zoneP/fPzoom) && ( pP > P-zoneP/fPzoom) ) {
+					if ( ( pH < H+zoneH/Hzoom) && ( pH > H-zoneH/Hzoom) && (pP < P+zoneP/Pzoom) && ( pP > P-zoneP/Pzoom) ) {
 						id = i;
 						logger.trace("(getIdNearest):: id={}",id);
 					}
@@ -495,46 +747,17 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 		this.alphaBlurBkgdImg = imageAlphaBlur;
 	}
 
-	public void setCurveFollowerH(double h) {
-		this.curveFollowerH = h;
+	public void setHCurveFollower(double h) {
+		this.HcurveFollower = h;
 	}
 
-	public void setCurveFollowerP(double p) {
-		this.curveFollowerP = p;
+	public void setPCurveFollower(double p) {
+		this.PcurveFollower = p;
 	}
 
 	public void setBufBkgdImg(BufferedImage bufBkgdImg) {
 		this.bufBkgdImg = bufBkgdImg;
 	}
 
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
 
 }

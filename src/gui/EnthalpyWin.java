@@ -127,8 +127,8 @@ public class EnthalpyWin extends JFrame {
 					Pac pac = new Pac();
 
 					// Set Gaz used on PAC
-					//pac.getRefrigerant().loadNewRefrigerant("./ressources/R407/R407C/Saturation Table R407C Dupont-Suva.txt");
-					pac.getRefrigerant().loadNewRefrigerant("./ressources/R22/Saturation Table R22.txt");
+					pac.getRefrigerant().loadNewRefrigerant("./ressources/R407/R407C/Saturation Table R407C Dupont-Suva.txt");
+					//pac.getRefrigerant().loadNewRefrigerant("./ressources/R22/Saturation Table R22.txt");
 					System.out.println(pac.getRefrigerant().getRfgName());
 
 					// Set configuration
@@ -379,12 +379,13 @@ public class EnthalpyWin extends JFrame {
 				lblPressureCoord.setText(String.format("P=%.2f bar",pResult));
 
 				// CORRECTION LIQUID OR GAS !!
-				double tRresult = refrigerant.getTSatFromP(pResult).getTLiquid();
-				lblTempCoord.setText(String.format("T=%.2f °C",tRresult));	
+				double tRresultL = refrigerant.getTSatFromP(pResult).getTLiquid();
+				double tRresultG = refrigerant.getTSatFromP(pResult).getTGas();
+				lblTempCoord.setText(String.format("T=%.2f/%.2f °C",tRresultL,tRresultG));	
 
 				try {
 					if (WinPressTemp.panelTempPressDrawArea.isVisible()) {
-						WinPressTemp.panelTempPressDrawArea.spotTempPressFollower(tRresult);
+						WinPressTemp.panelTempPressDrawArea.spotTempPressFollower(tRresultL);
 					}
 				} catch (NullPointerException e) {
 					// Not present ==> Do nothing !
@@ -393,8 +394,8 @@ public class EnthalpyWin extends JFrame {
 				if (rdbtnSaturation.isSelected()) {
 					double pSat = refrigerant.getP_SatCurve_FromH(hResult,pResult);
 					double tSat = refrigerant.getT_SatCurve_FromH(hResult,pResult);
-					enthalpyPanel.setCurveFollowerH(hResult);
-					enthalpyPanel.setCurveFollowerP(pSat);
+					enthalpyPanel.setHCurveFollower(hResult);
+					enthalpyPanel.setPCurveFollower(pSat);
 					if (pSat > 0 )
 						lblFollower.setText(String.format("PSat=%.2f / Tsat=%.2f",pSat,tSat));
 					else
