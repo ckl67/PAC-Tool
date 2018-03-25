@@ -26,21 +26,20 @@ public class EnthalpyBkgImg {
 	
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 	
-	// Refrigerant image file (.png)
-	private String imgRfgFile;		
+	private String imgRfgFile;			// Refrigerant image file (.png)		
 
-	// Reference points chosen on the Curve
-	private int refCurveH1x; 
-	private int refCurveH2x; 
-	private int refCurveP1y;	 
-	private int refCurveP2y;     
+	// Reference points chosen for H and P
+	private double dstH1; 
+	private double dstH2; 
+	private double dstP2;	 
+	private double dstP1;     
 
 	// Zone to consider from the Background Image related to the points above
 	// Outside of the zone nothing --> be large !! 
-	private int iBgH1x;
-	private int iBgH2x;
-	private int iBgP1y;
-	private int iBgP2y;
+	private int srcx1;
+	private int srcx2;
+	private int srcy2;
+	private int srcy1;
 		
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -51,18 +50,22 @@ public class EnthalpyBkgImg {
 		// Image
 		this.imgRfgFile = fileImgBg; // = "./ressources/R22/R22 couleur A4.png";
 
-		// Reference points chosen on the Curve
-		this.refCurveH1x = 140; 
-		this.refCurveH2x = 520; 
-		this.refCurveP1y = 1;		//Log(1) = 0 
-		this.refCurveP2y = 100;     //Log(100) = 2
+		// Reference points chosen on the Curve 
+		// (Reference Up Corner Left)
+		this.dstH1 = 140; 	// 	H = 140 kJ/kg
+		this.dstH2 = 520; 	// 	H = 520	kJ/kg
+		this.dstP1 = 0.5;   //	P = 0.5	bar
+		this.dstP2 = 50;	//	P = 50 	bar	
 
 		// Zone to consider from the Background Image related to the points above
-		// Outside of the zone nothing --> be large !! 
-		this.iBgH1x = 153;
-		this.iBgH2x = 2791;
-		this.iBgP1y = 1472;
-		this.iBgP2y = 83;
+		// Open with Paint !
+		// Outside of the zone nothing --> be large !!
+		// (Reference Up Corner Left)
+		this.srcx1 = 153;
+		this.srcx2 = 2791;
+		this.srcy1 = 289;
+		this.srcy2 = 1678;
+	    
 	}
 	
 	// -------------------------------------------------------
@@ -87,14 +90,14 @@ public class EnthalpyBkgImg {
 	public JSONObject getJsonObject() {
 		JSONObject jsonObj = new JSONObject();  
 		jsonObj.put("RefrigerantImageFile", this.imgRfgFile);
-		jsonObj.put("RefCurveH1x", this.refCurveH1x);	
-		jsonObj.put("RefCurveH2x", this.refCurveH2x);	
-		jsonObj.put("RefCurveP1y", this.refCurveP1y);	
-		jsonObj.put("RefCurveP2y", this.refCurveP2y);	
-		jsonObj.put("IBgH1x", this.iBgH1x);	
-		jsonObj.put("IBgH2x", this.iBgH2x);	
-		jsonObj.put("IBgP1y", this.iBgP1y);	
-		jsonObj.put("IBgP2y", this.iBgP2y);	
+		jsonObj.put("dstH1", this.dstH1);	
+		jsonObj.put("dstH2", this.dstH2);	
+		jsonObj.put("dstP1", this.dstP1);	
+		jsonObj.put("dstP2", this.dstP2);	
+		jsonObj.put("srcx1", this.srcx1);	
+		jsonObj.put("srcx2", this.srcx2);	
+		jsonObj.put("srcy1", this.srcy1);	
+		jsonObj.put("srcy2", this.srcy2);	
 		return jsonObj ;
 	}
 	
@@ -105,91 +108,85 @@ public class EnthalpyBkgImg {
 	public void setJsonObject(JSONObject jsonObj) {
 		this.imgRfgFile = (String) jsonObj.get("RefrigerantImageFile");
 		
-		this.refCurveH1x = ((Number) jsonObj.get("RefCurveH1x")).intValue() ;
-		this.refCurveH2x = ((Number) jsonObj.get("RefCurveH2x")).intValue() ;
-		this.refCurveP1y = ((Number) jsonObj.get("RefCurveP1y")).intValue() ;
-		this.refCurveP2y = ((Number) jsonObj.get("RefCurveP2y")).intValue() ;
-		this.iBgH1x = ((Number) jsonObj.get("IBgH1x")).intValue() ;
-		this.iBgH2x = ((Number) jsonObj.get("IBgH2x")).intValue() ;
-		this.iBgP1y = ((Number) jsonObj.get("IBgP1y")).intValue() ;
-		this.iBgP2y = ((Number) jsonObj.get("IBgP2y")).intValue() ;
+		this.dstH1 = ((Number) jsonObj.get("dstH1")).intValue() ;
+		this.dstH2 = ((Number) jsonObj.get("dstH2")).intValue() ;
+		this.dstP2 = ((Number) jsonObj.get("dstP1")).intValue() ;
+		this.dstP1 = ((Number) jsonObj.get("dstP2")).intValue() ;
+		this.srcx1 = ((Number) jsonObj.get("srcx1")).intValue() ;
+		this.srcx2 = ((Number) jsonObj.get("srcx2")).intValue() ;
+		this.srcy2 = ((Number) jsonObj.get("srcy1")).intValue() ;
+		this.srcy1 = ((Number) jsonObj.get("srcy2")).intValue() ;
 	}
 
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
 
-	public int getRefCurveH1x() {
-		return refCurveH1x;
+	public Double getDstH1() {
+		return dstH1;
 	}
 
-	public void setRefCurveH1x(int refCurveH1x) {
-		this.refCurveH1x = refCurveH1x;
+	public void setDstH1(Double H1) {
+		this.dstH1 = H1;
 	}
 
-	public int getRefCurveH2x() {
-		return refCurveH2x;
+	public Double getDstH2() {
+		return dstH2;
 	}
 
-	public void setRefCurveH2x(int refCurveH2x) {
-		this.refCurveH2x = refCurveH2x;
+	public void setDstH2(Double H2) {
+		this.dstH2 = H2;
 	}
 
-	public int getRefCurveP1y() {
-		return refCurveP1y;
+	public Double getDstP1() {
+		return dstP1;
 	}
 
-	public int getRefCurveP1yLog() {
-		return (int)Math.log10(refCurveP1y);
+	public void setDstP1(Double P1) {
+		this.dstP1 = P1;
 	}
 
-	public void setRefCurveP1y(int refCurveP1y) {
-		this.refCurveP1y = refCurveP1y;
+	public Double getDstP2() {
+		return dstP2;
 	}
 
-	public int getRefCurveP2y() {
-		return refCurveP2y;
+	public void setDstP2(Double P2) {
+		this.dstP2 = P2;
 	}
 
-	public int getRefCurveP2yLog() {
-		return (int)Math.log10(refCurveP2y);
+
+	public int getSrcx1() {
+		return srcx1;
 	}
 
-	public void setRefCurveP2y(int refCurveP2y) {
-		this.refCurveP2y = refCurveP2y;
+	public void setSrcx1(int x1) {
+		this.srcx1 = x1;
 	}
 
-	public int getiBgH1x() {
-		return iBgH1x;
+	public int getSrcx2() {
+		return srcx2;
 	}
 
-	public void setiBgH1x(int iBgH1x) {
-		this.iBgH1x = iBgH1x;
+	public void setSrcx2(int X2) {
+		this.srcx2 = X2;
 	}
 
-	public int getiBgH2x() {
-		return iBgH2x;
+	public int getSrcy1() {
+		return srcy1;
 	}
 
-	public void setiBgH2x(int iBgH2x) {
-		this.iBgH2x = iBgH2x;
+	public void setSrcy1(int y1) {
+		this.srcy1 = y1;
 	}
 
-	public int getiBgP1y() {
-		return iBgP1y;
+	public int getSrcy2() {
+		return srcy2;
 	}
 
-	public void setiBgP1y(int iBgP1y) {
-		this.iBgP1y = iBgP1y;
+	public void setSrcy2(int y2) {
+		this.srcy2 = y2;
 	}
 
-	public int getiBgP2y() {
-		return iBgP2y;
-	}
-
-	public void setiBgP2y(int iBgP2y) {
-		this.iBgP2y = iBgP2y;
-	}
 
 	public void setRefrigerantImageFile(String imgRfgFile) {
 		this.imgRfgFile = imgRfgFile;

@@ -15,7 +15,7 @@ public class JUnitRefrigant {
 		//Refrigerant refrigerant = new Refrigerant("./ressources/R22/Saturation Table R22.txt");
 		Refrigerant refrigerant = new Refrigerant("./ressources/R22/Saturation Table R22.txt");
 		
-		refrigerant.loadNewRefrigerant("./ressources/R407/R407C/Saturation Table R407C Dupont-Suva.txt");
+		//refrigerant.loadNewRefrigerant("./ressources/R407/R407C/Saturation Table R407C Dupont-Suva.txt");
 		
 		System.out.println(refrigerant.getRfgName());
 
@@ -85,10 +85,10 @@ public class JUnitRefrigant {
 		
 		// getPIsotherm(double H, double T, double P)
 		System.out.println("getPIsotherm( H,  T, P)");
-		T = 30;
+		T = 10;
 		P = 2;
 		H = 430.0;
-		for(int n=0;n<15;n++) {
+		for(int n=0;n<30;n++) {
 			H = H +1.0;
 					
 			System.out.println(	"P/T = " +P + "/" + T +

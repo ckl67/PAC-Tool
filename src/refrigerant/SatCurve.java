@@ -38,12 +38,15 @@ public class SatCurve {
 	private double IsoTherm_T0_Delta;
 	private double IsoTherm_H0_Ref;
 	private double IsoTherm_H0_Delta;
-	
-	private double xHmin;  			//  Enthalpy Minimum of the range of values displayed.
-	private double xHmax;    		//  Enthalpy Maximum of the range of value displayed.
 
-	private double yPmin;  			// Pressure Minimum of the range of Pressure value
-	private double yPmax;     		// Pressure Maximum of the range of Pressure value. 
+	private double Hmin;  			//  Enthalpy Minimum value (curve)
+	private double Hmax;    		//  Enthalpy Maximum value (curve).
+
+	private double Tmin;  			//  Temperature Minimum value (curve).
+	private double Tmax;    		//  temperature Maximum value (curve).
+
+	private double Pmin;  			// Pressure Minimum value (curve)
+	private double Pmax;     		// Pressure Maximum value (curve) 
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -57,11 +60,13 @@ public class SatCurve {
 		this.IsoTherm_H0_Ref = 390;
 		this.IsoTherm_H0_Delta = 8;
 
-		this.xHmin = 140;  				
-		this.xHmax = 520;    				
-		this.yPmin = 0.5;  
-		this.yPmax = 60;    
-		
+		this.Hmin = 1000.0;  				
+		this.Hmax = 0.0;    				
+		this.Pmin = 1000.0;  
+		this.Pmax = 0.0;    
+		this.Tmin = 1000.0;  
+		this.Tmax = 0.0;    
+
 		gasSatTable = new ArrayList<List<Double>>();
 	}
 
@@ -101,7 +106,7 @@ public class SatCurve {
 
 		gasFileName = fileNameGas;
 		File file = new File (fileNameGas);
-		logger.info("(loadGasSaturationData):: Read File: {}", fileNameGas);
+		logger.debug("(loadGasSaturationData):: Read File: {}", fileNameGas);
 
 		Scanner sken = null;
 		try {
@@ -116,31 +121,31 @@ public class SatCurve {
 			if (first.startsWith("Name:") ) {
 				String[] val = first.split (":");
 				vgasName = val [1];
-				logger.trace("Refrigerant = {}",vgasName);
+				logger.info("Refrigerant = {}",vgasName);
 			} else if (first.startsWith("Unity P:") ) {
 				String[] val = first.split (":");
 				unityP = val [1];
-				logger.trace("Unity of Pressure = {}",unityP);
+				logger.info("Unity of Pressure = {}",unityP);
 			} else if (first.startsWith("IsoTherm_P0_Ref:") ) {
 				String[] val = first.split (":");
 				IsoTherm_P0_Ref = Double.parseDouble(val [1].replace(",", "."));
-				logger.trace("IsoTherm_P0_Ref = {}",IsoTherm_P0_Ref);
+				logger.info("IsoTherm_P0_Ref = {}",IsoTherm_P0_Ref);
 			} else if (first.startsWith("IsoTherm_T0_Ref:") ) {
 				String[] val = first.split (":");
 				IsoTherm_T0_Ref = Double.parseDouble(val [1].replace(",", "."));
-				logger.trace("IsoTherm_T0_Ref = {}",IsoTherm_T0_Ref);
+				logger.info("IsoTherm_T0_Ref = {}",IsoTherm_T0_Ref);
 			} else if (first.startsWith("IsoTherm_T0_Delta:") ) {
 				String[] val = first.split (":");
 				IsoTherm_T0_Delta = Double.parseDouble(val[1].replace(",", "."));
-				logger.trace("IsoTherm_T0_Delta = {}",IsoTherm_T0_Delta);			
+				logger.info("IsoTherm_T0_Delta = {}",IsoTherm_T0_Delta);			
 			} else if (first.startsWith("IsoTherm_H0_Ref:") ) {
 				String[] val = first.split (":");
 				IsoTherm_H0_Ref = Double.parseDouble(val[1].replace(",", "."));
-				logger.trace("IsoTherm_H0_Ref = {}",IsoTherm_H0_Ref);
+				logger.info("IsoTherm_H0_Ref = {}",IsoTherm_H0_Ref);
 			} else if (first.startsWith("IsoTherm_H0_Delta:") ) {
 				String[] val = first.split (":");
 				IsoTherm_H0_Delta = Double.parseDouble(val[1].replace(",", "."));
-				logger.trace("IsoTherm_H0_Delta = {}",IsoTherm_H0_Delta);
+				logger.info("IsoTherm_H0_Delta = {}",IsoTherm_H0_Delta);
 			} else if (!first.startsWith("#") ) {
 				String[] val = first.split ("\t");
 
@@ -179,8 +184,8 @@ public class SatCurve {
 				// Create a new line in the gasSatTable and Add the row 
 				gasSatTable.add(row);
 
-				// LOGGER
 				int r = gasSatTable.size()-1;
+				// LOGGER
 				logger.trace("Temp={} P_Liquid={} P_Gas={} Density_Liquid={}  Density_Gas={}  H_Liquid={}  H_Latent={}  H_Gas={}  Entropy_Liquid={}  Entropy_Gas={} ",
 						gasSatTable.get(r).get(id_Temp),
 						gasSatTable.get(r).get(id_P_Liquid),
@@ -194,6 +199,44 @@ public class SatCurve {
 						gasSatTable.get(r).get(id_Entropy_Gas)	);
 			}
 		}
+
+		// Limit
+		Hmin = 10000.0;  				
+		Hmax = 0.0;    				
+		Pmin = 10000.0;  
+		Pmax = 0.0;    
+		Tmin = 10000.0;  
+		Tmax = 0.0;    
+
+		for(int n = 0; n < gasSatTable.size(); n++){
+			if ( gasSatTable.get(n).get(id_Temp) < Tmin)
+				Tmin = gasSatTable.get(n).get(id_Temp);
+			if ( gasSatTable.get(n).get(id_Temp) > Tmax)
+				Tmax = gasSatTable.get(n).get(id_Temp);
+			
+
+			if ( gasSatTable.get(n).get(id_H_Liquid) < Hmin)
+				Hmin = gasSatTable.get(n).get(id_H_Liquid);
+			if ( gasSatTable.get(n).get(id_H_Liquid) > Hmax)
+				Hmax = gasSatTable.get(n).get(id_H_Liquid);
+
+			if ( gasSatTable.get(n).get(id_H_Gas) < Hmin)
+				Hmin = gasSatTable.get(n).get(id_H_Gas);
+			if ( gasSatTable.get(n).get(id_H_Gas) > Hmax)
+				Hmax = gasSatTable.get(n).get(id_H_Gas);
+
+			if ( gasSatTable.get(n).get(id_P_Liquid) < Pmin)
+				Pmin = gasSatTable.get(n).get(id_P_Liquid);
+			if ( gasSatTable.get(n).get(id_P_Liquid) > Pmax)
+				Pmax = gasSatTable.get(n).get(id_P_Liquid);
+
+			if ( gasSatTable.get(n).get(id_P_Gas) < Pmin)
+				Pmin = gasSatTable.get(n).get(id_P_Gas);
+			if ( gasSatTable.get(n).get(id_P_Gas) > Pmax)
+				Pmax = gasSatTable.get(n).get(id_P_Gas);
+		}
+		logger.info("Hmin={}  Hmax={}  Pmin={}  Pmax={} ",Hmin,Hmax,Pmin,Pmax);
+				
 		// Close scanner to avoid memory leak
 		sken.close();
 		return(vgasName);
@@ -483,7 +526,7 @@ public class SatCurve {
 	 *		23		1112		945,1	1142,3	39,512	234,8	190,7	425,5	1,1206	1,7713
 	 *				=====												=====																
 	 *		24		1142,7		973,3	1138,2	40,728	236,4	189,5	425,9	1,1259	1,7704
- 	 *
+	 *
 	 *		78		3935,2		3748,1	831,6	218,698	347,8	78,6	426,4	1,4573	1,6829
 	 * 		79		4010,5		3831,1	820,3	228,096	351		74,2	425,2	1,4663	1,6785
 	 * 				======												======
@@ -493,7 +536,7 @@ public class SatCurve {
 	public double getT_SatCurve_FromH(double vH) {
 		return getT_SatCurve_FromH(vH,0);
 	}
-	
+
 	public double getT_SatCurve_FromH(double vH, double vP) {
 		double outT=0;
 		double min;
@@ -502,7 +545,7 @@ public class SatCurve {
 		// Check H Limit
 		if (vH > gasSatTable.get(gasSatTable.size()-1).get(id_H_Liquid)) {
 			// We work with id_H_Gas
-			
+
 			// Other principle to get on the value
 			for(int n = 0; n < gasSatTable.size(); n++){
 				if (gasSatTable.get(n).get(id_H_Gas) < vH) {
@@ -525,13 +568,13 @@ public class SatCurve {
 			else
 				id = idl;
 			// End of Other principle to get on the value
-					
-				
+
+
 			if (id == gasSatTable.size()-1) {
 				id = id-1;
 			} 
 
-			
+
 			double x,y0,y1,x0,x1;
 			x  = vH;
 			x0 = gasSatTable.get(id).get(id_H_Gas);
@@ -549,7 +592,7 @@ public class SatCurve {
 
 		} else {
 			// We work with id_H_Liquid
-		
+
 			min = Double.MAX_VALUE;
 			for(int n = 0; n < gasSatTable.size(); n++){
 				double diff = Math.abs(gasSatTable.get(n).get(id_H_Liquid) - vH);
@@ -558,7 +601,7 @@ public class SatCurve {
 					id = n;
 				}
 			}
-		
+
 			if (id == gasSatTable.size()-1) {
 				id = id-1;
 			} 
@@ -577,9 +620,9 @@ public class SatCurve {
 
 			return outT;
 
-			
+
 		}
-		
+
 	}
 
 	/**
@@ -608,7 +651,7 @@ public class SatCurve {
 	public double getP_SatCurve_FromH(double vH) {
 		return getP_SatCurve_FromH(vH,0);
 	}
-	
+
 	public double getP_SatCurve_FromH(double vH, double vP) {
 		double outT=0;
 		double min;
@@ -617,7 +660,7 @@ public class SatCurve {
 		// Check H Limit
 		if (vH > gasSatTable.get(gasSatTable.size()-1).get(id_H_Liquid)) {
 			// We work with id_H_Gas
-			
+
 			// Other principle to get on the value
 			for(int n = 0; n < gasSatTable.size(); n++){
 				if (gasSatTable.get(n).get(id_H_Gas) < vH) {
@@ -640,7 +683,7 @@ public class SatCurve {
 			else
 				id = idl;
 			// End of Other principle to get on the value
-			
+
 			if (id == gasSatTable.size()-1) {
 				id = id-1;
 			} 
@@ -662,7 +705,7 @@ public class SatCurve {
 
 		} else {
 			// We work with id_H_Liquid
-		
+
 			min = Double.MAX_VALUE;
 			for(int n = 0; n < gasSatTable.size(); n++){
 				double diff = Math.abs(gasSatTable.get(n).get(id_H_Liquid) - vH);
@@ -671,7 +714,7 @@ public class SatCurve {
 					id = n;
 				}
 			}
-		
+
 			if (id == gasSatTable.size()-1) {
 				id = id-1;
 			} 
@@ -690,13 +733,13 @@ public class SatCurve {
 
 			return outT;
 
-			
+
 		}
-		
+
 	}
 
-	
-	
+
+
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
@@ -708,7 +751,7 @@ public class SatCurve {
 	public int getSatTableSize() {
 		return(gasSatTable.size());
 	}
-	
+
 	public double getHSat_Gas(int n) {
 		return gasSatTable.get(n).get(id_H_Gas);
 	}
@@ -716,7 +759,7 @@ public class SatCurve {
 	public double getHSat_Liquid(int n) {
 		return gasSatTable.get(n).get(id_H_Liquid);
 	}
-	
+
 	public double getTSat(int n) {
 		return gasSatTable.get(n).get(id_Temp);
 	}
@@ -748,27 +791,35 @@ public class SatCurve {
 	public double getIsoTherm_H0_T(double T) {
 		//  H0(T) = H0_Delta * (T-T0_Ref)/T0_Delta + H0_Ref
 		return IsoTherm_H0_Delta * (T-IsoTherm_T0_Ref)/IsoTherm_T0_Delta + IsoTherm_H0_Ref ;
-}
+	}
 
 	public double getIsoTherm_H0_Delta() {
 		return IsoTherm_H0_Delta;
 	}
 
 	public double getHmin() {
-		return xHmin;
+		return Hmin;
 	}
 
 	public double getHmax() {
-		return xHmax;
+		return Hmax;
 	}
 
 	public double getPmin() {
-		return yPmin;
+		return Pmin;
 	}
 
 	public double getPmax() {
-		return yPmax;
+		return Pmax;
 	}
 
-	
+	public double getTmin() {
+		return Tmin;
+	}
+
+	public double getTmax() {
+		return Tmax;
+	}
+
+
 }

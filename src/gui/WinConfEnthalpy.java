@@ -262,12 +262,12 @@ public class WinConfEnthalpy extends JFrame {
 		textFieldH1X.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				enthalpy.setxHmin(Integer.valueOf(textFieldH1X.getText()));
-				enthalpyBkgImg.setRefCurveH1x(Integer.valueOf(textFieldH1X.getText()));
+				enthalpyBkgImg.setDstH1(Integer.valueOf(textFieldH1X.getText()));
 				enthalpyPanel.setxHmin(Integer.valueOf(textFieldH1X.getText()));	
 			}
 		});
 		textFieldH1X.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldH1X.setText(String.valueOf(enthalpyBkgImg.getRefCurveH1x()));
+		textFieldH1X.setText(String.valueOf(enthalpyBkgImg.getDstH1()));
 		textFieldH1X.setToolTipText("");
 		textFieldH1X.setBounds(156, 25, 46, 20);
 		panel_1.add(textFieldH1X);
@@ -283,12 +283,12 @@ public class WinConfEnthalpy extends JFrame {
 		textFieldH2X.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				enthalpy.setxHmax(Integer.valueOf(textFieldH2X.getText()));
-				enthalpyBkgImg.setRefCurveH2x(Integer.valueOf(textFieldH2X.getText()));	
+				enthalpyBkgImg.setDstH2(Integer.valueOf(textFieldH2X.getText()));	
 				enthalpyPanel.setxHmax(Integer.valueOf(textFieldH2X.getText()));	
 			}
 		});
 		textFieldH2X.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldH2X.setText(String.valueOf(enthalpyBkgImg.getRefCurveH2x()));
+		textFieldH2X.setText(String.valueOf(enthalpyBkgImg.getDstH2()));
 		textFieldH2X.setBounds(408, 23, 46, 20);
 		panel_1.add(textFieldH2X);
 		textFieldH2X.setColumns(10);
@@ -304,7 +304,7 @@ public class WinConfEnthalpy extends JFrame {
 		BasicArrowButton btnArrH1X_Right = new BasicArrowButton(BasicArrowButton.EAST);
 		btnArrH1X_Right.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				enthalpyBkgImg.setiBgH1x(enthalpyBkgImg.getiBgH1x()- Integer.valueOf(textFieldStepH1X.getText()));
+				enthalpyBkgImg.setSrcx1(enthalpyBkgImg.getSrcx1()- Integer.valueOf(textFieldStepH1X.getText()));
 				enthalpyWin.repaint();
 			}
 		});
@@ -314,7 +314,7 @@ public class WinConfEnthalpy extends JFrame {
 		BasicArrowButton btnArrH1X_left = new BasicArrowButton(BasicArrowButton.WEST);
 		btnArrH1X_left.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				enthalpyBkgImg.setiBgH1x(enthalpyBkgImg.getiBgH1x()+Integer.valueOf(textFieldStepH1X.getText()));
+				enthalpyBkgImg.setSrcx1(enthalpyBkgImg.getSrcx1()+Integer.valueOf(textFieldStepH1X.getText()));
 				enthalpyWin.repaint();
 			}
 		});
@@ -324,7 +324,7 @@ public class WinConfEnthalpy extends JFrame {
 		BasicArrowButton btnArrH2X_Right = new BasicArrowButton(BasicArrowButton.EAST);
 		btnArrH2X_Right.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				enthalpyBkgImg.setiBgH2x(enthalpyBkgImg.getiBgH2x()- Integer.valueOf(textFieldStepH2X.getText()));
+				enthalpyBkgImg.setSrcx2(enthalpyBkgImg.getSrcx2()- Integer.valueOf(textFieldStepH2X.getText()));
 				enthalpyWin.repaint();
 			}
 		});
@@ -334,7 +334,7 @@ public class WinConfEnthalpy extends JFrame {
 		BasicArrowButton btnArrH2X_left = new BasicArrowButton(BasicArrowButton.WEST);
 		btnArrH2X_left.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				enthalpyBkgImg.setiBgH2x(enthalpyBkgImg.getiBgH2x()+Integer.valueOf(textFieldStepH2X.getText()));
+				enthalpyBkgImg.setSrcx2(enthalpyBkgImg.getSrcx2()+Integer.valueOf(textFieldStepH2X.getText()));
 				enthalpyWin.repaint();
 			}
 		});
@@ -379,7 +379,7 @@ public class WinConfEnthalpy extends JFrame {
 		textFieldP1Y = new JTextField();
 		textFieldP1Y.setToolTipText("Multiple / Log10 ");
 		textFieldP1Y.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldP1Y.setText(String.valueOf(enthalpyBkgImg.getRefCurveP1y()));
+		textFieldP1Y.setText(String.valueOf(enthalpyBkgImg.getDstP2()));
 		textFieldP1Y.setBounds(155, 22, 46, 20);
 		panel_2.add(textFieldP1Y);
 		textFieldP1Y.setColumns(10);
@@ -393,7 +393,7 @@ public class WinConfEnthalpy extends JFrame {
 		textFieldP2Y = new JTextField();
 		textFieldP2Y.setToolTipText("Multiple / Log10 ");
 		textFieldP2Y.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldP2Y.setText(String.valueOf(enthalpyBkgImg.getRefCurveP2y()));
+		textFieldP2Y.setText(String.valueOf(enthalpyBkgImg.getDstP1()));
 		textFieldP2Y.setBounds(410, 19, 46, 20);
 		panel_2.add(textFieldP2Y);
 		textFieldP2Y.setColumns(10);
@@ -409,7 +409,7 @@ public class WinConfEnthalpy extends JFrame {
 		BasicArrowButton btnArrP1Y_Right = new BasicArrowButton(BasicArrowButton.NORTH);
 		btnArrP1Y_Right.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				enthalpyBkgImg.setiBgP1y(enthalpyBkgImg.getiBgP1y()+ Integer.valueOf(textFieldStepP1Y.getText()));
+				enthalpyBkgImg.setSrcy2(enthalpyBkgImg.getSrcy2()+ Integer.valueOf(textFieldStepP1Y.getText()));
 				enthalpyWin.repaint();
 			}
 		});
@@ -419,7 +419,7 @@ public class WinConfEnthalpy extends JFrame {
 		BasicArrowButton btnArrP1Y_left = new BasicArrowButton(BasicArrowButton.SOUTH);
 		btnArrP1Y_left.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {			
-				enthalpyBkgImg.setiBgP1y(enthalpyBkgImg.getiBgP1y()- Integer.valueOf(textFieldStepP1Y.getText()));
+				enthalpyBkgImg.setSrcy2(enthalpyBkgImg.getSrcy2()- Integer.valueOf(textFieldStepP1Y.getText()));
 				enthalpyWin.repaint();
 			}
 		});
@@ -429,7 +429,7 @@ public class WinConfEnthalpy extends JFrame {
 		BasicArrowButton btnArrP2Y_Right = new BasicArrowButton(BasicArrowButton.NORTH);
 		btnArrP2Y_Right.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				enthalpyBkgImg.setiBgP2y(enthalpyBkgImg.getiBgP2y()+ Integer.valueOf(textFieldStepP2Y.getText()));
+				enthalpyBkgImg.setSrcy1(enthalpyBkgImg.getSrcy1()+ Integer.valueOf(textFieldStepP2Y.getText()));
 				enthalpyWin.repaint();
 			}
 		});
@@ -439,7 +439,7 @@ public class WinConfEnthalpy extends JFrame {
 		BasicArrowButton btnArrP2Y_left = new BasicArrowButton(BasicArrowButton.SOUTH);
 		btnArrP2Y_left.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				enthalpyBkgImg.setiBgP2y(enthalpyBkgImg.getiBgP2y()- Integer.valueOf(textFieldStepP2Y.getText()));
+				enthalpyBkgImg.setSrcy1(enthalpyBkgImg.getSrcy1()- Integer.valueOf(textFieldStepP2Y.getText()));
 				enthalpyWin.repaint();
 			}
 		});
@@ -589,10 +589,10 @@ public class WinConfEnthalpy extends JFrame {
 		
 		textFieldRefrigeranName.setText(enthalpy.getNameRefrigerant());
 		textFieldEnthalpyFilePath.setText(enthalpyBkgImg.getEnthalpyImageFile());
-		textFieldH1X.setText(String.valueOf(enthalpyBkgImg.getRefCurveH1x()));
-		textFieldH2X.setText(String.valueOf(enthalpyBkgImg.getRefCurveH2x()));
-		textFieldP1Y.setText(String.valueOf(enthalpyBkgImg.getRefCurveP1y()));
-		textFieldP2Y.setText(String.valueOf(enthalpyBkgImg.getRefCurveP2y()));
+		textFieldH1X.setText(String.valueOf(enthalpyBkgImg.getDstH1()));
+		textFieldH2X.setText(String.valueOf(enthalpyBkgImg.getDstH2()));
+		textFieldP1Y.setText(String.valueOf(enthalpyBkgImg.getDstP2()));
+		textFieldP2Y.setText(String.valueOf(enthalpyBkgImg.getDstP1()));
 		
 		
 

@@ -53,7 +53,7 @@ public class ElDraw {
 	 * @param xy
 	 */
 	public ElDraw( EloElDraw velDrawObj, Color vcolor , double xy) {
-		//logger.info("(ElDraw):: Create={}", velDrawObj.name());
+		logger.trace("(ElDraw):: Create={}", velDrawObj.name());
 		this.elDrawObj = velDrawObj;
 		this.color = vcolor;
 		if (velDrawObj.equals(EloElDraw.LINE_HORZ) ) {  
@@ -81,7 +81,7 @@ public class ElDraw {
 	 * @param y1
 	 */
 	public ElDraw( EloElDraw velDrawObj, Color vcolor , double x1, double y1) {
-		//logger.info("(ElDraw):: Create={}", velDrawObj.name());
+		logger.trace("(ElDraw):: Create={}", velDrawObj.name());
 		this.elDrawObj = velDrawObj;
 		this.color = vcolor;
 		this.x1=x1;
@@ -102,7 +102,7 @@ public class ElDraw {
 	 * @param y2
 	 */
 	public ElDraw(EloElDraw velDrawObj, Color vcolor , double x1, double y1, double x2, double y2) {
-		//logger.info("(ElDraw):: Create={}", velDrawObj.name());
+		logger.trace("(ElDraw):: Create={}", velDrawObj.name());
 		this.elDrawObj = velDrawObj;
 		this.color = vcolor;
 		this.x1=x1;

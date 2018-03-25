@@ -268,7 +268,7 @@ public class EnthalpyElDraw {
 			double H0_T = refrigerant.getIsoTherm_H0_T(isoThermT);
 
 			lElDraw = new ArrayList<ElDraw>(); 
-			lElDraw.add(new ElDraw(EloElDraw.LINE_DASHED,Color.RED,HSatLiq,PSatLiq,HSatGas,PSatGas));
+			lElDraw.add(new ElDraw(EloElDraw.LINE_DASHED,new Color(100,100,200),HSatLiq,PSatLiq,HSatGas,PSatGas));
 
 			for(int h=0;h<(int)(H0_T-HSatGas);h++) {
 				double x1,x2,y1,y2;
@@ -276,12 +276,12 @@ public class EnthalpyElDraw {
 				x2 = HSatGas + h + 1;
 				y1 = refrigerant.getPIsotherm(x1, isoThermT); 
 				y2 = refrigerant.getPIsotherm(x2, isoThermT);
-				lElDraw.add(new ElDraw(EloElDraw.LINE_DASHED,Color.RED,x1,y1,x2,y2));	
+				lElDraw.add(new ElDraw(EloElDraw.LINE_DASHED,new Color(100,100,200),x1,y1,x2,y2));	
 				logger.trace("   x1={} y1={}  x2={} y2={}", x1,y1,x2,y2);
 
 			}
 			movable = false;
-			visible = true;
+			visible = false;
 			textDisplay = null;
 			textDisplayPositionAbove = false;
 			break;

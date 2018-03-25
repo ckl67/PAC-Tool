@@ -20,9 +20,9 @@ package gui;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
@@ -53,20 +53,19 @@ import javax.swing.event.ChangeListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import log4j.Log4j2Config;
-import mpoints.EloMeasurePointSelection;
 import mpoints.EloMeasureResult;
 import mpoints.EloMeasurePoint;
 import mpoints.MeasurePoint;
 import mpoints.MeasureResult;
 import pac.Pac;
 import refrigerant.Refrigerant;
-import refrigerant.TSat;
 import translation.TLanguage;
-
 import javax.swing.event.ChangeEvent;
 import javax.swing.ImageIcon;
 import java.awt.Toolkit;
 import javax.swing.UIManager;
+import java.awt.SystemColor;
+
 
 public class EnthalpyWin extends JFrame {
 
@@ -123,26 +122,30 @@ public class EnthalpyWin extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+
+					// Force point (".") as decimal separator --> set your Locale
+					Locale.setDefault(new Locale("en", "US"));
+
 					// Create the PAC
 					Pac pac = new Pac();
 
 					// Set Gaz used on PAC
-					pac.getRefrigerant().loadNewRefrigerant("./ressources/R407/R407C/Saturation Table R407C Dupont-Suva.txt");
-					//pac.getRefrigerant().loadNewRefrigerant("./ressources/R22/Saturation Table R22.txt");
+					//pac.getRefrigerant().loadNewRefrigerant("./ressources/R407/R407C/Saturation Table R407C Dupont-Suva.txt");
+					pac.getRefrigerant().loadNewRefrigerant("./ressources/R22/Saturation Table R22.txt");
 					System.out.println(pac.getRefrigerant().getRfgName());
 
 					// Set configuration
 					GuiConfig guiConfig = new GuiConfig();
 					guiConfig.setLanguage(TLanguage.FRENCH);
 
-					
+
 					// Create the List of measure points
 					List<MeasurePoint> lMeasurePoints;
 					lMeasurePoints = new ArrayList<MeasurePoint>(); 
 					for (EloMeasurePoint p : EloMeasurePoint.values()) {
 						lMeasurePoints.add(new MeasurePoint(p));
 					}
-			
+
 					//Compute Points
 					MeasurePoint mp1 = lMeasurePoints.get(EloMeasurePoint.P1.id());
 					MeasurePoint mp2 = lMeasurePoints.get(EloMeasurePoint.P2.id());
@@ -164,7 +167,6 @@ public class EnthalpyWin extends JFrame {
 
 					mp1.setValue(10, pac, lMeasurePoints);
 
-
 					// Create the List of Results
 					List<MeasureResult> lMeasureResults;
 					lMeasureResults = new ArrayList<MeasureResult>(); 
@@ -176,7 +178,7 @@ public class EnthalpyWin extends JFrame {
 					// add set the correct value based on the information computed in lMeasurePoints
 					List<EnthalpyElDraw> lEnthalpyElDraw;
 					lEnthalpyElDraw = new ArrayList<EnthalpyElDraw>(); 
-					
+
 
 					for (EloEnthalpyElDraw p : EloEnthalpyElDraw.values()) {
 						// Empty Draw element
@@ -184,10 +186,8 @@ public class EnthalpyWin extends JFrame {
 						// Compute the Draw element based on lMeasurePoints
 						lEnthalpyElDraw.get(p.ordinal()).set(p, lMeasurePoints);
 					}
-					double isoThermT = 10.0;
-					lEnthalpyElDraw.get(EloEnthalpyElDraw.ISOTHERM.ordinal()).set(EloEnthalpyElDraw.ISOTHERM, lMeasurePoints, pac, isoThermT);
-					
-					
+
+
 					// Create Background Image
 					// EnthalpyBkgImg enthalpyBkgImg = new EnthalpyBkgImg("./ressources/R407/R407C/R407C couleur A4.png");
 					EnthalpyBkgImg enthalpyBkgImg = new EnthalpyBkgImg("./ressources/R22/R22 couleur A4.png");
@@ -197,7 +197,7 @@ public class EnthalpyWin extends JFrame {
 					//enthalpyBkgImg.setiBgH2x(2724);
 					//enthalpyBkgImg.setiBgP1y(1648);;
 					//enthalpyBkgImg.setiBgP2y(216);;
-					
+
 					// Now we go to create Window image
 					EnthalpyWin frame1 = new EnthalpyWin(
 							pac, 
@@ -247,7 +247,6 @@ public class EnthalpyWin extends JFrame {
 	public void applyConfig() {
 		enthalpyPanel.setBufBkgdImg(enthalpyPanel.openRefrigerantImageFile());
 
-		Refrigerant refrigerant = pac.getRefrigerant();
 	}
 
 	public JTextField getPanelPacToolTextFieldCOP() {
@@ -378,10 +377,9 @@ public class EnthalpyWin extends JFrame {
 				double pResult = enthalpyPanel.getP_LogP(enthalpyPanel.getLogPoYm(evt.getY()));
 				lblPressureCoord.setText(String.format("P=%.2f bar",pResult));
 
-				// CORRECTION LIQUID OR GAS !!
 				double tRresultL = refrigerant.getTSatFromP(pResult).getTLiquid();
 				double tRresultG = refrigerant.getTSatFromP(pResult).getTGas();
-				lblTempCoord.setText(String.format("T=%.2f/%.2f °C",tRresultL,tRresultG));	
+				lblTempCoord.setText(String.format("T=%.2f / %.2f °C",tRresultL,tRresultG));	
 
 				try {
 					if (WinPressTemp.panelTempPressDrawArea.isVisible()) {
@@ -392,22 +390,54 @@ public class EnthalpyWin extends JFrame {
 				}
 
 				if (rdbtnSaturation.isSelected()) {
+					// Hide Isotherm
+					lEnthalpyElDraw.get(EloEnthalpyElDraw.ISOTHERM.ordinal()).setVisible(false);
+
 					double pSat = refrigerant.getP_SatCurve_FromH(hResult,pResult);
 					double tSat = refrigerant.getT_SatCurve_FromH(hResult,pResult);
 					enthalpyPanel.setHCurveFollower(hResult);
 					enthalpyPanel.setPCurveFollower(pSat);
-					if (pSat > 0 )
-						lblFollower.setText(String.format("PSat=%.2f / Tsat=%.2f",pSat,tSat));
+					lblFollower.setText(String.format("PSat=%.2f / Tsat=%.2f",pSat,tSat));
+					repaint();
+
+				} else if (rdbtnIsoTherm.isSelected()) {
+					double tIsotherm = Double.parseDouble(textFieldIsoThermTemp.getText()); 
+					
+					lEnthalpyElDraw.get(EloEnthalpyElDraw.ISOTHERM.ordinal()).set(EloEnthalpyElDraw.ISOTHERM, lMeasurePoints, pac, tIsotherm);
+					lEnthalpyElDraw.get(EloEnthalpyElDraw.ISOTHERM.ordinal()).setVisible(true);
+					
+					double pIsotherm = refrigerant.getPIsotherm(hResult, tIsotherm, pResult);
+					double hIsotherm = refrigerant.getHIsotherm(hResult, tIsotherm);
+					enthalpyPanel.setHCurveFollower(hIsotherm);
+					enthalpyPanel.setPCurveFollower(pIsotherm);
+					lblFollower.setText(String.format("IsoTherm P=%.2f / T=%.2f",pIsotherm,tIsotherm));
+					repaint();
+
+
+				} else if (rdbtnIsobar.isSelected()) {
+					// Hide Isotherm
+					lEnthalpyElDraw.get(EloEnthalpyElDraw.ISOTHERM.ordinal()).setVisible(false);
+
+					double pIsobar = Double.parseDouble(textFieldIsoBarPressure.getText()); 
+					double tIsobar = refrigerant.getIsobaricT(pIsobar,hResult);
+					enthalpyPanel.setHCurveFollower(hResult);
+					enthalpyPanel.setPCurveFollower(pIsobar);
+					if (hResult > pac.getRefrigerant().getHSatFromP(pIsobar).getHGas())
+						lblFollower.setText(String.format("IsoBar P=%.2f / T=~%.2f",pIsobar,tIsobar));
 					else
-						lblFollower.setText(String.format("----------"));			
-				} else {
+						lblFollower.setText(String.format("IsoBar P=%.2f / T=%.2f",pIsobar,tIsobar));
+
+					repaint();
+
+				}
+				else {
 					lblFollower.setText(String.format("----------"));
 				}
 
 				if (ElDrawIdToMoveOnP >=0 ){
 					enthalpyPanel.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 
-//					lEnthalpyElDraw.get(ElDrawIdToMoveOnP).setX1(hResult);
+					//					lEnthalpyElDraw.get(ElDrawIdToMoveOnP).setX1(hResult);
 					String name = lEnthalpyElDraw.get(ElDrawIdToMoveOnP).getTextDisplay(); // T1,T2,..
 					for (EloEnthalpyElDraw p : EloEnthalpyElDraw.values()) {
 						if (p.name() == name) {
@@ -422,7 +452,6 @@ public class EnthalpyWin extends JFrame {
 
 					}
 				}
-				//repaint();
 			}
 		});
 
@@ -455,11 +484,11 @@ public class EnthalpyWin extends JFrame {
 		mntmDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int id=0; 
-//				id = enthalpyPanel.getIdNearest(lEnthalpyElDraw, EloEnthalpyElDraw.POINT_TXT_ABV,enthalpyPanel.getHoXm((int)pointJPopupMenu.getX()), enthalpyPanel.getPoYm((int)pointJPopupMenu.getY()));
+				//				id = enthalpyPanel.getIdNearest(lEnthalpyElDraw, EloEnthalpyElDraw.POINT_TXT_ABV,enthalpyPanel.getHoXm((int)pointJPopupMenu.getX()), enthalpyPanel.getPoYm((int)pointJPopupMenu.getY()));
 				if (id < 0)
-//					id = enthalpyPanel.getIdNearest(lEnthalpyElDraw, EloElDraw.POINT_TXT_BLV, enthalpyPanel.getHoXm((int)pointJPopupMenu.getX()), enthalpyPanel.getPoYm((int)pointJPopupMenu.getY()));
+					//					id = enthalpyPanel.getIdNearest(lEnthalpyElDraw, EloElDraw.POINT_TXT_BLV, enthalpyPanel.getHoXm((int)pointJPopupMenu.getX()), enthalpyPanel.getPoYm((int)pointJPopupMenu.getY()));
 
-				logger.info(" Element to delete {} ", id);
+					logger.info(" Element to delete {} ", id);
 				if (id >= 0) {
 					lEnthalpyElDraw.remove(id);
 				}
@@ -472,10 +501,10 @@ public class EnthalpyWin extends JFrame {
 		mntmMove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int id=0; 
-//				int id = enthalpyPanel.getIdNearest(lEnthalpyElDraw, EloElDraw.POINT_TXT_ABV, enthalpyPanel.getHoXm((int)pointJPopupMenu.getX()), enthalpyPanel.getPoYm((int)pointJPopupMenu.getY()));
+				//				int id = enthalpyPanel.getIdNearest(lEnthalpyElDraw, EloElDraw.POINT_TXT_ABV, enthalpyPanel.getHoXm((int)pointJPopupMenu.getX()), enthalpyPanel.getPoYm((int)pointJPopupMenu.getY()));
 				if (id < 0)
-//					id = enthalpyPanel.getIdNearest(lEnthalpyElDraw, EloElDraw.POINT_TXT_BLV, enthalpyPanel.getHoXm((int)pointJPopupMenu.getX()), enthalpyPanel.getPoYm((int)pointJPopupMenu.getY()));
-				logger.info(" Element to move {} ", id);
+					//					id = enthalpyPanel.getIdNearest(lEnthalpyElDraw, EloElDraw.POINT_TXT_BLV, enthalpyPanel.getHoXm((int)pointJPopupMenu.getX()), enthalpyPanel.getPoYm((int)pointJPopupMenu.getY()));
+					logger.info(" Element to move {} ", id);
 				if (id >= 0) {
 					ElDrawIdToMoveOnP = id;
 				}
@@ -500,13 +529,8 @@ public class EnthalpyWin extends JFrame {
 		panelHight_Hight.add(lblPHP);
 
 		textPHP = new JTextField();
-		textPHP.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				double PK = Double.parseDouble(textPHP.getText());
-
-
-			}
-		});
+		textPHP.setBackground(SystemColor.controlHighlight);
+		textPHP.setEditable(false);
 		textPHP.setHorizontalAlignment(SwingConstants.RIGHT);
 		textPHP.setText(String.format("%.2f",lMeasurePoints.get(EloMeasurePoint._PK_VAPOR_ID).getValue()));
 		panelHight_Hight.add(textPHP);
@@ -517,65 +541,61 @@ public class EnthalpyWin extends JFrame {
 		panelHight_Hight.add(lblPBP);
 
 		textPBP = new JTextField();
-		textPBP.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				double P0 = Double.parseDouble(textPBP.getText());
-
-
-			}
-		});
+		textPBP.setBackground(SystemColor.controlHighlight);
+		textPBP.setEditable(false);
 		textPBP.setHorizontalAlignment(SwingConstants.RIGHT);
 		textPBP.setText(String.format("%.2f",lMeasurePoints.get(EloMeasurePoint._PR0id).getValue()));
 		panelHight_Hight.add(textPBP);
 		textPBP.setColumns(10);
-		
-				JButton btnPressureTemp = new JButton("P/Temp");
-				panelHight.add(btnPressureTemp, BorderLayout.SOUTH);
-				btnPressureTemp.setMaximumSize(new Dimension(85, 23));
-				btnPressureTemp.setAlignmentX(Component.CENTER_ALIGNMENT);
-				btnPressureTemp.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						//			winPressTemp.setVisible(true);
-					}
-				});
 
 		// ----------------------------------------
-		JPanel panelMiddle2 = new JPanel();
-		panelRefrigerantRight.add(panelMiddle2);
-		panelMiddle2.setLayout(new BorderLayout(0, 0));
+		JPanel panelMiddle = new JPanel();
+		panelRefrigerantRight.add(panelMiddle);
+		panelMiddle.setLayout(new BorderLayout(0, 0));
 
-		JPanel panelMiddle2_Center = new JPanel();
-		panelMiddle2.add(panelMiddle2_Center, BorderLayout.CENTER);
-		panelMiddle2_Center.setLayout(new BoxLayout(panelMiddle2_Center, BoxLayout.Y_AXIS));
+		JPanel panelMiddle_South = new JPanel();
+		panelMiddle.add(panelMiddle_South, BorderLayout.SOUTH);
+		panelMiddle_South.setLayout(new BoxLayout(panelMiddle_South, BoxLayout.Y_AXIS));
 
 		rdbtnSaturation = new JRadioButton("Saturation");
 		rdbtnSaturation.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		panelMiddle2_Center.add(rdbtnSaturation);
+		panelMiddle_South.add(rdbtnSaturation);
 
 		rdbtnIsoTherm = new JRadioButton("IsoTherm");
 		rdbtnIsoTherm.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		panelMiddle2_Center.add(rdbtnIsoTherm);
-		
+		panelMiddle_South.add(rdbtnIsoTherm);
+
 		textFieldIsoThermTemp = new JTextField();
 		textFieldIsoThermTemp.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldIsoThermTemp.setText("0,00");
-		panelMiddle2_Center.add(textFieldIsoThermTemp);
+		textFieldIsoThermTemp.setText("0.00");
+		panelMiddle_South.add(textFieldIsoThermTemp);
 		textFieldIsoThermTemp.setColumns(10);
 
 		rdbtnIsobar = new JRadioButton("IsoBar");
 		rdbtnIsobar.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		panelMiddle2_Center.add(rdbtnIsobar);
-		
+		panelMiddle_South.add(rdbtnIsobar);
+
 		textFieldIsoBarPressure = new JTextField();
+		textFieldIsoBarPressure.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				if ( Double.parseDouble(textFieldIsoBarPressure.getText()) <enthalpyPanel.getPgMin())
+				{
+					String tmp; 
+					tmp = String.format("%.2f",enthalpyPanel.getPgMin());
+					textFieldIsoBarPressure.setText(tmp);
+				}		
+			}
+		});
 		textFieldIsoBarPressure.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldIsoBarPressure.setText("0,00");
-		panelMiddle2_Center.add(textFieldIsoBarPressure);
+		textFieldIsoBarPressure.setText(String.format("%.2f",enthalpyPanel.getPgMin()));
+		panelMiddle_South.add(textFieldIsoBarPressure);
 		textFieldIsoBarPressure.setColumns(10);
 
 		rdbtnNothing = new JRadioButton("Nothing");
 		rdbtnNothing.setSelected(true);
 		rdbtnNothing.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		panelMiddle2_Center.add(rdbtnNothing);
+		panelMiddle_South.add(rdbtnNothing);
 
 		ButtonGroup btGroupPosFollower = new ButtonGroup();
 		btGroupPosFollower.add(rdbtnSaturation);
@@ -590,20 +610,20 @@ public class EnthalpyWin extends JFrame {
 
 		JPanel panelBottom_Bottom = new JPanel();
 		panelBottom.add(panelBottom_Bottom, BorderLayout.SOUTH);
-		panelBottom_Bottom.setLayout(new BoxLayout(panelBottom_Bottom, BoxLayout.Y_AXIS));
 
 		JButton btnResetZoom = new JButton("Centrer");
 		btnResetZoom.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btnResetZoom.setMaximumSize(new Dimension(85, 23));
 		btnResetZoom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				enthalpyPanel.centerImg();
-				enthalpyPanel.repaint();			
+				enthalpyPanel.centerImg();		
 			}
 		});
+		panelBottom_Bottom.setLayout(new BorderLayout(0, 0));
 		panelBottom_Bottom.add(btnResetZoom);
 
-		JButton btnClear = new JButton("Effacer");
+		JButton btnClear = new JButton("Redessiner");
+		panelBottom_Bottom.add(btnClear, BorderLayout.NORTH);
 		btnClear.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btnClear.setMaximumSize(new Dimension(85, 23));
 		btnClear.addActionListener(new ActionListener() {
@@ -611,7 +631,6 @@ public class EnthalpyWin extends JFrame {
 				enthalpyPanel.clean();
 			}
 		});
-		panelBottom_Bottom.add(btnClear);
 	}
 
 
@@ -620,20 +639,5 @@ public class EnthalpyWin extends JFrame {
 	// -------------------------------------------------------
 
 
-	public EnthalpyPanel getPanelRefrigerant() {
-		return enthalpyPanel;
-	}
-	public List<EnthalpyElDraw> getlEnthalpyElDraw() {
-		return lEnthalpyElDraw;
-	}
-
-	public List<MeasurePoint> getlMeasurePoints() {
-		return lMeasurePoints;
-	}
-
-
-	public Pac getPac() {
-		return pac;
-	}
 
 }
