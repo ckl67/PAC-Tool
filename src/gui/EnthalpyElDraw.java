@@ -86,9 +86,9 @@ public class EnthalpyElDraw {
 	 * @param vPac
 	 * @param isoThermT
 	 */
-	public void set(EloEnthalpyElDraw venthElDrawObject, List<MeasurePoint> lMeasurePoints, Pac vPac, double isoThermT ) {
+	public void set( List<MeasurePoint> lMeasurePoints, Pac vPac, double isoThermT ) {
 		lElDraw.clear();
-		Funct_EnthalpyElDraw(venthElDrawObject, lMeasurePoints,vPac,isoThermT);	
+		Funct_EnthalpyElDraw(enthElDrawObject, lMeasurePoints,vPac,isoThermT);	
 	}
 
 
@@ -99,12 +99,12 @@ public class EnthalpyElDraw {
 	 * @param venthElDrawObject
 	 * @param lMeasurePoints
 	 */
-	public void set(EloEnthalpyElDraw venthElDrawObject, List<MeasurePoint> lMeasurePoints) {
+	public void set(List<MeasurePoint> lMeasurePoints) {
 		lElDraw.clear();
-		
+
 		// Funct_EnthalpyElDraw can be called except for ISOTHERM
-		if (venthElDrawObject != EloEnthalpyElDraw.ISOTHERM) {
-			Funct_EnthalpyElDraw(venthElDrawObject, lMeasurePoints,null,0);
+		if (enthElDrawObject != EloEnthalpyElDraw.ISOTHERM) {
+			Funct_EnthalpyElDraw(enthElDrawObject, lMeasurePoints,null,0);
 		}
 	}
 
@@ -127,7 +127,7 @@ public class EnthalpyElDraw {
 		case P1:
 			// Get the Mesure Point information of the element to draw
 			m = lMeasurePoints.get(EloMeasurePoint.P1.id()); 
-			logger.info("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
+			logger.trace("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
 
 			lElDraw = new ArrayList<ElDraw>(); 
 			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.GREEN,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
@@ -139,7 +139,7 @@ public class EnthalpyElDraw {
 		case P2:
 			// Get the Mesure Point information of the element to draw
 			m = lMeasurePoints.get(EloMeasurePoint.P2.id()); 
-			logger.info("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
+			logger.trace("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
 
 			lElDraw = new ArrayList<ElDraw>(); 
 			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.GREEN,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
@@ -151,7 +151,7 @@ public class EnthalpyElDraw {
 		case P3:
 			// Get the Mesure Point information of the element to draw
 			m = lMeasurePoints.get(EloMeasurePoint.P3.id()); 
-			logger.info("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
+			logger.trace("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
 			lElDraw = new ArrayList<ElDraw>(); 
 			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.RED,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 			movable = false;
@@ -162,7 +162,7 @@ public class EnthalpyElDraw {
 		case P4:
 			// Get the Mesure Point information of the element to draw
 			m = lMeasurePoints.get(EloMeasurePoint.P4.id()); 
-			logger.info("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
+			logger.trace("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
 			lElDraw = new ArrayList<ElDraw>(); 
 			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.RED,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 			movable = false;
@@ -173,7 +173,7 @@ public class EnthalpyElDraw {
 		case P5:
 			// Get the Mesure Point information of the element to draw
 			m = lMeasurePoints.get(EloMeasurePoint.P5.id()); 
-			logger.info("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
+			logger.trace("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
 			lElDraw = new ArrayList<ElDraw>(); 
 			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.GREEN,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 			movable = true;
@@ -184,7 +184,7 @@ public class EnthalpyElDraw {
 		case P6:
 			// Get the Mesure Point information of the element to draw
 			m = lMeasurePoints.get(EloMeasurePoint.P6.id()); 
-			logger.info("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
+			logger.trace("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
 			lElDraw = new ArrayList<ElDraw>(); 
 			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.GREEN,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 			movable = true;
@@ -195,7 +195,7 @@ public class EnthalpyElDraw {
 		case P7:
 			// Get the Mesure Point information of the element to draw
 			m = lMeasurePoints.get(EloMeasurePoint.P7.id()); 
-			logger.info("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
+			logger.trace("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
 			lElDraw = new ArrayList<ElDraw>(); 
 			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.RED,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 			movable = false;
@@ -206,7 +206,7 @@ public class EnthalpyElDraw {
 		case P8:
 			// Get the Mesure Point information of the element to draw
 			m = lMeasurePoints.get(EloMeasurePoint.P8.id()); 
-			logger.info("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
+			logger.trace("Point={} H={} P={}", enthElDrawObject.getText(),m.getMP_H(),m.getMP_P0PK(lMeasurePoints));
 			lElDraw = new ArrayList<ElDraw>(); 
 			lElDraw.add(new ElDraw(EloElDraw.POINT,Color.GREEN,m.getMP_H(),m.getMP_P0PK(lMeasurePoints)));
 			movable = true;
@@ -216,7 +216,7 @@ public class EnthalpyElDraw {
 			break;
 		case LINE_P0:
 			m = lMeasurePoints.get(EloMeasurePoint.P7.id()); 
-			logger.info("{} Y={}", enthElDrawObject.getText(),m.getMP_P0PK(lMeasurePoints));
+			logger.trace("{} Y={}", enthElDrawObject.getText(),m.getMP_P0PK(lMeasurePoints));
 			lElDraw = new ArrayList<ElDraw>(); 
 			lElDraw.add(new ElDraw(EloElDraw.LINE_HORZ,Color.BLACK,m.getMP_P0PK(lMeasurePoints)));
 			movable = false;
@@ -226,7 +226,7 @@ public class EnthalpyElDraw {
 			break;
 		case LINE_PK:
 			m = lMeasurePoints.get(EloMeasurePoint.P3.id()); 
-			logger.info("{} Y={}", enthElDrawObject.getText(),m.getMP_P0PK(lMeasurePoints));
+			logger.trace("{} Y={}", enthElDrawObject.getText(),m.getMP_P0PK(lMeasurePoints));
 			lElDraw = new ArrayList<ElDraw>(); 
 			lElDraw.add(new ElDraw(EloElDraw.LINE_HORZ,Color.BLACK,m.getMP_P0PK(lMeasurePoints)));
 			movable = false;
@@ -296,6 +296,47 @@ public class EnthalpyElDraw {
 		}
 	}
 
+	/**
+	 * getEloMeasurePoint()
+	 * @return
+	 */
+	public int getEloMeasurePoint() {
+		int out=-1;
+
+		switch (enthElDrawObject) {
+
+		case P1:
+			out = EloMeasurePoint.P1.id(); 
+			textDisplayPositionAbove = false;
+			break;
+		case P2:
+			out = EloMeasurePoint.P2.id(); 
+			break;
+		case P3:
+			out = EloMeasurePoint.P3.id(); 
+			break;
+		case P4:
+			out = EloMeasurePoint.P4.id(); 
+			break;
+		case P5:
+			out = EloMeasurePoint.P5.id(); 
+			break;
+		case P6:
+			out = EloMeasurePoint.P6.id(); 
+			break;
+		case P7:
+			out = EloMeasurePoint.P7.id(); 
+			break;
+		case P8:
+			out = EloMeasurePoint.P8.id(); 
+			break;
+		default:
+			out = -1; 
+			break;
+		}
+
+		return out;
+	}
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------

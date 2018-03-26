@@ -99,11 +99,17 @@ public class MeasureResultTableWin extends JFrame {
 					mp8.setValue(-10, pac, lMeasurePoints);
 
 					
-					// Create the List of measure points
+					// Create the List of Measure Results
 					List<MeasureResult> lMeasureResults;
 					lMeasureResults = new ArrayList<MeasureResult>(); 
+
 					for (EloMeasureResult p : EloMeasureResult.values()) {
-						lMeasureResults.add(new MeasureResult(p,lMeasurePoints,pac));
+						lMeasureResults.add(new MeasureResult(p));
+					}
+
+					// Fill the list of Measure Results
+					for (EloMeasureResult p : EloMeasureResult.values()) {
+						lMeasureResults.get(p.id()).setValue(lMeasurePoints,pac);
 					}
 
 					// Now we can display

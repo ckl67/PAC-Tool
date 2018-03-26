@@ -11,6 +11,8 @@ public class Refrigerant extends SatCurve {
 	// -------------------------------------------------------
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
+	private final int ISOTHERM_POWER = 2;
+	
 	// --------------------------------------------------------------------
 	// Instance variables
 	// --------------------------------------------------------------------
@@ -189,7 +191,7 @@ public class Refrigerant extends SatCurve {
 			double P0 = this.getIsoTherm_P0_Ref();
 			logger.debug("  (getPIsotherm):: H={}>satHGas={}  Ha={} Pa={} H0={} P0={}",H,satHGas,Ha,Pa,H0,P0);
 
-			double n = 2;
+			double n = ISOTHERM_POWER;
 			double c = (H0-Ha)/Math.pow(Pa-P0,1/n);
 			outP = -Math.pow((H-Ha)/c,n) + Pa;
 			if (outP < 0) 
@@ -266,7 +268,7 @@ public class Refrigerant extends SatCurve {
 				(T- this.getIsoTherm_T0_Ref())/this.getIsoTherm_T0_Delta() + 
 				this.getIsoTherm_H0_Ref();
 		double P0 = this.getIsoTherm_P0_Ref();
-		double n = 2;
+		double n = ISOTHERM_POWER;
 		double c = (H0-Ha)/Math.pow(Pa-P0,1/n);
 
 		if (Pa > PRef) {

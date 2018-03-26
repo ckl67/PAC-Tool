@@ -72,6 +72,10 @@ public class EnthalpyBkgImg {
 	// 							METHOD
 	// -------------------------------------------------------
 
+	public void loadNewBkgImg(String fileImgBg) {
+		this.imgRfgFile = fileImgBg; // = "./ressources/R22/R22 couleur A4.png";
+	}
+
 	
 	// -------------------------------------------------------
 	// 							JSON

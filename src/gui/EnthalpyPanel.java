@@ -306,9 +306,6 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 		offset.x = 0;
 		offset.y = 0;	
 
-		logger.info(" Hzoom={}  HgUnit ={} ",Hzoom, HgUnit );
-		logger.info(" Pzoom={}  PgUnit ={} ",Pzoom, PgUnit );
-
 		repaint();
 	}
 
@@ -729,42 +726,47 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 		Pzoom =  1.0;
 		offset.x = 0;
 		offset.y= 0;
-
 		repaint();
 	}
 
 	/**
-	 * Will return the nearest element id of EnthalpyElDraw
+	 * Will return the nearest element id of EnthalpyElDraw Point
 	 * @param EnthalpyElDraw
 	 * @param EloEnthalpyElDraw
 	 * @param H 
 	 * @param Log(P) 
 	 * @return
 	 */
-	public int getIdNearest(List<EnthalpyElDraw> lEnthalpyElDraw, EloEnthalpyElDraw enthElDrawObject, double pH, double pP) {
-		int id=-1;
-		double zoneH = 2;
-		double zoneP = 2;
+	public int getIdNearestPoint(List<EnthalpyElDraw> lEnthalpyElDraw, int xm, int ym) {
+	int id=-1;
+	int xZone = 5;
+	int yZone = 5;
 
-		for(int i=0;i<lEnthalpyElDraw.size();i++) {
-			if ( (lEnthalpyElDraw.get(i).getEnthElDrawObject() == enthElDrawObject) && (lEnthalpyElDraw.get(i).isMovable()) ){
+	logger.trace("(getIdNearest):: xm={}-->[xZone={}]  ym={}-->[yZone={}] ", xm, xZone, ym, yZone);
 
-				for(int j=0;j<lEnthalpyElDraw.get(i).getlElDraw().size();j++) {
+	for(int i=0;i<lEnthalpyElDraw.size();i++) {
+		if ( lEnthalpyElDraw.get(i).isMovable() ) {
 
-					double H = lEnthalpyElDraw.get(i).getlElDraw().get(j).getX1();
-					double P = lEnthalpyElDraw.get(i).getlElDraw().get(j).getY1();
+			for(int j=0;j<lEnthalpyElDraw.get(i).getlElDraw().size();j++) {
 
-					//logger.trace("(getIdNearest):: picked pP={}  Point P={}  Zoom={}", pP, P, zoom);
+				int xmH =   getXmoH(lEnthalpyElDraw.get(i).getlElDraw().get(j).getX1());
+				int ymP = getYmoLog(lEnthalpyElDraw.get(i).getlElDraw().get(j).getY1());
 
-					if ( ( pH < H+zoneH/Hzoom) && ( pH > H-zoneH/Hzoom) && (pP < P+zoneP/Pzoom) && ( pP > P-zoneP/Pzoom) ) {
-						id = i;
-						logger.trace("(getIdNearest):: id={}",id);
-					}
+				logger.trace("(getIdNearest):: xmH={} abs(xmH-xm)={}    ymP={} abs(ymP-ym)={} ",
+						xmH,
+						Math.abs(xmH-xm),
+						ymP,
+						Math.abs(ymP-ym));
+
+				if (  (Math.abs(xmH-xm) < xZone)  && (Math.abs(ymP-ym) < yZone) ) {
+					id = i;
+					logger.trace("(getIdNearest):: id={}",id);
 				}
 			}
 		}
-		return id;
 	}
+	return id;
+}
 
 
 	// -------------------------------------------------------

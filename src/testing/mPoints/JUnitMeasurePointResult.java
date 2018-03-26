@@ -21,11 +21,12 @@ public class JUnitMeasurePointResult {
 		List<MeasurePoint> lMeasurePoints;
 		lMeasurePoints = new ArrayList<MeasurePoint>(); 
 
-		// Create the List of measure points
+		// Create the List of Measure POints
 		for (EloMeasurePoint p : EloMeasurePoint.values()) {
 			lMeasurePoints.add(new MeasurePoint(p));
 		}
 
+		// Fill the list of Measure POints
 		MeasurePoint mp1 = lMeasurePoints.get(EloMeasurePoint.P1.id());
 		MeasurePoint mp2 = lMeasurePoints.get(EloMeasurePoint.P2.id());
 		MeasurePoint mp3 = lMeasurePoints.get(EloMeasurePoint.P3.id());
@@ -62,12 +63,17 @@ public class JUnitMeasurePointResult {
 		}
 
 		
+		// Create the List of Measure Results
 		List<MeasureResult> lMeasureResults;
 		lMeasureResults = new ArrayList<MeasureResult>(); 
 
-		// Create the List of measure points
 		for (EloMeasureResult p : EloMeasureResult.values()) {
-			lMeasureResults.add(new MeasureResult(p,lMeasurePoints,pac));
+			lMeasureResults.add(new MeasureResult(p));
+		}
+
+		// Fill the list of Measure Results
+		for (EloMeasureResult p : EloMeasureResult.values()) {
+			lMeasureResults.get(p.id()).setValue(p,lMeasurePoints,pac);
 		}
 
 		for (int i = 0; i < lMeasureResults.size(); i++) {
@@ -78,8 +84,7 @@ public class JUnitMeasurePointResult {
 			System.out.println("    Val = " + mr.getValue());
 			System.out.println(" ");   
 
-		}
-			
+		}		
 		
 		// JSON
 		System.out.println("\n---> Construct JSON data");
@@ -87,8 +92,10 @@ public class JUnitMeasurePointResult {
 		jsonObj = mp1.getJsonObject();
 		System.out.println(jsonObj);
 
-		MeasureResult rT1_T8 = new MeasureResult(EloMeasureResult.T1_T8,lMeasurePoints,pac);
-		System.out.println(rT1_T8.getMRObject().name() + " = " + rT1_T8.getValue());
+		System.out.println(
+				lMeasureResults.get(EloMeasureResult.T1_T8.id()).getMRObject().name()  + 
+				" = " + 
+				lMeasureResults.get(EloMeasureResult.T1_T8.id()).getValue());
 
 		
 	}

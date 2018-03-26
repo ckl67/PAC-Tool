@@ -79,4 +79,9 @@ public enum EloEnthalpyElDraw {
 		this.text = text;
 	}
 	
+	public int id() {
+		return this.ordinal();
+	}
+
+	
 }

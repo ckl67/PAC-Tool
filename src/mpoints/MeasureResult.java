@@ -26,40 +26,58 @@ public class MeasureResult {
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	// Will create 1 object MeasureResult T1-T2,H1-H3,.. (of the EloMeasureResult), and based on
-	// all measured points, will return the result
-	// Exemple
-	//			 MeasureResult result_T1_T2 = new MeasureResult("T1-T2"; lMeasurePoints)
+	// Will create 1 object MeasureResult T1-T2,H1-H3,.. (of the EloMeasureResult)
 	//
-	public MeasureResult (EloMeasureResult vmRObject, List<MeasurePoint> vmeasurePointL, Pac vPac) {
+	public MeasureResult (EloMeasureResult vmRObject) {
 		mRObject = vmRObject;
+		value = 0;
+	}
+	// -------------------------------------------------------
+	// 							METHOD
+	// -------------------------------------------------------
+
+	/**
+	 *  MeasureResult result_T1_T2 = new MeasureResult("T1-T2")
+	 *  result_T1_T2.setMeasureResult("T1-T2",lMeasurePoints,pac)
+	 *  
+	 * @param vmeasurePointL
+	 * @param vPac
+	 * @return
+	 */
+	public boolean setValue ( List<MeasurePoint> vmeasurePointL, Pac vPac) {
+		boolean out = false;
+		
 		value = 0;
 		
 		double Ta=0,Tb=0,Ha=0,Hb=0,result=0;
 
-		switch (vmRObject) {
+		switch (this.mRObject) {
 		case T1_T8: 
 			Ta = vmeasurePointL.get(EloMeasurePoint.P1.id()).getMP_T();
 			Tb = vmeasurePointL.get(EloMeasurePoint.P8.id()).getMP_T();
 			result = Ta-Tb;
-			this.value = Math.round(result*100.0)/100.0; 
+			this.value = Math.round(result*100.0)/100.0;
+			out = true;
 			break;
 		case T2_T1: 
 			Ta = vmeasurePointL.get(EloMeasurePoint.P2.id()).getMP_T();
 			Tb = vmeasurePointL.get(EloMeasurePoint.P1.id()).getMP_T();
 			result = Ta-Tb;
 			this.value = Math.round(result*100.0)/100.0; 
+			out = true;
 			break;
 		case T3_T2:
 			Ta = vmeasurePointL.get(EloMeasurePoint.P3.id()).getMP_T();
 			Tb = vmeasurePointL.get(EloMeasurePoint.P2.id()).getMP_T();
 			result = Ta-Tb;
 			this.value = Math.round(result*100.0)/100.0; 
+			out = true;
 			break;
 		case T3T4:
 			Ta = vmeasurePointL.get(EloMeasurePoint.P3.id()).getMP_T();
 			result = Ta;
 			this.value = Math.round(result*100.0)/100.0; 
+			out = true;
 			break;
 		case T4_T5:
 			Ta = vmeasurePointL.get(EloMeasurePoint.P4.id()).getMP_T();
@@ -112,14 +130,11 @@ public class MeasureResult {
 			break;
 
 		} 
-		logger.trace("(MeasureResult):: {}= {} {}",this.mRObject.getDisplayTxt(),this.value,this.mRObject.getUnity());
+		logger.trace("(setMeasureResult):: {}= {} {}",this.mRObject.getDisplayTxt(),this.value,this.mRObject.getUnity());
 
-		
+		return out;
 	}
-	// -------------------------------------------------------
-	// 							METHOD
-	// -------------------------------------------------------
-
+	
 	public EloMeasureResult getMRObject() {
 		return mRObject;
 	}

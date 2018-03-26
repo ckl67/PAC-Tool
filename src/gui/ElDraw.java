@@ -37,8 +37,8 @@ public class ElDraw {
 
 	private EloElDraw 		elDrawObj;  	// type of draw : Line, Point,..
 	private Color 			color;			// Color
-	private double 			x1,y1;   		// Coordinate  (final Coordinates, to avoid re-computation)
-	private double 			x2,y2;			// Coordinate  (final Coordinates, to avoid re-computation)
+	private double 			x1,y1;   		// Is the real value, H, P,.. (not draw coordinate in integer) 
+	private double 			x2,y2;			// Is the real value, H, P,.. (not draw coordinate in integer)
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR

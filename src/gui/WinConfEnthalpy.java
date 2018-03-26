@@ -29,18 +29,17 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.basic.BasicArrowButton;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import enthalpy.Enthalpy;
-import misc.Comp;
-import misc.MeasureTable;
-import misc.ResultTable;
+import mpoints.EloMeasurePoint;
+import mpoints.EloMeasureResult;
 import mpoints.MeasurePoint;
+import mpoints.MeasureResult;
 import pac.Pac;
+import translation.TLanguage;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
 import javax.swing.ImageIcon;
@@ -54,44 +53,35 @@ import java.awt.Font;
 
 public class WinConfEnthalpy extends JFrame {
 
-	//private static final Logger logger = LogManager.getLogger(WinConfEnthalpy.class.getName());
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
-
 	private static final long serialVersionUID = 1L;
 
 	/* 	----------------------------------------
 	 * 		INSTANCE VAR
 	 * ----------------------------------------*/
 	EnthalpyWin enthalpyWin;
-	private Enthalpy enthalpy;		
-	private List<MeasurePoint> measurePointL;
-	private List<ElDraw> eDrawL;	
-	private MeasureTable measureTable;
-	private ResultTable resultTable;
-	private Pac pac;
-	private JTextField panelPacToolTextFieldCOP;
 
-	private EnthalpyPanel enthalpyPanel;
+	/* 	----------------------------------------
+	 * 		DEDUCED VAR
+	 * ----------------------------------------*/
 	private EnthalpyBkgImg enthalpyBkgImg;
+	private EnthalpyPanel enthalpyPanel;		
 
 	/* 	----------------------------------------
 	 * 		WIN BUILDER
 	 * ----------------------------------------*/
 	private JPanel panel;
 	private JTextField textFieldEnthalpyFilePath;
-	private JTextField textFieldH1X;
-	private JTextField textFieldH2X;
-	private JTextField textFieldP1Y;
-	private JTextField textFieldP2Y;
-	private JTextField txtFieldTemperaturePressionFile;
+	private JTextField textFieldDstH1;
+	private JTextField textFieldDstH2;
+	private JTextField textFieldDstP1;
+	private JTextField textFieldDstP2;
 
 	private JTextField txtFieldSatCurveFile;
 	private JTextField textFieldStepH1X;
 	private JTextField textFieldStepH2X;
 	private JTextField textFieldStepP1Y;
 	private JTextField textFieldStepP2Y;
-
-	private JTextField textFieldRefrigeranName;
 
 	// -------------------------------------------------------
 	// 				TEST THE APPLICATION STANDALONE 
@@ -100,18 +90,80 @@ public class WinConfEnthalpy extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {		
-					Enthalpy enthalpy1= new Enthalpy();
-					EnthalpyWin vwinEnthalpy1 = new EnthalpyWin(
-							new Pac(), 
-							enthalpy1, 
-							new MeasureTable(new ArrayList<MeasurePoint>(), new GuiConfig()), 
-							new ResultTable(new ArrayList<MeasurePoint>(), new GuiConfig()),
-							new ArrayList<MeasurePoint>(),
-							new ArrayList<ElDraw>(), 
-							new WinPressTemp(enthalpy1),
-							new JTextField());
-					WinConfEnthalpy frame = new WinConfEnthalpy(vwinEnthalpy1);
-					frame.setVisible(true);
+					// Force point (".") as decimal separator --> set your Locale
+					Locale.setDefault(new Locale("en", "US"));
+
+					// Create the PAC
+					Pac pac = new Pac();
+
+					// Set Gaz used on PAC
+					//pac.getRefrigerant().loadNewRefrigerant("./ressources/R407/R407C/Saturation Table R407C Dupont-Suva.txt");
+					pac.getRefrigerant().loadNewRefrigerant("./ressources/R22/Saturation Table R22.txt");
+					System.out.println(pac.getRefrigerant().getRfgName());
+
+					// Set configuration
+					GuiConfig guiConfig = new GuiConfig();
+					guiConfig.setLanguage(TLanguage.FRENCH);
+
+
+					// Create the List of measure points
+					List<MeasurePoint> lMeasurePoints;
+					lMeasurePoints = new ArrayList<MeasurePoint>(); 
+					for (EloMeasurePoint p : EloMeasurePoint.values()) {
+						lMeasurePoints.add(new MeasurePoint(p));
+					}
+
+					//Enter the Compute Points
+					lMeasurePoints.get(EloMeasurePoint.P3.id()).setValue(15, pac, lMeasurePoints);
+					lMeasurePoints.get(EloMeasurePoint.P7.id()).setValue(4, pac, lMeasurePoints);
+					lMeasurePoints.get(EloMeasurePoint.P4.id()).setValue(15, pac, lMeasurePoints);
+					lMeasurePoints.get(EloMeasurePoint.P1.id()).setValue(0, pac, lMeasurePoints);
+					lMeasurePoints.get(EloMeasurePoint.P2.id()).setValue(69, pac, lMeasurePoints);
+					lMeasurePoints.get(EloMeasurePoint.P5.id()).setValue(30, pac, lMeasurePoints);
+					lMeasurePoints.get(EloMeasurePoint.P6.id()).setValue(-10, pac, lMeasurePoints);
+					lMeasurePoints.get(EloMeasurePoint.P8.id()).setValue(0, pac, lMeasurePoints);
+
+					lMeasurePoints.get(EloMeasurePoint.P1.id()).setValue(10, pac, lMeasurePoints);
+
+					// Create the List of Measure Results
+					List<MeasureResult> lMeasureResults;
+					lMeasureResults = new ArrayList<MeasureResult>(); 
+
+					for (EloMeasureResult p : EloMeasureResult.values()) {
+						lMeasureResults.add(new MeasureResult(p));
+					}
+
+					// Fill the list of Measure Results
+					for (EloMeasureResult p : EloMeasureResult.values()) {
+						lMeasureResults.get(p.id()).setValue(lMeasurePoints,pac);
+					}
+
+					// Create an Empty list of Element Enthalpy Draw
+					// add set the correct value based on the information computed in lMeasurePoints
+					List<EnthalpyElDraw> lEnthalpyElDraw;
+					lEnthalpyElDraw = new ArrayList<EnthalpyElDraw>(); 
+
+					for (EloEnthalpyElDraw p : EloEnthalpyElDraw.values()) {
+						lEnthalpyElDraw.add(new EnthalpyElDraw(p));
+					}
+
+					// Compute the Draw element based on lMeasurePoints
+					for (EloEnthalpyElDraw p : EloEnthalpyElDraw.values()) {
+						lEnthalpyElDraw.get(p.ordinal()).set(lMeasurePoints);
+					}
+
+					// Create Background Image
+					// EnthalpyBkgImg enthalpyBkgImg = new EnthalpyBkgImg("./ressources/R407/R407C/R407C couleur A4.png");
+					EnthalpyBkgImg enthalpyBkgImg = new EnthalpyBkgImg("./ressources/R22/R22 couleur A4.png");
+
+					// Now we go to create Window image
+					EnthalpyWin frame1 = new EnthalpyWin(
+							pac, 
+							lMeasurePoints, 
+							lMeasureResults,
+							enthalpyBkgImg,
+							lEnthalpyElDraw);
+					frame1.setVisible(true);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -129,16 +181,8 @@ public class WinConfEnthalpy extends JFrame {
 	 */
 	public WinConfEnthalpy(EnthalpyWin vwinEnthalpy) {
 		enthalpyWin = vwinEnthalpy;
-		enthalpy = vwinEnthalpy.getEnthalpy();
-		measurePointL = vwinEnthalpy.getMeasurePointL();
-		eDrawL = vwinEnthalpy.geteDrawL();
-		measureTable = vwinEnthalpy.getMeasureTable();
-		resultTable = vwinEnthalpy.getResultTable();
-		pac = vwinEnthalpy.getPac();
-		panelPacToolTextFieldCOP = vwinEnthalpy.getPanelPacToolTextFieldCOP();
-		
-		enthalpyPanel = vwinEnthalpy.getPanelEnthalpy();
-		enthalpyBkgImg = enthalpy.getEnthalpyBkgImage();
+		enthalpyPanel = vwinEnthalpy.getEnthalpyPanel();
+		enthalpyBkgImg = vwinEnthalpy.getEnthalpyBkgImg();
 		initialize();
 	}
 
@@ -154,7 +198,7 @@ public class WinConfEnthalpy extends JFrame {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		
+
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Throwable e) {
@@ -164,90 +208,16 @@ public class WinConfEnthalpy extends JFrame {
 		setTitle("Pac-Tool Configuration Diargramme Enthalpique");
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(WinConfEnthalpy.class.getResource("/gui/images/PAC-Tool_32.png")));
-		setBounds(100, 100, 542, 555);
+		setBounds(100, 100, 537, 440);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		panel = new JPanel();
 		getContentPane().add(panel, BorderLayout.CENTER);
-
-		JButton btnEnthalpyFileChoice = new JButton("Fichier Image");
-		btnEnthalpyFileChoice.setBounds(427, 24, 97, 23);
-		btnEnthalpyFileChoice.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-
-				JFileChooser chooser = new JFileChooser();
-				FileNameExtensionFilter filter = new FileNameExtensionFilter( "Enthalpie files", "png");
-				chooser.setFileFilter(filter);
-				File workingDirectory = new File(System.getProperty("user.dir"));
-				chooser.setCurrentDirectory(workingDirectory);
-				int returnVal = chooser.showOpenDialog(panel);
-				if(returnVal == JFileChooser.APPROVE_OPTION) {
-					//System.out.println("You chose to open this file: " + chooser.getSelectedFile().getAbsolutePath());
-					String imagepath=chooser.getSelectedFile().getAbsolutePath();
-					textFieldEnthalpyFilePath.setText(imagepath);
-					
-					enthalpyBkgImg.setEnthalpyImageFile(textFieldEnthalpyFilePath.getText());	
-					enthalpyPanel.openEnthalpyImageFile();
-					
-					logger.trace("Reset to Zero the measure points List");
-					for (int n = 0; n < measurePointL.size(); n++ ) {
-						measurePointL.get(n).clearMeasure();
-					}
-					
-					logger.trace("Remove all Draw elements (eDrawL) (Clear the display)");
-					eDrawL.clear();
-
-					logger.trace("Update MeasureTable");
-					measureTable.setAllTableValues();
-
-					logger.trace("Update ResultTable");
-					resultTable.setAllTableValues();
-				
-					logger.trace("Repaint and Complete enthalpyWin");
-					enthalpyWin.repaint();
-					enthalpyWin.updateAllTextField();
-
-					logger.trace("COP ={}", Comp.cop(measurePointL,pac));
-					panelPacToolTextFieldCOP.setText(String.valueOf(Comp.cop(measurePointL,pac)));
-
-					
-					try {
-						if (enthalpyPanel.isVisible() ) {
-							enthalpyPanel.clean();
-						}
-					} catch (NullPointerException e) {
-
-					}
-				}
-			}
-		});
 		panel.setLayout(null);
-		panel.add(btnEnthalpyFileChoice);
-
-		JButton btnOK = new JButton("Fermer");
-		btnOK.setBounds(467, 493, 67, 23);
-		btnOK.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//System.out.println(textFieldEnthalpyFilePath.getText());
-				//confEnthalpy.setEnthalpyImageFile(textFieldEnthalpyFilePath.getText());		
-				dispose();
-			}
-		});
-
-		JLabel lblEnthalpyFile = new JLabel("Fichier Image Enthalpie :");
-		lblEnthalpyFile.setBounds(10, 28, 125, 14);
-		panel.add(lblEnthalpyFile);
-
-		textFieldEnthalpyFilePath = new JTextField();
-		textFieldEnthalpyFilePath.setBounds(145, 25, 272, 20);
-		textFieldEnthalpyFilePath.setText(enthalpyBkgImg.getEnthalpyImageFile());
-		textFieldEnthalpyFilePath.setColumns(10);
-		panel.add(textFieldEnthalpyFilePath);
-		panel.add(btnOK);
 
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Enthalpie", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel_1.setBounds(10, 85, 514, 91);
+		panel_1.setBounds(10, 313, 514, 91);
 		panel.add(panel_1);
 		panel_1.setLayout(null);
 
@@ -258,20 +228,18 @@ public class WinConfEnthalpy extends JFrame {
 		lblHOrigine.setBounds(30, 22, 64, 50);
 		panel_1.add(lblHOrigine);
 
-		textFieldH1X = new JTextField();
-		textFieldH1X.addActionListener(new ActionListener() {
+		textFieldDstH1 = new JTextField();
+		textFieldDstH1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				enthalpy.setxHmin(Integer.valueOf(textFieldH1X.getText()));
-				enthalpyBkgImg.setDstH1(Integer.valueOf(textFieldH1X.getText()));
-				enthalpyPanel.setxHmin(Integer.valueOf(textFieldH1X.getText()));	
+				enthalpyBkgImg.setDstH1(Double.valueOf(textFieldDstH1.getText()));
 			}
 		});
-		textFieldH1X.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldH1X.setText(String.valueOf(enthalpyBkgImg.getDstH1()));
-		textFieldH1X.setToolTipText("");
-		textFieldH1X.setBounds(156, 25, 46, 20);
-		panel_1.add(textFieldH1X);
-		textFieldH1X.setColumns(10);
+		textFieldDstH1.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldDstH1.setText(String.valueOf(enthalpyBkgImg.getDstH1()));
+		textFieldDstH1.setToolTipText("");
+		textFieldDstH1.setBounds(156, 25, 46, 20);
+		panel_1.add(textFieldDstH1);
+		textFieldDstH1.setColumns(10);
 
 		JLabel lblHFinal = new JLabel("New label");
 		lblHFinal.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -279,19 +247,17 @@ public class WinConfEnthalpy extends JFrame {
 		lblHFinal.setBounds(274, 21, 64, 53);
 		panel_1.add(lblHFinal);
 
-		textFieldH2X = new JTextField();
-		textFieldH2X.addActionListener(new ActionListener() {
+		textFieldDstH2 = new JTextField();
+		textFieldDstH2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				enthalpy.setxHmax(Integer.valueOf(textFieldH2X.getText()));
-				enthalpyBkgImg.setDstH2(Integer.valueOf(textFieldH2X.getText()));	
-				enthalpyPanel.setxHmax(Integer.valueOf(textFieldH2X.getText()));	
+				enthalpyBkgImg.setDstH2(Double.valueOf(textFieldDstH1.getText()));
 			}
 		});
-		textFieldH2X.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldH2X.setText(String.valueOf(enthalpyBkgImg.getDstH2()));
-		textFieldH2X.setBounds(408, 23, 46, 20);
-		panel_1.add(textFieldH2X);
-		textFieldH2X.setColumns(10);
+		textFieldDstH2.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldDstH2.setText(String.valueOf(enthalpyBkgImg.getDstH2()));
+		textFieldDstH2.setBounds(408, 23, 46, 20);
+		panel_1.add(textFieldDstH2);
+		textFieldDstH2.setColumns(10);
 
 		JLabel lblKjkg0 = new JLabel("kJ/kg");
 		lblKjkg0.setBounds(211, 28, 46, 14);
@@ -365,7 +331,7 @@ public class WinConfEnthalpy extends JFrame {
 
 		JPanel panel_2 = new JPanel();
 		panel_2.setBorder(new TitledBorder(null, "Pression", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_2.setBounds(10, 187, 514, 91);
+		panel_2.setBounds(10, 209, 514, 91);
 		panel.add(panel_2);
 		panel_2.setLayout(null);
 
@@ -376,13 +342,13 @@ public class WinConfEnthalpy extends JFrame {
 		lblPOrigine.setBounds(30, 22, 64, 50);
 		panel_2.add(lblPOrigine);
 
-		textFieldP1Y = new JTextField();
-		textFieldP1Y.setToolTipText("Multiple / Log10 ");
-		textFieldP1Y.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldP1Y.setText(String.valueOf(enthalpyBkgImg.getDstP2()));
-		textFieldP1Y.setBounds(155, 22, 46, 20);
-		panel_2.add(textFieldP1Y);
-		textFieldP1Y.setColumns(10);
+		textFieldDstP1 = new JTextField();
+		textFieldDstP1.setToolTipText("Multiple / Log10 ");
+		textFieldDstP1.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldDstP1.setText(String.valueOf(enthalpyBkgImg.getDstP2()));
+		textFieldDstP1.setBounds(155, 22, 46, 20);
+		panel_2.add(textFieldDstP1);
+		textFieldDstP1.setColumns(10);
 
 		JLabel lblPFinal = new JLabel("New label");
 		lblPFinal.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -390,13 +356,13 @@ public class WinConfEnthalpy extends JFrame {
 		lblPFinal.setBounds(275, 22, 64, 50);
 		panel_2.add(lblPFinal);
 
-		textFieldP2Y = new JTextField();
-		textFieldP2Y.setToolTipText("Multiple / Log10 ");
-		textFieldP2Y.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldP2Y.setText(String.valueOf(enthalpyBkgImg.getDstP1()));
-		textFieldP2Y.setBounds(410, 19, 46, 20);
-		panel_2.add(textFieldP2Y);
-		textFieldP2Y.setColumns(10);
+		textFieldDstP2 = new JTextField();
+		textFieldDstP2.setToolTipText("Multiple / Log10 ");
+		textFieldDstP2.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldDstP2.setText(String.valueOf(enthalpyBkgImg.getDstP1()));
+		textFieldDstP2.setBounds(410, 19, 46, 20);
+		panel_2.add(textFieldDstP2);
+		textFieldDstP2.setColumns(10);
 
 		JLabel lblBar0 = new JLabel("bar");
 		lblBar0.setBounds(208, 25, 57, 14);
@@ -478,51 +444,10 @@ public class WinConfEnthalpy extends JFrame {
 		label.setBounds(466, 40, 46, 14);
 		panel_2.add(label);
 
-		JPanel panel_3 = new JPanel();
-		panel_3.setLayout(null);
-		panel_3.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Relation Temp\u00E9rature / Pression", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel_3.setBounds(10, 289, 514, 91);
-		panel.add(panel_3);
-
-		JLabel lblTempPress = new JLabel("New label");
-		lblTempPress.setIcon(new ImageIcon(WinConfEnthalpy.class.getResource("/gui/images/PressionTemperature.png")));
-		lblTempPress.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		lblTempPress.setBackground(Color.WHITE);
-		lblTempPress.setBounds(10, 20, 106, 50);
-		panel_3.add(lblTempPress);
-
-		txtFieldTemperaturePressionFile = new JTextField();
-		txtFieldTemperaturePressionFile.setText("D:\\Users\\kluges1\\workspace\\pac-tool\\ressources\\R22\\P2T_R22.txt");
-		txtFieldTemperaturePressionFile.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtFieldTemperaturePressionFile.setColumns(10);
-		txtFieldTemperaturePressionFile.setBounds(126, 35, 273, 20);
-		panel_3.add(txtFieldTemperaturePressionFile);
-
-		JButton buttonLoadTemPressFile = new JButton("Fichier T/P");
-		buttonLoadTemPressFile.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				JFileChooser chooser = new JFileChooser();
-				FileNameExtensionFilter filter = new FileNameExtensionFilter( "Temperature-Pression files", "txt");
-				chooser.setFileFilter(filter);
-				File workingDirectory = new File(System.getProperty("user.dir"));
-				chooser.setCurrentDirectory(workingDirectory);
-				int returnVal = chooser.showOpenDialog(panel);
-				if(returnVal == JFileChooser.APPROVE_OPTION) {
-					//System.out.println("You chose to open this file: " + chooser.getSelectedFile().getAbsolutePath());
-					String filepath=chooser.getSelectedFile().getAbsolutePath();
-					txtFieldTemperaturePressionFile.setText(filepath);
-					enthalpy.setFileNameTP(txtFieldTemperaturePressionFile.getText());	
-
-				}
-			}
-		});
-		buttonLoadTemPressFile.setBounds(409, 34, 95, 23);
-		panel_3.add(buttonLoadTemPressFile);
-
 		JPanel panel_4 = new JPanel();
 		panel_4.setLayout(null);
 		panel_4.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Courbe de Staturation", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel_4.setBounds(10, 391, 514, 91);
+		panel_4.setBounds(10, 11, 514, 91);
 		panel.add(panel_4);
 
 		JLabel lblSatCurve = new JLabel("New label");
@@ -550,52 +475,70 @@ public class WinConfEnthalpy extends JFrame {
 				chooser.setCurrentDirectory(workingDirectory);
 				int returnVal = chooser.showOpenDialog(panel);
 				if(returnVal == JFileChooser.APPROVE_OPTION) {
-					//System.out.println("You chose to open this file: " + chooser.getSelectedFile().getAbsolutePath());
 					String filepath=chooser.getSelectedFile().getAbsolutePath();
+					logger.info("You chose to open this file: {} ",filepath);
 					txtFieldSatCurveFile.setText(filepath);
-					enthalpy.setFileNameSAT(txtFieldSatCurveFile.getText());	
 
+					//	pac.getRefrigerant().loadNewRefrigerant("./ressources/R22/Saturation Table R22.txt");
+					enthalpyWin.getPac().getRefrigerant().loadNewRefrigerant(filepath);
 				}
 			}
 		} );
 		btnLoadSatCurveFile.setBounds(409, 34, 95, 23);
 		panel_4.add(btnLoadSatCurveFile);
-		
-		JLabel lblEnthalpyRefrigerantName = new JLabel("Refrigerant Name :");
-		lblEnthalpyRefrigerantName.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblEnthalpyRefrigerantName.setBounds(20, 60, 104, 14);
-		panel.add(lblEnthalpyRefrigerantName);
-		
-		textFieldRefrigeranName = new JTextField();
-		textFieldRefrigeranName.addActionListener(new ActionListener() {
+
+		JPanel panel_3 = new JPanel();
+		panel_3.setLayout(null);
+		panel_3.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Fichier Image Enthalpie", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel_3.setBounds(10, 117, 514, 72);
+		panel.add(panel_3);
+
+		textFieldEnthalpyFilePath = new JTextField();
+		textFieldEnthalpyFilePath.setBounds(41, 31, 353, 20);
+		panel_3.add(textFieldEnthalpyFilePath);
+		textFieldEnthalpyFilePath.setText(enthalpyBkgImg.getRefrigerantImageFile());
+		textFieldEnthalpyFilePath.setColumns(10);
+
+		JButton btnEnthalpyFileChoice = new JButton("Fichier Image");
+		btnEnthalpyFileChoice.setBounds(407, 30, 97, 23);
+		panel_3.add(btnEnthalpyFileChoice);
+		btnEnthalpyFileChoice.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				enthalpy.setNameRefrigerant(textFieldRefrigeranName.getText());
-				logger.info("Refrigerant Name : {}",enthalpy.getNameRefrigerant());
-				enthalpyWin.repaint();
+
+				JFileChooser chooser = new JFileChooser();
+				FileNameExtensionFilter filter = new FileNameExtensionFilter( "Enthalpie files", "png");
+				chooser.setFileFilter(filter);
+				File workingDirectory = new File(System.getProperty("user.dir"));
+				chooser.setCurrentDirectory(workingDirectory);
+				int returnVal = chooser.showOpenDialog(panel);
+				if(returnVal == JFileChooser.APPROVE_OPTION) {
+					//System.out.println("You chose to open this file: " + chooser.getSelectedFile().getAbsolutePath());
+					String imagepath=chooser.getSelectedFile().getAbsolutePath();
+
+					logger.info("You chose to open this file: {} ",imagepath);
+					textFieldEnthalpyFilePath.setText(imagepath);
+
+					// Create Background Image
+					// EnthalpyBkgImg enthalpyBkgImg = new EnthalpyBkgImg("./ressources/R407/R407C/R407C couleur A4.png");
+					enthalpyWin.getEnthalpyBkgImg().loadNewBkgImg(imagepath);
+				}
 			}
 		});
-		textFieldRefrigeranName.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldRefrigeranName.setText(enthalpy.getNameRefrigerant());
-		textFieldRefrigeranName.setBounds(145, 56, 86, 20);
-		panel.add(textFieldRefrigeranName);
-		textFieldRefrigeranName.setColumns(10);
 	}
-	
+
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
 
 	public void applyConfig() {
-		
-		textFieldRefrigeranName.setText(enthalpy.getNameRefrigerant());
-		textFieldEnthalpyFilePath.setText(enthalpyBkgImg.getEnthalpyImageFile());
-		textFieldH1X.setText(String.valueOf(enthalpyBkgImg.getDstH1()));
-		textFieldH2X.setText(String.valueOf(enthalpyBkgImg.getDstH2()));
-		textFieldP1Y.setText(String.valueOf(enthalpyBkgImg.getDstP2()));
-		textFieldP2Y.setText(String.valueOf(enthalpyBkgImg.getDstP1()));
-		
-		
 
-		
+		textFieldDstH1.setText(String.valueOf(enthalpyBkgImg.getDstH1()));
+		textFieldDstH2.setText(String.valueOf(enthalpyBkgImg.getDstH2()));
+		textFieldDstP1.setText(String.valueOf(enthalpyBkgImg.getDstP2()));
+		textFieldDstP2.setText(String.valueOf(enthalpyBkgImg.getDstP1()));
+
+
+
+
 	}
 }
