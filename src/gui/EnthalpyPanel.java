@@ -35,12 +35,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import org.apache.logging.log4j.LogManager;
@@ -59,7 +54,6 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 	private Refrigerant refrigerant;		// Class Refrigerant to get Hmin, Hmax, ...
 
 	private EnthalpyBkgImg enthalpyBkgImg;	// Class RefrigerantBkgdImg for Background image
-	private BufferedImage bufBkgdImg;		// Refrigerant Image Background
 	private float alphaBlurBkgdImg;			// Blur the Background image  
 
 	private Point offset;					// Supplementary Offset
@@ -89,13 +83,12 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public EnthalpyPanel(Refrigerant vRefrigerant, EnthalpyBkgImg vimgRefrigerantBg, List<EnthalpyElDraw> vlEnthalpyElDraw) {
+	public EnthalpyPanel(Refrigerant vRefrigerant, EnthalpyBkgImg vEnthalpyBkgImg, List<EnthalpyElDraw> vlEnthalpyElDraw) {
 		super();
 
 		this.refrigerant = vRefrigerant;
 
-		this.enthalpyBkgImg = vimgRefrigerantBg;
-		this.bufBkgdImg = openRefrigerantImageFile();
+		this.enthalpyBkgImg = vEnthalpyBkgImg;
 		this.alphaBlurBkgdImg=0.5f;
 
 		this.offset = new Point(0,0);		
@@ -362,11 +355,11 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 		// -----------------------------------		
 
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,alphaBlurBkgdImg));
-		g2.drawImage(bufBkgdImg, 
+		g2.drawImage(enthalpyBkgImg.getBufBkgdImg(), 
 				getXmoH(enthalpyBkgImg.getDstH1()),
-				getYmoLog(enthalpyBkgImg.getDstP2()),
-				getXmoH(enthalpyBkgImg.getDstH2()),
 				getYmoLog(enthalpyBkgImg.getDstP1()),
+				getXmoH(enthalpyBkgImg.getDstH2()),
+				getYmoLog(enthalpyBkgImg.getDstP2()),
 
 				enthalpyBkgImg.getSrcx1(),
 				enthalpyBkgImg.getSrcy1(),
@@ -680,23 +673,7 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 	// 					Background Image File
 	// -------------------------------------------------------
 	
-	/**
-	 * Load the RefrigerantImageFile
-	 */
-	public BufferedImage openRefrigerantImageFile() {
-		BufferedImage image=null;
 
-		try {
-			File file = new File(enthalpyBkgImg.getRefrigerantImageFile());
-			logger.info("Read File: {}", enthalpyBkgImg.getRefrigerantImageFile());
-
-			image = ImageIO.read(file);	
-		} catch (IOException e) {
-			logger.error(e);
-			e.printStackTrace(); 
-		}
-		return image;
-	}
 
 	/**
 	 *  Set The image Blurring
@@ -709,14 +686,6 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 	// -------------------------------------------------------
 	// 					OTHERS
 	// -------------------------------------------------------
-
-	/** 
-	 * Clean the screen + Clear the list of the draw elements
-	 */
-	public void clean() {
-		//lEnthalpyElDraw.clear();
-		repaint();
-	}
 
 	/**
 	 * Center the Image
@@ -787,10 +756,6 @@ public class EnthalpyPanel extends JPanel implements MouseListener, MouseMotionL
 
 	public void setPCurveFollower(double p) {
 		this.PcurveFollower = p;
-	}
-
-	public void setBufBkgdImg(BufferedImage bufBkgdImg) {
-		this.bufBkgdImg = bufBkgdImg;
 	}
 
 	public double getPgMin() {

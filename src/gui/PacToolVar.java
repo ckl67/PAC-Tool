@@ -31,19 +31,19 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
-
-import enthalpy.Enthalpy;
 import gui.helpaboutdef.AboutWin;
 import gui.helpaboutdef.DefinitionWin;
 import gui.pac.CirculatorDistrWin;
 import gui.pac.CirculatorSrcWin;
 import gui.pac.CompressorWin;
 import log4j.Log4j2Config;
-import misc.MeasureTable;
-import misc.ResultTable;
 import mpoints.EloMeasurePoint;
+import mpoints.EloMeasureResult;
 import mpoints.MeasurePoint;
+import mpoints.MeasureResult;
 import pac.Pac;
+import translation.TLanguage;
+
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 import java.awt.SystemColor;
@@ -61,30 +61,32 @@ public class PacToolVar {
 	//  	All data are loaded once --> no problem of missing variables 
 			
 	private Pac pac;
-
-	private List<MeasurePoint> measurePointL;
-	private List<ElDraw> eDrawL;
-
 	private GuiConfig guiConfig;
-	private CompressorWin compressorWin;
+
+	private List<MeasurePoint> lMeasurePoints;
+	private MeasurePointTableWin measurePointTableWin;
+
+
+	private List<MeasureResult> lMeasureResults;
+	private MeasureResultTableWin measureResultTableWin;
 	
+	private List<EnthalpyElDraw> lEnthalpyElDraw;
+	
+	private EnthalpyBkgImg enthalpyBkgImg;
+	
+	private CompressorWin compressorWin;
 	private CirculatorDistrWin circulatorDistrWin;
 	private CirculatorSrcWin circulatorSrcWin;
 
 	private EnthalpyWin enthalpyWin;
-	private WinConfEnthalpy winConfEnthalpy;
+	private EnthalpyWinConf enthalpyWinConf;
 
-	private WinPressTemp winPressTemp;
-
-	private MeasureTable measureTable;
-	private MeasurePointTableWin measurePointTableWin;
-
-	private ResultTable resultTable;
-	private MeasureResultTableWin measureResultTableWin;
+	private PressTempWin pressTempWin;
 
 	private AboutWin aboutWin;
 	private DefinitionWin definitionWin;
-	private WinLogger winLogger;
+	private DefinitionWin abreviationWin;
+	private LoggerWin loggerWin;
 	
 	private JTextField panelPacToolTextFieldCOP;
 
@@ -141,46 +143,53 @@ public class PacToolVar {
 		int percent = 0;
 		
 		pac = new Pac();								// Contains Pac Features
+		pac.getRefrigerant().loadNewRefrigerant("./ressources/R22/Saturation Table R22.txt");
 		lblLoading.setText("Loading...... Pac Features");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
-		enthalpy = new Enthalpy();						// Enthalpy Features
-		lblLoading.setText("Loading...... Enthalpy Features");
-		percent = 100*i++/iterations;
-		progressBar.setValue(percent);
-
 		guiConfig = new GuiConfig();		// GUI Configuration
+		guiConfig.setLanguage(TLanguage.FRENCH);
 		lblLoading.setText("Loading...... GUI Configuration");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
-		eDrawL = new ArrayList<ElDraw>();				// Draw Elements
-		lblLoading.setText("Loading...... Draw Elements List");
-		percent = 100*i++/iterations;
-		progressBar.setValue(percent);
-
-		
-		measurePointL = new ArrayList<MeasurePoint>(); 
+		lMeasurePoints = new ArrayList<MeasurePoint>(); 
 		for (EloMeasurePoint p : EloMeasurePoint.values())
-			measurePointL.add(new MeasurePoint(p));
+			lMeasurePoints.add(new MeasurePoint(p));
 		lblLoading.setText("Loading...... Measure Point Elements List");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
-		
-		measureTable = new MeasureTable(measurePointL,guiConfig);
-		lblLoading.setText("Loading...... Measure Collections");
+		measurePointTableWin = new MeasurePointTableWin(lMeasurePoints, guiConfig);
+		lblLoading.setText("Loading...... Win. Measure Table");		
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
-		resultTable = new ResultTable(measurePointL,guiConfig);
-		lblLoading.setText("Loading...... Result Table");
+		lMeasureResults = new ArrayList<MeasureResult>(); 
+		for (EloMeasureResult p : EloMeasureResult.values()) {
+			lMeasureResults.add(new MeasureResult(p));
+		}
+		lblLoading.setText("Loading...... Measure Result Elements List");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
+		lEnthalpyElDraw = new ArrayList<EnthalpyElDraw>(); 
+		for (EloEnthalpyElDraw p : EloEnthalpyElDraw.values()) {
+			lEnthalpyElDraw.add(new EnthalpyElDraw(p));
+		}
+		lblLoading.setText("Loading...... Draw Elements List");
+		percent = 100*i++/iterations;
+		progressBar.setValue(percent);
+
+		// Create Background Image
+		// EnthalpyBkgImg enthalpyBkgImg = new EnthalpyBkgImg("./ressources/R407/R407C/R407C couleur A4.png");
+		enthalpyBkgImg = new EnthalpyBkgImg("./ressources/R22/R22 couleur A4.png");
+		lblLoading.setText("Loading...... Background Image");
+		percent = 100*i++/iterations;
+		progressBar.setValue(percent);
 		
-		winPressTemp = new WinPressTemp(enthalpy);
+		pressTempWin = new PressTempWin(pac.getRefrigerant());
 		lblLoading.setText("Loading...... Win. Temperature/Pressure");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
@@ -198,23 +207,13 @@ public class PacToolVar {
 		
 		panelPacToolTextFieldCOP = new JTextField();
 		
-		enthalpyWin = new EnthalpyWin(pac, enthalpy, measureTable, resultTable, measurePointL, eDrawL,winPressTemp, panelPacToolTextFieldCOP);
+		enthalpyWin = new EnthalpyWin(pac, enthalpy, measureResultTableWin, resultTable, lMeasurePoints, eDrawL,pressTempWin, panelPacToolTextFieldCOP);
 		lblLoading.setText("Loading...... Win. Enthalpy");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
-		winConfEnthalpy = new WinConfEnthalpy(enthalpyWin);
+		enthalpyWinConf = new EnthalpyWinConf(enthalpyWin);
 		lblLoading.setText("Loading...... Win. Configuration Enthalpy");		
-		percent = 100*i++/iterations;
-		progressBar.setValue(percent);
-
-		measurePointTableWin = new MeasurePointTableWin(measureTable);
-		lblLoading.setText("Loading...... Win. Measure Table");		
-		percent = 100*i++/iterations;
-		progressBar.setValue(percent);
-
-		measureResultTableWin = new MeasureResultTableWin(resultTable);
-		lblLoading.setText("Loading...... Win. Result Table");		
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
@@ -223,12 +222,17 @@ public class PacToolVar {
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
-		definitionWin = new DefinitionWin();
+		definitionWin = new DefinitionWin("Définition","/gui/helpaboutdef/Definitions.html");
 		lblLoading.setText("Loading...... Win. Definition");		
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 		
-		winLogger = new WinLogger(log4j2Config);
+		abreviationWin = new DefinitionWin("Abréviation","/gui/helpaboutdef/Abreviation.html");
+		lblLoading.setText("Loading...... Win. Definition");		
+		percent = 100*i++/iterations;
+		progressBar.setValue(percent);
+  
+		loggerWin = new LoggerWin(log4j2Config);
 		lblLoading.setText("Loading...... Win. Logger");		
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
@@ -241,79 +245,5 @@ public class PacToolVar {
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
 
-	public ResultTable getResultTable() {
-		return resultTable;
-	}
 
-	public Pac getPac() {
-		return pac;
-	}
-
-	public Enthalpy getEnthalpy() {
-		return enthalpy;
-	}
-
-	public GuiConfig getGuiConfig() {
-		return guiConfig;
-	}
-
-	public List<ElDraw> geteDrawL() {
-		return eDrawL;
-	}
-
-	public List<MeasurePoint> getMeasurePointL() {
-		return measurePointL;
-	}
-	
-	public CompressorWin getWinCompressor() {
-		return compressorWin;
-	}
-
-	public CirculatorDistrWin getWinCirculatorDistr() {
-		return circulatorDistrWin;
-	}
-
-	public CirculatorSrcWin getWinCirculatorSrc() {
-		return circulatorSrcWin;
-	}
-	
-	public EnthalpyWin getWinEnthalpy() {
-		return enthalpyWin;
-	}
-
-	public WinConfEnthalpy getWinConfEnthalpy() {
-		return winConfEnthalpy;
-	}
-
-	public AboutWin getWinAbout() {
-		return aboutWin;
-	}
-
-	public WinLogger getWinLogger() {
-		return winLogger;
-	}
-
-	public DefinitionWin getWinDefinition() {
-		return definitionWin;
-	}
-
-	public MeasurePointTableWin getWinMeasureTable() {
-		return measurePointTableWin;
-	}
-	
-	public MeasureResultTableWin getWinResultTable() {
-		return measureResultTableWin;
-	}
-
-	public WinPressTemp getWinPressTemp() {
-		return winPressTemp;
-	}
-	
-	public MeasureTable getMeasureTable() {
-		return measureTable;
-	}
-
-	public JTextField getPanelPacToolTextFieldCOP() {
-		return panelPacToolTextFieldCOP;
-	}
 }

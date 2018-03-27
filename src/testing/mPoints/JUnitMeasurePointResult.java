@@ -73,7 +73,7 @@ public class JUnitMeasurePointResult {
 
 		// Fill the list of Measure Results
 		for (EloMeasureResult p : EloMeasureResult.values()) {
-			lMeasureResults.get(p.id()).setValue(p,lMeasurePoints,pac);
+			lMeasureResults.get(p.id()).setValue(lMeasurePoints,pac);
 		}
 
 		for (int i = 0; i < lMeasureResults.size(); i++) {

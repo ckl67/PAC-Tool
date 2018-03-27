@@ -76,7 +76,7 @@ public class MeasurePointTableWin extends JFrame {
 
 					MeasurePointTableWin measurePointTableWin = new MeasurePointTableWin(lMeasurePoints, guiConfig); 
 					measurePointTableWin.setVisible(true);
-					
+
 					//Compute Points
 					//MeasurePoint mp1 = lMeasurePoints.get(EloMeasurePoint.P1.id());
 					MeasurePoint mp2 = lMeasurePoints.get(EloMeasurePoint.P2.id());
@@ -98,7 +98,7 @@ public class MeasurePointTableWin extends JFrame {
 					mp8.setValue(-10, pac, lMeasurePoints);
 
 					measurePointTableWin.updateTableValues(lMeasurePoints, guiConfig);				
-					
+
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -168,9 +168,9 @@ public class MeasurePointTableWin extends JFrame {
 					new Object[] {
 							" " + m.getMPObject().name(),
 							" " + m.getMPObject().getDefinition(guiConfig.getLanguage()),
-							m.getMP_T(),
-							m.getMP_P(),
-							m.getMP_H()
+							(int)(m.getMP_T()*100.0)/100,
+							(int)(m.getMP_P()*100.0)/100,
+							(int)(m.getMP_H()*100.0)/100
 					});
 		}
 		table = new JTable(defaultTableModel);

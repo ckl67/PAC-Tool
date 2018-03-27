@@ -36,7 +36,7 @@ import javax.swing.JRadioButton;
 import java.awt.GridLayout;
 import javax.swing.JCheckBox;
 
-public class WinLogger extends JFrame {
+public class LoggerWin extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private Log4j2Config log4j2Config;
@@ -65,7 +65,7 @@ public class WinLogger extends JFrame {
 
 					Log4j2Config log4jDynConfig1 = new Log4j2Config();
 					
-					WinLogger frame = new WinLogger(log4jDynConfig1);
+					LoggerWin frame = new LoggerWin(log4jDynConfig1);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -77,11 +77,11 @@ public class WinLogger extends JFrame {
 	// -------------------------------------------------------
 	// 						CREATE FRAME
 	// -------------------------------------------------------
-	public WinLogger(Log4j2Config vlog4j2Config) {
+	public LoggerWin(Log4j2Config vlog4j2Config) {
 		log4j2Config = vlog4j2Config;
 		
 		setTitle("Pac-Tool Logger");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(WinLogger.class.getResource("/gui/images/PAC-Tool_16.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(LoggerWin.class.getResource("/gui/images/PAC-Tool_16.png")));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 511, 285);
 		contentPane = new JPanel();

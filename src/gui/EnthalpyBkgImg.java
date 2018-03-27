@@ -18,6 +18,12 @@
  */
 package gui;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -26,7 +32,11 @@ public class EnthalpyBkgImg {
 	
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 	
-	private String imgRfgFile;			// Refrigerant image file (.png)		
+	// Refrigerant Background Image file name (.png)
+	private String fileNameBkgdImg;				
+
+	// Refrigerant Buffered Background Image
+	private BufferedImage bufBkgdImg;		
 
 	// Reference points chosen for H and P
 	private double dstH1; 
@@ -45,17 +55,27 @@ public class EnthalpyBkgImg {
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
-	public EnthalpyBkgImg(String fileImgBg) {
+	public EnthalpyBkgImg(String filename) {
 		
 		// Image
-		this.imgRfgFile = fileImgBg; // = "./ressources/R22/R22 couleur A4.png";
+		this.fileNameBkgdImg = filename; // = "./ressources/R22/R22 couleur A4.png";
+		
+		try {
+			File file = new File(filename);
+			logger.info("(BufferedImage)::  Read File: {}", filename);
+			bufBkgdImg = ImageIO.read(file);	
+		} catch (IOException e) {
+			logger.error(e);
+			bufBkgdImg = null;
+			e.printStackTrace(); 
+		}	
 
 		// Reference points chosen on the Curve 
-		// (Reference Up Corner Left)
 		this.dstH1 = 140; 	// 	H = 140 kJ/kg
 		this.dstH2 = 520; 	// 	H = 520	kJ/kg
-		this.dstP1 = 0.5;   //	P = 0.5	bar
+
 		this.dstP2 = 50;	//	P = 50 	bar	
+		this.dstP1 = 0.5;   //	P = 0.5	bar
 
 		// Zone to consider from the Background Image related to the points above
 		// Open with Paint !
@@ -63,17 +83,36 @@ public class EnthalpyBkgImg {
 		// (Reference Up Corner Left)
 		this.srcx1 = 153;
 		this.srcx2 = 2791;
-		this.srcy1 = 289;
-		this.srcy2 = 1678;
+
+		this.srcy2 = 289;
+		this.srcy1 = 1678;
 	    
+		logger.debug("(EnthalpyBkgImg)::  File ={}",fileNameBkgdImg);
+		logger.debug("(EnthalpyBkgImg)::    srcx1={}  srcx2={}  srcy1={}  srcy2={} ",srcx1,srcx2,srcy1,srcy2);
+		logger.debug("(EnthalpyBkgImg)::    dstH1={}  dstH2={}  dstP1={}  dstP2={} ",dstH1,dstH2,dstP1,dstP2);
+
 	}
 	
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
+	
+	public void loadNewEnthalpyBkgImg(String filename) {
+		this.fileNameBkgdImg = filename; // = "./ressources/R22/R22 couleur A4.png";
+		
+		try {
+			File file = new File(filename);
+			logger.info("(BufferedImage)::  Read File: {}", filename);
+			bufBkgdImg = ImageIO.read(file);	
+		} catch (IOException e) {
+			logger.error(e);
+			bufBkgdImg = null;
+			e.printStackTrace(); 
+		}	
 
-	public void loadNewBkgImg(String fileImgBg) {
-		this.imgRfgFile = fileImgBg; // = "./ressources/R22/R22 couleur A4.png";
+		logger.debug("(loadNewBkgImg)::  File ={}",fileNameBkgdImg);
+		logger.debug("loadNewBkgImg)::      srcx1={}  srcx2={}  srcy1={}  srcy2={} ",srcx1,srcx2,srcy1,srcy2);
+		logger.debug("loadNewBkgImg)::      dstH1={}  dstH2={}  dstP1={}  dstP2={} ",dstH1,dstH2,dstP1,dstP2);
 	}
 
 	
@@ -93,7 +132,7 @@ public class EnthalpyBkgImg {
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
 		JSONObject jsonObj = new JSONObject();  
-		jsonObj.put("RefrigerantImageFile", this.imgRfgFile);
+		jsonObj.put("RefrigerantImageFile", this.fileNameBkgdImg);
 		jsonObj.put("dstH1", this.dstH1);	
 		jsonObj.put("dstH2", this.dstH2);	
 		jsonObj.put("dstP1", this.dstP1);	
@@ -110,7 +149,7 @@ public class EnthalpyBkgImg {
 	 * @param jsonObj : JSON Object
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
-		this.imgRfgFile = (String) jsonObj.get("RefrigerantImageFile");
+		this.fileNameBkgdImg = (String) jsonObj.get("RefrigerantImageFile");
 		
 		this.dstH1 = ((Number) jsonObj.get("dstH1")).intValue() ;
 		this.dstH2 = ((Number) jsonObj.get("dstH2")).intValue() ;
@@ -193,13 +232,15 @@ public class EnthalpyBkgImg {
 
 
 	public void setRefrigerantImageFile(String imgRfgFile) {
-		this.imgRfgFile = imgRfgFile;
-		logger.info("(EnthalpyBkgImg):: setRefrigerantImageFile :: imgRfgFile = {}", imgRfgFile);
+		this.fileNameBkgdImg = imgRfgFile;
 	}
 
 	public String getRefrigerantImageFile() {
-		logger.info("(EnthalpyBkgImg):: getRefrigerantImageFile :: imgRfgFile = {}", imgRfgFile);
-		return imgRfgFile;
+		return fileNameBkgdImg;
+	}
+	
+	public BufferedImage getBufBkgdImg() {
+		return bufBkgdImg;
 	}
 
 }
