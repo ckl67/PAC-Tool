@@ -29,8 +29,6 @@ import java.util.Scanner;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
-import enthalpy.Enthalpy;
 import misc.Misc;
 import pac.Pac;
 
@@ -53,7 +51,7 @@ public class PacToolConfig {
 	 * @param fileName
 	 */
 	@SuppressWarnings("unchecked")
-	public static void saveConfigFile(Pac pac, Enthalpy enthalpy, GuiConfig guiConfig, String fileName) {
+	public static void saveConfigFile(Pac pac, GuiConfig guiConfig, String fileName) {
 
 		// Overall JSON object
 		JSONObject jsonObjPacTool = new JSONObject();
@@ -62,11 +60,6 @@ public class PacToolConfig {
 		JSONObject jsonObjPac = new JSONObject();
 		jsonObjPac = pac.getJsonObject();
 		jsonObjPacTool.put("PAC",jsonObjPac);
-
-		// Enthalpy (containing also EnthalpyBkgdImg)
-		JSONObject jsonObjEnthalpy = new JSONObject();
-		jsonObjEnthalpy = enthalpy.getJsonObject();
-		jsonObjPacTool.put("Enthalpy",jsonObjEnthalpy);
 
 		// GuiConfig
 		JSONObject jsonObjPrimeConfig = new JSONObject();
@@ -129,7 +122,7 @@ public class PacToolConfig {
 	 * @param guiConfig
 	 * @param fileName
 	 */
-	public static void readConfigFile(Pac pac, Enthalpy enthalpy, GuiConfig guiConfig, String fileName) {
+	public static void readConfigFile(Pac pac, GuiConfig guiConfig, String fileName) {
 		File file = new File (fileName);
 		Scanner sken = null;
 
@@ -162,12 +155,6 @@ public class PacToolConfig {
 		guiConfig.setJsonObject(jsonObjPrimeConfig);
 		//System.out.println(jsonObjPrimeConfig);
 				
-
-		// Enthalpy (containing also EnthalpyBkgdImg)
-		JSONObject jsonObjEnthalpy = (JSONObject) jsonObj.get("Enthalpy");
-		enthalpy.setJsonObject(jsonObjEnthalpy);
-		//System.out.println(jsonObjEnthalpy);
-
 		// PAC
 		JSONObject jsonObjPac = (JSONObject) jsonObj.get("PAC");
 		pac.setJsonObject(jsonObjPac);

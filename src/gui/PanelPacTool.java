@@ -43,18 +43,13 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import enthalpy.Enthalpy;
 import gui.pac.CirculatorDistrWin;
 import gui.pac.CirculatorSrcWin;
 import gui.pac.CompressorWin;
 import log4j.Log4j2Config;
-import misc.Comp;
-import misc.MeasureTable;
-import misc.ResultTable;
-import mpoints.EloMeasurePointSelection;
-import mpoints.EloMeasurePoint;
+import mpoints.EloMeasureResult;
 import mpoints.MeasurePoint;
+import mpoints.MeasureResult;
 import pac.Pac;
 import javax.imageio.ImageIO;
 
@@ -63,7 +58,6 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 
 	private static final long serialVersionUID = 1L;
 
-	//private static final Logger logger = LogManager.getLogger(PanelPacTool.class.getName());
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
 	// --------------------------------------------------------------------
@@ -75,18 +69,16 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 	 * 		INSTANCE VAR
 	 * ----------------------------------------*/
 
-	private List<MeasurePoint> measurePointL;
-	private List<ElDraw> eDrawL;
-	private Enthalpy enthalpy;
 	private Pac pac;
-	private MeasureTable measureTable;
-	private ResultTable resultTable;
+	private List<MeasurePoint> lMeasurePoints;
+	private List<MeasureResult> lMeasureResults;
+	private List<EnthalpyElDraw> lEnthalpyElDraw;	
+
 	private CompressorWin compressorWin;
 	private CirculatorDistrWin circulatorDistrWin;
 	private CirculatorSrcWin circulatorSrcWin;
 	private GuiConfig guiConfig;
 	private EnthalpyWin enthalpyWin;
-
 
 	private int bgImgWidth;
 	private  int bgImgHeight;
@@ -143,17 +135,14 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 	 * Create the application.
 	 */
 	public PanelPacTool(PacToolVar vpacToolVar) {
-		measurePointL = vpacToolVar.getMeasurePointL();
-		eDrawL = vpacToolVar.geteDrawL();
-		enthalpy = vpacToolVar.getEnthalpy();
+		lMeasurePoints = vpacToolVar.getlMeasurePoints();
 		pac = vpacToolVar.getPac();
-		measureTable = vpacToolVar.getMeasureTable();
-		resultTable = vpacToolVar.getResultTable();
-		compressorWin = vpacToolVar.getWinCompressor();
-		circulatorSrcWin = vpacToolVar.getWinCirculatorSrc();
-		circulatorDistrWin = vpacToolVar.getWinCirculatorDistr();
+		lMeasureResults = vpacToolVar.getlMeasureResults();
+		compressorWin = vpacToolVar.getCompressorWin();
+		circulatorSrcWin = vpacToolVar.getCirculatorSrcWin();
+		circulatorDistrWin = vpacToolVar.getCirculatorDistrWin();
 		guiConfig = vpacToolVar.getGuiConfig();
-		enthalpyWin = vpacToolVar.getWinEnthalpy();
+		enthalpyWin = vpacToolVar.getEnthalpyWin();
 		
 		textFieldCOP = vpacToolVar.getPanelPacToolTextFieldCOP();
 		
@@ -190,7 +179,7 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 
 
 	/**
-	 * Will return the nearest element id of measurePointL 
+	 * Will return the nearest element id of lMeasurePoints 
 	 * @param pX
 	 * @param pY
 	 * @return
@@ -200,10 +189,10 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 		int zoneX = 5;
 		int zoneY = 5;
 
-		for(int i=0;i<measurePointL.size();i++) {
-			int X = measurePointL.get(i).getMeasureObject().getXm();
-			int Y = measurePointL.get(i).getMeasureObject().getYm(); 		
-			if ( ( pX < (X+zoneX)) && ( pX > (X-zoneX)) && (pY < (Y+zoneY)) && ( pY > (Y-zoneY)) ) {
+		for(int i=0;i<lMeasurePoints.size();i++) {
+			int X = lMeasurePoints.get(i).getMPObject().getXm();
+			int Y = lMeasurePoints.get(i).getMPObject().getYm(); 		
+			if (  (Math.abs(pX-X) < zoneX)  && (Math.abs(pY-Y) < zoneY) ) {
 				id = i;
 			}
 		}
@@ -211,14 +200,14 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 	}
 
 	/**
-	 * Will return the element id of measurePointL for a name 
+	 * Will return the element id of lMeasurePoints for a name 
 	 * @param name
 	 * @return
 	 */
 	public int getIdForElem(String name) {
 		int id=-1;
-		for(int i=0;i<measurePointL.size();i++) {
-			if  (measurePointL.get(i).getMeasureObject().equals(name))
+		for(int i=0;i<lMeasurePoints.size();i++) {
+			if  (lMeasurePoints.get(i).getMPObject().equals(name))
 				id=i;
 		}
 		return id;	
@@ -255,24 +244,7 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 		btnReset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				logger.trace("Reset to Zero the measure points List");
-				for (int n = 0; n < measurePointL.size(); n++ ) {
-					measurePointL.get(n).clearMeasure();
-				}
-				logger.trace("Remove all Draw elements (eDrawL) (Clear the display)");
-				eDrawL.clear();
-				
-				logger.trace("Update MeasureTable");
-				measureTable.setAllTableValues();
 
-				logger.trace("Update ResultTable");
-				resultTable.setAllTableValues();
-			
-				logger.trace("Repaint and Complete enthalpyWin");
-				enthalpyWin.repaint();
-				enthalpyWin.updateAllTextField();
-				
-				logger.trace("COP ={}", Comp.cop(measurePointL,pac));
-				textFieldCOP.setText(String.valueOf(Comp.cop(measurePointL,pac)));
 			}
 		});
 
@@ -283,25 +255,7 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 		btnReCompute.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				logger.trace("Update the Measure Collection data ");
-				Comp.updateAllMeasurePoints(measurePointL,enthalpy,pac);
 
-				logger.trace("Update MeasureTable");
-				measureTable.setAllTableValues();
-
-				logger.trace("Update ResultTable");
-				resultTable.setAllTableValues();
-
-				logger.trace("Reinitialse the complete Draw elements with the Measure Collection");
-				eDrawL.clear();
-				eDrawL = ElDraw.createElDrawFrom(measurePointL,eDrawL);
-			
-				logger.trace("Repaint and Complete enthalpyWin");
-				enthalpyWin.repaint();
-				enthalpyWin.updateAllTextField();
-				
-				logger.trace("COP ={}", Comp.cop(measurePointL,pac));
-				textFieldCOP.setText(String.valueOf(Comp.cop(measurePointL,pac)));
 			}
 		});
 
@@ -328,43 +282,27 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 				int id = getIdNearest((int)textField.getX(),(int)textField.getY());
 				double inValue = Double.valueOf(textField.getText());
 
-				// HP1 = HP2 = PK_GAS = PK_LIQUID
-				if (id == EloMeasurePoint._PK_VAPOR_ID) {
-					measurePointL.get(EloMeasurePoint._PK_LIQUID_ID).setValue(inValue);
-					measurePointL.get(EloMeasurePoint._PK_LIQUID_ID).setMeasureChoiceStatus(EloMeasurePointSelection.Chosen);
-				}
-				if (id == EloMeasurePoint._PK_LIQUID_ID) {
-					measurePointL.get(EloMeasurePoint._PK_VAPOR_ID).setValue(inValue);
-					measurePointL.get(EloMeasurePoint._PK_VAPOR_ID).setMeasureChoiceStatus(EloMeasurePointSelection.Chosen);
-				}
-
-				// Affect Value to measurePointL
-				measurePointL.get(id).setValue(inValue);
-				// Indicate that the value has been chosen, 
-				// but there are some conditions to respect before 
-				// that the point can be validated 
-				measurePointL.get(id).setMeasureChoiceStatus(EloMeasurePointSelection.Chosen);
-
+				lMeasurePoints.get(id).setValue(inValue, pac, lMeasurePoints);
 				logger.trace("New values added {}",String.format("%.2f", inValue));
-				logger.trace("Update the Measure Collection data ");
-				Comp.updateAllMeasurePoints(measurePointL,enthalpy,pac);
 
-				logger.trace("Update MeasureTable");
-				measureTable.setAllTableValues();
+				// Fill the list of Measure Results
+				for (EloMeasureResult p : EloMeasureResult.values()) {
+					lMeasureResults.get(p.id()).setValue(lMeasurePoints,pac);
+				}
 
-				logger.trace("Update ResultTable");
-				resultTable.setAllTableValues();
-
-				logger.trace("Reinitialse the complete Draw elements with the Measure Collection");
-				eDrawL.clear();
-				eDrawL = ElDraw.createElDrawFrom(measurePointL,eDrawL);
+				// Compute the Draw element based on lMeasurePoints
+				for (EloEnthalpyElDraw p : EloEnthalpyElDraw.values()) {
+					lEnthalpyElDraw.get(p.ordinal()).set(lMeasurePoints);
+				}
 
 				logger.trace("Repaint and Complete enthalpyWin");
 				enthalpyWin.repaint();
 				enthalpyWin.updateAllTextField();
 
-				logger.trace("COP ={}", Comp.cop(measurePointL,pac));
-				textFieldCOP.setText(String.valueOf(Comp.cop(measurePointL,pac)));
+				;
+				
+				logger.trace("COP ={}", lMeasureResults.get(EloMeasureResult.COP.id()));
+				textFieldCOP.setText(String.valueOf(lMeasureResults.get(EloMeasureResult.COP.id())));
 
 				textField.setVisible(false);
 				textFieldUnity.setVisible(false);
@@ -400,8 +338,8 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 		g2d.drawImage(img,0, 0, this);
 
 		if (pointMatched) {
-			int x = measurePointL.get(pointMatched_id).getMeasureObject().getXm();
-			int y = measurePointL.get(pointMatched_id).getMeasureObject().getYm();
+			int x = lMeasurePoints.get(pointMatched_id).getMPObject().getXm();
+			int y = lMeasurePoints.get(pointMatched_id).getMPObject().getYm();
 
 			// Create Circle
 			Point2D center = new Point2D.Float(x, y);
@@ -413,7 +351,7 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 			g2d.fill(new Ellipse2D.Double(x-radius, y-radius, 2*radius, 2*radius));
 
 			// Definition Text 
-			String defTxt = measurePointL.get(pointMatched_id).getMeasureObject().getDefinition(guiConfig.getLanguage());
+			String defTxt = lMeasurePoints.get(pointMatched_id).getMPObject().getDefinition(guiConfig.getLanguage());
 			Font font = new Font(null, Font.PLAIN, 15);
 			g2d.setFont(font);
 
@@ -497,11 +435,11 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 				int id = getIdNearest(evt.getX(),evt.getY());
 				if (id >= 0 ) {
 					textField.setBounds(evt.getX(), evt.getY(), 80, 20);
-					textField.setText(String.valueOf(measurePointL.get(pointMatched_id).getValue()));
+					textField.setText(String.valueOf(lMeasurePoints.get(pointMatched_id).getValue()));
 					textField.setVisible(true);
 
 					textFieldUnity.setBounds(evt.getX()+80, evt.getY(), 30, 20);
-					textFieldUnity.setText(measurePointL.get(pointMatched_id).getMeasureObject().getUnity());
+					textFieldUnity.setText(lMeasurePoints.get(pointMatched_id).getMPObject().getUnity());
 					textFieldUnity.setVisible(true);
 				} else {
 					textField.setVisible(false);			

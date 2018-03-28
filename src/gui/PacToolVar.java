@@ -55,8 +55,8 @@ public class PacToolVar {
 	// -------------------------------------------------------
 	public static final String PACTool_Version = "Version Alpha 0.4.0";
 	
-	// Create all instances which will be used in WinPacTool + PanelPacTool
-	// AND which must be used outside of WinPacTool + PanelPacTool
+	// Create all instances which will be used in PacToolWin + PanelPacTool
+	// AND which must be used outside of PacToolWin + PanelPacTool
 	// 		By creating all the instances here, it assure that only 1 instance will be created
 	//  	All data are loaded once --> no problem of missing variables 
 			
@@ -207,7 +207,16 @@ public class PacToolVar {
 		
 		panelPacToolTextFieldCOP = new JTextField();
 		
-		enthalpyWin = new EnthalpyWin(pac, enthalpy, measureResultTableWin, resultTable, lMeasurePoints, eDrawL,pressTempWin, panelPacToolTextFieldCOP);
+		enthalpyWin = new EnthalpyWin(
+				guiConfig,
+				pac, 
+				lMeasurePoints, 
+				lMeasureResults,
+				enthalpyBkgImg,
+				lEnthalpyElDraw,
+				measurePointTableWin,
+				measureResultTableWin,
+				pressTempWin);	
 		lblLoading.setText("Loading...... Win. Enthalpy");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
@@ -244,6 +253,83 @@ public class PacToolVar {
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
+
+	public Pac getPac() {
+		return pac;
+	}
+
+	public GuiConfig getGuiConfig() {
+		return guiConfig;
+	}
+
+	public List<MeasurePoint> getlMeasurePoints() {
+		return lMeasurePoints;
+	}
+
+	public MeasurePointTableWin getMeasurePointTableWin() {
+		return measurePointTableWin;
+	}
+
+	public List<MeasureResult> getlMeasureResults() {
+		return lMeasureResults;
+	}
+
+	public MeasureResultTableWin getMeasureResultTableWin() {
+		return measureResultTableWin;
+	}
+
+	public List<EnthalpyElDraw> getlEnthalpyElDraw() {
+		return lEnthalpyElDraw;
+	}
+
+	public EnthalpyBkgImg getEnthalpyBkgImg() {
+		return enthalpyBkgImg;
+	}
+
+	public CompressorWin getCompressorWin() {
+		return compressorWin;
+	}
+
+	public CirculatorDistrWin getCirculatorDistrWin() {
+		return circulatorDistrWin;
+	}
+
+	public CirculatorSrcWin getCirculatorSrcWin() {
+		return circulatorSrcWin;
+	}
+
+	public EnthalpyWin getEnthalpyWin() {
+		return enthalpyWin;
+	}
+
+	public EnthalpyWinConf getEnthalpyWinConf() {
+		return enthalpyWinConf;
+	}
+
+	public PressTempWin getPressTempWin() {
+		return pressTempWin;
+	}
+
+	public AboutWin getAboutWin() {
+		return aboutWin;
+	}
+
+	public DefinitionWin getDefinitionWin() {
+		return definitionWin;
+	}
+
+	public DefinitionWin getAbreviationWin() {
+		return abreviationWin;
+	}
+
+	public LoggerWin getLoggerWin() {
+		return loggerWin;
+	}
+
+	public JTextField getPanelPacToolTextFieldCOP() {
+		return panelPacToolTextFieldCOP;
+	}
+
 
 
 }

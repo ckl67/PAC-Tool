@@ -100,6 +100,11 @@ public class EnthalpyWinConf extends JFrame {
 					pac.getRefrigerant().loadNewRefrigerant("./ressources/R22/Saturation Table R22.txt");
 					System.out.println(pac.getRefrigerant().getRfgName());
 
+					// Win Pressure Temperature
+					PressTempWin pressTempWin = new PressTempWin(pac.getRefrigerant());
+					pressTempWin.setVisible(true);
+
+					
 					// Set configuration
 					GuiConfig guiConfig = new GuiConfig();
 					guiConfig.setLanguage(TLanguage.FRENCH);
@@ -124,6 +129,11 @@ public class EnthalpyWinConf extends JFrame {
 
 					lMeasurePoints.get(EloMeasurePoint.P1.id()).setValue(10, pac, lMeasurePoints);
 
+					// Now we can display
+					MeasurePointTableWin measurePointTableWin = new MeasurePointTableWin(lMeasurePoints, guiConfig); 
+					measurePointTableWin.setVisible(true);
+
+					
 					// Create the List of Measure Results
 					List<MeasureResult> lMeasureResults;
 					lMeasureResults = new ArrayList<MeasureResult>(); 
@@ -135,6 +145,10 @@ public class EnthalpyWinConf extends JFrame {
 					for (EloMeasureResult p : EloMeasureResult.values()) {
 						lMeasureResults.get(p.id()).setValue(lMeasurePoints,pac);
 					}
+
+					// Now we can display
+					MeasureResultTableWin measureResultTableWin = new MeasureResultTableWin(lMeasureResults, guiConfig); 
+					measureResultTableWin.setVisible(true);
 
 					// Create an Empty list of Element Enthalpy Draw
 					List<EnthalpyElDraw> lEnthalpyElDraw;
@@ -156,11 +170,16 @@ public class EnthalpyWinConf extends JFrame {
 
 					// Now we go to create Window image
 					EnthalpyWin frame1 = new EnthalpyWin(
+							guiConfig,
 							pac, 
 							lMeasurePoints, 
 							lMeasureResults,
 							enthalpyBkgImg,
-							lEnthalpyElDraw);
+							lEnthalpyElDraw,
+							measurePointTableWin,
+							measureResultTableWin,
+							pressTempWin);
+
 					frame1.setVisible(true);
 
 					EnthalpyWinConf frame2 = new EnthalpyWinConf(frame1);

@@ -82,10 +82,10 @@ public class EnthalpyWin extends JFrame {
 	private List<EnthalpyElDraw> lEnthalpyElDraw;	
 	private EnthalpyBkgImg enthalpyBkgImg;
 	private MeasurePointTableWin measurePointTableWin;
+	private MeasureResultTableWin measureResultTableWin;
 
 	private PressTempWin pressTempWin;
-	
-	
+
 	/* 	----------------------------------------
 	 * 		WIN BUILDER
 	 * ----------------------------------------*/
@@ -133,10 +133,11 @@ public class EnthalpyWin extends JFrame {
 					pac.getRefrigerant().loadNewRefrigerant("./ressources/R22/Saturation Table R22.txt");
 					System.out.println(pac.getRefrigerant().getRfgName());
 
+					// Win Pressure Temperature
 					PressTempWin pressTempWin = new PressTempWin(pac.getRefrigerant());
 					pressTempWin.setVisible(true);
 
-					
+
 					// Set configuration
 					GuiConfig guiConfig = new GuiConfig();
 					guiConfig.setLanguage(TLanguage.FRENCH);
@@ -161,9 +162,10 @@ public class EnthalpyWin extends JFrame {
 
 					lMeasurePoints.get(EloMeasurePoint.P1.id()).setValue(10, pac, lMeasurePoints);
 
+					// Now we can display
 					MeasurePointTableWin measurePointTableWin = new MeasurePointTableWin(lMeasurePoints, guiConfig); 
 					measurePointTableWin.setVisible(true);
-					
+
 					// Create the List of Measure Results
 					List<MeasureResult> lMeasureResults;
 					lMeasureResults = new ArrayList<MeasureResult>(); 
@@ -177,11 +179,15 @@ public class EnthalpyWin extends JFrame {
 						lMeasureResults.get(p.id()).setValue(lMeasurePoints,pac);
 					}
 
+					// Now we can display
+					MeasureResultTableWin measureResultTableWin = new MeasureResultTableWin(lMeasureResults, guiConfig); 
+					measureResultTableWin.setVisible(true);
+
+					
 					// Create an Empty list of Element Enthalpy Draw
 					// add set the correct value based on the information computed in lMeasurePoints
 					List<EnthalpyElDraw> lEnthalpyElDraw;
 					lEnthalpyElDraw = new ArrayList<EnthalpyElDraw>(); 
-
 					for (EloEnthalpyElDraw p : EloEnthalpyElDraw.values()) {
 						lEnthalpyElDraw.add(new EnthalpyElDraw(p));
 					}
@@ -190,7 +196,7 @@ public class EnthalpyWin extends JFrame {
 					for (EloEnthalpyElDraw p : EloEnthalpyElDraw.values()) {
 						lEnthalpyElDraw.get(p.ordinal()).set(lMeasurePoints);
 					}
-					
+
 					// Create Background Image
 					// EnthalpyBkgImg enthalpyBkgImg = new EnthalpyBkgImg("./ressources/R407/R407C/R407C couleur A4.png");
 					EnthalpyBkgImg enthalpyBkgImg = new EnthalpyBkgImg("./ressources/R22/R22 couleur A4.png");
@@ -204,6 +210,7 @@ public class EnthalpyWin extends JFrame {
 							enthalpyBkgImg,
 							lEnthalpyElDraw,
 							measurePointTableWin,
+							measureResultTableWin,
 							pressTempWin);
 					frame1.setVisible(true);
 
@@ -225,6 +232,7 @@ public class EnthalpyWin extends JFrame {
 			EnthalpyBkgImg venthalpyBkgImg,
 			List<EnthalpyElDraw> vlEnthalpyElDraw, 
 			MeasurePointTableWin vmeasurePointTableWin,
+			MeasureResultTableWin vmeasureResultTableWin,
 			PressTempWin vwinPressTemp
 			) {
 		guiConfig = vguiConfig;
@@ -233,8 +241,9 @@ public class EnthalpyWin extends JFrame {
 		lMeasureResults = vlMeasureResults;
 		lEnthalpyElDraw = vlEnthalpyElDraw;
 		measurePointTableWin = vmeasurePointTableWin;
+		measureResultTableWin = vmeasureResultTableWin;
 		pressTempWin = vwinPressTemp;
-		
+
 		enthalpyBkgImg = venthalpyBkgImg;
 
 		pointJPopupMenu = new Point();
@@ -384,21 +393,15 @@ public class EnthalpyWin extends JFrame {
 					enthalpyPanel.setPCurveFollower(pSat);
 					lblFollower.setText(String.format("PSat=%.2f / Tsat=%.2f",pSat,tSat));
 					repaint();
-					
-					try {
-						if (pressTempWin.getPanelTempPressDrawArea().isVisible()) {
-							pressTempWin.getPanelTempPressDrawArea().spotTempPressFollower(tSat);
-						}
-					} catch (NullPointerException e) {
-						// Not present ==> Do nothing !
-					}
+
+					pressTempWin.getPanelTempPressDrawArea().spotTempPressFollower(tSat);
 
 				} else if (rdbtnIsoTherm.isSelected()) {
 					double tIsotherm = Double.parseDouble(textFieldIsoThermTemp.getText()); 
-					
+
 					lEnthalpyElDraw.get(EloEnthalpyElDraw.ISOTHERM.ordinal()).set(lMeasurePoints, pac, tIsotherm);
 					lEnthalpyElDraw.get(EloEnthalpyElDraw.ISOTHERM.ordinal()).setVisible(true);
-					
+
 					double pIsotherm = refrigerant.getPIsotherm(hResult, tIsotherm, pResult);
 					double hIsotherm = refrigerant.getHIsotherm(hResult, tIsotherm);
 					enthalpyPanel.setHCurveFollower(hIsotherm);
@@ -406,14 +409,9 @@ public class EnthalpyWin extends JFrame {
 					lblFollower.setText(String.format("IsoTherm P=%.2f / T=%.2f",pIsotherm,tIsotherm));
 					repaint();
 
-					try {
-						if (pressTempWin.getPanelTempPressDrawArea().isVisible()) {
-							pressTempWin.getPanelTempPressDrawArea().spotTempPressFollower(tIsotherm);
-						}
-					} catch (NullPointerException e) {
-						// Not present ==> Do nothing !
-					}
-					
+
+					pressTempWin.getPanelTempPressDrawArea().spotTempPressFollower(tIsotherm);
+
 
 				} else if (rdbtnIsobar.isSelected()) {
 					// Hide Isotherm
@@ -430,13 +428,7 @@ public class EnthalpyWin extends JFrame {
 
 					repaint();
 
-					try {
-						if (pressTempWin.getPanelTempPressDrawArea().isVisible()) {
-							pressTempWin.getPanelTempPressDrawArea().spotTempPressFollower(tIsobar);
-						}
-					} catch (NullPointerException e) {
-						// Not present ==> Do nothing !
-					}
+					pressTempWin.getPanelTempPressDrawArea().spotTempPressFollower(tIsobar);
 
 				}
 				else {
@@ -453,7 +445,7 @@ public class EnthalpyWin extends JFrame {
 					logger.info("Before MP({})={}",mpid,lMeasurePoints.get(mpid).getMP_H());
 					lMeasurePoints.get(mpid).setMP_H(hResult);
 					logger.info("After MP({})={}",mpid,lMeasurePoints.get(mpid).getMP_H());
-					
+
 					// Fill the list of Measure Results
 					for (EloMeasureResult p : EloMeasureResult.values()) {
 						lMeasureResults.get(p.id()).setValue(lMeasurePoints,pac);
@@ -465,6 +457,8 @@ public class EnthalpyWin extends JFrame {
 					}
 					repaint();
 					measurePointTableWin.updateTableValues(lMeasurePoints,guiConfig);
+					measureResultTableWin.updateTableValues(lMeasureResults, guiConfig);				
+
 				}
 			}
 		});
@@ -628,6 +622,14 @@ public class EnthalpyWin extends JFrame {
 		});
 	}
 
+	// -------------------------------------------------------
+	// 							METHOD
+	// -------------------------------------------------------
+
+	public void applyConfig() {
+		
+	}
+
 	private void computeAll() {
 		// Fill the list of Measure Results
 		for (EloMeasureResult p : EloMeasureResult.values()) {
@@ -638,9 +640,9 @@ public class EnthalpyWin extends JFrame {
 		for (EloEnthalpyElDraw p : EloEnthalpyElDraw.values()) {
 			lEnthalpyElDraw.get(p.ordinal()).set(lMeasurePoints);
 		}
-		
+
 	}
-	
+
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------

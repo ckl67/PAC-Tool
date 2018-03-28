@@ -48,7 +48,7 @@ public class PacTool {
 		
 		PacToolVar pacToolVar = new PacToolVar(log4j2Config);
 		
-		WinPacTool winPacTool = new WinPacTool(pacToolVar); 
-		winPacTool.setVisible(true);
+		PacToolWin pacToolWin = new PacToolWin(pacToolVar); 
+		pacToolWin.setVisible(true);
 	}
 }
