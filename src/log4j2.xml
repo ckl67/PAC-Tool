@@ -1,34 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- status will define the configuration level of log4j2 configuration file -->
 <Configuration status="error" name="XMLPACTOOL">
+
 	<Appenders>
 
-		<!-- Create Log "Console" -->
 		<Console name="Console" target="SYSTEM_OUT">
-			<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n" />
+			<PatternLayout
+				pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		</Console>
-
-		<!-- Create Log File Log File will be created and added by to the logger 
-			by program !! -->
 
 	</Appenders>
 
-
+	<!-- Levels used for identifying the severity of an event. Levels are organized 
+		from most specific to least: OFF (No logging) FATAL (little data) ERROR WARN 
+		INFO DEBUG TRACE (a lot of data) ALL (least specific, all data) -->
 	<Loggers>
-		<Root level="error">
-			<AppenderRef ref="Console" />
+		<Root level="ALL">
+			<AppenderRef ref="Console" level="DEBUG" />
 		</Root>
 
-		<Logger name="refrigerant" level="info" additivity="false">
-			<AppenderRef ref="Console" />
+		<Logger name="coolant" level="ALL" additivity="false">
+			<AppenderRef ref="Console" level="DEBUG" />
 		</Logger>
 
-		<Logger name="mpoints" level="error" additivity="false">
-			<AppenderRef ref="Console" />
+		<Logger name="gui" level="ALL" additivity="false">
+			<AppenderRef ref="Console" level="DEBUG" />
 		</Logger>
 
-		<Logger name="gui" level="debug" additivity="false">
-			<AppenderRef ref="Console" />
+		<Logger name="mpoints" level="ALL" additivity="false">
+			<AppenderRef ref="Console" level="DEBUG" />
+		</Logger>
+
+		<Logger name="pac" level="ALL" additivity="false">
+			<AppenderRef ref="Console" level="DEBUG" />
+		</Logger>
+
+		<Logger name="refrigerant" level="ALL" additivity="false">
+			<AppenderRef ref="Console" level="DEBUG" />
 		</Logger>
 
 	</Loggers>

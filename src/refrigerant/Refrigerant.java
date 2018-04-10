@@ -29,6 +29,7 @@ public class Refrigerant extends SatCurve {
 		this.rfgP = 0.0;
 		this.rfgT = 0.0; 
 		this.rfgH = 0.0; 	
+		
 	}
 
 	/*

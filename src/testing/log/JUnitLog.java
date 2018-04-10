@@ -1,39 +1,8 @@
-/*
- * - PAC-Tool - 
- * Tool for understanding basics and computation of PAC (Pompe à Chaleur)
- * Copyright (C) 2016 christian.klugesherz@gmail.com
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License (version 2)
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- */
-package gui;
+﻿package testing.log;
 
-import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.Toolkit;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.UIManager;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
 import java.io.Serializable;
 import java.nio.file.Paths;
 import java.util.Map;
-import java.awt.event.ActionEvent;
-import javax.swing.border.TitledBorder;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,247 +14,56 @@ import org.apache.logging.log4j.core.config.AppenderRef;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.layout.PatternLayout;
-import javax.swing.JRadioButton;
-import java.awt.GridLayout;
-import java.awt.Font;
+import org.junit.Test;
+import refrigerant.Refrigerant;
 
+public class JUnitLog {
 
-public class LoggerWin extends JFrame {
+	private static final Logger log = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
-	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
+	@Test
+	public void test() {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-	private JTextField textFieldLoggerFilePath;
-	private JRadioButton rdbtnLevelTrace;
-	private JRadioButton rdbtnLevelDebug;
-	private JRadioButton rdbtnLevelInfo;
-	private JRadioButton rdbtnLevelError;
-	private JRadioButton rdbtnLevelOff;
-	private JTextField txtPactoollog;
-	private JPanel panel;
-	private JRadioButton rdbtnFile;
-	private JRadioButton rdbtnConsole;
-	private JButton btnDebug;
+		// -------------------------------------------------------
+		// 							TEST
+		// -------------------------------------------------------
 
-	// -------------------------------------------------------
-	// 						TEST
-	// -------------------------------------------------------
-	public static void main(String[] args) {
+		System.out.println(" Logger based on XML file" );
+		log.error("Before altering the appender!");
+		displayLoggerRootLevel();
+		System.out.println(" Set Root Logger to INFO ");
+		setLoggerLevel(LogManager.ROOT_LOGGER_NAME, Level.INFO);
+		System.out.println(" Root Logger Level = " + getLoggerLevel(LogManager.ROOT_LOGGER_NAME));
 
-		try {
-			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		Refrigerant ref1 = new Refrigerant();
 
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoggerWin frame = new LoggerWin();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+		// Will remove all Loggers, except the root logger, and set Console Level to OFF
+		System.out.println(" All Declared Loggers " + getAllDeclaredLoggers().toString());
+		removeAllLoggerExceptRoot();
+		System.out.println(" All Declared Loggers " + getAllDeclaredLoggers().toString());
+		setLoggerLevel(LogManager.ROOT_LOGGER_NAME, Level.OFF);
+		System.out.println(" Root Logger Level = " + getLoggerLevel(LogManager.ROOT_LOGGER_NAME));
+		System.out.println("");
 
-	// -------------------------------------------------------
-	// 						CREATE FRAME
-	// -------------------------------------------------------
-	public LoggerWin() {
-	
-		setTitle("Pac-Tool Logger");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(LoggerWin.class.getResource("/gui/images/PAC-Tool_16.png")));
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 507, 311);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-
-		JLabel lblPathFile = new JLabel("Log File Path :");
-		lblPathFile.setBounds(22, 26, 102, 14);
-		contentPane.add(lblPathFile);
-
-		textFieldLoggerFilePath = new JTextField();
-		textFieldLoggerFilePath.setEditable(false);
-		textFieldLoggerFilePath.setText(getUserAppDirectory());
-		textFieldLoggerFilePath.setBounds(134, 23, 304, 20);
-		contentPane.add(textFieldLoggerFilePath);
-		textFieldLoggerFilePath.setColumns(10);
-
-		JButton btnClose = new JButton("Close");
-		btnClose.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-			}
-		});
-		btnClose.setBounds(375, 228, 89, 23);
-		contentPane.add(btnClose);
-
-		JPanel panelLevel = new JPanel();
-		panelLevel.setBorder(new TitledBorder(null, "Level", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelLevel.setBounds(24, 126, 440, 61);
-		contentPane.add(panelLevel);
-		panelLevel.setLayout(new GridLayout(0, 5, 0, 0));
-
-		rdbtnLevelTrace = new JRadioButton("Trace   >");
-		panelLevel.add(rdbtnLevelTrace);
-
-		rdbtnLevelDebug = new JRadioButton("Debug   >");
-		panelLevel.add(rdbtnLevelDebug);
-
-		rdbtnLevelInfo = new JRadioButton("Info   >");
-		panelLevel.add(rdbtnLevelInfo);
-
-		rdbtnLevelError = new JRadioButton("Error   >");
-		panelLevel.add(rdbtnLevelError);
-
-		rdbtnLevelOff = new JRadioButton("Off");
-		panelLevel.add(rdbtnLevelOff);
-
-		ButtonGroup groupLevel = new ButtonGroup();
-		groupLevel.add(rdbtnLevelTrace);
-		groupLevel.add(rdbtnLevelDebug);
-		groupLevel.add(rdbtnLevelInfo);
-		groupLevel.add(rdbtnLevelError);
-		groupLevel.add(rdbtnLevelOff);
-
-		JLabel lblFileName = new JLabel("Log File Name :");
-		lblFileName.setBounds(22, 62, 102, 14);
-		contentPane.add(lblFileName);
-
-		txtPactoollog = new JTextField();
-		txtPactoollog.setEditable(false);
-		txtPactoollog.setText("Pac-Tool.log");
-		txtPactoollog.setBounds(134, 54, 86, 20);
-		contentPane.add(txtPactoollog);
-		txtPactoollog.setColumns(10);
-
-		panel = new JPanel();
-		panel.setBorder(new TitledBorder(null, "Logger", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(22, 198, 219, 64);
-		contentPane.add(panel);
-		panel.setLayout(new GridLayout(0, 2, 0, 0));
-
-		rdbtnFile = new JRadioButton("File");
-		panel.add(rdbtnFile);
-
-		rdbtnConsole = new JRadioButton("Console (.xml)");
-		panel.add(rdbtnConsole);
-
-		ButtonGroup groupLog = new ButtonGroup();
-		groupLog.add(rdbtnFile);
-		groupLog.add(rdbtnConsole);
-
-		JButton btnApply = new JButton("Apply");
-		btnApply.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				if (rdbtnFile.isSelected()) {
-					// Will create the File Appender in <Appenders>
-					removeAllLoggerExceptRoot();
-					createFileAppender();
-
-					Level vlevel = Level.OFF;
-					if (rdbtnLevelTrace.isSelected()) 
-						vlevel = Level.TRACE;
-					else if (rdbtnLevelDebug.isSelected()) 
-						vlevel = Level.DEBUG;
-					else if (rdbtnLevelInfo.isSelected()) 
-						vlevel = Level.INFO;
-					else if (rdbtnLevelError.isSelected()) 
-						vlevel = Level.ERROR;
-					else if (rdbtnLevelOff.isSelected()) 
-						vlevel = Level.OFF;
-					else  
-						logger.debug("Error wrong Level");
-
-					createFileAppenderRefInRootLogger(vlevel);
-
-				} else {
-					// Will Read the XML file
-					((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
-					setRadioButtonLogLevel();
-					displayAllDeclaredLoggers();
-					displayAppenderRefRootLevels();
-				}
-			}
-		});
-		btnApply.setBounds(265, 228, 89, 23);
-		contentPane.add(btnApply);
-
-		btnDebug = new JButton("Test");
-		btnDebug.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		btnDebug.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				logger.fatal("---------------------------");
-				logger.trace("Test Trace");
-				logger.debug("Test Debug");
-				logger.info("Test Info");
-				logger.error("Test Error");
-			}
-		});
-		btnDebug.setBounds(375, 86, 51, 20);
-		contentPane.add(btnDebug);
 		
-		JLabel lblNewLabel = new JLabel("<html>Keep the file closed during loging !<br>\r\nEach new run of Pac-Tool will clean the Log File !\r\n<html>");
-		lblNewLabel.setBounds(134, 85, 239, 36);
-		contentPane.add(lblNewLabel);
+		// Will create the File Appender in <Appenders>
+		System.out.println(" All Declared Appenders " + getAllDeclaredAppenders().toString());
+		System.out.println(" Will create the File Appender");
+		createFileAppender();
+		System.out.println(" All Declared Appenders " + getAllDeclaredAppenders().toString());
 
-		setRadioButtonLogger();
-		setRadioButtonLogLevel();
+		// Add File AppenderRef in Root Logger + set Level of File Logger
+		System.out.println("Before to Add File AppenderRef");
+		displayAppenderRefRootLevels();
+		createFileAppenderRefInRootLogger(Level.INFO);
+		System.out.println("After to Add File AppenderRef");
+		displayAppenderRefRootLevels();
+
+		System.out.println("(P)----------- After altering the appender! We should only have FIle logger");
+
+		Refrigerant refrigerant = new Refrigerant("./ressources/R22/Saturation Table R22.txt");
+
 	}
-
-	// -------------------------------------------------------
-	// 							METHOD
-	// -------------------------------------------------------
-
-	public void setRadioButtonLogLevel() {
-
-		if (getUniqueAppenderRefRootName() == "File" ) {
-			if (getFileAppenderRefRootLevel() == Level.TRACE) 
-				rdbtnLevelTrace.setSelected(true);
-			else if (getFileAppenderRefRootLevel() == Level.DEBUG) 
-				rdbtnLevelDebug.setSelected(true);
-			else if (getFileAppenderRefRootLevel() == Level.INFO) 
-				rdbtnLevelInfo.setSelected(true);
-			else if (getFileAppenderRefRootLevel() == Level.ERROR) 
-				rdbtnLevelError.setSelected(true);
-			else if (getFileAppenderRefRootLevel() == Level.OFF) 
-				rdbtnLevelOff.setSelected(true);
-			else  
-				logger.error("(setRadioButtonLogLevel):: Wrong File level value");
-		} else if (getUniqueAppenderRefRootName() == "Console" ) {
-
-			if (getConsoleAppenderRefRootLevel() == Level.TRACE) 
-				rdbtnLevelTrace.setSelected(true);
-			else if (getConsoleAppenderRefRootLevel() == Level.DEBUG) 
-				rdbtnLevelDebug.setSelected(true);
-			else if (getConsoleAppenderRefRootLevel() == Level.INFO) 
-				rdbtnLevelInfo.setSelected(true);
-			else if (getConsoleAppenderRefRootLevel() == Level.ERROR) 
-				rdbtnLevelError.setSelected(true);
-			else if (getConsoleAppenderRefRootLevel() == Level.OFF) 
-				rdbtnLevelOff.setSelected(true);
-			else  
-				logger.error("(setRadioButtonLogLevel):: Wrong Console level value");
-		} else {
-			logger.error("(setRadioButtonLogLevel):: Wrong Logger value");
-		}
-	}
-
-	public void setRadioButtonLogger() {
-		if (getUniqueAppenderRefRootName() == "File" )
-			rdbtnFile.setSelected(true);
-		else if (getUniqueAppenderRefRootName() == "Console" ) 
-			rdbtnConsole.setSelected(true);
-		else
-			logger.error("(setRadioButtonLogger):: Wrong Logger value");
-	}
-
 
 	// -------------------------------------------------------------------------------------------
 	// 										Miscellaneous
@@ -318,7 +96,7 @@ public class LoggerWin extends JFrame {
 		and also that in "LoggerConfig" : 
 			Appender and AppenderRefs must be linked !
 			loggerConfig.getAppenders() --> Will return the Appenders in "Config". For me this is a BUG
-
+		
 			---"Config"---
 					Appenders
 							Appender(0)
@@ -341,7 +119,7 @@ public class LoggerWin extends JFrame {
 							-- Level : DEBUG
 					- Level -- ALL
 
-	 */
+	*/
 	// -------------------------------------------------------------------------------------------
 
 	// -------------------------------------------------------------------------------------------
@@ -365,7 +143,7 @@ public class LoggerWin extends JFrame {
 
 		ctx.updateLoggers();  
 	}
-
+	
 	/**
 	 * Will return all the Loggers 
 	 * @return
@@ -376,18 +154,7 @@ public class LoggerWin extends JFrame {
 		Configuration config = ctx.getConfiguration();
 		return( config.getLoggers() );
 	}
-
-	/**
-	 * Will Display all the Loggers 
-	 * @return
-	 */
-	@SuppressWarnings("resource")
-	public void displayAllDeclaredLoggers() {
-		LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-		Configuration config = ctx.getConfiguration();
-		logger.info("All Declared Loggers {}", config.getLoggers().toString());
-	}
-
+	
 
 	// -------------------------------------------------------------------------------------------
 	// 									Appenders in "Config"
@@ -420,7 +187,7 @@ public class LoggerWin extends JFrame {
 
 		// --- create the Appender
 		//<File name="LogFile" fileName="./Pac-Tool.log"
-		//		immediateFlush="true" append="false">
+		//		immediateFlush="false" append="false">
 		//		<PatternLayout
 		//			pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
 		//	</File>
@@ -429,7 +196,7 @@ public class LoggerWin extends JFrame {
 				.withName("File")
 				.withFileName(logPath + "/Pac-Tool.log")
 				.withAppend(false)
-				.withImmediateFlush(true)
+				.withImmediateFlush(false)
 				.withLayout(layout)
 				.build();
 
@@ -448,11 +215,13 @@ public class LoggerWin extends JFrame {
 		Configuration config = ctx.getConfiguration();
 		return( config.getAppenders() );
 	}
-
+	
 	// -------------------------------------------------------------------------------------------
 	// 								Appender and AppenderRef in "LoggerConfig"
 	//								(Appender and AppenderRefs must be linked)
 	// -------------------------------------------------------------------------------------------
+
+
 
 
 	/**   Add File appender in Root Logger
@@ -460,7 +229,7 @@ public class LoggerWin extends JFrame {
 	 * 
 	 * before
 	 *			<Root level=xxx>
-	 *				<AppenderRef ref="Console" level=.... />
+	 *				<AppenderRef ref="Console" level="OFF" />
 	 *			</Root>
 	 *	
 	 * After
@@ -495,6 +264,34 @@ public class LoggerWin extends JFrame {
 		ctx.updateLoggers();  
 	}
 
+	@SuppressWarnings("resource")
+	public void createConsoleAppenderRefInRootLogger(Level clevel) {
+
+		LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+		Configuration config= ctx.getConfiguration();
+
+		// The error done here was to get the loggerConfig !!
+		//	--> We have to create a new one
+		// LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
+
+		// Second Appender and AppenderRefs must be linked !!
+		AppenderRef ref1 = AppenderRef.createAppenderRef("Console", clevel, null);
+		AppenderRef[] refs = new AppenderRef[] { ref1  };
+
+		LoggerConfig loggerConfig  = LoggerConfig.createLogger(false, Level.ALL, LogManager.ROOT_LOGGER_NAME, "true", refs, null, config, null);
+
+		loggerConfig.addAppender(config.getAppender("Console"), clevel, null);
+
+		// Important to remove the root logger !
+		config.removeLogger(LogManager.ROOT_LOGGER_NAME);
+		config.addLogger(LogManager.ROOT_LOGGER_NAME, loggerConfig);
+
+		ctx.updateLoggers();  
+	}
+
+
+	
+	
 	// -------------------------------------------------------------------------------------------
 	// 								AppenderRef Levels in "LoggerConfig"
 	// -------------------------------------------------------------------------------------------
@@ -517,20 +314,21 @@ public class LoggerWin extends JFrame {
 		LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
 
 		for (AppenderRef ref : loggerConfig.getAppenderRefs()) {
-			logger.info("AppenderRef: {}, level: {}", ref.getRef(), ref.getLevel().toString());
+			System.out.printf("AppenderRef: %s, level: %s\n", ref.getRef(), ref.getLevel().toString());
 		}
 
-		logger.info("	--> LoggerConfig Level = {}",loggerConfig.getLevel());
-
+		System.out.println("	--> As information (Appenders of LoggerConfig cannot be displayed) ");
+		System.out.println("	--> LoggerConfig Level = " + loggerConfig.getLevel());
+		
 		// -----------------------------------------------------------------------
 		// Remark !
 		// With the following command, we will get the appenders of "Config" !
 		// loggerConfig.getAppenders();
 		// -----------------------------------------------------------------------
-
+		
 	}
 
-
+	
 	/**
 	 * getConsoleAppenderRefRootLevel()
 	 * Will return  DEBUG
@@ -540,21 +338,21 @@ public class LoggerWin extends JFrame {
 	 *	</Root>
 	 *
 	 */
-	@SuppressWarnings({ "resource"})
+	@SuppressWarnings({ "resource" })
 	public Level getConsoleAppenderRefRootLevel () {
 		Level vlevel = null;
-
+		
 		LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
 		Configuration config = ctx.getConfiguration();
 		LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
 
 		for (AppenderRef ref : loggerConfig.getAppenderRefs()) {
-			if (ref.getRef().toString().equals("Console"))
+			if (ref.getRef().toString().equals("Console") )
 				vlevel = ref.getLevel();
 		}
 		return vlevel;
 	}
-
+	
 	/**
 	 * getFileAppenderRefRootLevel()
 	 * Will return  INFO
@@ -567,46 +365,19 @@ public class LoggerWin extends JFrame {
 	@SuppressWarnings({ "resource" })
 	public Level getFileAppenderRefRootLevel () {
 		Level vlevel = null;
-
+		
 		LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
 		Configuration config = ctx.getConfiguration();
 		LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
 
 		for (AppenderRef ref : loggerConfig.getAppenderRefs()) {
-			if (ref.getRef().toString().equals("File"))
+			if (ref.getRef().toString().equals("Console") )
 				vlevel = ref.getLevel();
 		}
 		return vlevel;
 	}
 
-	/**
-	 * getUniqueAppenderRefRootName()
-	 * Will return the only one activate AppenderRef: in following case: Console
-	 * 	<Root level="ALL">
-	 *		<AppenderRef ref="Console" level="DEBUG" />
-	 *	</Root>
-	 *
-	 */
-	@SuppressWarnings({ "resource"})
-	public String getUniqueAppenderRefRootName () {
-		String name = null;
-
-		LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-		Configuration config = ctx.getConfiguration();
-		LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
-
-		for (AppenderRef ref : loggerConfig.getAppenderRefs()) {
-			if (ref.getRef().toString().equals("File") )
-				name = "File";
-			else if (ref.getRef().toString().equals("Console") )
-				name = "Console";
-			else
-				name = "Wrong";
-
-		}
-		return name;
-	}
-
+	
 	// -------------------------------------------------------------------------------------------
 	//									Logger Level in "LoggerConfig"
 	// -------------------------------------------------------------------------------------------
@@ -628,7 +399,8 @@ public class LoggerWin extends JFrame {
 		Configuration config = ctx.getConfiguration();
 		LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
 
-		logger.info("Logger Root = level: {}", loggerConfig.getLevel());
+
+		System.out.printf("Logger Root = level: %s\n", loggerConfig.getLevel());
 
 	}
 
@@ -680,4 +452,5 @@ public class LoggerWin extends JFrame {
 		loggerConfig.setLevel(vlevel);
 		ctx.updateLoggers();  
 	}
+
 }

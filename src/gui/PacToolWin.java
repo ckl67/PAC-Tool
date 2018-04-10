@@ -80,7 +80,7 @@ public class PacToolWin extends JFrame {
 	private DefinitionWin definitionWin;
 	private LoggerWin loggerWin;
 
-	private PanelPacTool contentPanel;
+	private PacToolPanel contentPanel;
 
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
@@ -93,6 +93,7 @@ public class PacToolWin extends JFrame {
 		pacToolVar = vpacToolVar;
 		
 		pac = vpacToolVar.getPac();
+		
 		guiConfig = vpacToolVar.getGuiConfig();
 		compressorWin = vpacToolVar.getCompressorWin();
 		circulatorDistrWin =  vpacToolVar.getCirculatorDistrWin();
@@ -133,7 +134,7 @@ public class PacToolWin extends JFrame {
 		// 													PANEL
 		// ===============================================================================================================
 
-		contentPanel = new PanelPacTool(pacToolVar);
+		contentPanel = new PacToolPanel(pacToolVar);
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		//setBounds(100, 10, contentPanel.getBgImgWidth()+7, contentPanel.getBgImgHeight()+49);
 		setBounds(100, 10, contentPanel.getBgImgWidth()+7, contentPanel.getBgImgHeight()+49);

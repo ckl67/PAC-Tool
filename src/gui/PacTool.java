@@ -23,8 +23,6 @@ import java.util.Locale;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import log4j.Log4j2Config;
-
 public class PacTool {
 	
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
@@ -37,16 +35,7 @@ public class PacTool {
 		// Force point (".") as decimal separator --> set your Locale
 		Locale.setDefault(new Locale("en", "US"));
 		
-		Log4j2Config log4j2Config = new Log4j2Config();
-		logger.info("Read the Appenders Declared");
-		logger.info("  All declared Appenders = {} ",log4j2Config.getAllDeclaredAppenders());
-		
-		logger.info("Read the Appenders Activated in the Logger");
-		logger.info("  Is Logger Console active --> {}", log4j2Config.isLoggerConsole());
-		logger.info("  Is Logger File active --> {}", log4j2Config.isLoggerLogFile());
-
-		
-		PacToolVar pacToolVar = new PacToolVar(log4j2Config);
+		PacToolVar pacToolVar = new PacToolVar();
 		
 		PacToolWin pacToolWin = new PacToolWin(pacToolVar); 
 		pacToolWin.setVisible(true);

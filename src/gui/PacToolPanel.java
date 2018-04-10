@@ -46,7 +46,6 @@ import org.apache.logging.log4j.Logger;
 import gui.pac.CirculatorDistrWin;
 import gui.pac.CirculatorSrcWin;
 import gui.pac.CompressorWin;
-import log4j.Log4j2Config;
 import mpoints.EloMeasureResult;
 import mpoints.MeasurePoint;
 import mpoints.MeasureResult;
@@ -54,7 +53,7 @@ import pac.Pac;
 import javax.imageio.ImageIO;
 
 
-public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionListener {
+public class PacToolPanel extends JPanel implements MouseListener,  MouseMotionListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -79,6 +78,9 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 	private CirculatorSrcWin circulatorSrcWin;
 	private GuiConfig guiConfig;
 	private EnthalpyWin enthalpyWin;
+
+	private MeasurePointTableWin measurePointTableWin;
+	private MeasureResultTableWin measureResultTableWin;
 
 	private int bgImgWidth;
 	private  int bgImgHeight;
@@ -106,19 +108,12 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {		
-				Log4j2Config log4j2Config = new Log4j2Config();
-				logger.info("Read the Appenders Declared");
-				logger.info("  All declared Appenders = {} ",log4j2Config.getAllDeclaredAppenders());
-				
-				logger.info("Read the Appenders Activated in the Logger");
-				logger.info("  Is Logger Console active --> {}", log4j2Config.isLoggerConsole());
-				logger.info("  Is Logger File active --> {}", log4j2Config.isLoggerLogFile());
 				
 				JFrame frame = new JFrame();
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
-				PanelPacTool panel1 = new PanelPacTool(new PacToolVar(log4j2Config));		
+				PacToolPanel panel1 = new PacToolPanel(new PacToolVar());		
 				frame.getContentPane().add(panel1, BorderLayout.CENTER);
 
 				frame.setBounds(100, 10, panel1.getBgImgWidth()+7, panel1.getBgImgHeight()+49);
@@ -134,16 +129,20 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 	/**
 	 * Create the application.
 	 */
-	public PanelPacTool(PacToolVar vpacToolVar) {
-		lMeasurePoints = vpacToolVar.getlMeasurePoints();
+	public PacToolPanel(PacToolVar vpacToolVar) {
 		pac = vpacToolVar.getPac();
+		lMeasurePoints = vpacToolVar.getlMeasurePoints();
 		lMeasureResults = vpacToolVar.getlMeasureResults();
+		lEnthalpyElDraw = vpacToolVar.getlEnthalpyElDraw();
 		compressorWin = vpacToolVar.getCompressorWin();
 		circulatorSrcWin = vpacToolVar.getCirculatorSrcWin();
 		circulatorDistrWin = vpacToolVar.getCirculatorDistrWin();
 		guiConfig = vpacToolVar.getGuiConfig();
 		enthalpyWin = vpacToolVar.getEnthalpyWin();
 		
+		measurePointTableWin = vpacToolVar.getMeasurePointTableWin();
+		measureResultTableWin = vpacToolVar.getMeasureResultTableWin();
+
 		textFieldCOP = vpacToolVar.getPanelPacToolTextFieldCOP();
 		
 		imgURL = "/gui/images/Cycle.png";
@@ -283,12 +282,14 @@ public class PanelPacTool extends JPanel implements MouseListener,  MouseMotionL
 				double inValue = Double.valueOf(textField.getText());
 
 				lMeasurePoints.get(id).setValue(inValue, pac, lMeasurePoints);
-				logger.trace("New values added {}",String.format("%.2f", inValue));
+				logger.debug("(initialize)::  New values added {} = {}",lMeasurePoints.get(id).getMPObject().name(), String.format("%.2f", inValue));
+				measurePointTableWin.updateTableValues(lMeasurePoints,guiConfig);
 
-				// Fill the list of Measure Results
+				// Compute the list of Measure Results
 				for (EloMeasureResult p : EloMeasureResult.values()) {
 					lMeasureResults.get(p.id()).setValue(lMeasurePoints,pac);
 				}
+				measureResultTableWin.updateTableValues(lMeasureResults, guiConfig);				
 
 				// Compute the Draw element based on lMeasurePoints
 				for (EloEnthalpyElDraw p : EloEnthalpyElDraw.values()) {

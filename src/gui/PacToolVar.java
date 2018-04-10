@@ -36,7 +36,6 @@ import gui.helpaboutdef.DefinitionWin;
 import gui.pac.CirculatorDistrWin;
 import gui.pac.CirculatorSrcWin;
 import gui.pac.CompressorWin;
-import log4j.Log4j2Config;
 import mpoints.EloMeasurePoint;
 import mpoints.EloMeasureResult;
 import mpoints.MeasurePoint;
@@ -55,8 +54,8 @@ public class PacToolVar {
 	// -------------------------------------------------------
 	public static final String PACTool_Version = "Version Alpha 0.4.0";
 	
-	// Create all instances which will be used in PacToolWin + PanelPacTool
-	// AND which must be used outside of PacToolWin + PanelPacTool
+	// Create all instances which will be used in PacToolWin + PacToolPanel
+	// AND which must be used outside of PacToolWin + PacToolPanel
 	// 		By creating all the instances here, it assure that only 1 instance will be created
 	//  	All data are loaded once --> no problem of missing variables 
 			
@@ -94,7 +93,7 @@ public class PacToolVar {
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
-	PacToolVar(Log4j2Config log4j2Config) {
+	PacToolVar() {
 
 		// ------ Frame ------------
 	    Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();	
@@ -167,17 +166,20 @@ public class PacToolVar {
 		progressBar.setValue(percent);
 
 		lMeasureResults = new ArrayList<MeasureResult>(); 
-		for (EloMeasureResult p : EloMeasureResult.values()) {
+		for (EloMeasureResult p : EloMeasureResult.values()) 
 			lMeasureResults.add(new MeasureResult(p));
-		}
 		lblLoading.setText("Loading...... Measure Result Elements List");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
+		measureResultTableWin = new MeasureResultTableWin(lMeasureResults, guiConfig); 
+		lblLoading.setText("Loading...... Win. Result Table");		
+		percent = 100*i++/iterations;
+		progressBar.setValue(percent);
+		
 		lEnthalpyElDraw = new ArrayList<EnthalpyElDraw>(); 
-		for (EloEnthalpyElDraw p : EloEnthalpyElDraw.values()) {
+		for (EloEnthalpyElDraw p : EloEnthalpyElDraw.values()) 
 			lEnthalpyElDraw.add(new EnthalpyElDraw(p));
-		}
 		lblLoading.setText("Loading...... Draw Elements List");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
@@ -241,7 +243,7 @@ public class PacToolVar {
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
   
-		loggerWin = new LoggerWin(log4j2Config);
+		loggerWin = new LoggerWin();
 		lblLoading.setText("Loading...... Win. Logger");		
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);

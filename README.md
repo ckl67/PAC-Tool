@@ -7,7 +7,7 @@ Outil qui permet de vérifier les données constructeur (COP) et de calculer le 
 
 # Chaîne de Développement
 La chaîne d'outil pour le développement est la suivante:  
-*Je donne ci-dessous l'ordre dans lequel je vous conseille de procéder pour l'installation de la chaîne de développement.*
+*Je donne ci-dessous l'ordre dans lequel je vous conseille de procéder à l'installation de la chaîne de développement.*
 
 # GitHub
 Service Web d'hébergement et de gestion de développement de logiciels se trouve [ici](https://github.com/ckl67/PAC-Tool)  
@@ -42,7 +42,7 @@ Afin de créer l'espace de travail sur votre PC, et obtenir une copie du dépôt
 [Eclipse IDE](https://www.eclipse.org/downloads/eclipse-packages/) *(Integrated Development Environment)* for Java Developers
 * Version minimale: Oxygene Release
 * Choisir: Eclipse Installer
-* Lors de l'installation choisir: Eclipse IDE for Java Developers
+* Lors de l'installation choisir: "Eclipse IDE for Java EE Developers"
 * Une fois installer, faire pointer sur le répertoire : <u>\Users\<votre compte windows>\workspace</u>
 
 ## Attention !
@@ -56,7 +56,8 @@ Permet de créer des interface graphique
 Sous Eclipse, à travers Help/Marketplace installer : **WindowBuilder**   
 
 ### Editeur HTML
-Editeur HTML, *(non wysiwyg)*  
+Editeur HTML, *(non wysiwyg)* 
+Cette opération est uniquement nécessaire dans le cas ou la version Eclipse installée est:  "Eclipse IDE for Java Developers"
 Sous Eclipse, à travers Help/Marketplace installer : **HTML Editor WPT**  
 A l'installation, il pourrait y avoir un conflit avec XML, dans ce cas je vous conseille de choisir : "Keep My installation the same"  
 *(Pour l'instant je n'ai pas réussi à trouver un éditeur HTML wysiwyg)*
@@ -83,10 +84,11 @@ log4j doit être téléchargé sur le site [officiel](https://logging.apache.org
 ### JSON
 Afin de pouvoir travailler avec du JSON, nous utilisons le fichier jar: json-simple  
 Il n'y a rien à faire ici. Les .jar files font déjà partis du projets.
-Cette opération est nécessaire que dans le cas d'une mise à jour de json-simple Pour plus d'explication voir [ici](https://www.tutorialspoint.com/json/json_java_example.htm)
+Cette opération est nécessaire que dans le cas d'une mise à jour de json-simple  
+Pour plus d'explication voir [ici](https://www.tutorialspoint.com/json/json_java_example.htm)
 
 # Éditeur HTML WYSIWYG
-[Bluegriffon](http://bluegriffon.org/index.html) est un excellent éditeur HTML WYSIWYG libre
+Pas de solution satisfaisante trouvée. Je reste sur la solution éditeur de texte.
 
 # Éditeur Markdown
 Markdown est un langage de balisage. Son but est d'offrir une syntaxe facile à lire et à écrire. Il y a un éditeur qui est intégrée à Eclipse, mais je préfère l'édituer [Markdown Monster](https://markdownmonster.west-wind.com/) 
@@ -101,7 +103,8 @@ Une introduction à l'outil peut se trouver [ici](https://developers.redhat.com/
 
 # Gestion de versions Git - Facultatif  
 [Git](https://git-scm.com/download/win) est intégré à Eclipse, mais je préfère utiliser SourceTree.  
-Git est donc intégré à SourceTree, mais afin de pouvoir créer une animation montrant l'évolution du développement, Git est nécessaire en local sous Windows
+Git est donc intégré à SourceTree.
+Mais afin de pouvoir créer une animation montrant l'évolution du développement, Git est nécessaire en local sous Windows
 
 # ffmpeg - Facultatif  
 [ffmpeg](https://ffmpeg.zeranoe.com/builds) est convertisseur vidéo gratuit, et est nécessaire pour Gource  
@@ -113,6 +116,8 @@ Attention, durant la génération de la vidéo, la fenêtre doit restée ouverte
 
 # Conversion Jar vers .Exec
 [Launch4j](http://launch4j.sourceforge.net/) est une application qui permet de créer des "lanceurs" *(exécutables Windows classiques)* pour des applications développées en Java.  
+Il n'y a rien à faire ici. Les fichiers font déjà partis du projets.
+
 Pour avoir une version standalone *(Java bundled)* il faut que Java soit installé dans un répertoire relatif.  
 Je conseille d'utiliser JDK, et de le copier sous: \workspace\pac-tool\inno\jar  
 Pour ce faire, et comme Oracle ne fournit plus des versions standalone, il faut procéder comme [suite](https://bgasparotto.com/convert-jdk-exe-zip/)

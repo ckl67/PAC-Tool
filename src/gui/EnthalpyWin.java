@@ -52,7 +52,6 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import log4j.Log4j2Config;
 import mpoints.EloMeasureResult;
 import mpoints.EloMeasurePoint;
 import mpoints.MeasurePoint;
@@ -112,7 +111,6 @@ public class EnthalpyWin extends JFrame {
 	// 				TEST THE APPLICATION STANDALONE 
 	// -------------------------------------------------------
 	public static void main(String[] args) {
-		new Log4j2Config();
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Throwable e) {
