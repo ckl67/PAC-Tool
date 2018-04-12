@@ -43,8 +43,9 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import gui.helpaboutdef.AboutWin;
-import gui.helpaboutdef.DefinitionWin;
+
+import gui.info.AboutWin;
+import gui.info.InfoWin;
 import gui.pac.CirculatorDistrWin;
 import gui.pac.CirculatorSrcWin;
 import gui.pac.CompressorWin;
@@ -77,7 +78,7 @@ public class PacToolWin extends JFrame {
 	private MeasureResultTableWin measureResultTableWin;
 
 	private AboutWin aboutWin;
-	private DefinitionWin definitionWin;
+	private InfoWin infoWin;
 	private LoggerWin loggerWin;
 
 	private PacToolPanel contentPanel;
@@ -103,7 +104,7 @@ public class PacToolWin extends JFrame {
 		measurePointTableWin = vpacToolVar.getMeasurePointTableWin();
 		measureResultTableWin = vpacToolVar.getMeasureResultTableWin();
 		aboutWin = vpacToolVar.getAboutWin();
-		definitionWin = vpacToolVar.getDefinitionWin();
+		infoWin = vpacToolVar.getDefinitionWin();
 		pressTempWin = vpacToolVar.getPressTempWin();
 		loggerWin = vpacToolVar.getLoggerWin();
 
@@ -379,8 +380,8 @@ public class PacToolWin extends JFrame {
 		mntmDefinitio.setIcon(new ImageIcon(PacToolWin.class.getResource("/gui/images/aide-index-16.png")));
 		mntmDefinitio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				logger.trace("JMenuItem: Open DefinitionWin");
-				definitionWin.setVisible(true);
+				logger.trace("JMenuItem: Open InfoWin");
+				infoWin.setVisible(true);
 
 			}
 		});

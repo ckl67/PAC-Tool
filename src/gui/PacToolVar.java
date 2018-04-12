@@ -31,8 +31,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
-import gui.helpaboutdef.AboutWin;
-import gui.helpaboutdef.DefinitionWin;
+
+import gui.info.AboutWin;
+import gui.info.InfoWin;
 import gui.pac.CirculatorDistrWin;
 import gui.pac.CirculatorSrcWin;
 import gui.pac.CompressorWin;
@@ -45,9 +46,16 @@ import translation.TLanguage;
 
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.awt.SystemColor;
 
 public class PacToolVar {
+
+	@SuppressWarnings("unused")
+	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
 	// -------------------------------------------------------
 	// 						CONSTANTES (DEFINE)
@@ -83,8 +91,8 @@ public class PacToolVar {
 	private PressTempWin pressTempWin;
 
 	private AboutWin aboutWin;
-	private DefinitionWin definitionWin;
-	private DefinitionWin abreviationWin;
+	private InfoWin infoWin;
+	private InfoWin abreviationWin;
 	private LoggerWin loggerWin;
 	
 	private JTextField panelPacToolTextFieldCOP;
@@ -93,7 +101,7 @@ public class PacToolVar {
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 
-	PacToolVar() {
+	PacToolVar(boolean defConsoleLoggerActivated) {
 
 		// ------ Frame ------------
 	    Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();	
@@ -233,17 +241,17 @@ public class PacToolVar {
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
-		definitionWin = new DefinitionWin("Définition","/gui/helpaboutdef/Definitions.html");
+		infoWin = new InfoWin("Définition","/gui/helpaboutdef/Definitions.html");
 		lblLoading.setText("Loading...... Win. Definition");		
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 		
-		abreviationWin = new DefinitionWin("Abréviation","/gui/helpaboutdef/Abreviation.html");
+		abreviationWin = new InfoWin("Abréviation","/gui/helpaboutdef/Abreviation.html");
 		lblLoading.setText("Loading...... Win. Definition");		
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
   
-		loggerWin = new LoggerWin();
+		loggerWin = new LoggerWin(defConsoleLoggerActivated);
 		lblLoading.setText("Loading...... Win. Logger");		
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
@@ -316,11 +324,11 @@ public class PacToolVar {
 		return aboutWin;
 	}
 
-	public DefinitionWin getDefinitionWin() {
-		return definitionWin;
+	public InfoWin getDefinitionWin() {
+		return infoWin;
 	}
 
-	public DefinitionWin getAbreviationWin() {
+	public InfoWin getAbreviationWin() {
 		return abreviationWin;
 	}
 

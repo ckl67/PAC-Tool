@@ -87,8 +87,39 @@ Il n'y a rien à faire ici. Les .jar files font déjà partis du projets.
 Cette opération est nécessaire que dans le cas d'une mise à jour de json-simple  
 Pour plus d'explication voir [ici](https://www.tutorialspoint.com/json/json_java_example.htm)
 
+### javamail
+Permet d'envoyer des mails.  
+Utile pour la gestion des BUGs, et l'envoi des Logs  
+Pour plus d'explication voir [ici](https://javaee.github.io/javamail/)  
+Il n'y a rien à faire ici. Les .jar files font déjà partis du projets.  
+
 # Éditeur HTML WYSIWYG
-Pas de solution satisfaisante trouvée. Je reste sur la solution éditeur de texte.
+L'éditeur HTML utilisé est un éditeur en ligne: https://html-online.com/editor/
+
+## Quelques remarques
+1. La sortie généré avec l'éditeur en ligne doit être associé avec des balises html
+2. Pour chaque modification, un "Refresh" du projet est nécessaire
+
+## Balise HTML
+
+Ci-dessous les balises à ajouter
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta content="text/html">
+<title></title>
+</head>
+<body>
+
+
+
+
+</body>
+</html>
+```
+
 
 # Éditeur Markdown
 Markdown est un langage de balisage. Son but est d'offrir une syntaxe facile à lire et à écrire. Il y a un éditeur qui est intégrée à Eclipse, mais je préfère l'édituer [Markdown Monster](https://markdownmonster.west-wind.com/) 
@@ -160,6 +191,7 @@ Télécharcher un Tutoriel sur Maxima
 
 ## Conseils
 Pour le test final, préférer la méthode en ligne de commande :
+Dans le répertoire jar, lancez:
 
 ```txt
 java -jar PAC-Tool.java

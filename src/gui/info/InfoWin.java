@@ -16,7 +16,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-package gui.helpaboutdef;
+package gui.info;
 
 import java.awt.EventQueue;
 import javax.swing.JEditorPane;
@@ -33,10 +33,9 @@ import java.io.InputStreamReader;
 
 import javax.swing.JScrollPane;
 
-public class DefinitionWin extends JFrame  {
+public class InfoWin extends JFrame  {
 
 	private static final long serialVersionUID = 1L;
-	//private static final Logger logger = LogManager.getLogger(DefinitionWin.class.getName());
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
 	// -------------------------------------------------------
@@ -56,11 +55,14 @@ public class DefinitionWin extends JFrame  {
 			public void run() {
 				try {
 
-					DefinitionWin window1 = new DefinitionWin("Définition","/gui/helpaboutdef/Definitions.html");
+					InfoWin window1 = new InfoWin("Définition","/gui/info/Definitions.html");
 					window1.setVisible(true);
 
-					DefinitionWin window2 = new DefinitionWin("Abréviation","/gui/helpaboutdef/Abreviation.html");
+					InfoWin window2 = new InfoWin("Abréviation","/gui/info/Abreviation.html");
 					window2.setVisible(true);
+
+					InfoWin window3 = new InfoWin("Issue","/gui/info/IssueEmail.html");
+					window3.setVisible(true);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -75,8 +77,17 @@ public class DefinitionWin extends JFrame  {
 
 	/**
 	 * Create the application.
+	 * @wbp.parser.constructor
 	 */
-	public DefinitionWin(String vtitle, String vfile) {
+	public InfoWin(String vtitle, String vfile) {
+		mInfoWin(vtitle, vfile, 450);
+	}
+	
+	public InfoWin(String vtitle, String vfile, int width) {
+		mInfoWin(vtitle, vfile, width);
+	}
+
+	private void mInfoWin(String vtitle, String vfile, int width) {
 		StringBuilder contentBuilder = new StringBuilder();
 
 		try {
@@ -85,7 +96,7 @@ public class DefinitionWin extends JFrame  {
 			// A resource in a jar file is not a File, so you can't treat it as one.
 			// Use getResourceAsStream and use InputStreamReader instead of FileReader. 
 
-			InputStream i = DefinitionWin.class.getResourceAsStream(vfile);
+			InputStream i = InfoWin.class.getResourceAsStream(vfile);
 			BufferedReader in = new BufferedReader(new InputStreamReader(i));
 		    String str;
 		    while ((str = in.readLine()) != null) {
@@ -93,12 +104,13 @@ public class DefinitionWin extends JFrame  {
 		    }
 		    in.close();
 		} catch (IOException e) {
-			logger.error("Ops! (DefinitionWin)", e);
+			logger.error("Ops! (InfoWin)", e);
 		}
 		htmlcontent = contentBuilder.toString();
 		
-		initialize(vtitle);
+		initialize(vtitle,width);	
 	}
+
 
 	// -------------------------------------------------------
 	// 							METHOD
@@ -106,7 +118,7 @@ public class DefinitionWin extends JFrame  {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize(String vtitle) {
+	private void initialize(String vtitle,int width) {
 		
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -114,10 +126,10 @@ public class DefinitionWin extends JFrame  {
 			logger.info(e);
 		}
 
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, width, 300);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		setIconImage(Toolkit.getDefaultToolkit().getImage(DefinitionWin.class.getResource("/gui/images/PAC-Tool_16.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(InfoWin.class.getResource("/gui/images/PAC-Tool_16.png")));
 		setTitle(vtitle);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -128,6 +140,7 @@ public class DefinitionWin extends JFrame  {
 		txtdef.setContentType("text/html");
 		txtdef.setText(htmlcontent);
 		scrollPane.setViewportView(txtdef);
+		txtdef.setCaretPosition(1);
 		
 	}
 

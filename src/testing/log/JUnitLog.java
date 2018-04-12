@@ -35,7 +35,7 @@ public class JUnitLog {
 		setLoggerLevel(LogManager.ROOT_LOGGER_NAME, Level.INFO);
 		System.out.println(" Root Logger Level = " + getLoggerLevel(LogManager.ROOT_LOGGER_NAME));
 
-		Refrigerant ref1 = new Refrigerant();
+		new Refrigerant();
 
 		// Will remove all Loggers, except the root logger, and set Console Level to OFF
 		System.out.println(" All Declared Loggers " + getAllDeclaredLoggers().toString());
@@ -61,7 +61,7 @@ public class JUnitLog {
 
 		System.out.println("(P)----------- After altering the appender! We should only have FIle logger");
 
-		Refrigerant refrigerant = new Refrigerant("./ressources/R22/Saturation Table R22.txt");
+		new Refrigerant("./ressources/R22/Saturation Table R22.txt");
 
 	}
 

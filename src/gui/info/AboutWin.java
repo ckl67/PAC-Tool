@@ -16,7 +16,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-package gui.helpaboutdef;
+package gui.info;
 
 import javax.swing.JFrame;
 import javax.swing.JTextPane;
@@ -79,7 +79,7 @@ public class AboutWin extends JFrame {
 			// A resource in a jar file is not a File, so you can't treat it as one.
 			// Use getResourceAsStream and use InputStreamReader instead of FileReader. 
 
-			InputStream i = DefinitionWin.class.getResourceAsStream("/gui/helpaboutdef/About.html");
+			InputStream i = InfoWin.class.getResourceAsStream("/gui/info/About.html");
 			BufferedReader in = new BufferedReader(new InputStreamReader(i));
 		    String str;
 		    while ((str = in.readLine()) != null) {
@@ -87,7 +87,7 @@ public class AboutWin extends JFrame {
 		    }
 		    in.close();
 		} catch (IOException e) {
-			logger.error("Ops! (DefinitionWin)", e);
+			logger.error("Ops! (InfoWin)", e);
 		}
 		htmlcontent = contentBuilder.toString();
 		initialize();

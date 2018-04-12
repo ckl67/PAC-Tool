@@ -21,7 +21,7 @@ package gui.pac;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import gui.GuiConfig;
-import gui.helpaboutdef.AboutWin;
+import gui.info.AboutWin;
 
 import java.awt.EventQueue;
 import javax.swing.JPanel;

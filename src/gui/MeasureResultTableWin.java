@@ -25,7 +25,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import gui.helpaboutdef.AboutWin;
+
+import gui.info.AboutWin;
 import mpoints.EloMeasurePoint;
 import mpoints.EloMeasureResult;
 import mpoints.MeasurePoint;

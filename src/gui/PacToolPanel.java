@@ -113,7 +113,7 @@ public class PacToolPanel extends JPanel implements MouseListener,  MouseMotionL
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
-				PacToolPanel panel1 = new PacToolPanel(new PacToolVar());		
+				PacToolPanel panel1 = new PacToolPanel(new PacToolVar(true));		
 				frame.getContentPane().add(panel1, BorderLayout.CENTER);
 
 				frame.setBounds(100, 10, panel1.getBgImgWidth()+7, panel1.getBgImgHeight()+49);
@@ -206,7 +206,7 @@ public class PacToolPanel extends JPanel implements MouseListener,  MouseMotionL
 	public int getIdForElem(String name) {
 		int id=-1;
 		for(int i=0;i<lMeasurePoints.size();i++) {
-			if  (lMeasurePoints.get(i).getMPObject().equals(name))
+			if  (lMeasurePoints.get(i).getMPObject().toString().equals(name))
 				id=i;
 		}
 		return id;	
