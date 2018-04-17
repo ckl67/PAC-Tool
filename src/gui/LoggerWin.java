@@ -421,7 +421,7 @@ public class LoggerWin extends JFrame {
 				lblConfigToBeApplied.setText("");
 			}
 		});
-		btnApply.setBounds(401, 219, 118, 23);
+		btnApply.setBounds(401, 198, 118, 23);
 		contentPane.add(btnApply);
 
 		btnDebug = new JButton("Test");
@@ -478,6 +478,15 @@ public class LoggerWin extends JFrame {
 		lblNewLabel_1.setIcon(new ImageIcon(LoggerWin.class.getResource("/gui/images/Logger.png")));
 		lblNewLabel_1.setBounds(23, 23, 80, 60);
 		contentPane.add(lblNewLabel_1);
+		
+		JButton buttonCleanLogFile = new JButton("Clean Log File");
+		buttonCleanLogFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		buttonCleanLogFile.setBounds(401, 232, 118, 23);
+		contentPane.add(buttonCleanLogFile);
 
 		//setLabelConfigToBeApplied();
 
@@ -1132,5 +1141,4 @@ public class LoggerWin extends JFrame {
 			e.printStackTrace();
 		}
 	}
-
 }
