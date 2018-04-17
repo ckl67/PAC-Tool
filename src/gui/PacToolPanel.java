@@ -302,8 +302,8 @@ public class PacToolPanel extends JPanel implements MouseListener,  MouseMotionL
 
 				;
 				
-				logger.trace("COP ={}", lMeasureResults.get(EloMeasureResult.COP.id()));
-				textFieldCOP.setText(String.valueOf(lMeasureResults.get(EloMeasureResult.COP.id())));
+				logger.trace("COP ={}", lMeasureResults.get(EloMeasureResult.COP.id()).getValue());
+				textFieldCOP.setText(String.valueOf(lMeasureResults.get(EloMeasureResult.COP.id()).getValue()));
 
 				textField.setVisible(false);
 				textFieldUnity.setVisible(false);

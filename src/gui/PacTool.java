@@ -20,12 +20,13 @@ package gui;
 
 import java.util.Locale;
 
+import javax.swing.UIManager;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class PacTool {
 	
-	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
 	// -------------------------------------------------------
@@ -33,22 +34,28 @@ public class PacTool {
 	// -------------------------------------------------------
 	public static void main(String[] args){
 		
-		boolean defConsoleLoggerActivated = false;
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (Throwable e) {
+			logger.error(e);
+		}
+
+		boolean xmlConsoleLoggerActivated = false;
 		for (int i= 0; i< args.length; i++) {
-			System.out.println("Command line arguments: " + args[i] );
+			logger.info("Command line arguments: " + args[i] );
 			if (args[i].equals("-Logger")) {
-				System.out.println("Console Logger will be activated based on .xml");
-				defConsoleLoggerActivated = true;	
+				logger.info(".xml Console Logger will be activated");
+				xmlConsoleLoggerActivated = true;	
 			} else {
-				System.out.println("Default Console Logger will be deactivated");
-				defConsoleLoggerActivated = false;								
+				logger.info("Console Logger will be deactivated");
+				xmlConsoleLoggerActivated = false;								
 			}
 		}
 		
 		// Force point (".") as decimal separator --> set your Locale
 		Locale.setDefault(new Locale("en", "US"));
 		
-		PacToolVar pacToolVar = new PacToolVar(defConsoleLoggerActivated);
+		PacToolVar pacToolVar = new PacToolVar(xmlConsoleLoggerActivated);
 		
 		PacToolWin pacToolWin = new PacToolWin(pacToolVar); 
 		pacToolWin.setVisible(true);

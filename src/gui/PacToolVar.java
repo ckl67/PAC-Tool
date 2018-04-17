@@ -54,13 +54,12 @@ import java.awt.SystemColor;
 
 public class PacToolVar {
 
-	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
 	// -------------------------------------------------------
 	// 						CONSTANTES (DEFINE)
 	// -------------------------------------------------------
-	public static final String PACTool_Version = "Version Alpha 0.4.0";
+	public static final String PACTool_Version = "Version Alpha 0.5.0";
 	
 	// Create all instances which will be used in PacToolWin + PacToolPanel
 	// AND which must be used outside of PacToolWin + PacToolPanel
@@ -102,6 +101,7 @@ public class PacToolVar {
 	// -------------------------------------------------------
 
 	PacToolVar(boolean defConsoleLoggerActivated) {
+
 
 		// ------ Frame ------------
 	    Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();	
@@ -146,21 +146,26 @@ public class PacToolVar {
 		
 		// -------------------------
 		int i = 1;
-		int iterations = 18;
+		int iterations = 17;
 		int percent = 0;
 		
+		logger.info("Initialize All Variables");
+
+		// 1
 		pac = new Pac();								// Contains Pac Features
 		pac.getRefrigerant().loadNewRefrigerant("./ressources/R22/Saturation Table R22.txt");
 		lblLoading.setText("Loading...... Pac Features");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
+		// 2
 		guiConfig = new GuiConfig();		// GUI Configuration
 		guiConfig.setLanguage(TLanguage.FRENCH);
 		lblLoading.setText("Loading...... GUI Configuration");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
+		// 3
 		lMeasurePoints = new ArrayList<MeasurePoint>(); 
 		for (EloMeasurePoint p : EloMeasurePoint.values())
 			lMeasurePoints.add(new MeasurePoint(p));
@@ -168,11 +173,13 @@ public class PacToolVar {
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
+		// 4
 		measurePointTableWin = new MeasurePointTableWin(lMeasurePoints, guiConfig);
 		lblLoading.setText("Loading...... Win. Measure Table");		
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
+		// 5
 		lMeasureResults = new ArrayList<MeasureResult>(); 
 		for (EloMeasureResult p : EloMeasureResult.values()) 
 			lMeasureResults.add(new MeasureResult(p));
@@ -180,11 +187,13 @@ public class PacToolVar {
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
+		// 6
 		measureResultTableWin = new MeasureResultTableWin(lMeasureResults, guiConfig); 
 		lblLoading.setText("Loading...... Win. Result Table");		
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 		
+		// 7
 		lEnthalpyElDraw = new ArrayList<EnthalpyElDraw>(); 
 		for (EloEnthalpyElDraw p : EloEnthalpyElDraw.values()) 
 			lEnthalpyElDraw.add(new EnthalpyElDraw(p));
@@ -192,6 +201,7 @@ public class PacToolVar {
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
+		// 8
 		// Create Background Image
 		// EnthalpyBkgImg enthalpyBkgImg = new EnthalpyBkgImg("./ressources/R407/R407C/R407C couleur A4.png");
 		enthalpyBkgImg = new EnthalpyBkgImg("./ressources/R22/R22 couleur A4.png");
@@ -199,16 +209,19 @@ public class PacToolVar {
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 		
+		// 9
 		pressTempWin = new PressTempWin(pac.getRefrigerant());
 		lblLoading.setText("Loading...... Win. Temperature/Pressure");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
+		// 10
 		compressorWin = new CompressorWin(pac, guiConfig);
 		lblLoading.setText("Loading...... Win. Compressor");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
+		// 11
 		circulatorSrcWin = new CirculatorSrcWin(pac, guiConfig);
 		circulatorDistrWin = new CirculatorDistrWin(pac,guiConfig);
 		lblLoading.setText("Loading...... Win. Circulator");
@@ -217,6 +230,7 @@ public class PacToolVar {
 		
 		panelPacToolTextFieldCOP = new JTextField();
 		
+		// 12
 		enthalpyWin = new EnthalpyWin(
 				guiConfig,
 				pac, 
@@ -231,27 +245,33 @@ public class PacToolVar {
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
+		// 13
 		enthalpyWinConf = new EnthalpyWinConf(enthalpyWin);
 		lblLoading.setText("Loading...... Win. Configuration Enthalpy");		
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
+		// 14
 		aboutWin = new AboutWin();
 		lblLoading.setText("Loading...... Win. About");		
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 
-		infoWin = new InfoWin("Définition","/gui/helpaboutdef/Definitions.html");
+		// 15
+		infoWin = new InfoWin("Définition","/gui/info/Definitions.html");
 		lblLoading.setText("Loading...... Win. Definition");		
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
 		
-		abreviationWin = new InfoWin("Abréviation","/gui/helpaboutdef/Abreviation.html");
+		// 16
+		abreviationWin = new InfoWin("Abréviation","/gui/info/Abreviation.html");
 		lblLoading.setText("Loading...... Win. Definition");		
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);
   
+		// 17
 		loggerWin = new LoggerWin(defConsoleLoggerActivated);
+		loggerWin.readConfigSetRadioButton();
 		lblLoading.setText("Loading...... Win. Logger");		
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);

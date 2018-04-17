@@ -86,14 +86,13 @@ public class LoggerWin extends JFrame {
 	private String eMailTo = "christian.klugesherz@gmail.com";
 
 
-	// By default the logger will always be on Console, meaning .xml !
-	// And for instance based on the configuration in the .xml file
+	// By default the logger will always be on Console, and with Level OFF !
+	// And only Root AppenderRef 
 	// Be care, .xml file are composed of severals AppenderRef, so, here we will not configure them
-	// We only gives the possibility to switch between : "Console on XML", or "Console OFF" --> No LOG 
-	// We use a Command line argument to activate either "Console .XML" or "Console OFF"
+	// We use a Command line argument to activate either "Console .XML" or by default Console {root} {OFF}
 	// The argument is : 
 	// 		-Logger  	--> Here we used .XML
-	//		without	 	--> No Logger will be used
+	//		without	 	--> Console OFF
 	// By Default the logger will be OFF, to avoid to pollute the output !
 	// In case we want to activate the LOGGER based on .xml, we have to use argument : -Logger  
 
@@ -134,18 +133,18 @@ public class LoggerWin extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					boolean defConsoleLoggerActivated = false;
+					boolean xmlConsoleLoggerActivated = false;
 					for (int i= 0; i< args.length; i++) {
 						System.out.println("Command line arguments: " + args[i] );
 						if (args[i].equals("-Logger")) {
-							System.out.println("Console Logger will be activated based on .xml");
-							defConsoleLoggerActivated = true;	
+							System.out.println(".xml Console Logger will be activated");
+							xmlConsoleLoggerActivated = true;	
 						} else {
 							System.out.println("Default Console Logger will be deactivated");
-							defConsoleLoggerActivated = false;								
+							xmlConsoleLoggerActivated = false;								
 						}
 					}
-					LoggerWin frame = new LoggerWin(defConsoleLoggerActivated);
+					LoggerWin frame = new LoggerWin(xmlConsoleLoggerActivated);
 					frame.setVisible(true);
 					frame.readConfigSetRadioButton();
 

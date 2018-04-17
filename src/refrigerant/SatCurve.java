@@ -13,7 +13,6 @@ public class SatCurve {
 	// -------------------------------------------------------
 	// 					CONSTANT
 	// -------------------------------------------------------
-	//private static final Logger logger = LogManager.getLogger(SatCurve.class.getName());
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
 	private final int id_Temp = 0;
