@@ -32,11 +32,6 @@ public class SatCurve {
 
 	private String gasFileName;
 	private List<List<Double>> gasSatTable;
-	private double IsoTherm_P0_Ref;
-	private double IsoTherm_T0_Ref;
-	private double IsoTherm_T0_Delta;
-	private double IsoTherm_H0_Ref;
-	private double IsoTherm_H0_Delta;
 
 	private double Hmin;  			//  Enthalpy Minimum value (curve)
 	private double Hmax;    		//  Enthalpy Maximum value (curve).
@@ -52,12 +47,6 @@ public class SatCurve {
 	// -------------------------------------------------------
 	public SatCurve() {
 		this.gasFileName = "empty";
-		// Default value based on R22
-		this.IsoTherm_P0_Ref = 0.5; 
-		this.IsoTherm_T0_Ref = -40;
-		this.IsoTherm_T0_Delta = 10;
-		this.IsoTherm_H0_Ref = 390;
-		this.IsoTherm_H0_Delta = 8;
 
 		this.Hmin = 1000.0;  				
 		this.Hmax = 0.0;    				
@@ -125,26 +114,6 @@ public class SatCurve {
 				String[] val = first.split (":");
 				unityP = val [1];
 				logger.info("Unity of Pressure = {}",unityP);
-			} else if (first.startsWith("IsoTherm_P0_Ref:") ) {
-				String[] val = first.split (":");
-				IsoTherm_P0_Ref = Double.parseDouble(val [1].replace(",", "."));
-				logger.info("IsoTherm_P0_Ref = {}",IsoTherm_P0_Ref);
-			} else if (first.startsWith("IsoTherm_T0_Ref:") ) {
-				String[] val = first.split (":");
-				IsoTherm_T0_Ref = Double.parseDouble(val [1].replace(",", "."));
-				logger.info("IsoTherm_T0_Ref = {}",IsoTherm_T0_Ref);
-			} else if (first.startsWith("IsoTherm_T0_Delta:") ) {
-				String[] val = first.split (":");
-				IsoTherm_T0_Delta = Double.parseDouble(val[1].replace(",", "."));
-				logger.info("IsoTherm_T0_Delta = {}",IsoTherm_T0_Delta);			
-			} else if (first.startsWith("IsoTherm_H0_Ref:") ) {
-				String[] val = first.split (":");
-				IsoTherm_H0_Ref = Double.parseDouble(val[1].replace(",", "."));
-				logger.info("IsoTherm_H0_Ref = {}",IsoTherm_H0_Ref);
-			} else if (first.startsWith("IsoTherm_H0_Delta:") ) {
-				String[] val = first.split (":");
-				IsoTherm_H0_Delta = Double.parseDouble(val[1].replace(",", "."));
-				logger.info("IsoTherm_H0_Delta = {}",IsoTherm_H0_Delta);
 			} else if (!first.startsWith("#") ) {
 				String[] val = first.split ("\t");
 
@@ -771,30 +740,6 @@ public class SatCurve {
 		return gasSatTable.get(n).get(id_P_Gas);
 	}
 
-	public double getIsoTherm_P0_Ref() {
-		return IsoTherm_P0_Ref;
-	}
-
-	public double getIsoTherm_T0_Ref() {
-		return IsoTherm_T0_Ref;
-	}
-
-	public double getIsoTherm_T0_Delta() {
-		return IsoTherm_T0_Delta;
-	}
-
-	public double getIsoTherm_H0_Ref() {
-		return IsoTherm_H0_Ref;
-	}
-
-	public double getIsoTherm_H0_T(double T) {
-		//  H0(T) = H0_Delta * (T-T0_Ref)/T0_Delta + H0_Ref
-		return IsoTherm_H0_Delta * (T-IsoTherm_T0_Ref)/IsoTherm_T0_Delta + IsoTherm_H0_Ref ;
-	}
-
-	public double getIsoTherm_H0_Delta() {
-		return IsoTherm_H0_Delta;
-	}
 
 	public double getHmin() {
 		return Hmin;
