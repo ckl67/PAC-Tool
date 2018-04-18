@@ -19,7 +19,6 @@ public class JUnitRefrigant {
 		
 		System.out.println(refrigerant.getRfgName());
 
-		System.out.println(refrigerant.getIsoTherm_H0_Ref());
 
 		P = 2.0;
 		T = -40.0;

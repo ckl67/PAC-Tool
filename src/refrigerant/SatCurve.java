@@ -30,7 +30,10 @@ public class SatCurve {
 	// 					INSTANCE VARIABLES
 	// -------------------------------------------------------
 
+	// Name mandatory to be displayed in the gui
 	private String gasFileName;
+	
+	private String gasName;
 	private List<List<Double>> gasSatTable;
 
 	private double Hmin;  			//  Enthalpy Minimum value (curve)
@@ -46,7 +49,10 @@ public class SatCurve {
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 	public SatCurve() {
-		this.gasFileName = "empty";
+
+		gasSatTable = new ArrayList<List<Double>>();
+
+		this.gasFileName = "./ressources/R22/R22 Saturation Table.txt";
 
 		this.Hmin = 1000.0;  				
 		this.Hmax = 0.0;    				
@@ -55,9 +61,27 @@ public class SatCurve {
 		this.Tmin = 1000.0;  
 		this.Tmax = 0.0;    
 
-		gasSatTable = new ArrayList<List<Double>>();
+		this.gasName = loadGasSaturationData(gasFileName);
+
 	}
 
+	public SatCurve(String fileNameGasSat) {
+
+		gasSatTable = new ArrayList<List<Double>>();
+
+		this.gasFileName = fileNameGasSat;
+
+		this.Hmin = 1000.0;  				
+		this.Hmax = 0.0;    				
+		this.Pmin = 1000.0;  
+		this.Pmax = 0.0;    
+		this.Tmin = 1000.0;  
+		this.Tmax = 0.0;    
+
+		this.gasName = loadGasSaturationData(gasFileName);
+	}
+
+	
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
@@ -96,6 +120,13 @@ public class SatCurve {
 		File file = new File (fileNameGas);
 		logger.debug("(loadGasSaturationData):: Read File: {}", fileNameGas);
 
+		this.Hmin = 1000.0;  				
+		this.Hmax = 0.0;    				
+		this.Pmin = 1000.0;  
+		this.Pmax = 0.0;    
+		this.Tmin = 1000.0;  
+		this.Tmax = 0.0;    
+
 		Scanner sken = null;
 		try {
 			sken = new Scanner (file);
@@ -117,7 +148,7 @@ public class SatCurve {
 			} else if (!first.startsWith("#") ) {
 				String[] val = first.split ("\t");
 
-				// Create 1 row, and add all elemnts
+				// Create 1 row, and add all elements
 				List<Double> row = new ArrayList<Double>();
 
 				// Temperature
@@ -765,6 +796,10 @@ public class SatCurve {
 
 	public List<List<Double>> getGasSatTable() {
 		return gasSatTable;
+	}
+
+	public String getGasName() {
+		return gasName;
 	}
 
 

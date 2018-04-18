@@ -4,14 +4,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
-public class Refrigerant {
+public class Refrigerant implements IRefrigerant {
 
 	// -------------------------------------------------------
 	// 					CONSTANT
 	// -------------------------------------------------------
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
-
-	private final int ISOTHERM_POWER = 2;
 	
 	// --------------------------------------------------------------------
 	// Instance variables
@@ -86,234 +84,19 @@ public class Refrigerant {
 	// 										Isobaric 
 	// -----------------------------------------------------------------------------------------
 
-	/**
-	 * Get Pressure of Isobaric 
-	 * No sense because == refP, but for the principle
-	 * @param refP
-	 * @param H
-	 * @return
-	 */
-	public double getIsobaricP(double refP, double H) {
-		// Whatever H
-		double outP=refP;			
-		return outP;
-	}
-
-	/**
-	 * Get Temperature of Isobaric 
-	 * No sense because == refP, but for the principle
-	 * @param refP
-	 * @param H
-	 * @return
-	 */
-	public double getIsobaricT(double refP, double H) {
-		double outT=refP;
-		double satHLiquid = satCurve.getHSatFromP(refP).getHLiquid();
-		double satHGas = satCurve.getHSatFromP(refP).getHGas();
-
-		double satTLiquid = satCurve.getTSatFromP(refP).getTLiquid();
-		double satTGas = satCurve.getTSatFromP(refP).getTGas();
-		
-		double x,y0,y1,x0,x1;
-
-
-		if (H< satHLiquid) {
-			outT = satCurve.getT_SatCurve_FromH(H);
-		}
-		else if (H> satHGas) {
-			outT = getTGasInterIsobarIsotherm(refP,H);
-		}
-		else {
-			x  = H;
-			x0 = satHLiquid;
-			x1 = satHGas;
-			if (x1==x0) {
-				logger.error("(getIsobaricT):: 2 same value will cause and issue and must be removed ");
-			}
-			y0 = satTLiquid;
-			y1 = satTGas;
-			outT = (x-x0)*(y1-y0)/(x1-x0)+ y0;
-		}		
-		return outT;
-	}
-
 	
-	/**
-	 * Get State of Isobaric 
-	 * @param refP
-	 * @param H
-	 * @return
-	 */
-	public String getIsobaricState(double refP, double H) {
-		String outState="Empty";
-
-		double satHLiquid = satCurve.getHSatFromP(refP).getHLiquid();
-		double satHGas = satCurve.getHSatFromP(refP).getHGas();
-		
-		if (H< satHLiquid) 
-			outState = "Liquid";
-		else if (H> satHGas)
-			outState = "Gas";
-		else
-			outState = "Liquid+Gas";
-
-		return outState;
-	}
 
 	// -----------------------------------------------------------------------------------------
 	// 										IsoThermCurve 
 	// -----------------------------------------------------------------------------------------
 
-	public double getPIsotherm(double H, double T) {
-		return getPIsotherm(H, T, satCurve.getPSatFromT(T).getPLiquid());
-	}
-
-
-	public double getHIsotherm(double H, double T) {
-		double outH = 0;
-		double satHLiquid = satCurve.getHSatFromT(T).getHLiquid();
-
-		if (H< satHLiquid) { 
-			outH = satHLiquid;
-		} else {
-			outH = H;
-		}
-
-		return(outH);
-	}
-
-	public double getPIsotherm(double H, double T, double P) {
-		double outP = 0;
-
-		double satHLiquid = satCurve.getHSatFromT(T).getHLiquid();
-		double satHGas = satCurve.getHSatFromT(T).getHGas();
-
-		double satPLiquid  = satCurve.getPSatFromT(T).getPLiquid();
-		double satPGas = satCurve.getPSatFromT(T).getPGas();
-
-		logger.debug("  (getPIsotherm):: H={} T={} P={}",H,T,P);
-		logger.debug("  (getPIsotherm):: satHLiquid={} satHGas={}",satHLiquid,satHGas);
-		logger.debug("  (getPIsotherm):: satPLiquid={} satPGas={}",satPLiquid,satPGas);
-
-		if (H< satHLiquid) { 
-			if (P < satPLiquid) {
-				outP = satPLiquid;
-			} else {
-				outP = P;
-			}
-		}
-		else if (H> satHGas) {
-			/*
-			 	PIsotherm(H,T,P)=  -( 1/c * (H-Ha) )^4 + Pa;  
-				with 	
-	         		c = (H0-Ha)/ (Pa-P0 )^(1/4); 
-	               		Pa et Ha : f(T isotherm)
-	        			P0 = P0_Ref
-	        			H0(T) = H0_Delta * (T-T0_Ref)/T0_Delta + H0_Ref
-			 */        
-			double Pa = satPGas;
-			double Ha = satHGas;
-			double H0 = isoThermCurve.getIsoTherm_H0_Delta() * 
-					(T- isoThermCurve.getIsoTherm_T0_Ref())/isoThermCurve.getIsoTherm_T0_Delta() + 
-					isoThermCurve.getIsoTherm_H0_Ref();
-			double P0 = isoThermCurve.getIsoTherm_P0_Ref();
-			logger.debug("  (getPIsotherm):: H={}>satHGas={}  Ha={} Pa={} H0={} P0={}",H,satHGas,Ha,Pa,H0,P0);
-
-			double n = ISOTHERM_POWER;
-			double c = (H0-Ha)/Math.pow(Pa-P0,1/n);
-			outP = -Math.pow((H-Ha)/c,n) + Pa;
-			if (outP < 0) 
-				outP = 0;
-
-		}
-		else {
-			// satHLiquid < H < satHGas
-			double x,y0,y1,x0,x1;
-			x  = H;
-			x0 = satHLiquid;
-			x1 = satHGas;
-			if (x1==x0) {
-				logger.error("(getPIsotherm):: 2 same value will cause and issue and must be removed ");
-			}
-			y0 = satPLiquid;
-			y1 = satPGas;
-			outP = (x-x0)*(y1-y0)/(x1-x0)+ y0;
-		}
-
-
-		return outP;
-	}
 
 	
 	// -----------------------------------------------------------------------------------------
 	// 										Intersection with Isobar 
 	// -----------------------------------------------------------------------------------------
 	
-	/**
-	 * T Gas Inter Isobar Isotherm --> Will determine T (Approximation !!)
-	 * @param PRef
-	 * @param H
-	 * @return
-	 */
-	public double getTGasInterIsobarIsotherm(double PRef, double H) {
-		double outT = 0;
-		double h=0;
-		// 	Based of function getHGasInterIsobarIsotherm() 	
-		
-		double TA = satCurve.getTSatFromP(PRef).getTGas();
-		
-		for (double t = TA+0.5; t<satCurve.getTmax(); t=t+0.5  ) {
-			outT=t;
-			h = getHGasInterIsobarIsotherm(PRef,t);
-			if (h > H)
-				break;
-		}
-		
-		return(outT);
-	}
-	
-	/**
-	 * H Gas Inter Isobar Isotherm
-	 * @param PRef
-	 * @param T
-	 * @return
-	 */
-	public double getHGasInterIsobarIsotherm(double PRef, double T) {
-		double outH = 0;
 
-		/*
-	 	Hinter = c * (Pa-PRef)^(1/n) + Ha
-		with 	
-     		c = (H0-Ha)/ (Pa-P0 )^(1/4); 
-           		Pa et Ha : f(T isotherm)
-    			P0 = P0_Ref
-    			H0(T) = H0_Delta * (T-T0_Ref)/T0_Delta + H0_Ref
-		 */        
-
-		double Pa = satCurve.getPSatFromT(T).getPGas();
-		double Ha = satCurve.getHSatFromT(T).getHGas();
-		double H0 = isoThermCurve.getIsoTherm_H0_Delta() * 
-				(T- isoThermCurve.getIsoTherm_T0_Ref())/isoThermCurve.getIsoTherm_T0_Delta() + 
-				isoThermCurve.getIsoTherm_H0_Ref();
-		double P0 = isoThermCurve.getIsoTherm_P0_Ref();
-		double n = ISOTHERM_POWER;
-		double c = (H0-Ha)/Math.pow(Pa-P0,1/n);
-
-		if (Pa > PRef) {
-			outH = c*Math.pow(Pa-PRef,(1/n)) + Ha;
-			logger.debug("(getHGasInterIsobarIsotherm):: PRef={} T={}",PRef,T);
-			logger.debug("     Pa={} Ha={} H0={} P0={} c={} PRef={} n={}",Pa,Ha,H0,P0,c,PRef,n);
-			logger.debug("      ---> outH={}",outH);
-		} else {
-			outH = 0;
-			logger.error("(getHGasInterIsobarIsotherm):: PRef={} T={}",PRef,T);
-			logger.error("    Error: condition not respected !! Pa>PRef !!  -->  PRef={}  Pa={}",PRef,Pa);
-			logger.error("     Pa={} Ha={} H0={} P0={} c={} PRef={} n={}",Pa,Ha,H0,P0,c,PRef,n);
-			logger.error("      ---> outH={}",outH);
-		}
-
-		return outH;
-	}
 
 	// -------------------------------------------------------
 	// 							JSON
@@ -379,6 +162,126 @@ public class Refrigerant {
 
 	public void setRfgT(double T) {
 		this.rfgT = T;
+	}
+
+	@Override
+	public double getPIsotherm(double H, double T, double P) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public TSat getTSatFromP(double pressure) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public PSat getPSatFromT(double temp) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HSat getHSatFromP(double pressure) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HSat getHSatFromT(double temp) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public double getHIsotherm(double H, double T) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double getPIsotherm(double H, double T) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double getT_SatCurve_FromH(double vH) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double getT_SatCurve_FromH(double vH, double vP) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double getHGasInterIsobarIsotherm(double PRef, double T) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double getIsoTherm_H0_T(double T) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getSatTableSize() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double getHSat_Liquid(int n) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double getPSat_Liquid(int n) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double getHSat_Gas(int n) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double getPSat_Gas(int n) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double getP_SatCurve_FromH(double vH) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double getP_SatCurve_FromH(double vH, double vP) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double getIsobaricT(double refP, double H) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double getTSat(int n) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }
