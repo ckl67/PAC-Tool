@@ -61,7 +61,9 @@ public class JUnitLog {
 
 		System.out.println("(P)----------- After altering the appender! We should only have FIle logger");
 
-		new Refrigerant("./ressources/R22/Saturation Table R22.txt");
+		new Refrigerant(
+				"D:/Users/kluges1/workspace/pac-tool/ressources/R22/R22 Saturation Table.txt",
+				"D:/Users/kluges1/workspace/pac-tool/ressources/R22/R22 IsoTherm Table.txt"	);
 
 	}
 

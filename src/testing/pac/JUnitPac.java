@@ -16,7 +16,10 @@ public class JUnitPac {
 		Pac pac = new Pac();
 				
 		System.out.println("Load R22 Refrigerent feature");
-		pac.getRefrigerant().loadRfgGasSaturationData("D:/Users/kluges1/workspace/pac-tool/ressources/R22/Saturation Table R22.txt");
+		
+		pac.getRefrigerant().loadNewRefrigerant(
+				"./ressources/R407/R407C/R407C Dupont-Suva Saturation Table.txt",
+				"./ressources/R407/R407C/R407C Dupont-Suva IsoTherm Table.txt");
 
 		System.out.println("\n---> Read PAC");
 		System.out.println("    Name CirculatorSrc =" + pac.getCirculatorSrc().getName());

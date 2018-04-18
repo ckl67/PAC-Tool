@@ -50,6 +50,8 @@ import javax.swing.UIManager;
 import javax.swing.border.EtchedBorder;
 import javax.swing.SwingConstants;
 import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class EnthalpyWinConf extends JFrame {
 
@@ -81,6 +83,7 @@ public class EnthalpyWinConf extends JFrame {
 	private JTextField textFieldStepH2X;
 	private JTextField textFieldStepP1Y;
 	private JTextField textFieldStepP2Y;
+	private JTextField txtFieldIsoThermCurveFile;
 
 	// -------------------------------------------------------
 	// 				TEST THE APPLICATION STANDALONE 
@@ -94,10 +97,6 @@ public class EnthalpyWinConf extends JFrame {
 
 					// Create the PAC
 					Pac pac = new Pac();
-
-					// Set Gaz used on PAC
-					//pac.getRefrigerant().loadNewRefrigerant("./ressources/R407/R407C/Saturation Table R407C Dupont-Suva.txt");
-					pac.getRefrigerant().loadNewRefrigerant("./ressources/R22/Saturation Table R22.txt");
 					System.out.println(pac.getRefrigerant().getRfgName());
 
 					// Win Pressure Temperature
@@ -227,7 +226,7 @@ public class EnthalpyWinConf extends JFrame {
 		setTitle("Pac-Tool Configuration Diargramme Enthalpique");
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(EnthalpyWinConf.class.getResource("/gui/images/PAC-Tool_32.png")));
-		setBounds(100, 100, 537, 440);
+		setBounds(100, 100, 537, 512);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		panel = new JPanel();
@@ -236,7 +235,7 @@ public class EnthalpyWinConf extends JFrame {
 
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Enthalpie", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel_1.setBounds(10, 313, 514, 91);
+		panel_1.setBounds(10, 382, 514, 91);
 		panel.add(panel_1);
 		panel_1.setLayout(null);
 
@@ -364,7 +363,7 @@ public class EnthalpyWinConf extends JFrame {
 
 		JPanel panel_2 = new JPanel();
 		panel_2.setBorder(new TitledBorder(null, "Pression", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_2.setBounds(10, 209, 514, 91);
+		panel_2.setBounds(10, 280, 514, 91);
 		panel.add(panel_2);
 		panel_2.setLayout(null);
 
@@ -504,24 +503,24 @@ public class EnthalpyWinConf extends JFrame {
 		JPanel panel_4 = new JPanel();
 		panel_4.setLayout(null);
 		panel_4.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Courbe de Staturation", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel_4.setBounds(10, 11, 514, 91);
+		panel_4.setBounds(10, 11, 514, 175);
 		panel.add(panel_4);
 
 		JLabel lblSatCurve = new JLabel("New label");
 		lblSatCurve.setIcon(new ImageIcon(EnthalpyWinConf.class.getResource("/gui/images/SaturationCurve.png")));
 		lblSatCurve.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		lblSatCurve.setBackground(Color.WHITE);
-		lblSatCurve.setBounds(10, 20, 106, 50);
+		lblSatCurve.setBounds(10, 20, 95, 50);
 		panel_4.add(lblSatCurve);
 
 		txtFieldSatCurveFile = new JTextField();
-		txtFieldSatCurveFile.setText(enthalpyWin.getPac().getRefrigerant().getGasFileNameSat());
+		txtFieldSatCurveFile.setText(enthalpyWin.getPac().getRefrigerant().getGasFileNameSatCurve());
 		txtFieldSatCurveFile.setHorizontalAlignment(SwingConstants.LEFT);
 		txtFieldSatCurveFile.setColumns(10);
 		txtFieldSatCurveFile.setBounds(126, 35, 273, 20);
 		panel_4.add(txtFieldSatCurveFile);
 
-		JButton btnLoadSatCurveFile = new JButton("Fichier Sat.");
+		JButton btnLoadSatCurveFile = new JButton("Saturation");
 		btnLoadSatCurveFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
@@ -536,19 +535,65 @@ public class EnthalpyWinConf extends JFrame {
 					logger.info("You chose to open this file: {} ",filepath);
 					txtFieldSatCurveFile.setText(filepath);
 
-					//	pac.getRefrigerant().loadNewRefrigerant("./ressources/R22/Saturation Table R22.txt");
-					enthalpyWin.getPac().getRefrigerant().loadNewRefrigerant(filepath);
-					enthalpyWin.repaint();
 				}
 			}
 		} );
 		btnLoadSatCurveFile.setBounds(409, 34, 95, 23);
 		panel_4.add(btnLoadSatCurveFile);
+		
+		txtFieldIsoThermCurveFile = new JTextField();
+		txtFieldIsoThermCurveFile.setText(enthalpyWin.getPac().getRefrigerant().getGasFileNameIsoThermCurve());
+		txtFieldIsoThermCurveFile.setHorizontalAlignment(SwingConstants.LEFT);
+		txtFieldIsoThermCurveFile.setColumns(10);
+		txtFieldIsoThermCurveFile.setBounds(126, 96, 273, 20);
+		panel_4.add(txtFieldIsoThermCurveFile);
+		
+		JLabel label_1 = new JLabel("New label");
+		label_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		label_1.setBackground(Color.WHITE);
+		label_1.setBounds(10, 81, 95, 50);
+		panel_4.add(label_1);
+		
+		JButton btnLoadIsoThermCurveFile = new JButton("IsoTherm");
+		btnLoadIsoThermCurveFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				JFileChooser chooser = new JFileChooser();
+				FileNameExtensionFilter filter = new FileNameExtensionFilter( "IsoTherm Files", "txt");
+				chooser.setFileFilter(filter);
+				File workingDirectory = new File(System.getProperty("user.dir"));
+				chooser.setCurrentDirectory(workingDirectory);
+				int returnVal = chooser.showOpenDialog(panel);
+				if(returnVal == JFileChooser.APPROVE_OPTION) {
+					String filepath=chooser.getSelectedFile().getAbsolutePath();
+					logger.info("You chose to open this file: {} ",filepath);
+					txtFieldIsoThermCurveFile.setText(filepath);
+
+				}
+			}
+		});
+		btnLoadIsoThermCurveFile.setBounds(409, 95, 95, 23);
+		panel_4.add(btnLoadIsoThermCurveFile);
+		
+		JButton buttonLoadNewGas = new JButton("Load Refregirant");
+		buttonLoadNewGas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (enthalpyWin.getPac().getRefrigerant().loadNewRefrigerant(
+						txtFieldSatCurveFile.getText(),
+						txtFieldIsoThermCurveFile.getText())) {
+					enthalpyWin.repaint();
+				} else {
+					buttonLoadNewGas.setText("Not Same Refrigerant !");	
+				}
+			}
+		});
+		buttonLoadNewGas.setBounds(206, 135, 122, 23);
+		panel_4.add(buttonLoadNewGas);
 
 		JPanel panel_3 = new JPanel();
 		panel_3.setLayout(null);
 		panel_3.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Fichier Image Enthalpie", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panel_3.setBounds(10, 117, 514, 72);
+		panel_3.setBounds(10, 197, 514, 72);
 		panel.add(panel_3);
 
 		textFieldEnthalpyFilePath = new JTextField();

@@ -31,7 +31,9 @@ public class JUnitCompressor {
 		System.out.println("\n---> Read afterwards ");
 		System.out.println("    Name="+vCompressor.getName());
 
-		Refrigerant vRefrigeranR22 =  new Refrigerant("D:/Users/kluges1/workspace/pac-tool/ressources/R22/Saturation Table R22.txt");
+		Refrigerant vRefrigeranR22 =  new Refrigerant(
+				"D:/Users/kluges1/workspace/pac-tool/ressources/R22/R22 Saturation Table.txt",
+				"D:/Users/kluges1/workspace/pac-tool/ressources/R22/R22 IsoTherm Table.txt"	);
 		vRefrigeranR22.setRfgP(25);
 		vCompressor.setDeltaP(40);
 

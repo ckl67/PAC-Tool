@@ -108,6 +108,14 @@ public class MeasurePointTableWin extends JFrame {
 		});
 	}
 
+	public void readTableValues(List<MeasurePoint> lMeasurePoints, GuiConfig guiConfig) {
+
+		for (int n = 0; n < lMeasurePoints.size(); n++) {
+		}
+		
+	}
+
+	
 	/**
 	 * Update the window with the new measure points
 	 * @param lMeasurePoints
@@ -175,6 +183,7 @@ public class MeasurePointTableWin extends JFrame {
 					});
 		}
 		table = new JTable(defaultTableModel);
+
 
 
 		JScrollPane scrollPane = new JScrollPane(table);

@@ -12,13 +12,14 @@ public class JUnitRefrigant {
 		double P;
 		double H;
 
-		//Refrigerant refrigerant = new Refrigerant("./ressources/R22/Saturation Table R22.txt");
-		Refrigerant refrigerant = new Refrigerant("./ressources/R22/Saturation Table R22.txt");
-		
-		//refrigerant.loadNewRefrigerant("./ressources/R407/R407C/Saturation Table R407C Dupont-Suva.txt");
-		
+		Refrigerant refrigerant = new Refrigerant();
 		System.out.println(refrigerant.getRfgName());
+		
+		refrigerant.loadNewRefrigerant(
+				"./ressources/R407/R407C/R407C Dupont-Suva Saturation Table.txt",
+				"./ressources/R407/R407C/R407C Dupont-Suva IsoTherm Table.txt");
 
+		System.out.println(refrigerant.getRfgName());
 
 		P = 2.0;
 		T = -40.0;
@@ -106,7 +107,9 @@ public class JUnitRefrigant {
 		System.out.println(jsonObj);
 
 		System.out.println("\n---> Modify the instance by loading new gas ");
-		refrigerant.loadRfgGasSaturationData("./ressources/R407/R407C/Saturation Table R407C Dupont-Suva.txt");
+		refrigerant.loadNewRefrigerant(
+				"./ressources/R407/R407C/R407C Dupont-Suva Saturation Table.txt",
+				"./ressources/R407/R407C/R407C Dupont-Suva IsoTherm Table.txt");
 		System.out.println("   Gaz Name ="+ refrigerant.getRfgName());
 	
 		System.out.println("\n---> Read JSON data");
