@@ -2,12 +2,6 @@
 #	--> Must be present !!!
 #	Name:
 #	Unity P:kPa or bar  
-#	--> Must be present !!!
-#   IsoTherm_P0_Ref
-#   IsoTherm_T0_Ref
-#   IsoTherm_T0_Delta
-#   IsoTherm_H0_Ref
-#   IsoTherm_H0_Delta
 # Saturation Table
 # http://www.linde-gas.ro/ro/index.html
 # Temp.   Press       Press     Density  Density          Enthalpy           Entropy  Entropy
@@ -15,11 +9,6 @@
 #        liquid        gas      liquid     gas      Liquid  latent  gas      liquid    gas
 Name:R407C
 Unity P:kPa
-IsoTherm_P0_Ref:0.5
-IsoTherm_T0_Ref:-40
-IsoTherm_T0_Delta:10
-IsoTherm_H0_Ref:392
-IsoTherm_H0_Delta:8
 -118	0,35273	0,1231	1598,8	0,0082306	44,22	296,88	341,09	0,25717	2,2242
 -117	0,39706	0,1411	1595,8	0,0093699	45,56	296,10	341,66	0,26582	2,2148
 -116	0,44618	0,1613	1592,8	0,010645	46,90	295,33	342,23	0,27438	2,2055

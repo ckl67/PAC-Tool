@@ -404,7 +404,7 @@ public class EnthalpyWin extends JFrame {
 					double hIsotherm = refrigerant.getHIsotherm(hResult, tIsotherm);
 					enthalpyPanel.setHCurveFollower(hIsotherm);
 					enthalpyPanel.setPCurveFollower(pIsotherm);
-					lblFollower.setText(String.format("IsoTherm P=%.2f / T=%.2f",pIsotherm,tIsotherm));
+					lblFollower.setText(String.format("IsoThermCurve P=%.2f / T=%.2f",pIsotherm,tIsotherm));
 					repaint();
 
 
@@ -547,7 +547,7 @@ public class EnthalpyWin extends JFrame {
 		rdbtnSaturation.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		panelMiddle_South.add(rdbtnSaturation);
 
-		rdbtnIsoTherm = new JRadioButton("IsoTherm");
+		rdbtnIsoTherm = new JRadioButton("IsoThermCurve");
 		rdbtnIsoTherm.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		panelMiddle_South.add(rdbtnIsoTherm);
 

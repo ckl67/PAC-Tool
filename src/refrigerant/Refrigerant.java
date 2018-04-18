@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
-public class Refrigerant extends SatCurve {
+public class Refrigerant {
 
 	// -------------------------------------------------------
 	// 					CONSTANT
@@ -16,6 +16,9 @@ public class Refrigerant extends SatCurve {
 	// --------------------------------------------------------------------
 	// Instance variables
 	// --------------------------------------------------------------------
+	private SatCurve satCurve;
+	private IsoThermCurve isoThermCurve;
+	
 	private String rfgName;
 	private double rfgP;
 	private double rfgT;
@@ -24,30 +27,56 @@ public class Refrigerant extends SatCurve {
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public Refrigerant(String fileNameGas) {
-		this.rfgName = loadGasSaturationData(fileNameGas);
-		this.rfgP = 0.0;
-		this.rfgT = 0.0; 
-		this.rfgH = 0.0; 	
+	public Refrigerant(String fileNameGasSat, String fileNameGasIsoThermCurve) {
+		String gasName1 = null;
+		String gasName2 = null;
 		
+		this.satCurve = new SatCurve();
+		gasName1 = satCurve.loadGasSaturationData(fileNameGasSat);
+
+		this.isoThermCurve = new IsoThermCurve();
+		gasName2 = isoThermCurve.loadGasIsoThermData(fileNameGasIsoThermCurve);
+
+		if (gasName1.equals(gasName2)) {
+			this.rfgName = gasName1;
+			this.rfgP = 0.0;
+			this.rfgT = 0.0; 
+			this.rfgH = 0.0; 	
+		} else {
+			logger.error("(Refrigerant):: Saturation Curve and IsoTherm curve don't return the same Gas name {} <> {}! ",gasName1,gasName2 );
+		}		
 	}
 
 	/*
 	 * Will load default Refrigerant R22
 	 */
 	public Refrigerant() {
-		this.rfgName = loadGasSaturationData("./ressources/R22/Saturation Table R22.txt");
-		this.rfgP = 0.0;
-		this.rfgT = 0.0; 
-		this.rfgH = 0.0; 	
+		String gasName1 = null;
+		String gasName2 = null;
+
+		this.satCurve = new SatCurve();
+		gasName1 = satCurve.loadGasSaturationData("./ressources/R22/R22 Saturation Table.txt");
+
+		this.isoThermCurve = new IsoThermCurve();
+		gasName2 = isoThermCurve.loadGasIsoThermData("./ressources/R22/R22 IsoTherm Table");
+
+		if (gasName1.equals(gasName2)) {
+			this.rfgName = gasName1;
+			this.rfgP = 0.0;
+			this.rfgT = 0.0; 
+			this.rfgH = 0.0; 	
+		} else {
+			logger.error("(Refrigerant):: Saturation Curve and IsoTherm curve don't return the same Gas name {} <> {}! ",gasName1,gasName2 );
+			System.exit(0);
+		}		
 	}
 
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
 
-	public void loadNewRefrigerant(String fileNameGas) {
-		this.rfgName = loadGasSaturationData(fileNameGas);
+	public void loadNewRefrigerant(String fileNameGasSat) {
+		this.rfgName = satCurve.loadGasSaturationData(fileNameGasSat);
 		this.rfgP = 0.0;
 		this.rfgT = 0.0; 
 		this.rfgH = 0.0; 
@@ -79,17 +108,17 @@ public class Refrigerant extends SatCurve {
 	 */
 	public double getIsobaricT(double refP, double H) {
 		double outT=refP;
-		double satHLiquid = this.getHSatFromP(refP).getHLiquid();
-		double satHGas = this.getHSatFromP(refP).getHGas();
+		double satHLiquid = satCurve.getHSatFromP(refP).getHLiquid();
+		double satHGas = satCurve.getHSatFromP(refP).getHGas();
 
-		double satTLiquid = this.getTSatFromP(refP).getTLiquid();
-		double satTGas = this.getTSatFromP(refP).getTGas();
+		double satTLiquid = satCurve.getTSatFromP(refP).getTLiquid();
+		double satTGas = satCurve.getTSatFromP(refP).getTGas();
 		
 		double x,y0,y1,x0,x1;
 
 
 		if (H< satHLiquid) {
-			outT = this.getT_SatCurve_FromH(H);
+			outT = satCurve.getT_SatCurve_FromH(H);
 		}
 		else if (H> satHGas) {
 			outT = getTGasInterIsobarIsotherm(refP,H);
@@ -104,8 +133,7 @@ public class Refrigerant extends SatCurve {
 			y0 = satTLiquid;
 			y1 = satTGas;
 			outT = (x-x0)*(y1-y0)/(x1-x0)+ y0;
-		}
-		
+		}		
 		return outT;
 	}
 
@@ -119,8 +147,8 @@ public class Refrigerant extends SatCurve {
 	public String getIsobaricState(double refP, double H) {
 		String outState="Empty";
 
-		double satHLiquid = this.getHSatFromP(refP).getHLiquid();
-		double satHGas = this.getHSatFromP(refP).getHGas();
+		double satHLiquid = satCurve.getHSatFromP(refP).getHLiquid();
+		double satHGas = satCurve.getHSatFromP(refP).getHGas();
 		
 		if (H< satHLiquid) 
 			outState = "Liquid";
@@ -133,18 +161,17 @@ public class Refrigerant extends SatCurve {
 	}
 
 	// -----------------------------------------------------------------------------------------
-	// 										IsoTherm 
+	// 										IsoThermCurve 
 	// -----------------------------------------------------------------------------------------
 
 	public double getPIsotherm(double H, double T) {
-		return getPIsotherm(H, T, this.getPSatFromT(T).getPLiquid());
-
+		return getPIsotherm(H, T, satCurve.getPSatFromT(T).getPLiquid());
 	}
 
 
 	public double getHIsotherm(double H, double T) {
 		double outH = 0;
-		double satHLiquid = this.getHSatFromT(T).getHLiquid();
+		double satHLiquid = satCurve.getHSatFromT(T).getHLiquid();
 
 		if (H< satHLiquid) { 
 			outH = satHLiquid;
@@ -158,11 +185,11 @@ public class Refrigerant extends SatCurve {
 	public double getPIsotherm(double H, double T, double P) {
 		double outP = 0;
 
-		double satHLiquid = this.getHSatFromT(T).getHLiquid();
-		double satHGas = this.getHSatFromT(T).getHGas();
+		double satHLiquid = satCurve.getHSatFromT(T).getHLiquid();
+		double satHGas = satCurve.getHSatFromT(T).getHGas();
 
-		double satPLiquid  = this.getPSatFromT(T).getPLiquid();
-		double satPGas = this.getPSatFromT(T).getPGas();
+		double satPLiquid  = satCurve.getPSatFromT(T).getPLiquid();
+		double satPGas = satCurve.getPSatFromT(T).getPGas();
 
 		logger.debug("  (getPIsotherm):: H={} T={} P={}",H,T,P);
 		logger.debug("  (getPIsotherm):: satHLiquid={} satHGas={}",satHLiquid,satHGas);
@@ -186,10 +213,10 @@ public class Refrigerant extends SatCurve {
 			 */        
 			double Pa = satPGas;
 			double Ha = satHGas;
-			double H0 = this.getIsoTherm_H0_Delta() * 
-					(T- this.getIsoTherm_T0_Ref())/this.getIsoTherm_T0_Delta() + 
-					this.getIsoTherm_H0_Ref();
-			double P0 = this.getIsoTherm_P0_Ref();
+			double H0 = isoThermCurve.getIsoTherm_H0_Delta() * 
+					(T- isoThermCurve.getIsoTherm_T0_Ref())/isoThermCurve.getIsoTherm_T0_Delta() + 
+					isoThermCurve.getIsoTherm_H0_Ref();
+			double P0 = isoThermCurve.getIsoTherm_P0_Ref();
 			logger.debug("  (getPIsotherm):: H={}>satHGas={}  Ha={} Pa={} H0={} P0={}",H,satHGas,Ha,Pa,H0,P0);
 
 			double n = ISOTHERM_POWER;
@@ -233,9 +260,9 @@ public class Refrigerant extends SatCurve {
 		double h=0;
 		// 	Based of function getHGasInterIsobarIsotherm() 	
 		
-		double TA = this.getTSatFromP(PRef).getTGas();
+		double TA = satCurve.getTSatFromP(PRef).getTGas();
 		
-		for (double t = TA+0.5; t<this.getTmax(); t=t+0.5  ) {
+		for (double t = TA+0.5; t<satCurve.getTmax(); t=t+0.5  ) {
 			outT=t;
 			h = getHGasInterIsobarIsotherm(PRef,t);
 			if (h > H)
@@ -263,12 +290,12 @@ public class Refrigerant extends SatCurve {
     			H0(T) = H0_Delta * (T-T0_Ref)/T0_Delta + H0_Ref
 		 */        
 
-		double Pa = this.getPSatFromT(T).getPGas();
-		double Ha = this.getHSatFromT(T).getHGas();
-		double H0 = this.getIsoTherm_H0_Delta() * 
-				(T- this.getIsoTherm_T0_Ref())/this.getIsoTherm_T0_Delta() + 
-				this.getIsoTherm_H0_Ref();
-		double P0 = this.getIsoTherm_P0_Ref();
+		double Pa = satCurve.getPSatFromT(T).getPGas();
+		double Ha = satCurve.getHSatFromT(T).getHGas();
+		double H0 = isoThermCurve.getIsoTherm_H0_Delta() * 
+				(T- isoThermCurve.getIsoTherm_T0_Ref())/isoThermCurve.getIsoTherm_T0_Delta() + 
+				isoThermCurve.getIsoTherm_H0_Ref();
+		double P0 = isoThermCurve.getIsoTherm_P0_Ref();
 		double n = ISOTHERM_POWER;
 		double c = (H0-Ha)/Math.pow(Pa-P0,1/n);
 
@@ -326,8 +353,8 @@ public class Refrigerant extends SatCurve {
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
 
-	public String loadRfgGasSaturationData(String fileNameGas) {
-		this.rfgName = loadGasSaturationData(fileNameGas);
+	public String loadRfgGasSaturationData(String fileNameGasSat) {
+		this.rfgName = loadGasSaturationData(fileNameGasSat);
 		return(rfgName);
 	}
 	public String getRfgName() {

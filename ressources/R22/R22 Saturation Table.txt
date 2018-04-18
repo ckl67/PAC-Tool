@@ -10,11 +10,6 @@
 #        liquid        gas      liquid     gas      Liquid  latent  gas      liquid    gas
 Name:R22
 Unity P:kPa
-IsoTherm_P0_Ref:0.5
-IsoTherm_T0_Ref:-50
-IsoTherm_T0_Delta:10
-IsoTherm_H0_Ref:384
-IsoTherm_H0_Delta:6
 -150	0,0019338	0,0019338	1701,8	0,0001633	37,558	298,342	335,9	0,14276	2,5653
 -149	0,0023683	0,0023683	1699,2	0,0001983	38,628	297,702	336,33	0,15141	2,5493
 -148	0,0028899	0,0028899	1696,6	0,0002401	39,696	297,074	336,77	0,15998	2,5337

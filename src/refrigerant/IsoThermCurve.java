@@ -7,9 +7,16 @@ import java.util.Scanner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class IsoTherm {
+public class IsoThermCurve {
 
+	// -------------------------------------------------------
+	// 					CONSTANT
+	// -------------------------------------------------------
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
+
+	// -------------------------------------------------------
+	// 					INSTANCE VARIABLES
+	// -------------------------------------------------------
 
 	private String gasFileName;
 
@@ -22,7 +29,7 @@ public class IsoTherm {
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public IsoTherm() {
+	public IsoThermCurve() {
 
 		this.gasFileName = "empty";
 
@@ -32,7 +39,6 @@ public class IsoTherm {
 		this.IsoTherm_T0_Delta = 10;
 		this.IsoTherm_H0_Ref = 390;
 		this.IsoTherm_H0_Delta = 8;
-
 	}
 
 	/**
@@ -45,7 +51,6 @@ public class IsoTherm {
 			#   IsoTherm_T0_Delta
 			#   IsoTherm_H0_Ref
 			#   IsoTherm_H0_Delta
-
 	 * @param  : File Name
 	 * @return : Name of Gas declared in the File.
 	 * ===============================================================================================
@@ -97,8 +102,6 @@ public class IsoTherm {
 		// Close scanner to avoid memory leak
 		sken.close();
 		return(vgasName);
-
-
 	}
 
 	public String getGasFileName() {
@@ -130,4 +133,5 @@ public class IsoTherm {
 		return IsoTherm_H0_Delta;
 	}
 
+	
 }

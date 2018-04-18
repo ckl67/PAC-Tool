@@ -1,0 +1,10 @@
+# Fields: 
+#	--> Must be present !!!
+#	Name:
+Name:R407C
+Unity P:kPa
+IsoTherm_P0_Ref:0.5
+IsoTherm_T0_Ref:-40
+IsoTherm_T0_Delta:10
+IsoTherm_H0_Ref:392
+IsoTherm_H0_Delta:8

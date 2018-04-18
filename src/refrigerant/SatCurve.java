@@ -706,8 +706,6 @@ public class SatCurve {
 
 	}
 
-
-
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
@@ -763,6 +761,10 @@ public class SatCurve {
 
 	public double getTmax() {
 		return Tmax;
+	}
+
+	public List<List<Double>> getGasSatTable() {
+		return gasSatTable;
 	}
 
 
