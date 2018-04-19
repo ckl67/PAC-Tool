@@ -283,7 +283,7 @@ public class PacToolPanel extends JPanel implements MouseListener,  MouseMotionL
 
 				lMeasurePoints.get(id).setValue(inValue, pac, lMeasurePoints);
 				logger.debug("(initialize)::  New values added {} = {}",lMeasurePoints.get(id).getMPObject().name(), String.format("%.2f", inValue));
-				measurePointTableWin.updateTableValues(lMeasurePoints,guiConfig);
+				measurePointTableWin.updateTableValues();
 
 				// Compute the list of Measure Results
 				for (EloMeasureResult p : EloMeasureResult.values()) {
@@ -439,6 +439,7 @@ public class PacToolPanel extends JPanel implements MouseListener,  MouseMotionL
 					textField.setText(String.valueOf(lMeasurePoints.get(pointMatched_id).getValue()));
 					textField.setVisible(true);
 
+					logger.debug(lMeasurePoints.get(pointMatched_id).getValue());
 					textFieldUnity.setBounds(evt.getX()+80, evt.getY(), 30, 20);
 					textFieldUnity.setText(lMeasurePoints.get(pointMatched_id).getMPObject().getUnity());
 					textFieldUnity.setVisible(true);

@@ -12,6 +12,7 @@ import javax.swing.UIManager;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import gui.info.AboutWin;
@@ -19,6 +20,7 @@ import mpoints.EloMeasurePoint;
 import mpoints.MeasurePoint;
 import pac.Pac;
 import translation.TLanguage;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -31,7 +33,7 @@ import java.util.List;
 /**
  * TableDemoWin uses a custom Table.
  */
-public class MeasurePointTableWin extends JFrame {
+public class TableDemoWin extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
@@ -60,7 +62,7 @@ public class MeasurePointTableWin extends JFrame {
 				}
 
 				// Create Frame
-				MeasurePointTableWin tableDemoWin = new MeasurePointTableWin(lMeasurePoints, guiConfig);
+				TableDemoWin tableDemoWin = new TableDemoWin(lMeasurePoints, guiConfig);
 				tableDemoWin.setVisible(true);
 				
 				// FROM NOW lMeasurePoints data are linked to the table value !!
@@ -83,6 +85,8 @@ public class MeasurePointTableWin extends JFrame {
 				mp5.setValue(30, pac, lMeasurePoints);
 				mp6.setValue(-10, pac, lMeasurePoints);
 				mp8.setValue(-10, pac, lMeasurePoints);
+
+				
 			}
 		});
 	}
@@ -90,7 +94,7 @@ public class MeasurePointTableWin extends JFrame {
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public MeasurePointTableWin( List<MeasurePoint> lMeasurePoints, GuiConfig guiConfig) {
+	public TableDemoWin( List<MeasurePoint> lMeasurePoints, GuiConfig guiConfig) {
 
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -178,9 +182,6 @@ public class MeasurePointTableWin extends JFrame {
 		}
 	}
 
-	public void updateTableValues() {
-		table.repaint();
-	}
 	// ****************************************************************************************
 	// 										NEW CLASS : 	
 	// ****************************************************************************************
@@ -271,17 +272,14 @@ public class MeasurePointTableWin extends JFrame {
 			case 2:
 				double t = Double.valueOf(value.toString());
 				mp.setMP_T(t);
-				mp.setValue(t);
 				break;
 			case 3:
 				double p = Double.valueOf(value.toString());
 				mp.setMP_P(p);
-				mp.setValue(p);
 				break;
 			case 4:
 				double h = Double.valueOf(value.toString());		
 				mp.setMP_H(h);
-				mp.setValue(h);
 				break;
 			default:
 				throw new IllegalArgumentException();
