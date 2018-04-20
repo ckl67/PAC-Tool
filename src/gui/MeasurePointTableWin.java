@@ -1,3 +1,21 @@
+/*
+ * - PAC-Tool - 
+ * Tool for understanding basics and computation of PAC (Pompe � Chaleur)
+ * Copyright (C) 2016 christian.klugesherz@gmail.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License (version 2)
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package gui;
 
 import javax.swing.ImageIcon;
@@ -20,7 +38,10 @@ import mpoints.MeasurePoint;
 import pac.Pac;
 import translation.TLanguage;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,9 +62,6 @@ public class MeasurePointTableWin extends JFrame {
 	// -------------------------------------------------------
 	// 				TEST THE APPLICATION STANDALONE 
 	// -------------------------------------------------------
-	/**
-	 * Launch the application for local test
-	 */
 	public static void main(String[] args) {
 
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -110,6 +128,7 @@ public class MeasurePointTableWin extends JFrame {
 		table = new JTable(new MyTableModel(lMeasurePoints, guiConfig));
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table.setAutoCreateRowSorter(true);
+		table.setFont(new Font("Tahoma", Font.PLAIN, 11));
 
 		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
 		centerRenderer.setHorizontalAlignment( JLabel.CENTER );
@@ -120,6 +139,8 @@ public class MeasurePointTableWin extends JFrame {
 		table.getColumnModel().getColumn(2).setCellRenderer( rightRenderer );
 		table.getColumnModel().getColumn(3).setCellRenderer( rightRenderer );
 		table.getColumnModel().getColumn(4).setCellRenderer( rightRenderer );
+		table.getColumnModel().getColumn(5).setCellRenderer( rightRenderer );
+
 
 		//Create the scroll pane and add the table to it.
 		JScrollPane scrollPane = new JScrollPane(table);
@@ -157,8 +178,10 @@ public class MeasurePointTableWin extends JFrame {
 		mnFile.add(mntmPrint);
 		getContentPane().add(scrollPane);
 
-		setJTableColumnsWidth( 700, 5, 65, 10, 10, 10);
+		setJTableColumnsWidth( 800, 5, 55, 10,  10, 10, 10);
 
+		//getContentPane().setPreferredSize(new Dimension(table.getPreferredSize().width, (table.getPreferredSize().height + 85)));
+	    
 	}
 
 	// -------------------------------------------------------
@@ -181,6 +204,8 @@ public class MeasurePointTableWin extends JFrame {
 	public void updateTableValues() {
 		table.repaint();
 	}
+	
+
 	// ****************************************************************************************
 	// 										NEW CLASS : 	
 	// ****************************************************************************************
@@ -189,7 +214,7 @@ public class MeasurePointTableWin extends JFrame {
 
 		private static final long serialVersionUID = 1L;
 
-		private String[] columnNames = { "Point", "Definition", "T (°C)", "P (bar)", "H (Kj/kg)" };
+		private String[] columnNames = { "Point", "Definition", "Value", "T (°C)", "P (bar)", "H (Kj/kg)" };
 
 		private List<MeasurePoint> lMeasurePoints;
 		private GuiConfig guiConfig;
@@ -218,21 +243,25 @@ public class MeasurePointTableWin extends JFrame {
 			return columnNames[col];
 		}
 
-		// Used to fill the table
+		/**
+		 * Used to fill the table
+		 */
 		public Object getValueAt(int row, int col) {
 			MeasurePoint m = lMeasurePoints.get(row); 
 			switch (col) {
 
-			// { "Point", "Definition", "T (°C)", "P (bar)", "H (Kj/kg)" };
+			// { "Point", "Definition", "Value", "T (°C)", "P (bar)", "H (Kj/kg)" };
 			case 0:
 				return m.getMPObject().name();
 			case 1:
 				return m.getMPObject().getDefinition(guiConfig.getLanguage());
 			case 2:
-				return Math.round(m.getMP_T()*100)/100.0;
+				return Math.round(m.getValue()*100)/100.0;
 			case 3:
-				return Math.round(m.getMP_P()*100)/100.0;
+				return Math.round(m.getMP_T()*100)/100.0;
 			case 4:
+				return Math.round(m.getMP_P()*100)/100.0;
+			case 5:
 				return Math.round(m.getMP_H()*100)/100.0;
 			default:
 				throw new IllegalArgumentException();
@@ -240,7 +269,7 @@ public class MeasurePointTableWin extends JFrame {
 		}
 
 		/**
-		 * Don't need to implement this method unless your table's editable.
+		 * Specify the cells which are editable
 		 */
 		public boolean isCellEditable(int row, int col) {
 			//Note that the data/cell address is constant,
@@ -253,9 +282,9 @@ public class MeasurePointTableWin extends JFrame {
 		}
 
 		/**
-		 * Don't need to implement this method unless your table's data can
-		 * change.
+		 * What happens with the data that you are entering in the table
 		 */
+
 		public void setValueAt(Object value, int row, int col) {
 			logger.debug("Setting value at {},{} to {} (an instance of {} ",
 					row,col, value, value.getClass());
