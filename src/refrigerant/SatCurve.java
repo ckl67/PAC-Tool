@@ -1,3 +1,21 @@
+/*
+ * - PAC-Tool - 
+ * Tool for understanding basics and computation of PAC (Pompe à Chaleur)
+ * Copyright (C) 2016 christian.klugesherz@gmail.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License (version 2)
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package refrigerant;
 
 import java.io.File;
@@ -30,13 +48,11 @@ public class SatCurve {
 	// 					INSTANCE VARIABLES
 	// -------------------------------------------------------
 
+	// Name mandatory to be displayed in the gui
 	private String gasFileName;
+	
+	private String gasName;
 	private List<List<Double>> gasSatTable;
-	private double IsoTherm_P0_Ref;
-	private double IsoTherm_T0_Ref;
-	private double IsoTherm_T0_Delta;
-	private double IsoTherm_H0_Ref;
-	private double IsoTherm_H0_Delta;
 
 	private double Hmin;  			//  Enthalpy Minimum value (curve)
 	private double Hmax;    		//  Enthalpy Maximum value (curve).
@@ -51,13 +67,10 @@ public class SatCurve {
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
 	public SatCurve() {
-		this.gasFileName = "empty";
-		// Default value based on R22
-		this.IsoTherm_P0_Ref = 0.5; 
-		this.IsoTherm_T0_Ref = -40;
-		this.IsoTherm_T0_Delta = 10;
-		this.IsoTherm_H0_Ref = 390;
-		this.IsoTherm_H0_Delta = 8;
+
+		gasSatTable = new ArrayList<List<Double>>();
+
+		this.gasFileName = "./ressources/R22/R22 Saturation Table.txt";
 
 		this.Hmin = 1000.0;  				
 		this.Hmax = 0.0;    				
@@ -66,9 +79,27 @@ public class SatCurve {
 		this.Tmin = 1000.0;  
 		this.Tmax = 0.0;    
 
-		gasSatTable = new ArrayList<List<Double>>();
+		this.gasName = loadGasSaturationData(gasFileName);
+
 	}
 
+	public SatCurve(String fileNameGasSat) {
+
+		gasSatTable = new ArrayList<List<Double>>();
+
+		this.gasFileName = fileNameGasSat;
+
+		this.Hmin = 1000.0;  				
+		this.Hmax = 0.0;    				
+		this.Pmin = 1000.0;  
+		this.Pmax = 0.0;    
+		this.Tmin = 1000.0;  
+		this.Tmax = 0.0;    
+
+		this.gasName = loadGasSaturationData(gasFileName);
+	}
+
+	
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
@@ -107,6 +138,13 @@ public class SatCurve {
 		File file = new File (fileNameGas);
 		logger.debug("(loadGasSaturationData):: Read File: {}", fileNameGas);
 
+		this.Hmin = 1000.0;  				
+		this.Hmax = 0.0;    				
+		this.Pmin = 1000.0;  
+		this.Pmax = 0.0;    
+		this.Tmin = 1000.0;  
+		this.Tmax = 0.0;    
+
 		Scanner sken = null;
 		try {
 			sken = new Scanner (file);
@@ -125,30 +163,10 @@ public class SatCurve {
 				String[] val = first.split (":");
 				unityP = val [1];
 				logger.info("Unity of Pressure = {}",unityP);
-			} else if (first.startsWith("IsoTherm_P0_Ref:") ) {
-				String[] val = first.split (":");
-				IsoTherm_P0_Ref = Double.parseDouble(val [1].replace(",", "."));
-				logger.info("IsoTherm_P0_Ref = {}",IsoTherm_P0_Ref);
-			} else if (first.startsWith("IsoTherm_T0_Ref:") ) {
-				String[] val = first.split (":");
-				IsoTherm_T0_Ref = Double.parseDouble(val [1].replace(",", "."));
-				logger.info("IsoTherm_T0_Ref = {}",IsoTherm_T0_Ref);
-			} else if (first.startsWith("IsoTherm_T0_Delta:") ) {
-				String[] val = first.split (":");
-				IsoTherm_T0_Delta = Double.parseDouble(val[1].replace(",", "."));
-				logger.info("IsoTherm_T0_Delta = {}",IsoTherm_T0_Delta);			
-			} else if (first.startsWith("IsoTherm_H0_Ref:") ) {
-				String[] val = first.split (":");
-				IsoTherm_H0_Ref = Double.parseDouble(val[1].replace(",", "."));
-				logger.info("IsoTherm_H0_Ref = {}",IsoTherm_H0_Ref);
-			} else if (first.startsWith("IsoTherm_H0_Delta:") ) {
-				String[] val = first.split (":");
-				IsoTherm_H0_Delta = Double.parseDouble(val[1].replace(",", "."));
-				logger.info("IsoTherm_H0_Delta = {}",IsoTherm_H0_Delta);
 			} else if (!first.startsWith("#") ) {
 				String[] val = first.split ("\t");
 
-				// Create 1 row, and add all elemnts
+				// Create 1 row, and add all elements
 				List<Double> row = new ArrayList<Double>();
 
 				// Temperature
@@ -737,13 +755,11 @@ public class SatCurve {
 
 	}
 
-
-
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
 
-	public String getGasFileNameSat() {
+	public String getGasFileName() {
 		return gasFileName;
 	}
 
@@ -771,30 +787,6 @@ public class SatCurve {
 		return gasSatTable.get(n).get(id_P_Gas);
 	}
 
-	public double getIsoTherm_P0_Ref() {
-		return IsoTherm_P0_Ref;
-	}
-
-	public double getIsoTherm_T0_Ref() {
-		return IsoTherm_T0_Ref;
-	}
-
-	public double getIsoTherm_T0_Delta() {
-		return IsoTherm_T0_Delta;
-	}
-
-	public double getIsoTherm_H0_Ref() {
-		return IsoTherm_H0_Ref;
-	}
-
-	public double getIsoTherm_H0_T(double T) {
-		//  H0(T) = H0_Delta * (T-T0_Ref)/T0_Delta + H0_Ref
-		return IsoTherm_H0_Delta * (T-IsoTherm_T0_Ref)/IsoTherm_T0_Delta + IsoTherm_H0_Ref ;
-	}
-
-	public double getIsoTherm_H0_Delta() {
-		return IsoTherm_H0_Delta;
-	}
 
 	public double getHmin() {
 		return Hmin;
@@ -818,6 +810,14 @@ public class SatCurve {
 
 	public double getTmax() {
 		return Tmax;
+	}
+
+	public List<List<Double>> getGasSatTable() {
+		return gasSatTable;
+	}
+
+	public String getGasName() {
+		return gasName;
 	}
 
 

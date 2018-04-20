@@ -76,7 +76,9 @@ public class PressTempWin extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Refrigerant refrigerant = new Refrigerant("D:/Users/kluges1/workspace/pac-tool/ressources/R407/R407C/Saturation Table R407C Dupont-Suva.txt");
+					Refrigerant refrigerant =  new Refrigerant(
+							"./ressources/R407/R407C/R407C Dupont-Suva Saturation Table.txt",
+							"./ressources/R407/R407C/R407C Dupont-Suva IsoTherm Table.txt");
 
 					PressTempWin window = new PressTempWin(refrigerant);
 					window.setVisible(true);

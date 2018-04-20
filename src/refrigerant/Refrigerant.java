@@ -1,21 +1,41 @@
+/*
+ * - PAC-Tool - 
+ * Tool for understanding basics and computation of PAC (Pompe à Chaleur)
+ * Copyright (C) 2016 christian.klugesherz@gmail.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License (version 2)
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 package refrigerant;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 
-public class Refrigerant extends SatCurve {
+public class Refrigerant implements IRefrigerant {
 
 	// -------------------------------------------------------
 	// 					CONSTANT
 	// -------------------------------------------------------
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
-	private final int ISOTHERM_POWER = 2;
-	
 	// --------------------------------------------------------------------
 	// Instance variables
 	// --------------------------------------------------------------------
+	private SatCurve satCurve;
+	private IsoThermCurve isoThermCurve;
+	private IsoBaricCurve isoBaricCurve;
+
 	private String rfgName;
 	private double rfgP;
 	private double rfgT;
@@ -24,268 +44,74 @@ public class Refrigerant extends SatCurve {
 	// -------------------------------------------------------
 	// 						CONSTRUCTOR
 	// -------------------------------------------------------
-	public Refrigerant(String fileNameGas) {
-		this.rfgName = loadGasSaturationData(fileNameGas);
-		this.rfgP = 0.0;
-		this.rfgT = 0.0; 
-		this.rfgH = 0.0; 	
-		
+	public Refrigerant(String fileNameGasSatCurve, String fileNameGasIsoThermCurve) {
+		String gasName1 = null;
+		String gasName2 = null;
+
+		this.satCurve = new SatCurve(fileNameGasSatCurve);
+		this.isoThermCurve = new IsoThermCurve(fileNameGasIsoThermCurve,satCurve);
+		this.isoBaricCurve = new IsoBaricCurve(satCurve,isoThermCurve);
+
+		gasName1 = satCurve.getGasName();
+		gasName2 = isoThermCurve.getGasName();
+
+		if (gasName1.equals(gasName2)) {
+			this.rfgName = gasName1;
+			this.rfgP = 0.0;
+			this.rfgT = 0.0; 
+			this.rfgH = 0.0; 	
+		} else {
+			logger.error("(Refrigerant):: Saturation Curve and IsoTherm curve don't return the same Gas name {} <> {}! ",gasName1,gasName2 );
+		}		
 	}
 
 	/*
 	 * Will load default Refrigerant R22
 	 */
 	public Refrigerant() {
-		this.rfgName = loadGasSaturationData("./ressources/R22/Saturation Table R22.txt");
-		this.rfgP = 0.0;
-		this.rfgT = 0.0; 
-		this.rfgH = 0.0; 	
+		String gasName1 = null;
+		String gasName2 = null;
+
+		this.satCurve = new SatCurve("./ressources/R22/R22 Saturation Table.txt");
+		this.isoThermCurve = new IsoThermCurve("./ressources/R22/R22 IsoTherm Table.txt",satCurve);
+		this.isoBaricCurve = new IsoBaricCurve(satCurve,isoThermCurve);
+
+		gasName1 = satCurve.getGasName();
+		gasName2 = isoThermCurve.getGasName();
+
+		if (gasName1.equals(gasName2)) {
+			this.rfgName = gasName1;
+			this.rfgP = 0.0;
+			this.rfgT = 0.0; 
+			this.rfgH = 0.0; 	
+		} else {
+			logger.error("(Refrigerant):: Saturation Curve and IsoTherm curve don't return the same Gas name {} <> {}! ",gasName1,gasName2 );
+		}			
 	}
 
 	// -------------------------------------------------------
 	// 							METHOD
 	// -------------------------------------------------------
 
-	public void loadNewRefrigerant(String fileNameGas) {
-		this.rfgName = loadGasSaturationData(fileNameGas);
-		this.rfgP = 0.0;
-		this.rfgT = 0.0; 
-		this.rfgH = 0.0; 
-	}
+	public boolean loadNewRefrigerant(String fileNameGasSatCurve, String fileNameGasIsoThermCurve) {
+		boolean out;
+		String gasName1 = null;
+		String gasName2 = null;
 
-	// -----------------------------------------------------------------------------------------
-	// 										Isobaric 
-	// -----------------------------------------------------------------------------------------
+		gasName1 = satCurve.loadGasSaturationData(fileNameGasSatCurve);
+		gasName2 = isoThermCurve.loadGasIsoThermData(fileNameGasIsoThermCurve);
 
-	/**
-	 * Get Pressure of Isobaric 
-	 * No sense because == refP, but for the principle
-	 * @param refP
-	 * @param H
-	 * @return
-	 */
-	public double getIsobaricP(double refP, double H) {
-		// Whatever H
-		double outP=refP;			
-		return outP;
-	}
-
-	/**
-	 * Get Temperature of Isobaric 
-	 * No sense because == refP, but for the principle
-	 * @param refP
-	 * @param H
-	 * @return
-	 */
-	public double getIsobaricT(double refP, double H) {
-		double outT=refP;
-		double satHLiquid = this.getHSatFromP(refP).getHLiquid();
-		double satHGas = this.getHSatFromP(refP).getHGas();
-
-		double satTLiquid = this.getTSatFromP(refP).getTLiquid();
-		double satTGas = this.getTSatFromP(refP).getTGas();
-		
-		double x,y0,y1,x0,x1;
-
-
-		if (H< satHLiquid) {
-			outT = this.getT_SatCurve_FromH(H);
-		}
-		else if (H> satHGas) {
-			outT = getTGasInterIsobarIsotherm(refP,H);
-		}
-		else {
-			x  = H;
-			x0 = satHLiquid;
-			x1 = satHGas;
-			if (x1==x0) {
-				logger.error("(getIsobaricT):: 2 same value will cause and issue and must be removed ");
-			}
-			y0 = satTLiquid;
-			y1 = satTGas;
-			outT = (x-x0)*(y1-y0)/(x1-x0)+ y0;
-		}
-		
-		return outT;
-	}
-
-	
-	/**
-	 * Get State of Isobaric 
-	 * @param refP
-	 * @param H
-	 * @return
-	 */
-	public String getIsobaricState(double refP, double H) {
-		String outState="Empty";
-
-		double satHLiquid = this.getHSatFromP(refP).getHLiquid();
-		double satHGas = this.getHSatFromP(refP).getHGas();
-		
-		if (H< satHLiquid) 
-			outState = "Liquid";
-		else if (H> satHGas)
-			outState = "Gas";
-		else
-			outState = "Liquid+Gas";
-
-		return outState;
-	}
-
-	// -----------------------------------------------------------------------------------------
-	// 										IsoTherm 
-	// -----------------------------------------------------------------------------------------
-
-	public double getPIsotherm(double H, double T) {
-		return getPIsotherm(H, T, this.getPSatFromT(T).getPLiquid());
-
-	}
-
-
-	public double getHIsotherm(double H, double T) {
-		double outH = 0;
-		double satHLiquid = this.getHSatFromT(T).getHLiquid();
-
-		if (H< satHLiquid) { 
-			outH = satHLiquid;
+		if (gasName1.equals(gasName2)) {
+			this.rfgName = gasName1;
+			this.rfgP = 0.0;
+			this.rfgT = 0.0; 
+			this.rfgH = 0.0;
+			out = true;
 		} else {
-			outH = H;
+			logger.error("(Refrigerant):: Saturation Curve and IsoTherm curve don't return the same Gas name {} <> {}! ",gasName1,gasName2 );
+			out = false;
 		}
-
-		return(outH);
-	}
-
-	public double getPIsotherm(double H, double T, double P) {
-		double outP = 0;
-
-		double satHLiquid = this.getHSatFromT(T).getHLiquid();
-		double satHGas = this.getHSatFromT(T).getHGas();
-
-		double satPLiquid  = this.getPSatFromT(T).getPLiquid();
-		double satPGas = this.getPSatFromT(T).getPGas();
-
-		logger.debug("  (getPIsotherm):: H={} T={} P={}",H,T,P);
-		logger.debug("  (getPIsotherm):: satHLiquid={} satHGas={}",satHLiquid,satHGas);
-		logger.debug("  (getPIsotherm):: satPLiquid={} satPGas={}",satPLiquid,satPGas);
-
-		if (H< satHLiquid) { 
-			if (P < satPLiquid) {
-				outP = satPLiquid;
-			} else {
-				outP = P;
-			}
-		}
-		else if (H> satHGas) {
-			/*
-			 	PIsotherm(H,T,P)=  -( 1/c * (H-Ha) )^4 + Pa;  
-				with 	
-	         		c = (H0-Ha)/ (Pa-P0 )^(1/4); 
-	               		Pa et Ha : f(T isotherm)
-	        			P0 = P0_Ref
-	        			H0(T) = H0_Delta * (T-T0_Ref)/T0_Delta + H0_Ref
-			 */        
-			double Pa = satPGas;
-			double Ha = satHGas;
-			double H0 = this.getIsoTherm_H0_Delta() * 
-					(T- this.getIsoTherm_T0_Ref())/this.getIsoTherm_T0_Delta() + 
-					this.getIsoTherm_H0_Ref();
-			double P0 = this.getIsoTherm_P0_Ref();
-			logger.debug("  (getPIsotherm):: H={}>satHGas={}  Ha={} Pa={} H0={} P0={}",H,satHGas,Ha,Pa,H0,P0);
-
-			double n = ISOTHERM_POWER;
-			double c = (H0-Ha)/Math.pow(Pa-P0,1/n);
-			outP = -Math.pow((H-Ha)/c,n) + Pa;
-			if (outP < 0) 
-				outP = 0;
-
-		}
-		else {
-			// satHLiquid < H < satHGas
-			double x,y0,y1,x0,x1;
-			x  = H;
-			x0 = satHLiquid;
-			x1 = satHGas;
-			if (x1==x0) {
-				logger.error("(getPIsotherm):: 2 same value will cause and issue and must be removed ");
-			}
-			y0 = satPLiquid;
-			y1 = satPGas;
-			outP = (x-x0)*(y1-y0)/(x1-x0)+ y0;
-		}
-
-
-		return outP;
-	}
-
-	
-	// -----------------------------------------------------------------------------------------
-	// 										Intersection with Isobar 
-	// -----------------------------------------------------------------------------------------
-	
-	/**
-	 * T Gas Inter Isobar Isotherm --> Will determine T (Approximation !!)
-	 * @param PRef
-	 * @param H
-	 * @return
-	 */
-	public double getTGasInterIsobarIsotherm(double PRef, double H) {
-		double outT = 0;
-		double h=0;
-		// 	Based of function getHGasInterIsobarIsotherm() 	
-		
-		double TA = this.getTSatFromP(PRef).getTGas();
-		
-		for (double t = TA+0.5; t<this.getTmax(); t=t+0.5  ) {
-			outT=t;
-			h = getHGasInterIsobarIsotherm(PRef,t);
-			if (h > H)
-				break;
-		}
-		
-		return(outT);
-	}
-	
-	/**
-	 * H Gas Inter Isobar Isotherm
-	 * @param PRef
-	 * @param T
-	 * @return
-	 */
-	public double getHGasInterIsobarIsotherm(double PRef, double T) {
-		double outH = 0;
-
-		/*
-	 	Hinter = c * (Pa-PRef)^(1/n) + Ha
-		with 	
-     		c = (H0-Ha)/ (Pa-P0 )^(1/4); 
-           		Pa et Ha : f(T isotherm)
-    			P0 = P0_Ref
-    			H0(T) = H0_Delta * (T-T0_Ref)/T0_Delta + H0_Ref
-		 */        
-
-		double Pa = this.getPSatFromT(T).getPGas();
-		double Ha = this.getHSatFromT(T).getHGas();
-		double H0 = this.getIsoTherm_H0_Delta() * 
-				(T- this.getIsoTherm_T0_Ref())/this.getIsoTherm_T0_Delta() + 
-				this.getIsoTherm_H0_Ref();
-		double P0 = this.getIsoTherm_P0_Ref();
-		double n = ISOTHERM_POWER;
-		double c = (H0-Ha)/Math.pow(Pa-P0,1/n);
-
-		if (Pa > PRef) {
-			outH = c*Math.pow(Pa-PRef,(1/n)) + Ha;
-			logger.debug("(getHGasInterIsobarIsotherm):: PRef={} T={}",PRef,T);
-			logger.debug("     Pa={} Ha={} H0={} P0={} c={} PRef={} n={}",Pa,Ha,H0,P0,c,PRef,n);
-			logger.debug("      ---> outH={}",outH);
-		} else {
-			outH = 0;
-			logger.error("(getHGasInterIsobarIsotherm):: PRef={} T={}",PRef,T);
-			logger.error("    Error: condition not respected !! Pa>PRef !!  -->  PRef={}  Pa={}",PRef,Pa);
-			logger.error("     Pa={} Ha={} H0={} P0={} c={} PRef={} n={}",Pa,Ha,H0,P0,c,PRef,n);
-			logger.error("      ---> outH={}",outH);
-		}
-
-		return outH;
+		return out;
 	}
 
 	// -------------------------------------------------------
@@ -304,7 +130,8 @@ public class Refrigerant extends SatCurve {
 	@SuppressWarnings("unchecked")
 	public JSONObject getJsonObject() {
 		JSONObject jsonObj = new JSONObject();  
-		jsonObj.put("RefrigerantGasFileName", this.getGasFileNameSat());
+		jsonObj.put("RefrigerantSatCurveGasFileName", satCurve.getGasFileName());
+		jsonObj.put("RefrigerantIsoThermCurveGasFileName", isoThermCurve.getGasFileName());
 		return jsonObj ;
 	}
 
@@ -313,23 +140,31 @@ public class Refrigerant extends SatCurve {
 	 * @param jsonObj : JSON Object
 	 */
 	public void setJsonObject(JSONObject jsonObj) {
-		String gasFileName;
+		String fileNameGasSatCurve = null;
+		String fileNameGasIsoThermCurve = null;
+		String gasName1 = null;
+		String gasName2 = null;
 
-		gasFileName = (String) jsonObj.get("RefrigerantGasFileName");
-		this.rfgName = loadGasSaturationData(gasFileName);
-		this.rfgP = 0.0;
-		this.rfgT = 0.0; 
-		this.rfgH = 0.0; 	
+		fileNameGasSatCurve = (String) jsonObj.get("RefrigerantSatCurveGasFileName");
+		fileNameGasIsoThermCurve = (String) jsonObj.get("RefrigerantIsoThermCurveGasFileName");
+
+		gasName1 = satCurve.loadGasSaturationData(fileNameGasSatCurve);
+		gasName2 = isoThermCurve.loadGasIsoThermData(fileNameGasIsoThermCurve);
+
+		if (gasName1.equals(gasName2)) {
+			this.rfgName = gasName1;
+			this.rfgP = 0.0;
+			this.rfgT = 0.0; 
+			this.rfgH = 0.0; 	
+		} else {
+			logger.error("(Refrigerant):: Saturation Curve and IsoTherm curve don't return the same Gas name {} <> {}! ",gasName1,gasName2 );
+		}		
 	}
 
 	// -------------------------------------------------------
 	// 					GETTER AND SETTER
 	// -------------------------------------------------------
 
-	public String loadRfgGasSaturationData(String fileNameGas) {
-		this.rfgName = loadGasSaturationData(fileNameGas);
-		return(rfgName);
-	}
 	public String getRfgName() {
 		return rfgName;
 	}
@@ -352,6 +187,136 @@ public class Refrigerant extends SatCurve {
 
 	public void setRfgT(double T) {
 		this.rfgT = T;
+	}
+
+	// -----------------------------------------------------------------------------------------
+	// 										Isobaric 
+	// -----------------------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------
+	// 										IsoThermCurve 
+	// -----------------------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------------
+	// 										Intersection with Isobar 
+	// -----------------------------------------------------------------------------------------
+
+	@Override
+	public double getPIsotherm(double H, double T, double P) {
+		return isoThermCurve.getPIsotherm(H, T, P);
+	}
+
+	@Override
+	public TSat getTSatFromP(double pressure) {
+		return satCurve.getTSatFromP(pressure);
+	}
+
+	@Override
+	public PSat getPSatFromT(double temp) {
+		return satCurve.getPSatFromT(temp);
+	}
+
+	@Override
+	public HSat getHSatFromP(double pressure) {
+		return satCurve.getHSatFromP(pressure);
+	}
+
+	@Override
+	public HSat getHSatFromT(double temp) {
+		return satCurve.getHSatFromT(temp);
+	}
+
+	@Override
+	public double getHIsotherm(double H, double T) {
+		return isoThermCurve.getHIsotherm(H, T);
+	}
+
+	@Override
+	public double getPIsotherm(double H, double T) {
+		return isoThermCurve.getPIsotherm(H, T);
+	}
+
+	@Override
+	public double getT_SatCurve_FromH(double vH) {
+		return satCurve.getT_SatCurve_FromH(vH);
+	}
+
+	@Override
+	public double getT_SatCurve_FromH(double vH, double vP) {
+		return satCurve.getT_SatCurve_FromH(vH, vP);
+	}
+
+	@Override
+	public double getHGasInterIsobarIsotherm(double PRef, double T) {
+		return isoThermCurve.getHGasInterIsobarIsotherm(PRef, T);
+	}
+
+	@Override
+	public double getIsoTherm_H0_T(double T) {
+		return isoThermCurve.getIsoTherm_H0_T(T);
+	}
+
+	@Override
+	public int getSatTableSize() {
+		return satCurve.getSatTableSize();
+	}
+
+	@Override
+	public double getHSat_Liquid(int n) {
+		return satCurve.getHSat_Liquid(n);
+	}
+
+	@Override
+	public double getPSat_Liquid(int n) {
+		return satCurve.getPSat_Liquid(n);
+	}
+
+	@Override
+	public double getHSat_Gas(int n) {
+		return satCurve.getHSat_Gas(n);
+	}
+
+	@Override
+	public double getPSat_Gas(int n) {
+		return satCurve.getPSat_Gas(n);
+	}
+
+	@Override
+	public double getP_SatCurve_FromH(double vH) {
+		return satCurve.getP_SatCurve_FromH(vH);
+	}
+
+	@Override
+	public double getP_SatCurve_FromH(double vH, double vP) {
+		return satCurve.getP_SatCurve_FromH(vH, vP);
+	}
+
+	@Override
+	public double getIsobaricT(double refP, double H) {
+		return isoBaricCurve.getIsobaricT(refP, H);
+	}
+
+	@Override
+	public double getTSat(int n) {
+		return satCurve.getTSat(n);
+	}
+
+	@Override
+	public double getIsobaricP(double refP, double H) {
+		return isoBaricCurve.getIsobaricP(refP, H);
+	}
+
+	@Override
+	public String getIsobaricState(double refP, double H) {
+		return isoBaricCurve.getIsobaricState(refP, H);
+	}
+
+	@Override
+	public String getGasFileNameSatCurve() {
+		return satCurve.getGasFileName();
+	}
+
+	@Override
+	public String getGasFileNameIsoThermCurve() {
+		return isoThermCurve.getGasFileName();
 	}
 
 }

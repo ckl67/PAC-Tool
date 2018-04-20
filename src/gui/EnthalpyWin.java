@@ -127,8 +127,10 @@ public class EnthalpyWin extends JFrame {
 					Pac pac = new Pac();
 
 					// Set Gaz used on PAC
-					//pac.getRefrigerant().loadNewRefrigerant("./ressources/R407/R407C/Saturation Table R407C Dupont-Suva.txt");
-					pac.getRefrigerant().loadNewRefrigerant("./ressources/R22/Saturation Table R22.txt");
+					pac.getRefrigerant().loadNewRefrigerant(
+							"D:/Users/kluges1/workspace/pac-tool/ressources/R22/R22 Saturation Table.txt",
+							"D:/Users/kluges1/workspace/pac-tool/ressources/R22/R22 IsoTherm Table.txt"	);
+					
 					System.out.println(pac.getRefrigerant().getRfgName());
 
 					// Win Pressure Temperature
@@ -404,7 +406,7 @@ public class EnthalpyWin extends JFrame {
 					double hIsotherm = refrigerant.getHIsotherm(hResult, tIsotherm);
 					enthalpyPanel.setHCurveFollower(hIsotherm);
 					enthalpyPanel.setPCurveFollower(pIsotherm);
-					lblFollower.setText(String.format("IsoTherm P=%.2f / T=%.2f",pIsotherm,tIsotherm));
+					lblFollower.setText(String.format("IsoThermCurve P=%.2f / T=%.2f",pIsotherm,tIsotherm));
 					repaint();
 
 
@@ -454,7 +456,7 @@ public class EnthalpyWin extends JFrame {
 						lEnthalpyElDraw.get(p.ordinal()).set(lMeasurePoints);
 					}
 					repaint();
-					measurePointTableWin.updateTableValues(lMeasurePoints,guiConfig);
+				//	measurePointTableWin.updateTableValues(lMeasurePoints,guiConfig);
 					measureResultTableWin.updateTableValues(lMeasureResults, guiConfig);				
 
 				}
@@ -547,7 +549,7 @@ public class EnthalpyWin extends JFrame {
 		rdbtnSaturation.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		panelMiddle_South.add(rdbtnSaturation);
 
-		rdbtnIsoTherm = new JRadioButton("IsoTherm");
+		rdbtnIsoTherm = new JRadioButton("IsoThermCurve");
 		rdbtnIsoTherm.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		panelMiddle_South.add(rdbtnIsoTherm);
 

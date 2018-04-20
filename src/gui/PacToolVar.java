@@ -153,7 +153,6 @@ public class PacToolVar {
 
 		// 1
 		pac = new Pac();								// Contains Pac Features
-		pac.getRefrigerant().loadNewRefrigerant("./ressources/R22/Saturation Table R22.txt");
 		lblLoading.setText("Loading...... Pac Features");
 		percent = 100*i++/iterations;
 		progressBar.setValue(percent);

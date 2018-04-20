@@ -1,0 +1,9 @@
+# Fields: 
+#	--> Must be present !!!
+#	Name:
+Name:R22
+IsoTherm_P0_Ref:0.5
+IsoTherm_T0_Ref:-50
+IsoTherm_T0_Delta:10
+IsoTherm_H0_Ref:384
+IsoTherm_H0_Delta:6

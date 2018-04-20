@@ -13,12 +13,14 @@ public class JUnitExpansionValve {
 	@Test
 	public void test() {
 		
-		System.out.println("TEST EXPANSION VALVE  = Détendeur !");
+		System.out.println("TEST EXPANSION VALVE  = Dï¿½tendeur !");
 
 		ExpansionValve vExpansionValve = new ExpansionValve();
 		System.out.println(vExpansionValve.getName());
 
-		Refrigerant vRefrigeranR22 =  new Refrigerant("D:/Users/kluges1/workspace/pac-tool/ressources/R22/Saturation Table R22.txt");
+		Refrigerant vRefrigeranR22 =  new Refrigerant(
+				"D:/Users/kluges1/workspace/pac-tool/ressources/R22/R22 Saturation Table.txt",
+				"D:/Users/kluges1/workspace/pac-tool/ressources/R22/R22 IsoTherm Table.txt"	);
 		vRefrigeranR22.setRfgP(25);
 		vRefrigeranR22.setRfgT(5);
 

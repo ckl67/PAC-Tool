@@ -14,7 +14,9 @@ public class JUnitDehydrator {
 	public void test() {
 		System.out.println("TEST DEHYDRATOR");
 		Dehydrator vDehydrator = new Dehydrator();
-		Refrigerant vGas = new Refrigerant("D:/Users/kluges1/workspace/pac-tool/ressources/R22/Saturation Table R22.txt");
+		Refrigerant vGas =  new Refrigerant(
+				"D:/Users/kluges1/workspace/pac-tool/ressources/R22/R22 Saturation Table.txt",
+				"D:/Users/kluges1/workspace/pac-tool/ressources/R22/R22 IsoTherm Table.txt"	);
 
 		assertEquals("Dehydrator",vDehydrator.getName());
 		
@@ -39,7 +41,7 @@ public class JUnitDehydrator {
 
 		System.out.println("\n--->Transfer Function");
 		System.out.println("Input --> Output");
-		System.out.println(vGas.getRfgT()+"°C-->"+vDehydrator.transfer(vGas).getRfgT()+"°C");
+		System.out.println(vGas.getRfgT()+"ï¿½C-->"+vDehydrator.transfer(vGas).getRfgT()+"ï¿½C");
 	}
 
 }

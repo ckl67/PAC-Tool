@@ -33,12 +33,15 @@ public class JUnitCondenser {
 		System.out.println("---> Read afterwards ");
 		assertEquals("Condenseur",vCondenser.getName());
 
-		Refrigerant vGas = new Refrigerant("D:/Users/kluges1/workspace/pac-tool/ressources/R22/Saturation Table R22.txt");
+		Refrigerant vGas =  new Refrigerant(
+				"D:/Users/kluges1/workspace/pac-tool/ressources/R22/R22 Saturation Table.txt",
+				"D:/Users/kluges1/workspace/pac-tool/ressources/R22/R22 IsoTherm Table.txt"	);
+
 		vGas.setRfgT(10);
 
 		System.out.println("--->Transfer Function");
 		System.out.println("Input --> Output");
-		System.out.println(vGas.getRfgT()+"°C-->"+vCondenser.transfer(vGas).getRfgT()+"°C");
+		System.out.println(vGas.getRfgT()+"Â°C-->"+vCondenser.transfer(vGas).getRfgT()+"Â°C");
 	}
 
 }
