@@ -289,7 +289,7 @@ public class PacToolPanel extends JPanel implements MouseListener,  MouseMotionL
 				for (EloMeasureResult p : EloMeasureResult.values()) {
 					lMeasureResults.get(p.id()).setValue(lMeasurePoints,pac);
 				}
-				measureResultTableWin.updateTableValues(lMeasureResults, guiConfig);				
+				measureResultTableWin.updateTableValues();				
 
 				// Compute the Draw element based on lMeasurePoints
 				for (EloEnthalpyElDraw p : EloEnthalpyElDraw.values()) {

@@ -456,9 +456,8 @@ public class EnthalpyWin extends JFrame {
 						lEnthalpyElDraw.get(p.ordinal()).set(lMeasurePoints);
 					}
 					repaint();
-				//	measurePointTableWin.updateTableValues(lMeasurePoints,guiConfig);
-					measureResultTableWin.updateTableValues(lMeasureResults, guiConfig);				
-
+					measurePointTableWin.updateTableValues();
+					measureResultTableWin.updateTableValues();				
 				}
 			}
 		});
@@ -657,6 +656,10 @@ public class EnthalpyWin extends JFrame {
 
 	public Pac getPac() {
 		return pac;
+	}
+
+	public GuiConfig getGuiConfig() {
+		return guiConfig;
 	}
 
 }

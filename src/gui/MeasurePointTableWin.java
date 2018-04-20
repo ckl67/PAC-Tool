@@ -37,9 +37,9 @@ import mpoints.EloMeasurePoint;
 import mpoints.MeasurePoint;
 import pac.Pac;
 import translation.TLanguage;
+import translation.TMeasurePoint;
+
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -121,7 +121,7 @@ public class MeasurePointTableWin extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(AboutWin.class.getResource("/gui/images/PAC-Tool_16.png")));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(true);
-		setBounds(100, 100, 700, 271);
+		setBounds(100, 100, 800, 271);
 
 
 		// Create Table
@@ -172,15 +172,13 @@ public class MeasurePointTableWin extends JFrame {
 				} catch (PrinterException exc) {
 					logger.error(exc);
 				}			
-
 			}
 		});
 		mnFile.add(mntmPrint);
 		getContentPane().add(scrollPane);
 
-		setJTableColumnsWidth( 800, 5, 55, 10,  10, 10, 10);
-
-		//getContentPane().setPreferredSize(new Dimension(table.getPreferredSize().width, (table.getPreferredSize().height + 85)));
+		//  { "Point", "Definition", "Value", "T (°C)", "P (bar)", "H (Kj/kg)" };
+		setJTableColumnsWidth( 800, 5, 50, 15,  10, 10, 10);
 	    
 	}
 
@@ -214,7 +212,8 @@ public class MeasurePointTableWin extends JFrame {
 
 		private static final long serialVersionUID = 1L;
 
-		private String[] columnNames = { "Point", "Definition", "Value", "T (°C)", "P (bar)", "H (Kj/kg)" };
+		//  { "Point", "Definition", "Value", "T (°C)", "P (bar)", "H (Kj/kg)" };
+		private String[] columnNames = new String[6];
 
 		private List<MeasurePoint> lMeasurePoints;
 		private GuiConfig guiConfig;
@@ -225,6 +224,15 @@ public class MeasurePointTableWin extends JFrame {
 		public MyTableModel( List<MeasurePoint> vlMeasurePoints, GuiConfig vguiConfig) {
 			lMeasurePoints = vlMeasurePoints;
 			guiConfig = vguiConfig;
+			
+			//  { "Point", "Definition", "Value", "T (°C)", "P (bar)", "H (Kj/kg)" };
+			columnNames[0] = TMeasurePoint.DEF_TAB_POINT.getLangue(guiConfig.getLanguage());
+			columnNames[1] = TMeasurePoint.DEF_TAB_DEFINITION.getLangue(guiConfig.getLanguage());
+			columnNames[2] = TMeasurePoint.DEF_TAB_VAL.getLangue(guiConfig.getLanguage());
+			columnNames[3] = "T (°C)";
+			columnNames[4] = "P (bar)";
+			columnNames[5] = "H (Kj/kg)";
+			
 		}
 
 		// -------------------------------------------------------
@@ -274,7 +282,9 @@ public class MeasurePointTableWin extends JFrame {
 		public boolean isCellEditable(int row, int col) {
 			//Note that the data/cell address is constant,
 			//no matter where the cell appears onscreen.
-			if (col < 2) {
+			// { "Point", "Definition", "Value", "T (°C)", "P (bar)", "H (Kj/kg)" };
+
+			if (col < 3) {
 				return false;
 			} else {
 				return true;
@@ -292,25 +302,27 @@ public class MeasurePointTableWin extends JFrame {
 			MeasurePoint mp = lMeasurePoints.get(row); 
 			switch (col) {
 
-			// { "Point", "Definition", "T (°C)", "P (bar)", "H (Kj/kg)" };
+			// { "Point", "Definition", "Value", "T (°C)", "P (bar)", "H (Kj/kg)" };
 			case 0:
 				break;
 			case 1:
 				break;
 			case 2:
+				break;
+			case 3:
 				double t = Double.valueOf(value.toString());
 				mp.setMP_T(t);
 				mp.setValue(t);
 				break;
-			case 3:
+			case 4:
 				double p = Double.valueOf(value.toString());
 				mp.setMP_P(p);
 				mp.setValue(p);
 				break;
-			case 4:
+			case 5:
 				double h = Double.valueOf(value.toString());		
 				mp.setMP_H(h);
-				mp.setValue(h);
+				//mp.setValue(h);
 				break;
 			default:
 				throw new IllegalArgumentException();
