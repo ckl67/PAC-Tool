@@ -116,7 +116,7 @@ public class MeasurePoint {
 		return out;
 	}
 
-	private void setValue(double value) {
+	public void setValue(double value) {
 		this.value = value;
 	}
 
