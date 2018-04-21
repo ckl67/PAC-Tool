@@ -151,7 +151,7 @@ public class PacToolWin extends JFrame {
 		JMenu mnFile = new JMenu("File");
 		menuBar.add(mnFile);
 
-		JMenuItem mntmLoad = new JMenuItem("Load");
+		JMenuItem mntmLoad = new JMenuItem("Load Configuration");
 		mntmLoad.setIcon(new ImageIcon(PacToolWin.class.getResource("/gui/images/load-icon-16.png")));
 		mntmLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -176,7 +176,7 @@ public class PacToolWin extends JFrame {
 		});
 		mnFile.add(mntmLoad);
 
-		JMenuItem mntmSave = new JMenuItem("Save");
+		JMenuItem mntmSave = new JMenuItem("Save Configuration");
 		mntmSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -246,7 +246,7 @@ public class PacToolWin extends JFrame {
 		});
 		mnFile.add(mntmQuit);
 
-		JMenu mnPac = new JMenu("Pac");
+		JMenu mnPac = new JMenu("Navigate");
 		menuBar.add(mnPac);
 
 		JMenuItem mntmCompressor = new JMenuItem("Compressor");
@@ -305,8 +305,8 @@ public class PacToolWin extends JFrame {
 		JMenu mnAllData = new JMenu("Data");
 		menuBar.add(mnAllData);
 
-		JMenuItem mntmTableMeasures = new JMenuItem("Measures");
-		mntmTableMeasures.setIcon(new ImageIcon(PacToolWin.class.getResource("/gui/images/table-16.png")));
+		JMenuItem mntmTableMeasures = new JMenuItem("Measures Table");
+		mntmTableMeasures.setIcon(new ImageIcon(PacToolWin.class.getResource("/gui/images/measure-16.png")));
 		mntmTableMeasures.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				logger.trace("JMenuItem: Open WinMeasureTable");
@@ -315,20 +315,20 @@ public class PacToolWin extends JFrame {
 		});
 		mnAllData.add(mntmTableMeasures);
 		
-		JMenuItem mntmResults = new JMenuItem("Results");
+		JMenuItem mntmResults = new JMenuItem("Results Table");
 		mntmResults.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				logger.trace("JMenuItem: Open WinResultTable");
 				measureResultTableWin.setVisible(true);			
 			}
 		});
-		mntmResults.setIcon(new ImageIcon(PacToolWin.class.getResource("/gui/images/table-16.png")));
+		mntmResults.setIcon(new ImageIcon(PacToolWin.class.getResource("/gui/images/results-16.png")));
 		mnAllData.add(mntmResults);
 
-		JMenu mpreference = new JMenu("Preferences");
-		menuBar.add(mpreference);
+		JMenu mnPreference = new JMenu("Preferences");
+		menuBar.add(mnPreference);
 
-		JMenuItem mImgEnthalpyCfg = new JMenuItem("Enthalpy Configuration");
+		JMenuItem mImgEnthalpyCfg = new JMenuItem("Pac-Tool Configuration");
 		mImgEnthalpyCfg.setIcon(new ImageIcon(PacToolWin.class.getResource("/gui/images/configuration-16.png")));
 		mImgEnthalpyCfg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -337,13 +337,13 @@ public class PacToolWin extends JFrame {
 				enthalpyWinConf.setVisible(true);
 			}
 		});
-		mpreference.add(mImgEnthalpyCfg);
+		mnPreference.add(mImgEnthalpyCfg);
 
 		ButtonGroup buttonGroup = new ButtonGroup();
 
 		JMenu mlangue = new JMenu("Language");
 		mlangue.setIcon(new ImageIcon(PacToolWin.class.getResource("/gui/images/langue-16.png")));
-		mpreference.add(mlangue);
+		mnPreference.add(mlangue);
 
 		JRadioButtonMenuItem mRationItemFrench = new JRadioButtonMenuItem("Francais");
 		mRationItemFrench.addActionListener(new ActionListener() {
@@ -373,37 +373,29 @@ public class PacToolWin extends JFrame {
 		mlangue.add(mRationItemEnglisch);;
 
 
-		JMenu mnGeneral = new JMenu("Geothermy");
-		menuBar.add(mnGeneral);
+		JMenu mnGeothermy = new JMenu("Geothermy");
+		menuBar.add(mnGeothermy);
 
-		JMenuItem mntmDefinitio = new JMenuItem("Definitions");
-		mntmDefinitio.setIcon(new ImageIcon(PacToolWin.class.getResource("/gui/images/aide-index-16.png")));
-		mntmDefinitio.addActionListener(new ActionListener() {
+		JMenuItem mntmDefinition = new JMenuItem("Definitions");
+		mntmDefinition.setIcon(new ImageIcon(PacToolWin.class.getResource("/gui/images/definition-16.png")));
+		mntmDefinition.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				logger.trace("JMenuItem: Open InfoWin");
 				infoWin.setVisible(true);
 
 			}
 		});
-		mnGeneral.add(mntmDefinitio);
-
-		JMenu mnHelp = new JMenu("Help");
-		menuBar.add(mnHelp);
-
-		JMenuItem mntmAbout = new JMenuItem("About");
-		mntmAbout.setIcon(new ImageIcon(PacToolWin.class.getResource("/gui/images/About16.png")));
-		mntmAbout.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				logger.trace("JMenuItem: Open AboutWin");
-				aboutWin.setVisible(true);
-			}
-		});
-		mnHelp.add(mntmAbout);
+		mnGeothermy.add(mntmDefinition);
 		
-		JSeparator separator_2 = new JSeparator();
-		mnHelp.add(separator_2);
+		JMenuItem mntmAbreviation = new JMenuItem("Abreviations");
+		mntmAbreviation.setIcon(new ImageIcon(PacToolWin.class.getResource("/gui/images/abreviation-16.png")));
+		mnGeothermy.add(mntmAbreviation);
+		
+		JMenu mnDebug = new JMenu("Debug");
+		menuBar.add(mnDebug);
 		
 		JMenuItem mntmLog = new JMenuItem("Log");
+		mnDebug.add(mntmLog);
 		mntmLog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				logger.trace("JMenuItem: Open loggerWin");
@@ -411,7 +403,33 @@ public class PacToolWin extends JFrame {
 			}
 		});
 		mntmLog.setIcon(new ImageIcon(PacToolWin.class.getResource("/gui/images/logger-16.png")));
-		mnHelp.add(mntmLog);
+
+		JMenu mnHelp = new JMenu("Help");
+		menuBar.add(mnHelp);
+		
+		JMenuItem mntmHelp = new JMenuItem("Help Contents");
+		mntmHelp.setIcon(new ImageIcon(PacToolWin.class.getResource("/gui/images/aide-index-16.png")));
+		mnHelp.add(mntmHelp);
+		
+		JSeparator separator_2 = new JSeparator();
+		mnHelp.add(separator_2);
+		
+				JMenuItem mntmAbout = new JMenuItem("About Pac-Tool");
+				mntmAbout.setIcon(new ImageIcon(PacToolWin.class.getResource("/gui/images/About16.png")));
+				mntmAbout.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						logger.trace("JMenuItem: Open AboutWin");
+						aboutWin.setVisible(true);
+					}
+				});
+				
+				JMenuItem mntmCheckUpdates = new JMenuItem("Check For Updates");
+				mntmCheckUpdates.setIcon(new ImageIcon(PacToolWin.class.getResource("/gui/images/update-16.png")));
+				mnHelp.add(mntmCheckUpdates);
+				
+				JSeparator separator_3 = new JSeparator();
+				mnHelp.add(separator_3);
+				mnHelp.add(mntmAbout);
 
 
 	}
